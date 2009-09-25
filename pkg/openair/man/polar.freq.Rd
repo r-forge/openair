@@ -160,5 +160,5 @@ polar.freq(mydata, breaks = c(0, 10, 50, 100, 250, 500, 700))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{wind frequency}
+\keyword{methods}
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

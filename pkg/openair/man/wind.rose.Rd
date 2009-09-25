@@ -96,4 +96,4 @@ wind.rose(mydata, angle = 10, width = 0.3, grid.line = 1)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 
-\keyword{wind rose}% __ONLY ONE__ keyword per line
+\keyword{methods}% __ONLY ONE__ keyword per line

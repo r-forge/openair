@@ -248,8 +248,6 @@ so2.15min.data.again <- import.aurn.wrapper(
 diurnal.error(so2.15min.data.again, pollutant="so2")
 
 }
-\keyword{ ~import }
-\keyword{ ~import.aurn }
-\keyword{ ~UK Air Quality Archive }
-\keyword{ ~AURN data importing }
+\keyword{methods}
+
 

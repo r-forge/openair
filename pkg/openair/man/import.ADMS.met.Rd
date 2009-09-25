@@ -92,5 +92,5 @@ mydata <- import.ADMS.met(x)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-%\keyword{}
+\keyword{methods}
 %\keyword{}% __ONLY ONE__ keyword per line

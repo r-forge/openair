@@ -186,5 +186,5 @@ polar.annulus(mydata, poll="pmc", type = "trend", main = "trend in pmc at Maryle
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{polar plot}
-\keyword{bivariate}% __ONLY ONE__ keyword per line
+\keyword{methods}
+%\keyword{bivariate}% __ONLY ONE__ keyword per line

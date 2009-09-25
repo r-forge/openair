@@ -83,5 +83,5 @@ linear.relation(mydata, x = "pm10", y = "pm25", rsq.thresh = 0.8)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{relationship}
-\keyword{oxidant}% __ONLY ONE__ keyword per line
+\keyword{methods}
+%\keyword{oxidant}% __ONLY ONE__ keyword per line

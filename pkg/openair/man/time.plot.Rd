@@ -168,5 +168,5 @@ time.plot(select.by.date(mydata, year = 2004, month = 6), pollutant =
 c("nox", "no2"), lwd = c(1, 2), col = "black")
 
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{methods}
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

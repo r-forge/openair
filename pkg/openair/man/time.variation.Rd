@@ -163,5 +163,5 @@ results[[6]] ## plots diurnal plot on its own
 ## results[[4]] are the monthly results
 
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{methods}
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

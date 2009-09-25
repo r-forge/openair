@@ -202,4 +202,4 @@ polar.plot(mydata, pollutant = "pm10", type = "weekday")
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{polar plot} % __ONLY ONE__ keyword per line
+\keyword{methods} % __ONLY ONE__ keyword per line

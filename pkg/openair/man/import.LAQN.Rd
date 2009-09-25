@@ -47,5 +47,5 @@ Data can be downloaded from \url{http://www.londonair.org}.}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-%\keyword{}
+\keyword{methods}
 %\keyword{}% __ONLY ONE__ keyword per line

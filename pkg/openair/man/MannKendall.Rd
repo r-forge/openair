@@ -168,5 +168,5 @@ MannKendall(subset(mydata, format(date, "\%Y") > 1999), pollutant = "o3", ylab =
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{Mann-Kendall}
-\keyword{trend}% __ONLY ONE__ keyword per line
+\keyword{methods}
+%\keyword{trend}% __ONLY ONE__ keyword per line
