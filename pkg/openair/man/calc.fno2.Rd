@@ -126,5 +126,5 @@ can be useful for filtering the data in this way.}
 to use this function.}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% ONLY ONE keyword per line
+\keyword{methods}
+%\keyword{ ~kwd2 }% ONLY ONE keyword per line
