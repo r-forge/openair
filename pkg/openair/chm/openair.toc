@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package openair:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package openair:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="openair-package">
+<param name="Local" value="openair-package.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="calc.fno2">
+<param name="Local" value="calc.fno2.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="diurnal.error">
+<param name="Local" value="diurnal.error.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="elimna">
+<param name="Local" value="elimna.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fourier">
+<param name="Local" value="fourier.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="MannKendall">
+<param name="Local" value="MannKendall.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="open.colours">
+<param name="Local" value="open.colours.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="openair">
+<param name="Local" value="openair-package.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polar.annulus">
+<param name="Local" value="polar.annulus.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polar.condition">
+<param name="Local" value="polar.condition.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polar.freq">
+<param name="Local" value="polar.freq.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polar.percentile">
+<param name="Local" value="polar.percentile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polar.plot">
+<param name="Local" value="polar.plot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="regboot">
+<param name="Local" value="regboot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="regci">
+<param name="Local" value="regci.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="samp.boot.block">
+<param name="Local" value="samp.boot.block.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="smooth.trend">
+<param name="Local" value="smooth.trend.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="stl.plot">
+<param name="Local" value="stl.plot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="summarise">
+<param name="Local" value="summarise.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tau">
+<param name="Local" value="tau.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tau.boot">
+<param name="Local" value="tau.boot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="trend.hour.weekday">
+<param name="Local" value="trend.hour.weekday.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="trend.level.hour">
+<param name="Local" value="trend.level.hour.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="trend.level.wd">
+<param name="Local" value="trend.level.wd.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="trend.plot">
+<param name="Local" value="trend.plot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tsp1reg">
+<param name="Local" value="tsp1reg.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="wind.rose">
+<param name="Local" value="wind.rose.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="year.panels">
+<param name="Local" value="year.panels.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package openair:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Bivariate polar annulus plot">
+<param name="Local" value="polar.annulus.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Bivariate polar plot with smoothing">
+<param name="Local" value="polar.plot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Function to plot wind speed/direction frequencies and other statistics">
+<param name="Local" value="polar.freq.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Function to rapidly provide an overview of air quality data">
+<param name="Local" value="summarise.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Mann-Kendall trend tests">
+<param name="Local" value="MannKendall.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Tools for the analysis of air pollution data">
+<param name="Local" value="openair-package.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Traditional wind rose plot">
+<param name="Local" value="wind.rose.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="~~function to do ... ~~ ">
+<param name="Local" value="year.panels.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>

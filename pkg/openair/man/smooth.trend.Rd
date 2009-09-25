@@ -1,0 +1,119 @@
+\name{smooth.trend}
+\alias{smooth.trend}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{Calculate smooth trends}
+\description{
+Use non-parametric methods to calculate time series trends
+}
+\usage{
+smooth.trend(mydata,
+pollutant = "nox",
+deseason = FALSE,
+type = "default",
+simulate = FALSE,
+n = 200,
+autocor = FALSE,
+ylab = pollutant,
+main = "",
+auto.text = TRUE, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{mydata}{A data frame containing the field \code{date} and at least
+one other parameter for which a trend test is required; typically (but
+not necessarily) a pollutant.}
+
+  \item{pollutant}{The parameter for which a trend test is
+    required. Mandatory.}
+
+  \item{deseason}{Should the data be de-deasonalized first? If
+  \code{TRUE} the function \code{stl} is used (seasonal trend
+  decomposition using loess). Note that if \code{TRUE} missing data are
+  first linearly interpolated because \code{stl} cannot handle missing
+  data.}
+
+  \item{type}{The type of analysis to be done. The default is will
+produce a single plot using the entire data. Other types include
+\code{hour} (for hour of the day), \code{weekday} (for day of the week),
+\code{month} (for month of the year), \code{wd} (wind direction split
+into eight sectors and \code{ws} (wind speed split into eight
+quantiles). Finally, there is an option \code{site}, which requires a
+slightly different format. If \code{site} is used a data frame with
+headings \code{date}, a pollutant and \code{site} is required. It is
+also possible to choose \code{type} as another variable in the data
+frame. For example, \code{type = "o3"} will plot four wind roses for
+different levels of ozone, split into four quantiles (approximately
+equal numbers of counts in each of the four splits). This offers great
+flexibility for understanding the variation of different variables
+dependent on another.}
+
+  \item{simulate}{Should simulations be carried out to determine the
+Mann-Kendall tau and p-value. The default is \code{FALSE}. If
+\code{TRUE}, bootstrap simulations are undertaken, which also account
+for autocorrelation.}
+
+  \item{n}{Number of bootstrap simulations if \code{simulate = TRUE}.}
+
+  \item{autocor}{Should autocorrelation be considered in the trend
+uncertainty estimates? The default is \code{FALSE}. Generally,
+accounting for autocorrelation increases the uncertainty of the trend
+estimate sometimes by a large amount.}
+
+  \item{ylab}{y-axis label.}
+
+  \item{main}{Title of plot, if required.}
+
+  \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
+  \code{TRUE} titles and axis labels will automatically try and format
+  pollutant names and units properly e.g.  by subscripting the
+  \sQuote{2} in NO2.}
+
+  \item{\dots}{Other graphical parameters e.g. pch = 16 for filled circles.}
+}
+\details{
+The \code{smooth.trend} function provides a flexible way of estimating
+the trend in the concentration of a pollutant or other variable. Monthly
+mean values are calculated from an hourly (or higher resolution) or
+daily time series. There is the option to deseasonalise the data if
+there is evidence of a seasonal cycle.
+
+\code{smooth.trend} uses a Generalized Additive Model (GAM) from the
+\code{\link{mgcv}} package to find the most appropriate level of
+smoothing. The function is particularly suited to situations where trends
+are not monotonic (see discussion with \code{\link{MannKendall}} for
+more details on this). The \code{smooth.trend} function is particularly
+useful as an exploratory technique e.g. to check how linear or
+non-linear trends are.
+
+95\% confidence intervals are shown by shading. Bootstrap estimates of
+the confidence intervals are also available through the \code{simulate}
+option. Residual resampling is used.
+
+Trends can be considered in a very wide range of ways, controlled by
+setting \code{type} - see examples below.
+}
+
+%\references{ ~put references to the literature/web site here ~ }
+\author{David Carslaw}
+%\note{ ~~further notes~~
+
+%  ~Make other sections like Warning with
+%  \section{Warning }{....} ~
+%}
+
+\seealso{\code{\link{MannKendall}} for an alternative method of
+  calculating trends.}
+\examples{
+# load example data from package
+data(mydata)
+
+# trend plot for nox
+smooth.trend(mydata, pollutant = "nox")
+
+# trend plot by each of 8 wind sectors
+smooth.trend(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

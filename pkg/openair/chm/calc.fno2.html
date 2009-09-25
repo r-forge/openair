@@ -1,0 +1,324 @@
+<html><head><title>~~function to do ... ~~</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>calc.fno2(openair)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   calc.fno2">
+<param name="keyword" value=" ~~function to do ... ~~">
+</object>
+
+
+<h2>~~function to do ... ~~</h2>
+
+
+<h3>Description</h3>
+
+<p>
+~~ A concise (1-5 lines) description of what the function does. ~~
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+calc.fno2(input, tau = 60, plot = TRUE, user.fno2, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>input</code></td>
+<td>
+~~Describe <code>input</code> here~~ </td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+~~Describe <code>tau</code> here~~ </td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+~~Describe <code>plot</code> here~~ </td></tr>
+<tr valign="top"><td><code>user.fno2</code></td>
+<td>
+~~Describe <code>user.fno2</code> here~~ </td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+~~Describe <code>...</code> here~~ </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+~~ If necessary, more details than the description above ~~
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+~Describe the value returned
+If it is a LIST, use
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>comp1 </code></td>
+<td>
+Description of 'comp1'</td></tr>
+<tr valign="top"><td><code>comp2 </code></td>
+<td>
+Description of 'comp2'</td></tr>
+</table>
+<p>
+
+...</p>
+
+<h3>Warning</h3>
+
+<p>
+....
+</p>
+
+
+<h3>Note</h3>
+
+<p>
+~~further notes~~ 
+</p>
+<p>
+~Make other sections like Warning with section{Warning }{....} ~
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+~~who you are~~
+</p>
+
+
+<h3>References</h3>
+
+<p>
+~put references to the literature/web site here ~
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+~~objects to See Also as <code><a onclick="findlink('utils', 'help.html')" style="text-decoration: underline; color: blue; cursor: hand">help</a></code>, ~~~
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##---- Should be DIRECTLY executable !! ----
+##-- ==&gt;  Define data, use random,
+##--    or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function(input, tau = 60, plot = TRUE, user.fno2,...) {
+{
+
+library(mgcv)
+library(lattice)
+#function to prepare data ######################################################
+prepare &lt;- function(input) {
+
+    #if cl or temp are missing, fill in with default values
+    if(!any(names(input) %in% "temp"))  input$temp &lt;- 11
+    if(!any(names(input) %in% "cl"))  input$cl &lt;- 4.5
+    input$temp &lt;- input$temp + 273
+
+   #different date components
+    input &lt;- input[order(input$date), ]
+    year &lt;- as.numeric(format(input$date, "%Y"))
+    month &lt;- as.numeric(format(input$date, "%m"))
+    jd &lt;- as.numeric(format(input$date, "%j"))
+    hour &lt;- as.numeric(format(input$date, "%H"))
+
+    nox.v &lt;- input$nox - input$back_nox #estimated road contribution to NOx
+    SLAT = 52 #latitute
+
+    a &lt;- 23.45 * (2 * pi / 360) * sin((jd + 284) * 2 * pi / 365)
+
+    s &lt;- sin(2 * pi * SLAT / 360) * sin(a) + cos(2 * pi * SLAT / 360) *
+         cos(a) * cos((hour - 12) * 2 * pi / 24)
+
+    solar &lt;- (990 * s - 30) * (1 - 0.75 * (input$cl / 8) ^ 3.4)
+
+    jno2 &lt;- ifelse(solar &lt; 0, 0, 0.0008 * exp(-10/solar) + 0.0000074*solar)
+
+    k &lt;-  0.04405*exp(-1370/input$temp)
+
+    r &lt;- jno2/k
+
+    cbind(input, year, month, jd, hour, jno2, k, r, nox.v)
+    
+  }
+################################################################################
+
+calc.error &lt;- function(user.fno2, nox, no2, nox.v, k, r, jno2, back_no2, back_o3, type) {
+    
+    #measured NOX-NO2 relationship
+    bin1 &lt;- cut(nox, breaks = 200)
+    bin.meas &lt;- aggregate(no2, list(bin1), mean, na.rm = TRUE)
+
+    #first calculate new hourly means with t, f-NO2
+    d &lt;- 1/(k * tau)
+    no2.v &lt;-  nox.v * user.fno2
+    no2.n &lt;- no2.v + back_no2
+    no2.o &lt;- no2.n + back_o3
+    b &lt;- nox + no2.o + r + d
+    no2.pred &lt;- 0.5 * (b - (b^2 - 4 * (nox * no2.o + no2.n * d)) ^ 0.5)
+    
+    o3 &lt;- (jno2 * tau * no2.pred + back_o3)/(k * tau * (nox - no2.pred) + 1)
+
+    #make NOx-NO2 relationship
+    bin.mod &lt;- aggregate(no2.pred, list(bin1), mean, na.rm = TRUE)
+    error &lt;- sum(bin.meas$x - bin.mod$x, na.rm = TRUE)^2
+
+    #return different results depending on use
+    switch(type,
+          err = error,
+          conc = data.frame(no2 = no2.pred, o3 = o3)
+    )
+  }
+
+#plot results ##################################################################
+plot.fno2 &lt;- function(results,...) {
+
+      mod &lt;- gam(fno2 ~ s(as.numeric(date)), data = results)
+      pred &lt;- predict(mod, results, se = TRUE)
+
+      x1 &lt;- c(results$date, rev(results$date))
+      y1 &lt;- c(pred$fit + 2 * pred$se.fit, rev(pred$fit - 2 * pred$se.fit))
+
+      years &lt;- as.numeric(unique(format(results$date, "%Y")))
+      years &lt;- c(years, max(years) + 1)
+      years &lt;- ISOdate(years, 1, 1)
+      
+      xyplot(fno2 ~ date, data = results,
+          pch = 16,
+          ylab = expression("f-NO" [2] * " (%)"),...,
+          
+          panel = function(x, y,...) {
+              lpolygon(x1, y1, col = "lightblue", border = NA)
+              panel.grid(h = -1, v = 0)
+              panel.abline(v = as.Date(years), col = "grey85")
+              panel.xyplot(x, y,...)
+              panel.lines(results$date, pred$fit, col = "blue", lwd = 2,...)
+          }
+          )
+      }
+
+###plots orginal monthly NO2 and predicted with  ###############################
+plot.no2 &lt;- function(input, res,...) {
+
+      results &lt;- tapply(res$no2, format(res$date,"%Y-%m"), mean, na.rm = TRUE)
+      measured &lt;- tapply(input$no2, format(input$date,"%Y-%m"), mean, na.rm = TRUE)
+      
+      dates &lt;- names(tapply(input$nox, format(input$date, "%Y-%m"), mean))
+      dates &lt;- as.Date(paste(dates, "-01", sep = ""))
+
+      results &lt;- data.frame(date = dates, no2 = results, no2.meas = measured)
+
+      #modelled results
+      mod &lt;- gam(no2 ~ s(as.numeric(date)), data = results)
+      pred.mod &lt;- predict(mod, results, se = TRUE)
+
+      x1 &lt;- c(results$date, rev(results$date))
+      y1 &lt;- c(pred.mod$fit + 2 * pred.mod$se.fit, rev(pred.mod$fit - 2 * pred.mod$se.fit))
+      
+      #measured results
+      meas &lt;- gam(no2.meas ~ s(as.numeric(date)), data = results)
+      pred.meas &lt;- predict(meas, results, se = TRUE)
+
+      x2 &lt;- c(results$date, rev(results$date))
+      y2 &lt;- c(pred.meas$fit + 2 * pred.meas$se.fit, rev(pred.meas$fit - 2 * pred.meas$se.fit))
+
+      years &lt;- as.numeric(unique(format(results$date, "%Y")))
+      years &lt;- c(years, max(years) + 1)
+      years &lt;- ISOdate(years, 1, 1)
+
+      xyplot(no2.meas ~ date, data = results,
+          type = "l",
+          ylab = expression("NO" [2] * " (ppb)"),
+
+          key = list(lines = list(col = c("red", "blue"), lwd = 2),
+                text = list(c("modelled", "measured")), columns = 2),...,
+
+          panel = function(x, y,...) {
+              lpolygon(x1, y1, col = rgb(1, 0, 0, 0.2), border = NA)
+              lpolygon(x2, y2, col = rgb(0, 0, 1, 0.2), border = NA)
+              panel.grid(h = -1, v = 0)
+              panel.abline(v = as.Date(years), col = "grey85")
+              panel.xyplot(x, y,...)
+              panel.lines(results$date, pred.mod$fit, col = "red", lwd = 2)
+              panel.lines(results$date, pred.meas$fit, col = "blue", lwd = 2)
+          }
+          )
+  }
+#start of code#################################################################
+    input.all &lt;- prepare(input)  #process input data
+    input.all &lt;- subset(input.all, nox.v &gt; 0)  #process only +ve increments
+
+    if(missing(user.fno2)) {
+
+        fun.opt &lt;- function(x)  {
+                          optimize(calc.error, c(0, 0.5), x$nox, x$no2,
+                                   x$nox.v, x$k, x$r, x$jno2, x$back_no2, x$back_o3, "err")
+                   }
+        #split data frame by year/month
+        input.part &lt;- split(input.all, input.all[c("month", "year")])
+        
+        input.part &lt;- input.part[which(lapply(input.part, nrow) &gt; 50)]  #need at least 50 hours
+        
+        fno2 &lt;- sapply(input.part, function(x) fun.opt(x)$minimum)
+
+        dates &lt;- lapply(input.part, function(x) format(x$date[1], "%Y-%m"))
+        dates &lt;- do.call(rbind, dates)
+        #dates &lt;- names(tapply(input$nox, format(input$date, "%Y-%m"), mean))
+        dates &lt;- as.Date(paste(dates, "-01", sep = ""))
+
+        results &lt;- data.frame(date = dates, fno2 = 100 * fno2) # retrun estimates
+        
+        if (plot) print(plot.fno2(results,...))
+        results
+        
+      } else {  ###calculate NO2 concentrations based on user input for whole series
+         res &lt;- calc.error(user.fno2, input.all$nox, input.all$no2,
+                        input.all$nox.v, input.all$k, input.all$r,
+                        input.all$jno2, input.all$back_no2,
+                        input.all$back_o3, "conc")
+
+        ids &lt;- which(input$date %in% input.all$date)  #indices with data
+
+        res &lt;- cbind(date = input.all$date, res)
+
+        gaps &lt;- data.frame(date = input$date[-ids], no2 = input$no2[-ids], o3 = NA)
+
+        res &lt;- rbind(res, gaps)
+        res &lt;- res[order(res$date), ]
+        if (plot) print(plot.no2(input.all, res,...))
+        res
+    }
+  }
+  }
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

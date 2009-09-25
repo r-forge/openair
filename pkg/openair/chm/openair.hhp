@@ -1,0 +1,41 @@
+[OPTIONS]
+Auto Index=Yes
+Contents file=openair.toc
+Compatibility=1.1 or later
+Compiled file=openair.chm
+Default topic=00Index.html
+Display compile progress=No
+Full-text search=Yes
+Full text search stop list file=..\..\..\gnuwin32\help\R.stp
+Title=R Help for package openair
+
+
+[FILES]
+00Index.html
+MannKendall.html
+calc.fno2.html
+diurnal.error.html
+elimna.html
+fourier.html
+open.colours.html
+openair-package.html
+polar.annulus.html
+polar.condition.html
+polar.freq.html
+polar.percentile.html
+polar.plot.html
+regboot.html
+regci.html
+samp.boot.block.html
+smooth.trend.html
+stl.plot.html
+summarise.html
+tau.html
+tau.boot.html
+trend.hour.weekday.html
+trend.level.hour.html
+trend.level.wd.html
+trend.plot.html
+tsp1reg.html
+wind.rose.html
+year.panels.html

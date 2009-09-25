@@ -1,0 +1,64 @@
+\name{openair-package}
+\alias{openair-package}
+\alias{openair}
+\docType{package}
+\title{Tools for the analysis of air pollution data}
+\description{
+This is a UK Natural Environment Research Council (NERC) funded knowledge exchange
+project that aims to make available innovative analysis tools for air pollution data.
+The tools have generally been developed to analyse data of at least hourly resolution
+both from air pollution monitoring and dispersion modelling. The availability of
+meteorological data at the same time resolution greatly enhances the capabilities
+of these tools.
+}
+\details{
+\tabular{ll}{
+Package: \tab openair\cr
+Type: \tab Package\cr
+Version: \tab Alpha pre-release\cr
+Date: \tab 2009-05-15\cr
+License: \tab GPL\cr
+LazyLoad: \tab yes\cr
+}
+\code{openair} contains collection of functions to analyse air pollution data. Typically it is expected that data are hourly means, although some functions consider other time periods. The principal aim to make available analysis techniques that most users of air quality data and model output would not normally have access to. The functions consist of those developed by the authors and a growing number from other researchers.
+
+Most functions work with a very straightforward way, but offer many options for finer control and perhaps more in-depth analysis.
+
+The \code{openair} package depends on several other packages written by other people to function properly.
+
+To ensure that these other packages are available, they need to be installed, and this requires a connection to the internet. Other packages required come with the R base system. This can be done by pasting the text below into R.
+
+install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "Hmisc", "ggplot2"))
+
+If there are problems with the automatic download of these packages, see \url{www.openair-project.org} for more details.
+
+To check to see if \code{openair} has been correctly installed, try some of the examples below. In case of any problems, contact David Carslaw \url{mailto: d.c.carslaw@its.leeds.ac.uk} or Karl Ropkins \url{mailto: k.ropkins@its.leeds.ac.uk} directly.
+
+}
+\author{
+David Carslaw and Karl Ropkins
+
+Maintainer: David Carslaw <d.c.carslaw@its.leeds.ac.uk>
+
+}
+\references{
+Most reference details are given under the specific functions.
+
+Carslaw, D.C. and K. Ropkins (2009). Open-source tools for analysing air pollution data. Institute for Transport Studies, University of Leeds.
+}
+\keyword{Air pollution}
+\seealso{See \url{www.openair-project.org} for up to date information on the project.
+}
+\examples{
+# load example data from package
+data(mydata)
+
+# summarise the data in a compact way
+summarise(mydata)
+
+# traditional wind rose
+wind.rose(mydata)
+
+# basic plot
+polar.plot(mydata, pollutant = "nox")
+}
