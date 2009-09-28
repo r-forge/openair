@@ -7,10 +7,10 @@
 }
 \usage{
 polar.annulus(polar,
-pollutant = "",
+pollutant = "nox",
 resolution = "fine",
-local.time = TRUE,
-period = "trend",
+local.time = FALSE,
+period = "hour",
 type = "default",
 limits = c(0, 100),
 cols = "default",
@@ -18,7 +18,8 @@ width = "normal",
 exclude.missing = TRUE,
 date.pad = FALSE,
 force.positive = TRUE,
-k = 15, key = TRUE,
+k = 15,
+key = TRUE,
 main = "",
 auto.text = TRUE, ...)
 }
@@ -176,12 +177,12 @@ data(mydata)
 polar.annulus(mydata, poll="pm10", main = "trend in pm10 at Marylebone Road")
 
 # seasonal plot for PM10 at Marylebone Rd
-polar.annulus(mydata, poll="pm10", type = "season")
+polar.annulus(mydata, poll="pm10", period = "season")
 
 # trend in coarse particles (PMc = PM10 - PM2.5), calculate PMc first
 
 mydata$pmc <- mydata$pm10 - mydata$pm25
-polar.annulus(mydata, poll="pmc", type = "trend", main = "trend in pmc at Marylebone Road")
+polar.annulus(mydata, poll="pmc", period = "trend", main = "trend in pmc at Marylebone Road")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

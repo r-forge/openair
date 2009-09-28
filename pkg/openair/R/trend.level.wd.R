@@ -20,7 +20,7 @@ trend.level.wd <-  function(mydata,
 
 
     ###Function to deal with completly missing data when doing max ############
-    newmax <- function(data)  if (all(is.na(data)))  NA else  max(data, na.rm = T)
+    newmax <- function(data)  if (all(is.na(data)))  NA else  max(data, na.rm = TRUE)
 
     #average by year/month/wd
     if (statistic == "mean") {
@@ -60,7 +60,7 @@ trend.level.wd <-  function(mydata,
                 breaks = seq(limits[1], limits[2], length = 100)
         }
     #add max at end
-    breaks = c(breaks, max(means$conc, na.rm = T))
+    breaks = c(breaks, max(means$conc, na.rm = TRUE))
 
     nlev2 = length(breaks)
     col.scale = breaks
@@ -71,7 +71,7 @@ trend.level.wd <-  function(mydata,
             data = means,
 			main = quick.text(main, auto.text),
             ylab = expression("wind direction (" *degree * ")"),
-            as.table = T,
+            as.table = TRUE,
             col.regions = col,
             at = col.scale,
             scales = list(x = list(labels = c("Jan", "Apr", "Jul", "Oct"),

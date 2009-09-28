@@ -23,7 +23,7 @@ trend.level.hour <-  function(mydata,
               if (all(is.na(data))) {
                   NA
               } else {
-                  max(data, na.rm = T)
+                  max(data, na.rm = TRUE)
               }}
     ###########################################################################
 
@@ -63,7 +63,7 @@ trend.level.hour <-  function(mydata,
                 breaks = seq(limits[1], limits[2], length = 100)
         }
     #add max at end
-    breaks = c(breaks, max(means$conc, na.rm = T))
+    breaks = c(breaks, max(means$conc, na.rm = TRUE))
 
     nlev2 = length(breaks)
     col.scale = breaks

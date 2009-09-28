@@ -1,4 +1,9 @@
-calc.fno2 <- function(input, tau = 60, plot = TRUE, user.fno2, main = "", theme = "bw", ...) {
+calc.fno2 <- function(input,
+                      tau = 60,
+                      plot = TRUE,
+                      user.fno2,
+                      main = "",
+                      theme = "bw", ...) {
 {
 
     library(ggplot2)

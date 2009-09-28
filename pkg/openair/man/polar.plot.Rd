@@ -154,7 +154,7 @@ auto.text = TRUE, ...)  }
   Henry, R.C., Chang, Y.S., Spiegelman, C.H., 2002. Locating nearby
   sources of air pollution by nonparametric regression of atmospheric
   concentrations on wind direction. Atmospheric Environment 36 (13),
-  2237–2244.
+  2237-2244.
 
   Westmoreland, E.J., N. Carslaw, D.C. Carslaw, A. Gillah and E. Bates
   (2007).  Analysis of air quality within a street canyon using
@@ -164,7 +164,7 @@ auto.text = TRUE, ...)  }
   Yu, K.N., Cheung, Y.P., Cheung, T., Henry, R.C., 2004.
   Identifying the impact of large urban airports on local air
   quality by nonparametric regression. Atmospheric Environment
-  38 (27), 4501–4507.
+  38 (27), 4501-4507.
 }
 
 \author{David Carslaw }

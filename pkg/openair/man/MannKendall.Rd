@@ -80,7 +80,7 @@ value of the trend, choose alpha = 0.01 etc.}
   \item{autocor}{Should autocorrelation be considered in the trend
 uncertainty estimates? The default is \code{FALSE}. Generally,
 accounting for autocorrelation increases the uncertainty of the trend
-estimate — sometimes by a large amount.}
+estimate - sometimes by a large amount.}
 
   \item{\dots}{Other graphical parameters.}
 }
@@ -126,10 +126,10 @@ this is a very good resource statistics as applied to environmental
 data.
 
 Hirsch, R. M., Slack, J. R., Smith, R. A., 1982. Techniques of trend analysis for monthly
-water-quality data. Water Resources Research 18 (1), 107–121.
+water-quality data. Water Resources Research 18 (1), 107-121.
 
 Kunsch, H. R., 1989. The jackknife and the bootstrap for general stationary observations.
-Annals of Statistics 17 (3), 1217–1241.
+Annals of Statistics 17 (3), 1217-1241.
 
 \dots see also several of the Air Qulaity Expert Group (AQEG) reports
 for the use of similar tests applied to UK/European air quality data,
@@ -156,7 +156,9 @@ data(mydata)
 MannKendall(mydata, pollutant = "nox")
 
 # trend plot for ozone with p=0.01 i.e. uncertainty in slope shown at
-99\% confidence interval MannKendall(mydata, pollutant = "o3", ylab =
+# 99 % confidence interval
+
+MannKendall(mydata, pollutant = "o3", ylab =
 "o3 (ppb)", alpha = 0.01)
 
 # trend plot by each of 8 wind sectors

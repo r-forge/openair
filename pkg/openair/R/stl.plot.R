@@ -18,7 +18,7 @@ stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,...)  {
     means <- as.vector(means)
 
     #simple fill of missing data
-    means[which(is.nan(means))] <- mean(means, na.rm = T)
+    means[which(is.nan(means))] <- mean(means, na.rm = TRUE)
 
     start.year <- as.numeric(format(mydata$date[1], "%Y"))
     end.year <- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))

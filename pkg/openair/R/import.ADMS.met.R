@@ -1,6 +1,6 @@
 
 import.ADMS.met <- function(filename = file.choose()) {
-    met <- read.csv(filename, nrows = 1, header=T)
+    met <- read.csv(filename, nrows = 1, header = TRUE)
     variables <- met[1,1]
     met <- read.csv(filename, nrows= variables + 1, header = TRUE)
     variables <- met[2:(variables +1),]

@@ -34,10 +34,7 @@ open.colours(scheme = "default", n = 100)
 }
 \references{ ~put references to the literature/web site here ~ }
 \author{David Carslaw}
-\note{ ~~further notes~~
 
- ~Make other sections like Warning with \section{Warning }{....} ~
-}
 %\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 # to return 5 colours from the "jet" scheme:
@@ -45,7 +42,7 @@ cols <- open.colours("jet", 5)
 cols
 
 # to interpolate between named colours e.g. 10 colours from yellow to
-  green to red:
+#  green to red:
 cols <- open.colours(c("yellow", "green", "red"), 10)
 cols
 

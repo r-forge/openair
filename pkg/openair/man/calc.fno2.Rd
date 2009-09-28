@@ -12,7 +12,10 @@ emissions ratio of NO2/NOX --- the level of primary NO2
 calc.fno2(input,
 tau = 60,
 plot = TRUE,
-user.fno2, ...)
+user.fno2,
+main = "",
+theme = "bw",
+...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,10 +39,12 @@ user.fno2, ...)
     applied to the whole time series and is useful for testing "what if"
     questions.}
 
-   \item{theme}{Either "bw" for black and white (the default) or
-    "grey". See \code{ggplot2} package information for more details.}
+  \item{main}{Title of plot if required.}
 
-  \item{\dots}{Other graphical parameters e.g. \code{main = "my no2 plot"}}
+  \item{theme}{Colour theme to use - see ggplot2 for details. Can be
+  \code{"bw"} (default) or \code{"grey"}.}
+
+  \item{\dots}{Other graphical parameters.}
 }
 
 \details{ The principal purpose of this function is to estimate the
@@ -122,8 +127,10 @@ road is prominent are selected. The \code{\link{polar.plot}} function
 can be useful for filtering the data in this way.}
 
 \seealso{ \code{\link{linear.relation}} if you have roadside ozone measurements. }
-\examples{Users should see the full openair manual for examples of how
-to use this function.}
+\examples{
+## Users should see the full openair manual for examples of how
+## to use this function.
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{methods}

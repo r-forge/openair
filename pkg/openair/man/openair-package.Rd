@@ -46,7 +46,7 @@ Most reference details are given under the specific functions.
 
 Carslaw, D.C. and K. Ropkins (2009). Open-source tools for analysing air pollution data. Institute for Transport Studies, University of Leeds.
 }
-\keyword{Air pollution}
+\keyword{methods}
 \seealso{See \url{www.openair-project.org} for up to date information on the project.
 }
 \examples{

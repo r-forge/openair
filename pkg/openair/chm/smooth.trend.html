@@ -1,4 +1,4 @@
-<html><head><title>~~function to do ... ~~</title>
+<html><head><title>Calculate smooth trends</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="Rchm.css">
 </head>
@@ -6,24 +6,35 @@
 
 <table width="100%"><tr><td>smooth.trend(openair)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
 <param name="keyword" value="R:   smooth.trend">
-<param name="keyword" value=" ~~function to do ... ~~">
+<param name="keyword" value=" Calculate smooth trends">
 </object>
 
 
-<h2>~~function to do ... ~~</h2>
+<h2>Calculate smooth trends</h2>
 
 
 <h3>Description</h3>
 
 <p>
-~~ A concise (1-5 lines) description of what the function does. ~~
+Use non-parametric methods to calculate time series trends
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-smooth.trend(mydata, pollutant = "nox", deseason = TRUE, type = "default", simulate = FALSE, n = 200, autocor = FALSE, ylab = pollutant, main = "", auto.text = TRUE, ...)
+smooth.trend(mydata,
+pollutant = "nox",
+deseason = FALSE,
+type = "default",
+simulate = FALSE,
+n = 200,
+autocor = FALSE,
+ylab = pollutant,
+main = "",
+ci = FALSE,
+alpha = 0.2,
+auto.text = TRUE, ...)
 </pre>
 
 
@@ -32,366 +43,131 @@ smooth.trend(mydata, pollutant = "nox", deseason = TRUE, type = "default", simul
 <table summary="R argblock">
 <tr valign="top"><td><code>mydata</code></td>
 <td>
-~~Describe <code>mydata</code> here~~ </td></tr>
+A data frame containing the field <code>date</code> and at least
+one other parameter for which a trend test is required; typically (but
+not necessarily) a pollutant.</td></tr>
 <tr valign="top"><td><code>pollutant</code></td>
 <td>
-~~Describe <code>pollutant</code> here~~ </td></tr>
+The parameter for which a trend test is
+required. Mandatory.</td></tr>
 <tr valign="top"><td><code>deseason</code></td>
 <td>
-~~Describe <code>deseason</code> here~~ </td></tr>
+Should the data be de-deasonalized first? If
+<code>TRUE</code> the function <code>stl</code> is used (seasonal trend
+decomposition using loess). Note that if <code>TRUE</code> missing data are
+first linearly interpolated because <code>stl</code> cannot handle missing
+data.</td></tr>
 <tr valign="top"><td><code>type</code></td>
 <td>
-~~Describe <code>type</code> here~~ </td></tr>
+The type of analysis to be done. The default is will
+produce a single plot using the entire data. Other types include
+<code>hour</code> (for hour of the day), <code>weekday</code> (for day of the week),
+<code>month</code> (for month of the year), <code>wd</code> (wind direction split
+into eight sectors and <code>ws</code> (wind speed split into eight
+quantiles). Finally, there is an option <code>site</code>, which requires a
+slightly different format. If <code>site</code> is used a data frame with
+headings <code>date</code>, a pollutant and <code>site</code> is required. It is
+also possible to choose <code>type</code> as another variable in the data
+frame. For example, <code>type = "o3"</code> will plot four wind roses for
+different levels of ozone, split into four quantiles (approximately
+equal numbers of counts in each of the four splits). This offers great
+flexibility for understanding the variation of different variables
+dependent on another.</td></tr>
 <tr valign="top"><td><code>simulate</code></td>
 <td>
-~~Describe <code>simulate</code> here~~ </td></tr>
+Should simulations be carried out to determine the
+Mann-Kendall tau and p-value. The default is <code>FALSE</code>. If
+<code>TRUE</code>, bootstrap simulations are undertaken, which also account
+for autocorrelation.</td></tr>
 <tr valign="top"><td><code>n</code></td>
 <td>
-~~Describe <code>n</code> here~~ </td></tr>
+Number of bootstrap simulations if <code>simulate = TRUE</code>.</td></tr>
 <tr valign="top"><td><code>autocor</code></td>
 <td>
-~~Describe <code>autocor</code> here~~ </td></tr>
+Should autocorrelation be considered in the trend
+uncertainty estimates? The default is <code>FALSE</code>. Generally,
+accounting for autocorrelation increases the uncertainty of the trend
+estimate sometimes by a large amount.</td></tr>
 <tr valign="top"><td><code>ylab</code></td>
 <td>
-~~Describe <code>ylab</code> here~~ </td></tr>
+y-axis label.</td></tr>
 <tr valign="top"><td><code>main</code></td>
 <td>
-~~Describe <code>main</code> here~~ </td></tr>
+Title of plot, if required.</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+Should confidence intervals be plotted? The default is
+<code>FALSE</code>.</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+The alpha transparency of shaded confidence intervals -
+if plotted. A value of 0 is fully transparent and 1 is fully opaque.</td></tr>
 <tr valign="top"><td><code>auto.text</code></td>
 <td>
-~~Describe <code>auto.text</code> here~~ </td></tr>
+Either <code>TRUE</code> (default) or <code>FALSE</code>. If
+<code>TRUE</code> titles and axis labels will automatically try and format
+pollutant names and units properly e.g.  by subscripting the
+&lsquo;2&rsquo; in NO2.</td></tr>
 <tr valign="top"><td><code>...</code></td>
 <td>
-~~Describe <code>...</code> here~~ </td></tr>
+Other graphical parameters e.g. pch = 16 for filled circles.</td></tr>
 </table>
 
 <h3>Details</h3>
 
 <p>
-~~ If necessary, more details than the description above ~~
-</p>
-
-
-<h3>Value</h3>
-
-<p>
-~Describe the value returned
-If it is a LIST, use
-</p>
-<table summary="R argblock">
-<tr valign="top"><td><code>comp1 </code></td>
-<td>
-Description of 'comp1'</td></tr>
-<tr valign="top"><td><code>comp2 </code></td>
-<td>
-Description of 'comp2'</td></tr>
-</table>
-<p>
-
-...</p>
-
-<h3>Warning</h3>
-
-<p>
-....
-</p>
-
-
-<h3>Note</h3>
-
-<p>
-~~further notes~~ 
+The <code>smooth.trend</code> function provides a flexible way of estimating
+the trend in the concentration of a pollutant or other variable. Monthly
+mean values are calculated from an hourly (or higher resolution) or
+daily time series. There is the option to deseasonalise the data if
+there is evidence of a seasonal cycle.
 </p>
 <p>
-~Make other sections like Warning with section{Warning }{....} ~
+<code>smooth.trend</code> uses a Generalized Additive Model (GAM) from the
+<code><a onclick="findlink('mgcv', 'mgcv.html')" style="text-decoration: underline; color: blue; cursor: hand">mgcv</a></code> package to find the most appropriate level of
+smoothing. The function is particularly suited to situations where trends
+are not monotonic (see discussion with <code><a href="MannKendall.html">MannKendall</a></code> for
+more details on this). The <code>smooth.trend</code> function is particularly
+useful as an exploratory technique e.g. to check how linear or
+non-linear trends are.
+</p>
+<p>
+95% confidence intervals are shown by shading. Bootstrap estimates of
+the confidence intervals are also available through the <code>simulate</code>
+option. Residual resampling is used.
+</p>
+<p>
+Trends can be considered in a very wide range of ways, controlled by
+setting <code>type</code> - see examples below.
 </p>
 
 
 <h3>Author(s)</h3>
 
 <p>
-~~who you are~~
-</p>
-
-
-<h3>References</h3>
-
-<p>
-~put references to the literature/web site here ~
+David Carslaw
 </p>
 
 
 <h3>See Also</h3>
 
 <p>
-~~objects to See Also as <code><a onclick="findlink('utils', 'help.html')" style="text-decoration: underline; color: blue; cursor: hand">help</a></code>, ~~~
+<code><a href="MannKendall.html">MannKendall</a></code> for an alternative method of
+calculating trends.
 </p>
 
 
 <h3>Examples</h3>
 
 <pre>
-##---- Should be DIRECTLY executable !! ----
-##-- ==&gt;  Define data, use random,
-##--    or do  help(data=index)  for the standard data sets.
+# load example data from package
+data(mydata)
 
-## The function is currently defined as
-function(mydata, 
-                pollutant = "nox", 
-                deseason = TRUE, 
-                type = "default",
-                simulate = FALSE,
-                n = 200, #bootstrap simulations
-                autocor = FALSE,
-                ylab = pollutant,
-                main = "",
-                auto.text = TRUE,...)  {        
-        
-        library(mgcv)
-        library(lattice)
-        library(zoo)
-        
-        #extract variables of interest
-        if (type == "wd") vars &lt;- c("date", pollutant, "wd")
-        if (type == "ws") vars &lt;- c("date", pollutant, "ws")
-        if (type == "site") vars &lt;- c("date", pollutant, "site")
-        if (type != "wd" &amp; type != "ws" &amp; type != "site") vars &lt;- c("date", pollutant)
-        
-        mydata &lt;- mydata[, vars]
-        mydata &lt;- mydata[order(mydata$date), ]
-        
-        ##cut wd into 8 (0-45 deg etc.)##############################################
-        if (type == "default") mydata$wd.cut &lt;- "All data"
+# trend plot for nox
+smooth.trend(mydata, pollutant = "nox")
 
-        if (type == "hour") mydata$wd.cut &lt;- format(mydata$date, "%H")
-        
-        if (type == "month") {mydata$wd.cut &lt;- format(mydata$date, "%B")
-                period &lt;- "annual"} #does not make sense otherwise
-        
-        if (type == "weekday") mydata$wd.cut &lt;- format(mydata$date, "%A")
-        
-        if (type == "wd") {
-                
-                mydata$wd.cut &lt;- cut(mydata$wd, breaks = seq(22.5, 382.5, 45), 
-                                labels =c("NE", "E", "SE", "S", "SW", "W", "NW", "N"))
-                mydata$wd.cut[is.na(mydata$wd.cut)] &lt;- "N" # for wd &lt; 22.5
-                mydata$wd.cut &lt;- ordered(mydata$wd.cut, levels = c("NW", "N", "NE", 
-                                                "W", "E", "SW", "S", "SE"))}
-        
-        if (type == "ws") mydata$wd.cut &lt;- cut(mydata$ws, breaks = 
-                                                quantile(mydata$ws, probs = 0:8/8, na.rm = TRUE))
-        
-        if (type == "site") mydata$wd.cut &lt;- mydata$site
-        ############################################################################
-        
-        #sometimes data have long trailing NAs, so start and end at first and last data
-        min.idx &lt;- min(which(!is.na(mydata[, pollutant])))
-        max.idx &lt;- max(which(!is.na(mydata[, pollutant])))      
-        mydata &lt;- mydata[min.idx:max.idx, ]
-        
-        #for overall data and graph plotting
-        start.year &lt;- as.numeric(format(mydata$date[1], "%Y"))
-        end.year &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-        start.month &lt;- as.numeric(format(mydata$date[1], "%m"))
-        end.month &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
-        
-        process.cond &lt;- function(mydata) {              
-                
-                # sometimes data have long trailing NAs, so start and end at 
-                # first and last data
-                min.idx &lt;- min(which(!is.na(mydata[, pollutant])))
-                max.idx &lt;- max(which(!is.na(mydata[, pollutant])))      
-                mydata &lt;- mydata[min.idx:max.idx, ]
-                
-                # these subsets may have different dates to overall
-                start.year &lt;- as.numeric(format(mydata$date[1], "%Y"))
-                end.year &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-                start.month &lt;- as.numeric(format(mydata$date[1], "%m"))
-                end.month &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
-                
-                wd.cut = as.character(unique(na.omit(mydata$wd.cut)))
-                
-                #use this to make sure all dates are present, even when data are missing
-                all.dates &lt;- data.frame(date = seq(
-                                                as.Date(ISOdate(start.year, start.month, 1)), 
-                                                as.Date(ISOdate(end.year, end.month, 1)), 
-                                                by = "months"))
-                
-                means &lt;- tapply(mydata[, pollutant], format(mydata$date, "%Y-%m"), 
-                                mean, na.rm = TRUE)
-                
-                #actual dates in data
-                dates &lt;- as.Date(paste(names(means), "-01", sep = ""))
-                mydata &lt;- data.frame(dates = dates, means = as.vector(means))
-                
-                mydata &lt;- merge(mydata, all.dates, by.x = "dates", by.y = "date", 
-                                all.y = TRUE)
-                
-                #dates as numeric for GAM fitting
-                dates &lt;- seq((start.year + (start.month - 1)/12), 
-                                (end.year + (end.month - 1)/12), by = 1/12)
-                
-                mydata$date &lt;- dates
-                
-                #can't deseason less than 2 years of data
-                if (nrow(mydata) &lt; 24) deseason &lt;- FALSE
-                
-                if (deseason) {
-                        #interpolate missing data using zoo
-                        mydata$means &lt;- na.approx(mydata$means)
-                        
-                        myts &lt;- ts(mydata$means, start = c(start.year, start.month),
-                                        end = c(end.year, end.month), frequency = 12)
-                        
-                        ssd &lt;- stl(myts, s.window = 35, robust = FALSE, s.degree = 0)
-                        
-                        deseas &lt;- ssd$time.series[, "trend"] + ssd$time.series[, "remainder"]
-                        deseas &lt;- as.vector(deseas)
-                        
-                        results &lt;- data.frame(date = dates, conc = as.vector(deseas),
-                                        wd.cut = wd.cut)
-                        
-                } else {
-                        
-                        results &lt;- data.frame(date = dates, conc = mydata$means,
-                                        wd.cut = wd.cut)
-                        
-                }
-                
-                if (!simulate) {  #just plot the data   
-                        mod &lt;- gam(conc ~ s(date), data = results)
-                        pred &lt;- predict(mod, results, se = TRUE)
-                        
-                        results &lt;- cbind(results, pred = pred$fit, 
-                                        lower = pred$fit - 2 * pred$se.fit, 
-                                        upper = pred$fit + 2 * pred$se.fit)
-                        
-                } else {
-                        
-                        sam.size = nrow(results)
-                        boot.pred &lt;- matrix(nrow = sam.size, ncol = n)
-                        
-                        print ("Taking bootstrap samples. Please wait...")
-                        
-                        #set up bootstrap
-                        block.length &lt;- 1
-                        if (autocor) block.length &lt;- round(sam.size^(1/3))
-                        index &lt;- samp.boot.block(sam.size, n, block.length)
-                        
-                        #predict first
-                        mod &lt;- gam(conc ~ s(date, bs = "tp"), data = results)
-                        residuals &lt;- residuals(mod) #residuals of the model
-                        pred.input &lt;- predict(mod, results)
-                        
-                        for (i in 1:n) {
-                                #make new data
-                                new.data &lt;- data.frame(date = results$date, conc = pred.input + 
-                                                                residuals[index[, i]])  
-                                
-                                mod &lt;- gam(conc ~ s(date, bs = "tp"), data = new.data)
-                                pred &lt;- predict(mod, new.data)
-                                boot.pred[, i] &lt;- pred
-                                
-                        }    
-                        
-                        #calculate percentiles
-                        percentiles &lt;- apply(boot.pred, 1, function(x) 
-                                                quantile(x, probs = c(0.025, 0.975)))
-                        
-                        results &lt;- cbind(results, pred = rowMeans(boot.pred), 
-                                        lower = percentiles[1, ], 
-                                        upper = percentiles[2, ])
-                        
-                }       
-                results 
-        }
-        
-        split.data &lt;- split(mydata, mydata$wd.cut)
-        split.data &lt;- lapply(split.data, function(x) process.cond(x))
-        split.data &lt;- do.call(rbind, split.data)
-        
-        #define the levels for plotting
-        if (type == "default") {
-                
-                layout = c(1, 1)
-        }
-        if (type == "wd") {
-                
-                layout = c(3, 3)
-                
-        }
-        
-        if (type == "hour") {
-                levels(split.data$wd.cut) &lt;- paste("hour = ", 0:23)
-                
-                layout = c(6, 4)
-        }
-        
-        if (type == "weekday") {
-                weekdays &lt;- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-                                "Saturday", "Sunday")
-                
-                split.data$wd.cut &lt;- ordered(split.data$wd.cut, levels = weekdays)
-                
-                layout = c(3, 3)
-        }
-        
-        if (type == "ws"){
-                ws.levels = levels(split.data$wd.cut)
-                ws.levels &lt;- gsub("[[]", "", ws.levels)
-                ws.levels &lt;- gsub("[]]", "", ws.levels)
-                ws.levels &lt;- gsub("[(]", "", ws.levels)
-                ws.levels &lt;- gsub("[)]", "", ws.levels)
-                ws.levels &lt;- gsub("[,]", " to ", ws.levels)
-                levels(split.data$wd.cut) = ws.levels
-                
-                layout = c(4, 2)
-                
-        }
-        
-        if (type == "site") {
-                
-                N &lt;- length(unique(as.character(mydata$site)))
-                if (N == 2) layout &lt;- c(2, 1)
-                if (N &gt; 2) layout &lt;- c(ceiling(sqrt(N)), ceiling(sqrt(N)))
-        }
-        
-        strip &lt;- TRUE
-        skip &lt;- FALSE
-        if (type == "default")  strip = FALSE #remove strip
-        if (type == "wd") skip &lt;-  c(F, F, F, F, T, F, F, F, F)
-        
-        xyplot(conc ~ date | wd.cut, data = split.data, 
-                        as.table = TRUE,
-                        strip = strip,
-                        layout = layout,
-                        skip = skip,
-                        xlab = "year",
-                        ylab = quick.text(ylab, auto.text),
-                        main = quick.text(main, auto.text),
-                        ...,
-                        
-                        panel = function(x, y, subscripts,...) {
-                                x1.pol &lt;- seq(start.year, end.year + 1, by = 2)
-                                x2.pol &lt;- x1.pol + 1
-                                y1.pol &lt;- min(split.data$conc, na.rm = TRUE) - 100
-                                y2.pol &lt;- max(split.data$conc, na.rm = TRUE) + 100
-                                panel.rect(x1.pol, y1.pol, x2.pol, y2.pol, 
-                                                col = "grey95", border = "grey95")
-                                
-                                
-                                x1 &lt;- c(split.data$date[subscripts], rev(split.data$date[subscripts]))
-                                y1 &lt;- c(split.data$lower[subscripts], rev(split.data$upper[subscripts]))
-                                lpolygon(x1, y1, col = "lightpink", border = NA)
-                                llines(split.data$date[subscripts], split.data$pred[subscripts], 
-                                                lwd = 2, col = "red")
-                                
-                                panel.xyplot(x, y, type = "b",...)
-                                
-                        })
-        
-        #invisible(results)    
-  }
+# trend plot by each of 8 wind sectors
+smooth.trend(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
 </pre>
 
 <script Language="JScript">
@@ -405,6 +181,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
 
 </body></html>

@@ -69,23 +69,6 @@ Description of 'comp2'</td></tr>
 
 ...</p>
 
-<h3>Warning</h3>
-
-<p>
-....
-</p>
-
-
-<h3>Note</h3>
-
-<p>
-~~further notes~~ 
-</p>
-<p>
-~Make other sections like Warning with section{Warning }{....} ~
-</p>
-
-
 <h3>Author(s)</h3>
 
 <p>
@@ -106,61 +89,6 @@ Description of 'comp2'</td></tr>
 ~~objects to See Also as <code><a onclick="findlink('utils', 'help.html')" style="text-decoration: underline; color: blue; cursor: hand">help</a></code>, ~~~
 </p>
 
-
-<h3>Examples</h3>
-
-<pre>
-##---- Should be DIRECTLY executable !! ----
-##-- ==&gt;  Define data, use random,
-##--    or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function(mydata, pollutant = "nox", s.wind = 17,...)  {
-    #Does seasonal trend decompostion based on loess smoothing (STL)
-    #NOTE! Currently this procedure will fill missing values by the mean of the whole
-    # time series
-
-    library(lattice)
-    library(latticeExtra)
-    #extract variables of interest
-    vars &lt;- c("date", pollutant)
-    mydata &lt;- mydata[, vars]
-    mydata &lt;- mydata[order(mydata$date), ]
-    #rename pollutant to keep code consistent
-    colnames(mydata)[2] &lt;- "conc"
-
-    means &lt;- tapply(mydata$conc, format(mydata$date,"%Y-%m"), mean, na.rm = TRUE)
-
-    means &lt;- as.vector(means)
-
-    #simple fill of missing data
-    means[which(is.nan(means))] &lt;- mean(means, na.rm = T)
-
-    start.year &lt;- as.numeric(format(mydata$date[1], "%Y"))
-    end.year &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-    start.month &lt;- as.numeric(format(mydata$date[1], "%m"))
-    end.month &lt;- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
-
-    myts &lt;- ts(means, start = c(start.year, start.month),
-        end = c(end.year, end.month), frequency = 12)
-
-    ssd &lt;- stl(myts, s.window = s.wind, robust = TRUE, s.degree = 1)
-
-    stlplot &lt;- xyplot(ssd,
-                xlab = "year",...,
-
-                panel = function(x, y) {
-                panel.abline(v = start.year:end.year, col = "grey85")
-                panel.abline(h = 0, col = "grey85")
-                panel.xyplot(x, y, type = "l")
-                panel.xyplot(x, y, type = "p", cex = 0.2, col = "red")
-                })
-
-    print(stlplot)
-    invisible(ssd)
-  }
-</pre>
-
 <script Language="JScript">
 function findlink(pkg, fn) {
 var Y, link;
@@ -172,6 +100,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
 
 </body></html>

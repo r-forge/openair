@@ -18,11 +18,13 @@ type = "histogram",
 pollutant = "nox",
 period = "year",
 breaks = 20,
-col.trend = "lightgoldenrod1",
+col.trend = "lightgoldenrod2",
 col.data = "lightblue",
 col.mis = rgb(0.65, 0.04, 0.07),
 col.hist = "forestgreen",
-auto.text = TRUE)
+main = "",
+auto.text = TRUE,
+...)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -74,10 +76,14 @@ auto.text = TRUE)
 
 \item{col.hist}{Colour for the histogram or density plot.}
 
+\item{main}{The title of the plot, if required.}
+
 \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format
   pollutant names and units properly e.g.  by subscripting the
   \sQuote{2} in NO2.}
+
+\item{\ldots}{Other graphical parameters.}
 }
 
 \details{

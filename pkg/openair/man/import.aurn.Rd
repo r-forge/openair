@@ -7,26 +7,19 @@
 }
 \usage{
 import.aurn(file,
-file.type = "csv",
 header.at = 5,
 data.at = 7,
-eof.report = NULL,
-data.order = c("value", "status", "unit"),
-na.strings = "NA",
-simplify.names = TRUE,
+na.strings = c("No data", "", "NA"),
 date.name = "Date",
- date.break = "-",
-date.order = "dmy",
+date.break = "-",
 time.name = "time",
-time.break = ":",
-time.order = "hm",
-time.format = "GMT",
-is.ws = NULL,
-is.wd = NULL,
-misc.info = c(1, 2, 3, 4),
-site.id = 4,
+ misc.info = c(1, 2, 3, 4),
+is.site = 4,
 bad.24 = TRUE,
-correct.time = -3600)
+correct.time = -3600,
+output = "final",
+data.order = c("value", "status", "unit"),
+simplify.names = TRUE, ...)
 }
 
 %- maybe also 'usages' for other objects documented here.
@@ -35,9 +28,6 @@ correct.time = -3600)
     read.table(utils) also allows this to be a readable text-mode
     connection or url (although these options are currently not fully
   tested). }
-
-  \item{file.type}{ The file format, defaults to common AURN "csv"
-    (comma delimited) format, but also allows "txt" (tab delimited). }
 
   \item{header.at}{ The file row holding header information. This is
   used to set names for the resulting imported data frame, but may be
@@ -49,73 +39,51 @@ correct.time = -3600)
   before this row, and attempt to include all data from this row
   onwards. }
 
-  \item{eof.report}{ An end of file marker. When genearating the data
-  frame, the function will ignore all information after eof.report is
-  encountered. The default setting (NULL) turns this argument off. }
+\item{na.strings}{ Strings of any terms that are to be interpreted as
+  NA values within the file. }
 
-  \item{data.order}{ A vector of names defining the type of order of
-  data types. AURN files typically include three data types, actual data
-  and associated data quality and measurement unit reports. Here, these
-  are defined as "value", "status" and "unit", respectively. }
-
-  \item{na.strings}{ Strings of any terms that are to be interpreted as
-    NA values within the file. }
-
-  \item{simplify.names}{ A logical prompting the function to try to
-  simply data frame names using common chemical shorthand
-  (TRUE/FALSE). FALSE retains names from file, although these may be
-  modified if not unique. }
-
-  \item{date.name}{ Header name of column holding date
+ \item{date.name}{ Header name of column holding date
   information. Combined with time information as single date column in
   the generated data frame. }
 
-  \item{date.break}{ The break character separating days, months and
-    years in date information. For example, "-" in "01-01-2009". }
+\item{date.break}{ The break character separating days, months and
+  years in date information. For example, "-" in "01-01-2009". }
 
-  \item{date.order}{ The order of date information, using d for days, m
-  for months and y for years. So, "dmy" or "mdy" for common UK and US
-  logger date stamp formats, but allows any logical combination ("y",
-  "ymd", etc). }
-
-  \item{time.name}{ Header name of column holding time
+\item{time.name}{ Header name of column holding time
   information. Combined with date information as single date column in
   the generated data frame. }
 
-  \item{time.break}{ The break character separating hours, minutes and
-    seconds in time information. For example, ":" in "12:00:00". }
-
-  \item{time.order}{ The order of time information, using h for hours, m
-  for minutes and s for seconds. The argument allows any logical
-  combination ("hm", "hms", etc). }
-
-  \item{time.format}{ The time format the data was logged in, "GMT"
-  (default), "UTC", etc. See as.POSIX* functions for further
-  information. }
-
-  \item{is.ws}{ Header name of column holding wind speed
-    information. Default NULL turns this option off. }
-
-  \item{is.wd}{ Header name of column holding wind strength
-    information. Default NULL turns this option off. }
-
-  \item{misc.info}{ Row numbers of any additional information that may
+\item{misc.info}{ Row numbers of any additional information that may
   be required from the original file. Each line retained as a character
   vector in the generated data frame comment. }
 
-  \item{site.id}{ Row holding site name or identification. The function
-  uses this information to generate a site column, which allows data
-  from two or more sites to be combined in a single data frame. }
+\item{is.site}{ Header name of column holding site
+  information. Default NULL turns this option off. }
 
-  \item{bad.24}{ Reset AURN 24 time stamp. AURN time series are logged
+\item{bad.24}{ Reset AURN 24 time stamp. AURN time series are logged
   as 00:00:01 to 24:00:00 as opposed to the more conventional 00:00:00
   to 23:59:59. bad.24 = TRUE resets the time stamp which is not allowed
   in some time series classes or functions.}
 
-  \item{correct.time}{ Numerical correction (in seconds) for imported
+\item{correct.time}{ Numerical correction (in seconds) for imported
   date. AURN data is logged retrospectively. For 1 hour average data,
   correct.time = -3600 resets this to the start of the sampling
   period. }
+
+\item{output}{set to "final".}
+
+\item{data.order}{ A vector of names defining the type of order of
+  data types. AURN files typically include three data types, actual data
+  and associated data quality and measurement unit reports. Here, these
+  are defined as "value", "status" and "unit", respectively. }
+
+\item{simplify.names}{ A logical prompting the function to try to
+  simply data frame names using common chemical shorthand
+  (TRUE/FALSE). FALSE retains names from file, although these may be
+  modified if not unique. }
+
+\item{ldots}{Other parameters - not used currently.}
+
 
 } \details{ The import.aurn() function was developed for use with air
 quality monitoring site data files, downloaded in standard hourly (or 1
@@ -146,9 +114,9 @@ adjustments (as set in''bad.24' and 'correct.time') will be retained in
 the data frame comment.  }
 
 \author{ Karl Ropkins }
-\note{
+
 \section{Warning }{The import.aurn() function is currently released as a
-  test version.} ~ }
+  test version.}
 
 \examples{
 
@@ -162,13 +130,13 @@ the data frame comment.  }
 #example file "AirQualityDataHourly.csv" Brighton Roadside and Brighton Preston Park 2008.
 
 #import data as mydata
-mydata <- import.aurn("AirQualityDataHourly.csv")
+## mydata <- import.aurn("AirQualityDataHourly.csv")
 
 #read additional information retained by import.aurn
-comment(mydata)
+## comment(mydata)
 
 #analysis data by site
-boxplot(nox ~ site, data = mydata)
+## boxplot(nox ~ site, data = mydata)
 
 ##########
 #example 2
@@ -176,11 +144,11 @@ boxplot(nox ~ site, data = mydata)
 #example using data from url
 
 #import data as otherdata
-otherdata <- import.aurn(
-  "http://www.airquality.co.uk/archive/data_files/site_data/HG1_2007.csv")
+## otherdata <- import.aurn(
+##  "http://www.airquality.co.uk/archive/data_files/site_data/HG1_2007.csv")
 
 #use openair function
-summarise(otherdata)
+## summarise(otherdata)
 
 ##########
 #example 3
@@ -188,29 +156,29 @@ summarise(otherdata)
 #example of importing other similar data formats
 
 #import 15 min average so2 data from Bexley using url
-so2.15min.data <- import.aurn(
-  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv",
-  correct.time = -900)
+## so2.15min.data <- import.aurn(
+##  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv",
+##  correct.time = -900)
 
 #note: correct.time amended for 15 min offset/correction.
 
 #additional comments
-comment(so2.15min.data)
+## comment(so2.15min.data)
 
 #analysis
-diurnal.error(so2.15min.data, pollutant="so2")
+## diurnal.error(so2.15min.data, pollutant="so2")
 
 #wrapper for above
 ##(e.g. if you have to do this -or similar- a lot of time)
-import.aurn.wrapper <- function(file, correct.time = -900, ...)
-  { import.aurn(file = file, correct.time = correct.time, ...) }
+## import.aurn.wrapper <- function(file, correct.time = -900, ...)
+##  { import.aurn(file = file, correct.time = correct.time, ...) }
 
 #same as above
-so2.15min.data.again <- import.aurn.wrapper(
-  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv")
+## so2.15min.data.again <- import.aurn.wrapper(
+##  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv")
 
 #analysis
-diurnal.error(so2.15min.data.again, pollutant="so2")
+## diurnal.error(so2.15min.data.again, pollutant="so2")
 
 }
 \keyword{methods}

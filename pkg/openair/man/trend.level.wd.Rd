@@ -17,7 +17,7 @@ trend.level.wd(mydata, pollutant = "nox", limits = c(0, 100), statistic = "mean"
   \item{cols}{ ~~Describe \code{cols} here~~ }
   \item{main}{ ~~Describe \code{main} here~~ }
   \item{auto.text}{ ~~Describe \code{auto.text} here~~ }
-  \item{\dots}{ ~~Describe \code{\dots} here~~ }
+  \item{...}{ ~~Describe \code{\dots} here~~ }
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -31,10 +31,10 @@ trend.level.wd(mydata, pollutant = "nox", limits = c(0, 100), statistic = "mean"
 }
 \references{ ~put references to the literature/web site here ~ }
 \author{ ~~who you are~~ }
-\note{ ~~further notes~~
+%\note{ ~~further notes~~
 
- ~Make other sections like Warning with \section{Warning }{....} ~
-}
+% ~Make other sections like Warning with \section{Warning }{....} ~
+%}
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 %\examples{}
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -157,7 +157,7 @@ time.plot(mydata, pollutant = c("nox", "no2"), group = TRUE, normalise =
 time.plot(select.by.date(mydata, year = 1999), pollutant = "nox")
 
 # select specific date range for two pollutants
-time.plot(select.by.date(mydata, start "6/8/2003", end = "13/8/2003"),
+time.plot(select.by.date(mydata, start = "6/8/2003", end = "13/8/2003"),
 pollutant = c("no2", "o3"))
 
 # choose different line styles etc

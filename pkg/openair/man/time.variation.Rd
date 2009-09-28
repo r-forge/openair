@@ -7,7 +7,7 @@
   typically pollutant concentrations. Three separate plots are produced.
 }
 \usage{
-diurnal.error(mydata,
+time.variation(mydata,
 pollutant = "nox",
 local.time = FALSE,
 normalise = FALSE,
@@ -15,7 +15,7 @@ ylab = pollutant,
 name.pol = pollutant,
 type = "default",
 ci = TRUE,
-theme = "bw",
+cols = "hue",
 main = "",
 key = NULL,
 auto.text = TRUE,
@@ -36,7 +36,7 @@ alpha = 0.4,...)
     default is \code{FALSE}. Emissions activity tends to occur at local
     time e.g. rush hour is at 8 am every day. When the clocks go forward
     in spring, the emissions are effectively released into the
-    atmosphere at GMT – 1 hour during the summer. When plotting
+    atmosphere at GMT - 1 hour during the summer. When plotting
     diurnal profiles, this has the effect of "smearing-out" the
     concentrations. Sometimes, a better approach is to express time as
     local time, which here is defined as BST (British Summer Time). This

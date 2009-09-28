@@ -1,4 +1,4 @@
-<html><head><title>~~function to do ... ~~</title>
+<html><head><title>Polar percentile plots</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="Rchm.css">
 </head>
@@ -6,24 +6,34 @@
 
 <table width="100%"><tr><td>polar.percentile(openair)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
 <param name="keyword" value="R:   polar.percentile">
-<param name="keyword" value=" ~~function to do ... ~~">
+<param name="keyword" value=" Polar percentile plots">
 </object>
 
 
-<h2>~~function to do ... ~~</h2>
+<h2>Polar percentile plots</h2>
 
 
 <h3>Description</h3>
 
 <p>
-~~ A concise (1-5 lines) description of what the function does. ~~
+Shows the concentration of a pollutant in polar coordinates and
+information the percentiles.
 </p>
 
 
 <h3>Usage</h3>
 
 <pre>
-polar.percentile(polar, pollutant = "", type = "ws", limits = c(0, 100), per = c(50, 95), cols = "default", auto.smooth = TRUE, k = 10, main = "", auto.text = TRUE, ...)
+polar.percentile(polar,
+pollutant = "",
+type = "ws",
+limits = c(0, 100),
+per = c(50, 95),
+cols = "default",
+auto.smooth = TRUE,
+k = 10,
+main = "",
+auto.text = TRUE, ...)
 </pre>
 
 
@@ -32,22 +42,31 @@ polar.percentile(polar, pollutant = "", type = "ws", limits = c(0, 100), per = c
 <table summary="R argblock">
 <tr valign="top"><td><code>polar</code></td>
 <td>
-~~Describe <code>polar</code> here~~ </td></tr>
+Mandatory. The user must supply a data frame with fields
+including <code>date</code>, <code>pollutant, ws</code> and <code>wd</code>.</td></tr>
 <tr valign="top"><td><code>pollutant</code></td>
 <td>
-~~Describe <code>pollutant</code> here~~ </td></tr>
+Mandatory. A pollutant name corresponding to a
+variable in a data frame should be supplied e.g. <code>pollutant =
+      "nox"</code></td></tr>
 <tr valign="top"><td><code>type</code></td>
 <td>
-~~Describe <code>type</code> here~~ </td></tr>
+The type can be "ws" (default) "year" or "month", for
+plotting by wind speed ranges, year and by month of year. The choice of
+year is useful for examining trends and plotting by month can indicate
+seasonal influences.</td></tr>
 <tr valign="top"><td><code>limits</code></td>
 <td>
 ~~Describe <code>limits</code> here~~ </td></tr>
 <tr valign="top"><td><code>per</code></td>
 <td>
-~~Describe <code>per</code> here~~ </td></tr>
+The user can provide overall percentile values to
+plot. This is is the form c(50, 95) e.g. to consider the 50th and
+95th percentiles.</td></tr>
 <tr valign="top"><td><code>cols</code></td>
 <td>
-~~Describe <code>cols</code> here~~ </td></tr>
+Colours to be used for plotting. Options include
+"default", "increment", "heat", "spectral" and user defined.</td></tr>
 <tr valign="top"><td><code>auto.smooth</code></td>
 <td>
 ~~Describe <code>auto.smooth</code> here~~ </td></tr>
@@ -90,27 +109,10 @@ Description of 'comp2'</td></tr>
 
 ...</p>
 
-<h3>Warning</h3>
-
-<p>
-....
-</p>
-
-
-<h3>Note</h3>
-
-<p>
-~~further notes~~ 
-</p>
-<p>
-~Make other sections like Warning with section{Warning }{....} ~
-</p>
-
-
 <h3>Author(s)</h3>
 
 <p>
-~~who you are~~
+David Carslaw
 </p>
 
 
@@ -127,193 +129,6 @@ Description of 'comp2'</td></tr>
 ~~objects to See Also as <code><a onclick="findlink('utils', 'help.html')" style="text-decoration: underline; color: blue; cursor: hand">help</a></code>, ~~~
 </p>
 
-
-<h3>Examples</h3>
-
-<pre>
-##---- Should be DIRECTLY executable !! ----
-##-- ==&gt;  Define data, use random,
-##--    or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function(polar,
-                pollutant = "",
-                type = "ws",
-                limits = c(0, 100),
-                per = c(50, 95),
-                cols = "default",
-                auto.smooth = TRUE,
-                k = 10,
-                main = "",
-                auto.text = TRUE,...) {
-        
-        #needs access to these packages
-        library(mgcv)    #for smoothing surfaces and removing noise
-        library(lattice) #basic plotting
-        
-        #extract variables of interest
-        
-        vars &lt;- c("wd", "date", "ws", pollutant)
-        polar &lt;- polar[, vars]
-        polar &lt;- polar[order(polar$date), ]
-        polar &lt;- na.omit(polar)
-        
-        polar$wd[polar$wd == 0] &lt;- 360
-        
-        #round wd to make processing obvious
-        polar$wd[polar$wd == 0] &lt;- NA
-        polar$wd &lt;- 10 * round(polar$wd/10)
-        polar$wd[polar$wd == 0] &lt;- 360   # angles &lt;5 should be in 360 bin
-        
-        
-        percentile &lt;- seq(0, 100, length = 30) #for percentiles
-        
-        wd &lt;- seq(from = 10, to = 360, by = 10) #wind directions from 10 to 360
-        ws.wd &lt;- expand.grid(percentile = percentile, wd = wd)
-        u &lt;- ws.wd$percentile * sin(pi * ws.wd$wd / 180) #convert to polar coords
-        v &lt;- ws.wd$percentile * cos(pi * ws.wd$wd / 180)
-        
-        #data to predict over
-        input.data &lt;- expand.grid(u = seq(-100, 100, length = 100),
-                        v = seq(-100, 100, length = 100))
-        
-        prepare.grid &lt;- function(polar) {
-                #identify which ws and wd bins the data belong
-                wd &lt;- cut(polar$wd, breaks = seq(0, 360, 10), include.lowest = TRUE)
-                binned &lt;- sapply(split(polar[, pollutant], wd), function(x)
-                                        quantile(x, probs= seq(0, 1, length = 30)^.5, na.rm = TRUE))
-                binned &lt;- as.vector(binned)
-                
-                ######################Smoothing#################################################
-                
-                #run GAM to make a smooth surface
-                
-                if (auto.smooth == TRUE) {
-                        Mgam &lt;- gam(binned ^ 0.5 ~ te(u, v))
-                } else {
-                        Mgam &lt;- gam(binned ^ 0.5 ~ s(u, v, k = k))
-                }
-                pred &lt;- predict.gam(Mgam, input.data)
-                pred &lt;- pred ^ 2
-                pred
-        }
-        
-        #############################################################################
-        if (type == "ws") {
-                #cut data into 8 intervals with same number of points
-                polar$cond &lt;- cut(polar$ws, quantile(polar$ws, probs = seq(0, 1, length = 9),
-                                                na.rm = TRUE), include.lowest = TRUE, labels = FALSE)
-                
-                ws.levels &lt;- levels(cut(polar$ws, quantile(polar$ws, probs =
-                                                                                seq(0, 1, length = 9), na.rm = TRUE), include.lowest = TRUE))
-        }
-        
-        if (type == "year") {
-                polar$cond &lt;- cut(polar$date, "year", labels = FALSE)
-        }
-        
-        if (type == "month") {
-                polar$cond &lt;- as.numeric(format(polar$date, "%m"))
-        }
-        
-        results.grid &lt;- data.frame(u = NULL, v = NULL, z = NULL, cond = NULL)
-        polar &lt;- na.omit(polar)
-        
-        for (i in unique(polar$cond))
-        {
-                pred &lt;- prepare.grid(subset(polar, cond == i))
-                pred &lt;- cbind(u = input.data$u, v = input.data$v, z = pred, cond = i)
-                results.grid &lt;- rbind(results.grid, pred)
-        }
-        
-        if (type == "ws") {  #better labelling of strips
-                results.grid$cond &lt;- as.factor(results.grid$cond)
-                ws.levels &lt;- gsub("[[]", "", ws.levels)
-                ws.levels &lt;- gsub("[]]", "", ws.levels)
-                ws.levels &lt;- gsub("[(]", "", ws.levels)
-                ws.levels &lt;- gsub("[)]", "", ws.levels)
-                ws.levels &lt;- gsub("[,]", " to ", ws.levels)
-                levels(results.grid$cond) = ws.levels
-        }
-        
-        if (type == "year") {
-                results.grid$cond &lt;- as.factor(results.grid$cond)
-                levels(results.grid$cond) = unique(format(polar$date, "%Y"))
-        }
-        
-        if (type == "month") {
-                results.grid$cond &lt;- as.factor(results.grid$cond)
-                levels(results.grid$cond) = month.name
-        }
-        
-        #remove points to make a circle
-        results.grid$z[(results.grid$u^2 + results.grid$v^2)^.5 &gt; 100] &lt;- NA
-        
-        #auto-scaling
-        nlev = 200  #preferred number of intervals
-        #handle missing breaks arguments
-        if(missing(limits))
-        {
-                breaks = unique(c(0, pretty(results.grid$z^0.5, nlev)))
-                br = pretty((results.grid$z), n = 10)
-        } else {
-                breaks = pretty(limits^0.5, n = nlev)
-                br = pretty(limits, n = 10)
-        }
-        
-        nlev2 = length(breaks)
-        
-        col &lt;- open.colours(cols, (nlev2 - 1))  
-        
-        col.scale &lt;- breaks
-        
-        contourplot((z)^.5 ~ u * v | cond, results.grid,
-                        as.table = TRUE,
-                        main = quick.text(main, auto.text),
-                        axes = FALSE,
-                        col.regions = col, region = TRUE,
-                        aspect = 1,
-                        at = col.scale,
-                        xlab = "", ylab = "",
-                        scales = list(draw = FALSE),
-                        colorkey = list(labels = list(at = br^0.5, labels = br)),
-                        xlim = c(-120, 120), ylim =c(-120, 120),...,
-                        
-                        panel = function(x, y, z,subscripts,...) {
-                                panel.levelplot(x, y, z, subscripts, at = col.scale,
-                                                col.regions = col)
-                                
-                                panel.contourplot(x, y, z, subscripts,
-                                                at = (quantile(polar[, pollutant], probs = per / 100, na.rm = TRUE))^0.5,
-                                                contour = TRUE, region = FALSE,
-                                                labels = list(labels = as.character(per), cex = 0.6),
-                                                col = "magenta")
-                                
-                                #add axis line to central polar plot
-                                llines(c(-100, 100), c(0, 0),
-                                                col = "grey20")
-                                llines(c(0, 0), c(-100, 100),
-                                                col = "grey20")
-                                
-                                lsegments(c(-90, -25, 25, 90),
-                                                rep(-5, 4),
-                                                c(-90, -25, 25, 90),
-                                                rep(5, 4), col = "grey20")
-                                lsegments(rep(-5, 4),
-                                                c(-90, -25, 25, 90),
-                                                rep(5, 4),
-                                                c(-90, -25, 25, 90), col = "grey20")
-                                
-                                # text for directions
-                                ltext(-100 - 10, 0, "W")
-                                ltext(0, -100 - 10, "S")
-                                ltext(0, 100 + 10, "N")
-                                ltext(100 + 10, 0, "E")
-                        })
-        
-  }
-</pre>
-
 <script Language="JScript">
 function findlink(pkg, fn) {
 var Y, link;
@@ -325,6 +140,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
 
 </body></html>

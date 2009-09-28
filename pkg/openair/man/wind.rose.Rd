@@ -21,7 +21,7 @@ auto.text = TRUE,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{polar}{A data frame containing fields \code{ws} and \ws{wd}}
+  \item{polar}{A data frame containing fields \code{ws} and \code{wd}}
 
   \item{ws.int}{Wind speed interval. Default is 2 m/s but for low met
   masts with low mean wind speeds a value of 1 or 0.5 m/s may be
@@ -48,6 +48,9 @@ auto.text = TRUE,
 
 \item{width}{Adjustment factor for width of wind speed intervals. For
   example, \code{width = 1.5} will make the width 1.5 times wider.}
+
+\item{units}{Controls the units shown on the scale e.g. \code{units =
+"knots"}.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format

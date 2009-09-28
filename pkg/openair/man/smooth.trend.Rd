@@ -15,6 +15,8 @@ n = 200,
 autocor = FALSE,
 ylab = pollutant,
 main = "",
+ci = FALSE,
+alpha = 0.2,
 auto.text = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -62,6 +64,12 @@ estimate sometimes by a large amount.}
   \item{ylab}{y-axis label.}
 
   \item{main}{Title of plot, if required.}
+
+   \item{ci}{Should confidence intervals be plotted? The default is
+     \code{FALSE}.}
+
+   \item{alpha}{The alpha transparency of shaded confidence intervals -
+   if plotted. A value of 0 is fully transparent and 1 is fully opaque.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format

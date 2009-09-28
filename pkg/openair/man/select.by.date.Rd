@@ -35,7 +35,7 @@ year = 2008, month = 1, day = "weekday", hour = 1)
   be in lower or upper case. Also accepts "weekday" (Monday - Friday)
   and "weekend" for convenience.}
 
-\item{year}{An hour or hours to select from 0-23 e.g. \code{hour = 0:12} to
+\item{hour}{An hour or hours to select from 0-23 e.g. \code{hour = 0:12} to
   select hours 0 to 12 inclusive.}
 
 }

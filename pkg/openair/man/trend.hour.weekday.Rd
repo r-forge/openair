@@ -32,10 +32,10 @@ trend.hour.weekday(mydata, pollutant = "nox", limits = c(0, 100), line.colour = 
 }
 \references{ ~put references to the literature/web site here ~ }
 \author{ ~~who you are~~ }
-\note{ ~~further notes~~
+%\note{ ~~further notes~~
 
- ~Make other sections like Warning with \section{Warning }{....} ~
-}
+% ~Make other sections like Warning with \section{Warning }{....} ~
+%}
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 %\examples{}
 % Add one or more standard keywords, see file 'KEYWORDS' in the

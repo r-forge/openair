@@ -170,22 +170,22 @@ columns following the 'co' column will be automatically renamed
 'unit.co' and 'status.co', respectively.  }
 \author{ Karl Ropkins }
 
-\note{ \section{Warning }{The import.aurn() function is currently
-released as a test version.} ~ }
+\section{Warning }{The import.aurn() function is currently
+released as a test version.}
 
 \seealso{See \code{\link{import}} and \code{\link{import.LAQN}}.}
 \examples{
 
 ##########
-#example 1
+# example 1
 ##########
-#data obtained from http://www.openair-project.org
+# data obtained from http://www.openair-project.org
 
 #import data as mydata
-mydata <- import("example data long.csv")
+## mydata <- import("example data long.csv")
 
 #use openair function
-polar.plot(mydata, pollutant="nox")
+## polar.plot(mydata, pollutant="nox")
 
 ##########
 #example 2
@@ -197,13 +197,13 @@ polar.plot(mydata, pollutant="nox")
 #example file "AirQualityDataHourly.csv" Brighton Roadside and Brighton Preston Park 2008.
 
 #import data as mydata
-mydata <- import.aurn("AirQualityDataHourly.csv")
+## mydata <- import.aurn("AirQualityDataHourly.csv")
 
 #read additional information retained by import.aurn
-comment(mydata)
+## comment(mydata)
 
 #analysis data by site using R
-boxplot(nox ~ site, data = mydata)
+## boxplot(nox ~ site, data = mydata)
 
 ##########
 #example 3
@@ -211,11 +211,11 @@ boxplot(nox ~ site, data = mydata)
 #example using data from url
 
 #import data as otherdata
-otherdata <- import.aurn(
-  "http://www.airquality.co.uk/archive/data_files/site_data/HG1_2007.csv")
+## otherdata <- import.aurn(
+##   "http://www.airquality.co.uk/archive/data_files/site_data/HG1_2007.csv")
 
 #use openair function
-summarise(otherdata)
+## summarise(otherdata)
 
 ##########
 #example 4
@@ -223,29 +223,29 @@ summarise(otherdata)
 #example of importing other similar data formats
 
 #import 15 min average so2 data from Bexley using url
-so2.15min.data <- import.aurn(
-  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv",
-  correct.time = -900)
+## so2.15min.data <- import.aurn(
+##   "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv",
+##  correct.time = -900)
 
 #note: correct.time amended for 15 min offset/correction.
 
 #additional comments
-comment(so2.15min.data)
+## comment(so2.15min.data)
 
 #analysis
-diurnal.error(so2.15min.data, pollutant="so2")
+## diurnal.error(so2.15min.data, pollutant="so2")
 
 #wrapper for above
 ##(e.g. if you have to do this -or similar- a lot of time)
-import.aurn.wrapper <- function(file = file.choose(), correct.time = -900, ...)
-  { import.aurn(file = file, correct.time = correct.time, ...) }
+## import.aurn.wrapper <- function(file = file.choose(), correct.time = -900, ...)
+##   { import.aurn(file = file, correct.time = correct.time, ...) }
 
 #same as above
-so2.15min.data.again <- import.aurn.wrapper(
-  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv")
+## so2.15min.data.again <- import.aurn.wrapper(
+##  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv")
 
 #analysis
-diurnal.error(so2.15min.data.again, pollutant="so2")
+## diurnal.error(so2.15min.data.again, pollutant="so2")
 
 }
 \keyword{methods}

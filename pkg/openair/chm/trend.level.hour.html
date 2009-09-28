@@ -81,23 +81,6 @@ Description of 'comp2'</td></tr>
 
 ...</p>
 
-<h3>Warning</h3>
-
-<p>
-....
-</p>
-
-
-<h3>Note</h3>
-
-<p>
-~~further notes~~ 
-</p>
-<p>
-~Make other sections like Warning with section{Warning }{....} ~
-</p>
-
-
 <h3>Author(s)</h3>
 
 <p>
@@ -118,95 +101,6 @@ Description of 'comp2'</td></tr>
 ~~objects to See Also as <code><a onclick="findlink('utils', 'help.html')" style="text-decoration: underline; color: blue; cursor: hand">help</a></code>, ~~~
 </p>
 
-
-<h3>Examples</h3>
-
-<pre>
-##---- Should be DIRECTLY executable !! ----
-##-- ==&gt;  Define data, use random,
-##--    or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function(mydata,
-                pollutant = "nox",
-                limits = c(0, 100),
-                statistic = "mean",
-                cols = "default",
-                                main = "",
-                                auto.text = TRUE,...) {
-
-    library(lattice)
-    library(Hmisc)
-  
-
-    #extract variables of interest
-    vars &lt;- c("date", "wd", pollutant)
-    mydata &lt;- mydata[, vars]
-    mydata &lt;- mydata[order(mydata$date), ]
-
-    ###Function to deal with completly missing data when doing max ############
-    newmax &lt;- function(data) {
-              if (all(is.na(data))) { 
-                  NA
-              } else {
-                  max(data, na.rm = T)
-              }}
-    ###########################################################################
-
-    if (statistic == "mean") {
-          #average by year/month/wd
-          means &lt;- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
-             format(mydata$date, "%H")), mean, na.rm = TRUE)
-    } else {
-          means &lt;- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
-             format(mydata$date, "%H")), newmax)
-    }
-
-    #change the names to a more readable format
-    names(means) &lt;- c("date", "hour", "conc")
-
-    #need to get into year/month/day
-    newdate &lt;- as.character(means$date)
-    newdate &lt;- paste(newdate,"-01", sep = "")
-    newdate &lt;- as.Date(newdate, format = "%Y-%m-%d")
-    #add to summary
-    means &lt;- cbind(means, newdate)
-
-    month &lt;- as.numeric(format(means$newdate, "%m"))
-    year &lt;- as.factor(format(means$newdate, "%Y"))
-    means$hour &lt;- as.numeric(means$hour)
-    means &lt;- cbind(means, month, year)
-
-    means$conc &lt;- means$conc
-
-    #use user defined or own; own based on distribution, with upper limit
-     if(missing(limits)) {
-                #range between lower and 95th percentile
-                breaks = seq(min(means$conc, na.rm = TRUE),
-                         quantile(means$conc, probs = 0.95, na.rm = TRUE),
-                         length = 100)
-         } else {
-                breaks = seq(limits[1], limits[2], length = 100)
-        }
-    #add max at end
-    breaks = c(breaks, max(means$conc, na.rm = T))
-
-    nlev2 = length(breaks)
-    col.scale = breaks
-
-        col &lt;- open.colours(cols, (nlev2 - 1))
-
-    levelplot(conc ~ month * hour | year,
-            data = means,
-                        main = quick.text(main, auto.text),
-            as.table = TRUE,
-            col.regions = col,
-            at = col.scale,
-            scales = list(x = list(labels = c("Jan", "Apr", "Jul", "Oct"),
-                      at = c(1, 4, 7, 10))),...)
-  }
-</pre>
-
 <script Language="JScript">
 function findlink(pkg, fn) {
 var Y, link;
@@ -218,6 +112,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
 
 </body></html>
