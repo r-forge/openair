@@ -94,7 +94,7 @@ auto.text = TRUE, ...)
   the end of the last year. The purpose is to ensure that the trend plot
   begins and ends at the beginning or end of year.}
 
-\item{force.postive}{The default is \code{TRUE}. Sometimes if
+\item{force.positive}{The default is \code{TRUE}. Sometimes if
   smoothing data with streep gradients it is possible for predicted
   values to be negative. \code{force.positive = TRUE} ensures that
   predictions remain postive. This is useful for several reasons. First,

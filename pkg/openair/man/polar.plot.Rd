@@ -86,7 +86,7 @@ auto.text = TRUE, ...)  }
     and plotting all of them can reduce the useful information in the
     plot. }
 
-  \item{force.postive}{The default is \code{TRUE}. Sometimes if
+  \item{force.positive}{The default is \code{TRUE}. Sometimes if
     smoothing data with streep gradients it is possible for predicted
     values to be negative. \code{force.positive = TRUE} ensures that
     predictions remain postive. This is useful for several reasons. First,
