@@ -189,14 +189,14 @@ data(mydata)
 polar.plot(mydata, pollutant = "nox")
 
 # polar plots by year on same scale
-polar.plot(mydata, pollutant = "so2", type = "year", main = "polar plot of so2")
+\dontrun{polar.plot(mydata, pollutant = "so2", type = "year", main = "polar plot of so2")}
 
 # set minimum number of bins to be used to see if pattern remains similar
 polar.plot(mydata, pollutant = "nox", min.bin = 3)
 
 # plot by day of the week
 
-polar.plot(mydata, pollutant = "pm10", type = "weekday")
+\dontrun{polar.plot(mydata, pollutant = "pm10", type = "weekday")}
 
 }
 

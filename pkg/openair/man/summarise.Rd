@@ -148,16 +148,16 @@ summarise(mydata, percentile = 0.95)
 
 # show missing data where there are at least 96 contiguous missing
 # values (4 days)
-summarise(mydata, na.len = 96)
+\dontrun{summarise(mydata, na.len = 96)}
 
 # show data in green
-summarise(mydata, col.data = "green")
+\dontrun{summarise(mydata, col.data = "green")}
 
 # show missing data in yellow
-summarise(mydata, col.mis = "yellow")
+\dontrun{summarise(mydata, col.mis = "yellow")}
 
 # show density plot line in black
-summarise(mydata, col.dens = "black")
+\dontrun{summarise(mydata, col.dens = "black")}
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
