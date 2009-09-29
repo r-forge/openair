@@ -1,2 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-imports("mgcv", "zoo", "lattice", "boot", "reshape", "plyr", "RColorBrewer","LatticeExtra")
