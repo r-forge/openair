@@ -11,7 +11,7 @@ import.aurn uses rbind (in reshape).  }
 
 \usage{ import(file =
 file.choose(), file.type="csv", header.at = 1, data.at = 2, eof.report =
-NULL, na.strings = c("", "NA"), date.name = "date", date.break = "/",
+NULL, na.strings = c("", "NA"), quote="\"", date.name = "date", date.break = "/",
 date.order = "dmy", time.name = "date", time.break = ":", time.order =
 "hm", time.format ="GMT", is.ws = NULL, is.wd = NULL, is.site = NULL,
 misc.info = NULL, bad.24 = FALSE, correct.time = NULL, output = "final")
@@ -45,6 +45,9 @@ encountered. The default setting (NULL) turns this argument off. }
 
 \item{na.strings}{ Strings of any terms that are to be interpreted as NA
   values within the file. }
+
+\item{quote}{ Strings of any terms imported file may use to represent a character 
+field. }
 
 \item{date.name}{ Header name of column
 holding date information. Combined with time information as single date
