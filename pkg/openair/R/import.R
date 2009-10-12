@@ -2,7 +2,7 @@ import <- function(file = file.choose(),
 file.type="csv",
 header.at = 1, data.at = 2,
 eof.report = NULL,
-na.strings = c("", "NA"),
+na.strings = c("", "NA"), quote="\"", 
 date.name = "date", date.break = "/", date.order = "dmy",
 time.name = "date", time.break = ":", time.order = "hm", time.format ="GMT",
 is.ws = NULL, is.wd = NULL,
@@ -56,7 +56,7 @@ file.misc <- file.misc[misc.info]
 }
 
 #import names
-file.names <- read.table(file, header = FALSE, sep = sep, skip = (header.at - 1), nrows = 1, colClasses = "character")
+file.names <- read.table(file, header = FALSE, sep = sep, quote = quote, skip = (header.at - 1), nrows = 1, colClasses = "character")
 file.names <- as.character(file.names)
 
 #reset ws, wd, site names if assigned
@@ -66,7 +66,7 @@ if(!is.null(is.wd)) { file.names <- gsub(is.wd, "wd", file.names, ignore.case = 
 if(!is.null(is.site)) { file.names <- gsub(is.site, "site", file.names, ignore.case = FALSE) }
 
 #import data
-file.data <- read.table(file, header = FALSE, sep = sep, skip = (data.at - 1), nrows = -1, na.strings = na.strings, fill = TRUE)
+file.data <- read.table(file, header = FALSE, sep = sep, skip = (data.at - 1), nrows = -1, na.strings = na.strings,  quote = quote, fill = TRUE)
 
 #check for eof (if required)
 if(!is.null(eof.report)) {
