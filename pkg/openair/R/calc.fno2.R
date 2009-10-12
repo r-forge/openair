@@ -76,12 +76,13 @@ calc.fno2 <- function(input,
     ## plot results ##################################################################
     plot.fno2 <- function(results,...) {
 
-        ggplot(results, aes(date, fno2)) +
+        theplot <- ggplot(results, aes(date, fno2)) +
             geom_point() +
-                stat_smooth(size = 1, span = 0.5) +
                     ylab(quick.text("f-NO2 (%)")) +
                         xlab("year") +
                             opts(title = quick.text(main))
+        if (nrow(na.omit(results)) > 5) theplot <- theplot +  stat_smooth(size = 1, span = 0.5)
+        print(theplot)
     }
 
 ###plots orginal monthly NO2 and predicted with  ###############################
@@ -107,7 +108,7 @@ calc.fno2 <- function(input,
     }
     ## start of code#################################################################
     input <- check.prep(input, Names = c("date", "nox", "no2", "back_no2",
-                               "back_nox", "back_o3"), "default")
+                               "back_nox", "back_o3", "cl", "temp"), "default")
     input <- na.omit(input)
     input.all <- prepare(input)  ## process input data
     input.all <- subset(input.all, nox.v > 0)  ## process only +ve increments
