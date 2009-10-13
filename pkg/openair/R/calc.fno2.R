@@ -12,9 +12,6 @@ calc.fno2 <- function(input,
     ## function to prepare data ######################################################
     prepare <- function(input) {
 
-        ## if cl or temp are missing, fill in with default values
-        if(!any(names(input) %in% "temp"))  input$temp <- 11
-        if(!any(names(input) %in% "cl"))  input$cl <- 4.5
         input$temp <- input$temp + 273
 
         ## different date components
@@ -106,7 +103,14 @@ calc.fno2 <- function(input,
                     xlab("year") +
                         opts(title = quick.text(main))
     }
+
     ## start of code#################################################################
+     ## if cl or temp are missing, fill in with default values
+
+    ## check to see if cloud and temperature are present; if not, set default values
+    if(!any(names(input) %in% "temp"))  input$temp <- 11
+    if(!any(names(input) %in% "cl"))  input$cl <- 4.5
+
     input <- check.prep(input, Names = c("date", "nox", "no2", "back_no2",
                                "back_nox", "back_o3", "cl", "temp"), "default")
     input <- na.omit(input)
