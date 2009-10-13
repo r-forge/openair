@@ -29,6 +29,9 @@ summarise <- function(mydata,
         stop (cat("There are some missing dates on line(s)", which(is.na(mydata$date))),"\n")
     }
 
+     ## print data types - helps with debugging
+    print(unlist(sapply(mydata, class)))
+
     ## check to see if there is a field site and >1 site
     ## if several sites and no pollutant supplied, use first numeric
 
@@ -158,7 +161,7 @@ summarise <- function(mydata,
                        monthly.mean$value <- 1 + range01(monthly.mean$value) * 4
 
                        panel.xyplot(monthly.mean$date, monthly.mean$value, type = "l",
-                                    col = col.trend)
+                                    col = col.trend,...)
 
                        ## plot all data region
                        with(mydata, lrect(as.numeric(min(date)), 0,
