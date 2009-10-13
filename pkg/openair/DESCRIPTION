@@ -4,7 +4,7 @@ Title: Open-source tools for the analysis of air pollution data
 Version: 0.1
 Date: 2009-10-01
 Author: David Carslaw and Karl Ropkins
-Depends: R (>= 2.8), mgcv, zoo, lattice, boot, reshape, plyr, RColorBrewer, Hmisc, ggplot2
+Depends: mgcv, zoo, lattice, boot, reshape, plyr,RColorBrewer, Hmisc, ggplot2, proto
 Suggests: RODBC, latticeExtra
 Maintainer: David Carslaw <d.c.carslaw@its.leeds.ac.uk>
 Description: Tools to analyse, interpret and understand air pollution data. Data are typically hourly time series and both monitoring data and dispersion model output can be analysed.  Many functions can also be applied to other data, including meteorlogical and traffic data.
