@@ -430,7 +430,7 @@ make.package <- function(x) {
     detach(package:openair)
     setwd("d:/openair")
     system("R CMD build --binary openair")
-    install.packages("d:/openair/openair_1.0.zip", repos = NULL)
+    install.packages("d:/openair/openair_0.1.zip", repos = NULL)
     library(openair)
 }
 
