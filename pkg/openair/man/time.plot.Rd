@@ -89,8 +89,8 @@ auto.text = TRUE, ...)
 
   \item{key.columns}{Number of columns to be used in the key. With many
   pollutants a single column can make to key too wide. The user can thus
-  choose to use several columns by setting \code{columns} to be greater
-  than 1.}
+  choose to use several columns by setting \code{columns} to be less
+  than the number of pollutants.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
     titles and axis labels will automatically try and format pollutant

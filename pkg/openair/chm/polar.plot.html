@@ -115,7 +115,7 @@ This sets the upper limit wind speed to be used. Often
 there are only a relatively few data points at very high wind speeds
 and plotting all of them can reduce the useful information in the
 plot. </td></tr>
-<tr valign="top"><td><code>force.postive</code></td>
+<tr valign="top"><td><code>force.positive</code></td>
 <td>
 The default is <code>TRUE</code>. Sometimes if
 smoothing data with streep gradients it is possible for predicted
@@ -244,19 +244,19 @@ data(mydata)
 polar.plot(mydata, pollutant = "nox")
 
 # polar plots by year on same scale
-polar.plot(mydata, pollutant = "so2", type = "year", main = "polar plot of so2")
+## Not run: polar.plot(mydata, pollutant = "so2", type = "year", main = "polar plot of so2")
 
 # set minimum number of bins to be used to see if pattern remains similar
 polar.plot(mydata, pollutant = "nox", min.bin = 3)
 
 # plot by day of the week
 
-polar.plot(mydata, pollutant = "pm10", type = "weekday")
+## Not run: polar.plot(mydata, pollutant = "pm10", type = "weekday")
 
 </pre>
 
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
+<hr><div align="center">[Package <em>openair</em> version 0.1 <a href="00Index.html">Index</a>]</div>
 
 </body></html>

@@ -1,5 +1,5 @@
 import <- function(file = file.choose(),
-file.type="csv",
+file.type = "csv",
 header.at = 1, data.at = 2,
 eof.report = NULL,
 na.strings = c("", "NA"), quote="\"", 
@@ -164,6 +164,7 @@ if(!output=="working") {
 if(!is.null(misc.info)) { comment(file.data) <- file.misc }
 ans <- cbind(date = a, file.data)
 
+print(unlist(sapply(ans, class)))
 ##  catch missing dates
 ids <- which(is.na(ans$date))
 

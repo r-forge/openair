@@ -9,6 +9,7 @@ time.variation <- function(mydata,
                            cols = "hue",
                            main = "",
                            key = NULL,
+                           key.columns = 1,
                            auto.text = TRUE,
                            alpha = 0.4, ...)   {
 
@@ -58,6 +59,7 @@ time.variation <- function(mydata,
         mylab <- levels(factor(mydata$variable))
     }
 
+
     divide.by.mean <- function(x) {
         Mean <- mean(x$value, na.rm = TRUE)
         x$value <- x$value / Mean
@@ -99,12 +101,16 @@ time.variation <- function(mydata,
     }
 
     npol <- length(unique(mydata$variable)) ## number of pollutants
+
+    ## number of columns for key
+    if (missing(key.columns)) key.columns <- npol
+
     myColors <- open.colours(cols, npol)
 
     ## for individual plot keys - useful if only one of the plots is extracted after printing
     if (!is.null(key)) {
         key <- list(rectangles = list(col = myColors[1:npol], border = NA),
-                    text = list(lab = mylab),  space = "bottom", columns = npol)
+                    text = list(lab = mylab),  space = "bottom", columns = key.columns)
 
         main <- overall.main
     }
@@ -127,7 +133,7 @@ time.variation <- function(mydata,
                        ylab = quick.text(ylab, auto.text),
                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                        key = list(rectangles = list(col = myColors[1:npol], border = NA),
-                       text = list(lab = mylab),  space = "bottom", columns = npol),
+                       text = list(lab = mylab),  space = "bottom", columns = key.columns),
                        strip = strip.custom(par.strip.text = list(cex = 0.9)),
                        par.settings = simpleTheme(col = myColors),
 

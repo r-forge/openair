@@ -18,6 +18,7 @@ ci = TRUE,
 cols = "hue",
 main = "",
 key = NULL,
+key.columns = 1,
 auto.text = TRUE,
 alpha = 0.4,...)
 }
@@ -84,6 +85,11 @@ defined (see manual for more details).}
   sometimes necessary just to use one for a report. If \code{key} is
   \code{TRUE}, a key is added to all plots allowing the extraction of a
   single plot \emph{with} key. See below for an example.}
+
+ \item{key.columns}{Number of columns to be used in the key. With many
+  pollutants a single column can make to key too wide. The user can thus
+  choose to use several columns by setting \code{columns} to be less
+  thna the number of pollutants.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
     titles and axis labels will automatically try and format pollutant

@@ -218,19 +218,18 @@ MannKendall(mydata, pollutant = "nox")
 # trend plot for ozone with p=0.01 i.e. uncertainty in slope shown at
 # 99 
 
-MannKendall(mydata, pollutant = "o3", ylab =
-"o3 (ppb)", alpha = 0.01)
+MannKendall(mydata, pollutant = "o3", ylab = "o3 (ppb)", alpha = 0.01)
 
 # trend plot by each of 8 wind sectors
-MannKendall(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
+## Not run: MannKendall(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
 
 # and for a subset of data (from year 2000 onwards)
-MannKendall(subset(mydata, format(date, "%Y") &gt; 1999), pollutant = "o3", ylab = "o3 (ppb)")
+## Not run: MannKendall(select.by.date(mydata, year = 2000:2005), pollutant = "o3", ylab = "o3 (ppb)")
 
 </pre>
 
 
 
-<hr><div align="center">[Package <em>openair</em> version 1.0 <a href="00Index.html">Index</a>]</div>
+<hr><div align="center">[Package <em>openair</em> version 0.1 <a href="00Index.html">Index</a>]</div>
 
 </body></html>
