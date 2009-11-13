@@ -1,8 +1,7 @@
 open.colours <- function(scheme = "default", n = 100) {
 library(RColorBrewer)
 #heat
-heat <- colorRampPalette(c("#FFFFD6", "#FFFF8A", "#FFFB7D", "#FFEF78", "#FFDD76",
-        "#FFC473", "#FFA36C", "#F8795F", "#CB444B", "#930030"))
+heat <- colorRampPalette(brewer.pal(9, "YlOrRd"), interpolate = "spline")
 
 jet <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
                       "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
