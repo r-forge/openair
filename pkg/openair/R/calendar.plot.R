@@ -1,9 +1,11 @@
 ## development of a calendar function
 ## David Carslaw November 2009
 
-## calendar.plot shows air quality or oher data in a conventional calender format.
+## calendar.plot shows air quality or other data in a conventional calendar format.
 ## This makes it easy to gain a feel about variations in concentrations and other parameters
-##
+## By default ir shows the day of the month for each day, but can also show the wind vector,
+## which may also be normalised to wind speed.
+
 calendar.plot <- function(mydata,
                           pollutant = "nox",
                           year = 2003,
@@ -122,6 +124,7 @@ calendar.plot <- function(mydata,
         ws$conc.mat <- ws$conc.mat / max(ws$conc.mat, na.rm = TRUE)
     }
 
+    ## set up scales
     nlev <- 200
     breaks <- pretty(mydata$conc.mat, n = nlev)
     nlev2 <- length(breaks)

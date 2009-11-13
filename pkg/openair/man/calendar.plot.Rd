@@ -33,13 +33,6 @@ auto.text = TRUE,
 
   \item{type}{Not yet implemented.}
 
-  \item{limits}{The functions does its best to choose sensible limits
-    automatically. However, there are circumstances when the user will
-    wish to set different ones. An example would be a series of plots
-    showing each year of data separately. The limits are set in the form
-    \code{c(lower, upper)}, so \code{limits = c(0, 100)} would force the
-    plot limits to span 0-100.}
-
   \item{annotate}{This option controls what appears on each day of the
   calendar. Can be: \code{date} - shows day of the month; \code{wd} -
   shows vector-averaged wind direction, or \code{ws} - shows
