@@ -15,15 +15,15 @@ weekday.abb <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 ## it finds the table of values of time gaps and picks the biggest
 ## can't think of better way unless user specifies what the time interval is meant to be
 
-find.time.interval <- function(date) {
+find.time.interval <- function(dates) {
     ## assumes date is ordered before we get here
     ## id of highest frequency of gaps
-    id <- which.max(table(diff(as.numeric(mydata$date))))
+    id <- which.max(table(diff(as.numeric(dates))))
     seconds <- as.numeric(names(id))
 
-    if (class(date)[1] == "POSIXt") seconds <- paste(seconds, "sec")
+    if (class(dates)[1] == "POSIXt") seconds <- paste(seconds, "sec")
 
-    if (class(date)[1] == "Date") {
+    if (class(dates)[1] == "Date") {
         seconds <- 3600 * 24
         seconds <- paste(seconds, "sec")
     }
