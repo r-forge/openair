@@ -41,7 +41,9 @@ data.thresh = 0, statistic = "mean", percentile = 95)}
   see below. }
 
 \item{percentile}{The percentile level in \% used when \code{statistic =
-  "percentile"}. The default is 95.}
+    "percentile"}. The default is 95.}
+
+}
 
 \details{This function calculates time averages for a data frame. It
   also treats wind direction correctly through vector-averaging. For
