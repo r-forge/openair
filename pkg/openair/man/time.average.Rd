@@ -8,11 +8,11 @@ time averages, calculating vector-averaged wind direction where
 appropriate. The averaged periods can also take account of data capture
 rates.  }
 
-\usage{ newdata <- time.average(mydata, period = "days",
-data.thresh = 0) }
+\usage{newdata <- time.average(mydata, period = "days",
+data.thresh = 0)}
 
 
-%- maybe also 'usage' for other objects documented here.  
+%- maybe also 'usage' for other objects documented here.
 
 \arguments{
 \item{mydata}{A data frame containing a \code{date} field . Can be class
@@ -30,6 +30,8 @@ data.thresh = 0) }
   regardless if of the number of values available. Conversely, a value
   of 100 will mean that all data will need to be present for the average
   to be calculated, else it is recorded as \code{NA}.}
+
+}
 
 \details{This function calculates time averages for a data frame. It
   also treats wind direction correctly through vector-averaging
