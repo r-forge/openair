@@ -4,6 +4,7 @@ time.plot <- function(mydata,
                       stack = FALSE,
                       normalise = FALSE,
                       avg.time = "default",
+                      data.thresh = 0,
                       type = "default",
                       layout = c(1, 1),
                       cols = "brewer1",
@@ -37,29 +38,8 @@ time.plot <- function(mydata,
     mydata <- date.pad(mydata, type)
 
     ## average the data if necessary (default does nothing)
-    date.class <- class(mydata$date)
-    avg.type <- c("hourly", "daily", "weekly", "monthly", "yearly")
-    avg.format <- c("%Y-%m-%d %H", "%Y-%m-%d", "%Y-%W", "%Y-%m", "%Y")
-
-    ## function to average data
-    avg.data <- function(mydata, avg.type, type) {
-        id <- which(avg.type == avg.time)
-        if (type == "default") {
-            mydata <- aggregate(mydata, list(Date = format(mydata$date, avg.format[id])),
-                                mean, na.rm = TRUE)
-        }
-        if (type == "site") {
-            mydata <- aggregate(subset(mydata, select = -site),
-                                list(Date = format(mydata$date, avg.format[id]),
-                                     site = mydata$site), mean, na.rm = TRUE)
-        }
-        mydata <- subset(mydata, select = -Date)
-        class(mydata$date) <- date.class
-        mydata
-    }
-
-    if (avg.time != "default") mydata <- avg.data(mydata, avg.type, type)
-
+    if (avg.time != "default") mydata <- time.average(mydata, period = avg.time,
+        data.thresh = data.thresh)
 
     mydata <- cut.data(mydata, type)
 

@@ -13,6 +13,7 @@ group = FALSE,
 stack = FALSE,
 normalise = FALSE,
 avg.time = "default",
+data.thresh = 0,
 type = "default",
 layout = c(1, 1),
 cols = "brewer1",
@@ -50,10 +51,12 @@ auto.text = TRUE, ...)
     their mean values. This helps to compare the shape of the diurnal
     trends for variables on very different scales.}
 
- \item{avg.time}{Averaging time to use. \code{"default"} does not apply
- any averaging to the data. Other valid settings are \code{"hourly"}
- (useful for averging data with less than 1-hour means), \code{"daily"},
- \code{"weekly"}, \code{"monthly"} and \code{"yearly"}.}
+ \item{avg.time}{This defines the time period to average to. Can be "secs",
+  "mins", "hours", "days", "DSTdays", "weeks", "months", "quarters" or
+  "years". For much increased flexibility a number can precede these
+  options followed by a space. For example, a time-average of 2 months
+  would be \code{period = "2 months"}. See \code{\link{time.average}} for
+  further details on this.}
 
   \item{type}{Currently only \code{"default"} or \code{"site"} are
     available options. If \code{type = "site"} then plots for a
@@ -167,6 +170,16 @@ time.plot(mydata, pollutant = c("nox", "no2"), lty = 1)
 time.plot(select.by.date(mydata, year = 2004, month = 6), pollutant =
 c("nox", "no2"), lwd = c(1, 2), col = "black")
 
+# different averaging times
+
+#daily mean O3
+time.plot(mydata, pollutant = "o3", avg.time = "days")
+
+# daily mean O3 ensuring each day has data capture of at least 75\%
+time.plot(mydata, pollutant = "o3", avg.time = "days", data.thresh = 75)
+
+# 2-week average of O3 concentrations
+time.plot(mydata, pollutant = "o3", avg.time = "2 weeks")
 }
 \keyword{methods}
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
