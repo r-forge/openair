@@ -5,6 +5,9 @@ time.plot <- function(mydata,
                       normalise = FALSE,
                       avg.time = "default",
                       data.thresh = 0,
+                      statistic = "mean",
+                      percentile = 0.95,
+                      date.pad = FALSE,
                       type = "default",
                       layout = c(1, 1),
                       cols = "brewer1",
@@ -35,11 +38,11 @@ time.plot <- function(mydata,
     mydata <- check.prep(mydata, vars, type)
 
     ## pad out any missing date/times so that line don't extend between areas of missing data
-    mydata <- date.pad(mydata, type)
+    if (date.pad) mydata <- date.pad(mydata, type)
 
     ## average the data if necessary (default does nothing)
     if (avg.time != "default") mydata <- time.average(mydata, period = avg.time,
-        data.thresh = data.thresh)
+        data.thresh = data.thresh, statistic = statistic, percentile = percentile)
 
     mydata <- cut.data(mydata, type)
 

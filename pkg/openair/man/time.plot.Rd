@@ -14,6 +14,9 @@ stack = FALSE,
 normalise = FALSE,
 avg.time = "default",
 data.thresh = 0,
+statistic = "mean",
+percentile = 95,
+date.pad = FALSE,
 type = "default",
 layout = c(1, 1),
 cols = "brewer1",
@@ -51,12 +54,34 @@ auto.text = TRUE, ...)
     their mean values. This helps to compare the shape of the diurnal
     trends for variables on very different scales.}
 
- \item{avg.time}{This defines the time period to average to. Can be "secs",
-  "mins", "hours", "days", "DSTdays", "weeks", "months", "quarters" or
-  "years". For much increased flexibility a number can precede these
+ \item{avg.time}{This defines the time period to average to. Can be "sec",
+  "min", "hour", "day", "DSTday", "week", "month", "quarter" or
+  "year". For much increased flexibility a number can precede these
   options followed by a space. For example, a time-average of 2 months
-  would be \code{period = "2 months"}. See \code{\link{time.average}} for
+  would be \code{period = "2 month"}. See \code{\link{time.average}} for
   further details on this.}
+
+\item{data.thresh}{The data capture threshold to use (\%). A value of
+  zero means that all available data will be used in a particular period
+  regardless if of the number of values available. Conversely, a value
+  of 100 will mean that all data will need to be present for the average
+  to be calculated, else it is recorded as \code{NA}.}
+
+\item{statistic}{The statistic to apply when aggregating the data;
+  default is the mean. Can be one of \code{mean, max, min, median,
+  frequency, sd, percentile}. Note that \code{sd} is the standard
+  deviation and \code{frequency} is the number (frequency) of valid
+  records in the period. \code{percentile} is the percentile level (\%)
+  between 0-100. }
+
+\item{percentile}{The percentile level in \% used when \code{statistic =
+    "percentile"}. The default is 95.}
+
+\item{date.pad}{Should missing data be padded-out? This is useful where
+  a data frame consists of two or more "chunks" of data with time gaps
+  between them. By setting \code{date.pad = TRUE} the time gaps between
+  the chunks are shown properly, rather than with a line connecting each
+  chunk. For irregular data, set to \code{FASLE}.}
 
   \item{type}{Currently only \code{"default"} or \code{"site"} are
     available options. If \code{type = "site"} then plots for a
@@ -173,13 +198,13 @@ c("nox", "no2"), lwd = c(1, 2), col = "black")
 # different averaging times
 
 #daily mean O3
-time.plot(mydata, pollutant = "o3", avg.time = "days")
+time.plot(mydata, pollutant = "o3", avg.time = "day")
 
 # daily mean O3 ensuring each day has data capture of at least 75\%
-time.plot(mydata, pollutant = "o3", avg.time = "days", data.thresh = 75)
+time.plot(mydata, pollutant = "o3", avg.time = "day", data.thresh = 75)
 
 # 2-week average of O3 concentrations
-time.plot(mydata, pollutant = "o3", avg.time = "2 weeks")
+time.plot(mydata, pollutant = "o3", avg.time = "2 week")
 }
 \keyword{methods}
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

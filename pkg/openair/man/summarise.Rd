@@ -128,9 +128,11 @@ automatically be chosen.
 
 }
 
+
+
 %\references{ ~put references to the literature/web site here ~ }
 \author{David Carslaw}
-%\note{ ~~further notes~~
+
 
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %}

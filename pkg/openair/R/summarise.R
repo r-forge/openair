@@ -79,9 +79,9 @@ summarise <- function(mydata,
     end.date <- as.POSIXct(ceil(max(mydata$date), period) - 3600)
 
     ## find time interval of data and pad any missing times
-    interval <- find.time.interval(mydata$date)
-    all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
-    mydata <- merge(mydata, all.dates, all.y = TRUE)
+        interval <- find.time.interval(mydata$date)
+        all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
+        mydata <- merge(mydata, all.dates, all = TRUE)
 
     mydata <- melt(mydata, id.var = "date")
 

@@ -9,7 +9,7 @@ appropriate. The averaged periods can also take account of data capture
 rates.  }
 
 \usage{newdata <- time.average(mydata, period = "days",
-data.thresh = 0)}
+data.thresh = 0, statistic = "mean", percentile = 95)}
 
 
 %- maybe also 'usage' for other objects documented here.
@@ -18,11 +18,11 @@ data.thresh = 0)}
 \item{mydata}{A data frame containing a \code{date} field . Can be class
 \code{POSIXct} or \code{Date}.}
 
-\item{period}{This defines the time period to average to. Can be "secs",
-  "mins", "hours", "days", "DSTdays", "weeks", "months", "quarters" or
+\item{period}{This defines the time period to average to. Can be "sec",
+  "min", "hour", "day", "DSTday", "week", "month", "quarter" or
   "years". For much increased flexibility a number can precede these
   options followed by a space. For example, a time-average of 2 months
-  would be \code{period = "2 months"}. See \code{\link{cut.POSIXt}} for
+  would be \code{period = "2 month"}. See \code{\link{cut.POSIXt}} for
   further details on this.}
 
 \item{data.thresh}{The data capture threshold to use (\%). A value of
@@ -31,13 +31,22 @@ data.thresh = 0)}
   of 100 will mean that all data will need to be present for the average
   to be calculated, else it is recorded as \code{NA}.}
 
-}
+
+\item{statistic}{The statistic to apply when aggregating the data;
+  default is the mean. Can be one of \code{mean, max, min, median,
+  frequency, sd, percentile}. Note that \code{sd} is the standard
+  deviation and \code{frequency} is the number (frequency) of valid
+  records in the period. \code{percentile} is the percentile level (\%)
+  between 0-100, which can be set using the \code{percentile} option -
+  see below. }
+
+\item{percentile}{The percentile level in \% used when \code{statistic =
+  "percentile"}. The default is 95.}
 
 \details{This function calculates time averages for a data frame. It
-  also treats wind direction correctly through vector-averaging
-  averaging. For example, the average of 350 degrees and 10 degrees is
-  either 0 or 360 - not 180. The calculations therefore average the wind
-  components.
+  also treats wind direction correctly through vector-averaging. For
+  example, the average of 350 degrees and 10 degrees is either 0 or 360
+  - not 180. The calculations therefore average the wind components.
 
 \code{time.average} should be useful in many circumstances where it is
 necessary to work with different time-average data. For example, hourly
@@ -47,7 +56,7 @@ data 1-hour means first.
 
 For the research community \code{time.average} should be useful for
 dealing with outputs from instruments where there are a range of time
-averages used.
+periods used.
 
 It is also very useful for plotting data using
 \code{\link{time.plot}}. Often the data are too dense to see patterns
