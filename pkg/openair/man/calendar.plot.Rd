@@ -22,8 +22,8 @@ auto.text = TRUE,
 %- maybe also 'usage' for other objects documented here.
 
 \arguments{ \item{mydata}{A data frame minimally containing \code{date}
-    and at least one other numeric variable. The date should be in
-    either \code{Date} format or class \code{POSIXct}.}
+  and at least one other numeric variable and a year. The date should be
+  in either \code{Date} format or class \code{POSIXct}.}
 
   \item{pollutant}{Mandatory. A pollutant name corresponding to a
     variable in a data frame should be supplied e.g. \code{pollutant =

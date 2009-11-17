@@ -31,14 +31,16 @@ calendar.plot <- function(mydata,
     main <- main
 
     ## themes for calendar plot
-    def.theme <- lattice.getOption("default.theme")
-    cal.theme <- function() {
-            theme <- list(strip.background = list(col = "grey90"),
+    def.theme  <- list(strip.background = list(col = "#ffe5cc"),
+                     strip.border = list(col = "black"),
+                     axis.line = list(col = "black"),
+                     par.strip.text = list(cex =1))
+            
+    cal.theme <- list(strip.background = list(col = "grey90"),
                      strip.border = list(col = "transparent"),
                      axis.line = list(col = "transparent"),
                      par.strip.text = list(cex = 0.8))
-        }
-
+        
     lattice.options(default.theme = cal.theme)
 
     ## all the days in the year
@@ -135,6 +137,7 @@ calendar.plot <- function(mydata,
     col.scale <- breaks
 
     print(levelplot(conc.mat ~ x * y | month, data = mydata,
+              par.settings = cal.theme,
               main = main,
               at = col.scale,
               col.regions = col,
