@@ -15,8 +15,8 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
     if (data.thresh < 0 | data.thresh > 100) stop("Data capture range outside 0-100")
 
     if (statistic == "mean") form <- "mean(x, na.rm = TRUE)"
-    if (statistic == "max") form <- "max(x, na.rm = TRUE)"
-    if (statistic == "min") form <- "min(x, na.rm = TRUE)"
+    if (statistic == "max") form <- "suppressWarnings(max(x, na.rm = TRUE))"
+    if (statistic == "min") form <- "suppressWarnings(min(x, na.rm = TRUE))"
     if (statistic == "median") form <- "median(x, na.rm = TRUE)"
     if (statistic == "median") form <- "median(x, na.rm = TRUE)"
     if (statistic == "sd") form <- "sd(x, na.rm = TRUE)"

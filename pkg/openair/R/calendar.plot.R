@@ -12,7 +12,7 @@ calendar.plot <- function(mydata,
                           type = "default",
                           annotate = "date",
                           statistic = "mean",
-                          cols = "default",
+                          cols = "heat",
                           main = quick.text((paste(pollutant, "in", year))),
                           auto.text = TRUE,
                           ...) {
@@ -96,16 +96,19 @@ calendar.plot <- function(mydata,
         colour.mat <- as.vector(apply(colour.mat, 1, rev))
 
         grid <- data.frame(expand.grid(x = 1:7, y = 1:6))
-        results <- data.frame(x = grid$x, y = grid$y, conc.mat,
+        results <- suppressWarnings(data.frame(x = grid$x, y = grid$y, conc.mat,
                               month = format(mydata$date[1], "%B"),
-                              date.mat = date.mat, dateColour = colour.mat)
+                              date.mat = date.mat, dateColour = colour.mat))
 
         results
-
     }
 
-
-    if (class(mydata$date)[1] == "POSIXt") mydata <- daily.mean(mydata)  ## calculate daily means
+    ## calculate daily means
+    if (class(mydata$date)[1] == "POSIXt") {
+        mydata <- time.average(mydata, "day")
+        mydata$date <- as.Date(mydata$date)
+    }
+    
     mydata <- cut.data(mydata, type = "month")
     baseData <- mydata
 
