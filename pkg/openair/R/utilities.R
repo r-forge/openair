@@ -49,7 +49,7 @@ date.pad <- function(mydata, type = "default") {
         ## find time interval of data
         interval <- find.time.interval(mydata$date)
         all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
-        mydata <- merge(mydata, all.dates, all.y = TRUE)
+        mydata <- merge(mydata, all.dates, all = TRUE)
         if (type == "site") mydata$site <- site
         mydata
     }
