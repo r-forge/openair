@@ -24,6 +24,8 @@ main = "",
 ylab = pollutant,
 lty = 1:length(pollutant),
 lwd = 1,
+key = TRUE,
+strip = TRUE,
 key.columns = 1,
 auto.text = TRUE, ...)
 }
@@ -61,27 +63,31 @@ auto.text = TRUE, ...)
   would be \code{period = "2 month"}. See \code{\link{time.average}} for
   further details on this.}
 
-\item{data.thresh}{The data capture threshold to use (\%). A value of
-  zero means that all available data will be used in a particular period
-  regardless if of the number of values available. Conversely, a value
-  of 100 will mean that all data will need to be present for the average
-  to be calculated, else it is recorded as \code{NA}.}
+\item{data.thresh}{The data capture threshold to use (\%) when
+  aggregating the data using \code{avg.time}. A value of zero means that
+  all available data will be used in a particular period regardless if
+  of the number of values available. Conversely, a value of 100 will
+  mean that all data will need to be present for the average to be
+  calculated, else it is recorded as \code{NA}. Not used if
+  \code{avg.time = "default"}.}
 
-\item{statistic}{The statistic to apply when aggregating the data;
-  default is the mean. Can be one of \code{mean, max, min, median,
-  frequency, sd, percentile}. Note that \code{sd} is the standard
-  deviation and \code{frequency} is the number (frequency) of valid
-  records in the period. \code{percentile} is the percentile level (\%)
-  between 0-100. }
+\item{statistic}{The statistic to apply when aggregating the data using
+  \code{avg.time}; default is the mean. Can be one of \code{mean, max,
+  min, median, frequency, sd, percentile}. Note that \code{sd} is the
+  standard deviation and \code{frequency} is the number (frequency) of
+  valid records in the period. \code{percentile} is the percentile level
+  (\%) between 0-100. Not used if \code{avg.time = "default"}.}
 
 \item{percentile}{The percentile level in \% used when \code{statistic =
-    "percentile"}. The default is 95.}
+    "percentile"} and when aggregating the data with
+    \code{avg.time}. The default is 95. Not used if \code{avg.time =
+    "default"}.}
 
 \item{date.pad}{Should missing data be padded-out? This is useful where
   a data frame consists of two or more "chunks" of data with time gaps
   between them. By setting \code{date.pad = TRUE} the time gaps between
   the chunks are shown properly, rather than with a line connecting each
-  chunk. For irregular data, set to \code{FASLE}.}
+  chunk. For irregular data, set to \code{FALSE}.}
 
   \item{type}{Currently only \code{"default"} or \code{"site"} are
     available options. If \code{type = "site"} then plots for a
@@ -114,6 +120,10 @@ auto.text = TRUE, ...)
     example, if \code{pollutant = c("nox", "no2", "o3")}, and a wider line
     was wanted for ozone, then \code{lwd} can be expressed as \code{lwd =
       c(1, 1, 2)}.}
+
+  \item{key}{Should a key be drawn? The default is \code{TRUE}.}
+
+  \item{strip}{Should a strip be drawn? The default is \code{TRUE}.}
 
   \item{key.columns}{Number of columns to be used in the key. With many
   pollutants a single column can make to key too wide. The user can thus
@@ -155,6 +165,13 @@ auto.text = TRUE, ...)
   \code{time.plot} works very well with \code{\link{select.by.date}},
   which is used for selecting particular date ranges quickly and
   easily. See examples below.
+
+  By default plots are shown with a colour key at the bottom and in teh
+  case of multiple pollutants or sites, strips on teh left of each
+  plot. Sometimes this may be overkill and the user can opt to remove
+  the key and/or the strip by setting \code{key} and/or \code{strip} to
+  \code{FALSE}. One reason to do this is to maximise the plotting area
+  and therefore the information shown.
 }
 
 %\references{ ~put references to the literature/web site here ~ }

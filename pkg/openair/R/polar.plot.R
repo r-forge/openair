@@ -11,9 +11,9 @@ polar.plot <- function(polar,
                        force.positive = TRUE,
                        k = 100,
                        main = "",
-                       auto.text = TRUE,
-                       ...) {
+                       auto.text = TRUE, ...) {
     library(plyr)
+ 
     ## extract variables of interest
     vars <- c("ws", "wd", "date", pollutant)
     if (type == "site") vars <- c("date", pollutant, "ws", "wd", "site")
@@ -83,11 +83,6 @@ polar.plot <- function(polar,
             res <- int
             wsp <- rep(x, res)
             wdp <- rep(y, rep(res, res))
-            ## remove null data
-          #  polar <- na.omit(polar)
-
-           # ind <- with(polar, exclude.too.far(wsp, wdp, ws * sin(pi * wd / 180),
-           #                                   ws * cos(pi * wd / 180), dist = 0.05))
 
             ## data with gaps caused by min.bin
             all.data <- na.omit(data.frame(u, v, binned))
@@ -99,11 +94,9 @@ polar.plot <- function(polar,
     }
 
 #############################################################################
-#    results.grid <- split(polar, polar$cond)
-#    results.grid <- lapply(results.grid, function(x) prepare.grid(x))
-#    results.grid <- do.call(rbind, results.grid)
+  
     results.grid <- ddply(polar, .(cond), prepare.grid)
-
+ 
     ## remove wind speeds > upper to make a circle
     results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 

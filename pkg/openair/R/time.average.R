@@ -23,10 +23,11 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
     if (statistic == "frequency") form <- "length(na.omit(x))"
     if (statistic == "percentile") form <- "quantile(x, probs = percentile, na.rm = TRUE)"
 
-    ## pad out missing data
-    mydata <- date.pad(mydata)
-    
+   
     calc.mean <- function(mydata) { ## function to calculate means
+
+         ## pad out missing data
+        mydata <- date.pad(mydata)   
         
         if ("wd" %in% names(mydata)) {
             mydata$u <- sin(2 * pi * mydata$wd / 360)
@@ -66,7 +67,7 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
             dailymet <- subset(dailymet, select = c(-u, -v))
         }
 
-         if ("site" %in% names(mydata)) dailymean$site <- mydata$site[1]
+         if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
         
         dailymet
     }

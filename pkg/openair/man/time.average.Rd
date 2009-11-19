@@ -20,7 +20,7 @@ data.thresh = 0, statistic = "mean", percentile = 95)}
 
 \item{period}{This defines the time period to average to. Can be "sec",
   "min", "hour", "day", "DSTday", "week", "month", "quarter" or
-  "years". For much increased flexibility a number can precede these
+  "year". For much increased flexibility a number can precede these
   options followed by a space. For example, a time-average of 2 months
   would be \code{period = "2 month"}. See \code{\link{cut.POSIXt}} for
   further details on this.}
