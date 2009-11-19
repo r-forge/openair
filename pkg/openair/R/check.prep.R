@@ -7,7 +7,7 @@ check.prep <- function(mydata, Names, type, remove.calm = TRUE) {
 
     ## deal with conditioning variable if present, if user-defined, must exist in data
     ## pre-defined types
-    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend")
+    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend", "monthyear")
     if ((type %in% conds) & (type %in% Names == FALSE)) {
         Names <- Names
     } else {

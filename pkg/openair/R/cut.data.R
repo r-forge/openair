@@ -5,7 +5,7 @@ cut.data <- function(mydata, type = "default") {
     ## If another added, then amend check.prep
 
     ## adds a column "cond"
-    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend")
+    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend", "monthyear")
 
     if (type %in% conds == FALSE) { ## generic, user-defined
         ## split by four quantiles unless it is a factor, in which case keep as is
@@ -44,6 +44,11 @@ cut.data <- function(mydata, type = "default") {
     if (type == "month") {mydata$cond <- format(mydata$date, "%B")
                           mydata$cond <- ordered(mydata$cond, levels = month.name)
                           period <- "annual"} #does not make sense otherwise
+
+     if (type == "monthyear") {
+         mydata$cond <- format(mydata$date, "%B %Y")
+          mydata$cond <- ordered(mydata$cond, levels = unique(mydata$cond))
+     }
 
     if (type == "season") {
         mydata$cond <- "winter" ## define all as winter first, then assign others
