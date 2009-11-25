@@ -9,7 +9,7 @@ appropriate. The averaged periods can also take account of data capture
 rates.  }
 
 \usage{newdata <- time.average(mydata, period = "days",
-data.thresh = 0, statistic = "mean", percentile = 95)}
+data.thresh = 0, statistic = "mean", percentile = 95, start.date = NA)}
 
 
 %- maybe also 'usage' for other objects documented here.
@@ -43,6 +43,16 @@ data.thresh = 0, statistic = "mean", percentile = 95)}
 \item{percentile}{The percentile level in \% used when \code{statistic =
     "percentile"}. The default is 95.}
 
+\item{start.date}{A string giving a start date to use. This is sometimes
+useful if a time series starts between obvious intervals. For example,
+for a 1-minute time series that starts "2009-11-29 12:07:00" that needs
+to be averaged up to 15-minute means, the intervals would be "2009-11-29
+12:07:00", "2009-11-29 12:22:00" etc. Often, however, it is better to
+round down to a more obvious start point e.g. "2009-11-29 12:00:00" such
+that the sequence is then "2009-11-29 12:00:00", "2009-11-29
+12:15:00"...\code{start.date} is therefore used to force this type of
+sequence.}
+
 }
 
 \details{This function calculates time averages for a data frame. It
@@ -67,15 +77,18 @@ and setting different averaging periods easily helps with interpretation.
 
 \section{Warning }{\code{time.average} will remove any character or
   factor columns - except if a column "site" is available. This is
-  necessary because characters/factors cannot be sensibly averaged.}
+  necessary because characters/factors cannot be sensibly averaged. If
+  merging with a daily time series with dates in \code{Date} format, it
+  will be necessary to convert the format of the output e.g. mydata$date
+  <- as.Date(mydata$date) before merging.}
 
 \value{Returns a data frame with date in class \code{POSIXct} and will
   remove any non-numeric columns except a column "site".}
 
 %\references{ ~put references to the literature/web site here ~ }
 \author{David Carslaw}
-\note{Note that \code{time.average} calculates the average of the dates
-  in a period also and returns date as \code{POSIXct}.}
+%\note{Note that \code{time.average} calculates the average of the dates
+%  in a period also and returns date as \code{POSIXct}.}
 
 \seealso{See \code{\link{time.plot}} that plots time series data and
   uses \code{time.average} to aggregate data where necessary.}

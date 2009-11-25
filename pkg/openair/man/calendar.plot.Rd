@@ -15,7 +15,7 @@ year = 2003,
 type = "default",
 annotate = "date",
 statistic = "mean",
-cols = "default",
+cols = "heat",
 main = quick.text((paste(pollutant, "in", year))),
 auto.text = TRUE,
 ...)  }
