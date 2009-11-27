@@ -34,7 +34,7 @@ auto.text = TRUE,
   \item{type}{Default is \code{default}, which will plot all data on one
   wind rose. Other useful options are \code{year}, \code{month} and \code{hour} for
   one wind rose for each year or each month respectfully. Many more
-  types are shown in \code{\link{cut.data}}. }
+  types are shown in the function \code{cut.data}. }
 
   \item{cols}{Colours to be used for plotting. Options include
   \code{default}, \code{increment}, \code{heat}, \code{jet}, \code{hue}

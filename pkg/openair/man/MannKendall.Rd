@@ -50,7 +50,8 @@ frame. For example, \code{type = "o3"} will plot four wind roses for
 different levels of ozone, split into four quantiles (approximately
 equal numbers of counts in each of the four splits). This offers great
 flexibility for understanding the variation of different variables
-dependent on another.}
+dependent on another. See function\code{cut.data} for more details on
+the flexibility here.}
 
   \item{period}{Either \code{monthly} (the default), or
 \code{annual}. Determines whether monthly mean or annual mean trends are

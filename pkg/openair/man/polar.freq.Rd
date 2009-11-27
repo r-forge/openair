@@ -41,9 +41,11 @@ on. Finally, "weighted.mean" will plot the concentration of a pollutant
 weighted by wind speed/direction. Each segment therefore provides the
 percentage overall contribution to the total concentration.  More
 information is given in the examples. Note that for options other than
-"frequency", it is necessary to also provide the name of a pollutant.}
+"frequency", it is necessary to also provide the name of a
+pollutant. See function \code{cut.data} for further details.}
 
-  \item{ws.int}{Wind speed interval assumed. In some cases e.g. a low met mast, an interval of 0.5 may be more appropriate.}
+  \item{ws.int}{Wind speed interval assumed. In some cases e.g. a low
+  met mast, an interval of 0.5 may be more appropriate.}
 
   \item{breaks}{The user can provide their own scale. \code{breaks}
   expects a sequence of numbers that define the range of the scale. The
@@ -84,7 +86,7 @@ another.}
   an so on; bins with less than 2 valid records are set to NA. Care
   should be taken when using a value > 1 because of the risk of removing
   real data points. It is recommended to consider your data with
-  care. Also, the \code{\link{polar.plot}} function can be of use in
+  care. Also, the \code{polar.plot} function can be of use in
   such circumstances.}
 
   \item{border.col}{The colour of the boundary of each wind

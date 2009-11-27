@@ -47,7 +47,7 @@ frame. For example, \code{type = "o3"} will plot four wind roses for
 different levels of ozone, split into four quantiles (approximately
 equal numbers of counts in each of the four splits). This offers great
 flexibility for understanding the variation of different variables
-dependent on another.}
+dependent on another. See function \code{cut.data} for further information.}
 
   \item{simulate}{Should simulations be carried out to determine the
 Mann-Kendall tau and p-value. The default is \code{FALSE}. If

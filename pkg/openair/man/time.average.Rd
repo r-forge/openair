@@ -8,8 +8,14 @@ time averages, calculating vector-averaged wind direction where
 appropriate. The averaged periods can also take account of data capture
 rates.  }
 
-\usage{newdata <- time.average(mydata, period = "days",
-data.thresh = 0, statistic = "mean", percentile = 95, start.date = NA)}
+\usage{
+time.average(mydata,
+period = "days",
+data.thresh = 0,
+statistic = "mean",
+percentile = 95,
+start.date = NA)
+}
 
 
 %- maybe also 'usage' for other objects documented here.
@@ -22,7 +28,7 @@ data.thresh = 0, statistic = "mean", percentile = 95, start.date = NA)}
   "min", "hour", "day", "DSTday", "week", "month", "quarter" or
   "year". For much increased flexibility a number can precede these
   options followed by a space. For example, a time-average of 2 months
-  would be \code{period = "2 month"}. See \code{\link{cut.POSIXt}} for
+  would be \code{period = "2 month"}. See \code{cut.POSIXt} for
   further details on this.}
 
 \item{data.thresh}{The data capture threshold to use (\%). A value of
@@ -30,7 +36,6 @@ data.thresh = 0, statistic = "mean", percentile = 95, start.date = NA)}
   regardless if of the number of values available. Conversely, a value
   of 100 will mean that all data will need to be present for the average
   to be calculated, else it is recorded as \code{NA}.}
-
 
 \item{statistic}{The statistic to apply when aggregating the data;
   default is the mean. Can be one of \code{mean, max, min, median,
@@ -50,9 +55,8 @@ to be averaged up to 15-minute means, the intervals would be "2009-11-29
 12:07:00", "2009-11-29 12:22:00" etc. Often, however, it is better to
 round down to a more obvious start point e.g. "2009-11-29 12:00:00" such
 that the sequence is then "2009-11-29 12:00:00", "2009-11-29
-12:15:00"...\code{start.date} is therefore used to force this type of
+12:15:00" \ldots \code{start.date} is therefore used to force this type of
 sequence.}
-
 }
 
 \details{This function calculates time averages for a data frame. It

@@ -57,15 +57,16 @@ auto.text = TRUE, ...)
 
 \item{type}{The \code{type} can either be \code{"default"} or
   \code{"site"}. The former will produce a single plot and the latter
-  produces the same number of plots as there are sites. See the manual
-  for details of use. It is also possible to choose \code{type} as
-  another variable in the data frame. For example, \code{type = "o3"}
-  will plot four wind roses for different levels of ozone, split into
-  four quantiles (approximately equal numbers of counts in each of the
-  four splits). This offers great flexibility for understanding the
-  variation of different variables dependent on another.}
+  produces the same number of plots as there are sites. It is also
+  possible to choose \code{type} as another variable in the data
+  frame. For example, \code{type = "o3"} will plot four wind roses for
+  different levels of ozone, split into four quantiles (approximately
+  equal numbers of counts in each of the four splits). This offers great
+  flexibility for understanding the variation of different variables
+  dependent on another. See function \code{cut.data} for more details on
+  how data can be split.}
 
-\item{limits}{The functions does its best to choose sensible limits
+\item{limits}{The function does its best to choose sensible limits
   automatically. However, there are circumstances when the user will
   wish to set different ones. An example would be a series of plots
   showing each year of data separately. The limits are set in the form
