@@ -60,7 +60,7 @@ auto.text = TRUE, ...)
   "min", "hour", "day", "DSTday", "week", "month", "quarter" or
   "year". For much increased flexibility a number can precede these
   options followed by a space. For example, a time-average of 2 months
-  would be \code{period = "2 month"}. See \code{\link{time.average}} for
+  would be \code{period = "2 month"}. See function \code{time.average} for
   further details on this.}
 
 \item{data.thresh}{The data capture threshold to use (\%) when
