@@ -34,8 +34,8 @@ auto.text = TRUE,
   \item{type}{Not yet implemented.}
 
   \item{annotate}{This option controls what appears on each day of the
-  calendar. Can be: \code{date} - shows day of the month; \code{wd} -
-  shows vector-averaged wind direction, or \code{ws} - shows
+  calendar. Can be: "date" - shows day of the month; "wd" -
+  shows vector-averaged wind direction, or "ws" - shows
   vector-averaged wind direction scaled by wind speed. }
 
 \item{statistic}{Note currently implemented - only mean is currently
@@ -94,7 +94,7 @@ If wind speed is also available, then setting the option \code{annotate
 
 \section{Warning }{This function is under development.}
 
-%\seealso{\code{\link{polar.annulus}}, \code{\link{polar.freq}}}
+\seealso{\code{\link{time.plot}}, \code{\link{time.variation}}}
 
 \examples{
 

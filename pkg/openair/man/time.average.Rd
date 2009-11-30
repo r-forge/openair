@@ -38,11 +38,11 @@ start.date = NA)
   to be calculated, else it is recorded as \code{NA}.}
 
 \item{statistic}{The statistic to apply when aggregating the data;
-  default is the mean. Can be one of \code{mean, max, min, median,
-  frequency, sd, percentile}. Note that \code{sd} is the standard
-  deviation and \code{frequency} is the number (frequency) of valid
-  records in the period. \code{percentile} is the percentile level (\%)
-  between 0-100, which can be set using the \code{percentile} option -
+  default is the mean. Can be one of "mean", "max", "min", "median",
+  "frequency", "sd", "percentile". Note that "sd" is the standard
+  deviation and "frequency" is the number (frequency) of valid
+  records in the period. "percentile" is the percentile level (\%)
+  between 0-100, which can be set using the "percentile" option -
   see below. }
 
 \item{percentile}{The percentile level in \% used when \code{statistic =

@@ -24,11 +24,13 @@ main = "",
 auto.text = TRUE, ...)
 }
 
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{polar}{A data frame minimally containing \code{ws}, \code{wd} and \code{date}.}
+%- maybe also 'usage' for other objects documented here.  \arguments{
+\item{polar}{A data frame minimally containing \code{ws}, \code{wd} and
+\code{date}.}
 
-  \item{pollutant}{Mandatory. A pollutant name corresponding to a variable in a data frame should be supplied e.g. \code{pollutant = "nox"} }
+  \item{pollutant}{Mandatory. A pollutant name corresponding to a
+  variable in a data frame should be supplied e.g. \code{pollutant =
+  "nox"} }
 
   \item{statistic}{The statistic that should be applied to each wind
 speed/direction bin. Can be "frequency", "mean", "median", "max"
@@ -82,12 +84,11 @@ another.}
 
   \item{min.bin}{The minimum number of points allowed in a wind
   speed/wind direction bin.  The default is 1. A value of two requires
-  at least 2 valid records in each bin (units of 1 m/s and 10 degrees)
-  an so on; bins with less than 2 valid records are set to NA. Care
-  should be taken when using a value > 1 because of the risk of removing
-  real data points. It is recommended to consider your data with
-  care. Also, the \code{polar.plot} function can be of use in
-  such circumstances.}
+  at least 2 valid records in each bin an so on; bins with less than 2
+  valid records are set to NA. Care should be taken when using a value >
+  1 because of the risk of removing real data points. It is recommended
+  to consider your data with care. Also, the \code{polar.plot} function
+  can be of use in such circumstances.}
 
   \item{border.col}{The colour of the boundary of each wind
 speed/direction bin. The default is transparent. Another useful choice
@@ -100,7 +101,9 @@ sometimes is "white".}
   pollutant names and units properly e.g.  by subscripting the
   \sQuote{2} in NO2.}
 
-  \item{\dots}{Other graphical parameters.}  } \details{
+\item{\dots}{Other graphical parameters.}  }
+
+\details{
 \code{polar.freq} is its default use provides details of wind speed and
 direction frequencies. In this respect it is similar to
 \code{\link{wind.rose}}, but considers wind direction intervals of 10

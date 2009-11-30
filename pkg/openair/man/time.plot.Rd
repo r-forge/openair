@@ -71,12 +71,13 @@ auto.text = TRUE, ...)
   calculated, else it is recorded as \code{NA}. Not used if
   \code{avg.time = "default"}.}
 
-\item{statistic}{The statistic to apply when aggregating the data using
-  \code{avg.time}; default is the mean. Can be one of \code{mean, max,
-  min, median, frequency, sd, percentile}. Note that \code{sd} is the
-  standard deviation and \code{frequency} is the number (frequency) of
-  valid records in the period. \code{percentile} is the percentile level
-  (\%) between 0-100. Not used if \code{avg.time = "default"}.}
+\item{statistic}{The statistic to apply when aggregating the data;
+  default is the mean. Can be one of "mean", "max", "min", "median",
+  "frequency", "sd", "percentile". Note that "sd" is the standard
+  deviation and "frequency" is the number (frequency) of valid
+  records in the period. "percentile" is the percentile level (\%)
+  between 0-100, which can be set using the "percentile" option -
+  see below. Not used if \code{avg.time = "default"}.}
 
 \item{percentile}{The percentile level in \% used when \code{statistic =
     "percentile"} and when aggregating the data with
@@ -178,7 +179,9 @@ auto.text = TRUE, ...)
 \author{David Carslaw}
 
 \seealso{\code{\link{MannKendall}}, \code{\link{smooth.trend}},
-  \code{\link{linear.relation}}, \code{\link{select.by.date}}}
+  \code{\link{linear.relation}}, \code{\link{select.by.date}} and
+  \code{\link{time.average}} for details on selecting averaging times
+  and other statistics in a flexible way}
 
 \examples{
 

@@ -25,10 +25,10 @@ span = 0.3,...)
 pollutants.}
 
   \item{x}{First pollutant that when plotted would appear on the x-axis
-  of a relationship.}
+  of a relationship e.g. \code{x = "nox"}.}
 
   \item{y}{Second pollutant that when plotted would appear on the y-axis
-  of a relationship.}
+  of a relationship e.g. \code{y = "pm10"}.}
 
   \item{period}{A range of different time periods can be
   analysed. "monthly" will plot a monthly time series and "weekly" a

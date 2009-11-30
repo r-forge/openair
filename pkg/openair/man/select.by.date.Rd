@@ -17,9 +17,9 @@ year = 2008, month = 1, day = "weekday", hour = 1)
 \item{mydata}{A data frame containing a \code{date} field in hourly or
   high resolution format.}
 
-\item{start}{A start date in the form d/m/y e.g. 1/2/1999.}
+\item{start}{A start date in the form d/m/yyyy e.g. "1/2/1999".}
 
-\item{end}{An end date in the form d/m/y e.g. 31/5/1999.}
+\item{end}{An end date in the form d/m/yyyy e.g. "31/5/1999".}
 
 \item{year}{A year or years to select e.g. \code{year = 1998:2004} to
   select 1998-2004 inclusive or \code{year = c(1998, 2004)} to select

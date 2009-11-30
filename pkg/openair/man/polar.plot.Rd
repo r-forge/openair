@@ -47,9 +47,9 @@ auto.text = TRUE, ...)  }
     variation of different variables dependent on another. See function 
     \code{cut.data} for further details.}
 
-  \item{resolution}{Two plot resolutions can be set: \code{normal} (the
-    default) and \code{fine}, for a smoother plot. It should be noted
-    that plots with a \code{fine} resolution can take longer to render
+  \item{resolution}{Two plot resolutions can be set: "normal" (the
+    default) and "fine", for a smoother plot. It should be noted
+    that plots with a "fine" resolution can take longer to render
     and the default option should be sufficient or most circumstances.}
 
   \item{limits}{The function does its best to choose sensible limits
@@ -75,12 +75,11 @@ auto.text = TRUE, ...)  }
 
   \item{min.bin}{The minimum number of points allowed in a wind
     speed/wind direction bin.  The default is 1. A value of two requires
-    at least 2 valid records in each bin (units of 1 m/s and 10 degrees)
-    an so on; bins with less than 2 valid records are set to NA. Care
-    should be taken when using a value > 1 because of the risk of removing
-    real data points. It is recommended to consider your data with
-    care. Also, the \code{polar.freq} function can be of use in
-    such circumstances.}
+    at least 2 valid records in each bin an so on; bins with less than 2
+    valid records are set to NA. Care should be taken when using a value
+    > 1 because of the risk of removing real data points. It is
+    recommended to consider your data with care. Also, the
+    \code{polar.freq} function can be of use in such circumstances.}
 
   \item{upper}{This sets the upper limit wind speed to be used. Often
     there are only a relatively few data points at very high wind speeds

@@ -35,14 +35,14 @@ auto.text = TRUE, ...)
   corresponding to a variable in a data frame should be supplied
   e.g. \code{pollutant = "nox"} }
 
-\item{resolution}{Two plot resolutions can be set: \code{normal} and
-  \code{fine} (the default).}
+\item{resolution}{Two plot resolutions can be set: \code{"normal"} and
+  \code{"fine"} (the default).}
 
 \item{local.time}{Should the results be calculated in local time? The
   default is \code{TRUE}. Emissions activity tends to occur at local
   time e.g. rush hour is at 8 am every day. When the clocks go forward
   in spring, the emissions are effectively released into the
-  atmosphere at GMT - 1 hour during the summer. When plotting
+  atmosphere at BST - 1 hour during the summer. When plotting
   diurnal profiles, this has the effect of "smearing-out" the
   concentrations. A better approach is to express time as local time,
   which here is defined as BST (British Summer Time). This correction

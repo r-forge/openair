@@ -39,23 +39,23 @@ not necessarily) a pollutant.}
 
   \item{type}{The type of analysis to be done. The default is will
 produce a single plot using the entire data. Other types include
-\code{hour} (for hour of the day), \code{weekday} (for day of the week),
-\code{month} (for month of the year), \code{wd} (wind direction split
-into eight sectors and \code{ws} (wind speed split into eight
-quantiles). There is an option \code{site}, which requires a slightly
-different format. If \code{site} is used a data frame with headings
+"hour" (for hour of the day), "weekday" (for day of the week),
+"month" (for month of the year), "wd" (wind direction split
+into eight sectors and "ws" (wind speed split into eight
+quantiles). There is an option "site", which requires a slightly
+different format. If "site" is used a data frame with headings
 \code{date}, a pollutant and \code{site} is required. It is also
 possible to choose \code{type} as another variable in the data
 frame. For example, \code{type = "o3"} will plot four wind roses for
 different levels of ozone, split into four quantiles (approximately
 equal numbers of counts in each of the four splits). This offers great
 flexibility for understanding the variation of different variables
-dependent on another. See function\code{cut.data} for more details on
+dependent on another. See function \code{cut.data} for more details on
 the flexibility here.}
 
-  \item{period}{Either \code{monthly} (the default), or
-\code{annual}. Determines whether monthly mean or annual mean trends are
-plotted. Note that for \code{annual}, six or more years are required.}
+  \item{period}{Either "monthly" (the default), or "annual". Determines
+whether monthly mean or annual mean trends are plotted. Note that for
+"annual", six or more years are required.}
 
   \item{simulate}{Should simulations be carried out to determine the
 Mann-Kendall tau and p-value. The default is \code{FALSE}. If
