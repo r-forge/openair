@@ -10,7 +10,7 @@ rates.  }
 
 \usage{
 time.average(mydata,
-period = "days",
+period = "day",
 data.thresh = 0,
 statistic = "mean",
 percentile = 95,
@@ -99,14 +99,14 @@ and setting different averaging periods easily helps with interpretation.
 
 \examples{
 ## daily average values
-daily <- time.average(mydata, period = "days")
+daily <- time.average(mydata, period = "day")
 
 ## daily average values ensuring at least 75 \% data capture
 ## i.e. at least 18 valid hours
-daily <- time.average(mydata, period = "days", data.thresh = 75)
+daily <- time.average(mydata, period = "day", data.thresh = 75)
 
 ## 2-weekly averages
-fortnight <- time.average(mydata, period = "2 weeks")
+fortnight <- time.average(mydata, period = "2 week")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
