@@ -35,7 +35,7 @@ cut.data <- function(mydata, type = "default") {
     }
 
     if (type == "default") mydata$cond <- mydata$cond <- paste(format(min(mydata$date),
-        "%d % %B %Y"), " to ", format(max(mydata$date), "%d % %B %Y"), sep = "")
+        "%d %B %Y"), " to ", format(max(mydata$date), "%d %B %Y"), sep = "")
 
     if (type == "year") mydata$cond <- format(mydata$date, "%Y")
 
