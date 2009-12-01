@@ -24,7 +24,8 @@ main = "",
 auto.text = TRUE, ...)
 }
 
-%- maybe also 'usage' for other objects documented here.  \arguments{
+%- maybe also 'usage' for other objects documented here.
+\arguments{
 \item{polar}{A data frame minimally containing \code{ws}, \code{wd} and
 \code{date}.}
 

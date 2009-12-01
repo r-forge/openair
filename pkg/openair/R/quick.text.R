@@ -112,7 +112,12 @@ ans <- gsub("ch4","' 'CH' [4] * '", ans)
 	ans <- gsub("g/km", "' 'g km' ^-1 *'", ans)
 	ans <- gsub("g/s", "' 'g s' ^-1 *'", ans)
 	ans <- gsub("km/hr", "' 'km hr' ^-1 *'", ans)
+        ans <- gsub("km/h", "' 'km hr' ^-1 *'", ans)
 	ans <- gsub("km/hour", "' 'km hr' ^-1 *'", ans)
+
+        ans <- gsub("km/hr/s", "' 'km hr' ^-1 ' s' ^-1 *'", ans)
+        ans <- gsub("km/h/s", "km hr' ^-1 * ' s' ^-1 *'", ans)
+	ans <- gsub("km/hour/s", "' 'km hr' ^-1 ' s' ^-1 *'", ans)
 
 # R2
 	ans <- gsub("r2", "R' ^2 *'", ans)
