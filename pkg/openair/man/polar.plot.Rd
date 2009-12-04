@@ -11,21 +11,16 @@
   carried out using \code{mgcv}.  }
 
 \usage{
-polar.plot(polar,
-pollutant = "nox",
-type = "default",
-resolution = "normal",
-limits = c(0, 100),
-exclude.missing = TRUE,
-cols = "default",
-min.bin = 1,
-upper = 10,
-force.positive = TRUE,
-k = 100, main = "",
-auto.text = TRUE, ...)  }
+polar.plot(polar, pollutant = "nox", type = "default",
+resolution = "normal", limits = c(0, 100), exclude.missing = TRUE,
+uncertainty = FALSE, cols = "default", min.bin = 1,
+upper = 10, ws.int = 5, angle.scale = 45,
+units = "(m/s)", force.positive = TRUE, k = 100,
+ main = "", auto.text = TRUE, ...)  }
 %- maybe also 'usage' for other objects documented here.
 
-\arguments{ \item{polar}{A data frame minimally containing \code{ws},
+\arguments{
+  \item{polar}{A data frame minimally containing \code{ws},
     \code{wd} and a pollutant. Can also contain \code{date} if plots by
     time period are required.}
 
@@ -66,7 +61,18 @@ auto.text = TRUE, ...)  }
     too far from the original data produces a plot where it is clear where
     the original data lie. If set to \code{FALSE} missing data will be
     interpolated.}
-
+  
+  \item{uncertainty}{Should the uncertainty in the calculated surface be
+    shown? If \code{TRUE} three plots are produced on the same scale
+    showing the predicted surface together with the estimated lower and
+    upper uncertainties at the 95\% confidence interval. Calculating the
+    uncertainties is useful to understand whether features are real or
+    not. For example, at high wind speeds where there are few data there is
+    greater uncertainty over the predicted values. The uncertainties are
+    calculated using the GAM and weighting is done by the frequency of
+    measurements in each wind speed-direction bin. Note that if
+    uncertainties are calculated then the type is set to "default".}
+  
   \item{cols}{Colours to be used for plotting. Options include
     "default", "increment", "heat", "jet" and user defined. For user
     defined the user can supply a list of colour names recognised by R
@@ -85,6 +91,22 @@ auto.text = TRUE, ...)  }
     there are only a relatively few data points at very high wind speeds
     and plotting all of them can reduce the useful information in the
     plot. }
+
+  \item{ws.int}{This sets the (dashed) circular grid line spacing. The
+    default is 5. It can be useful, for example, to set \code{ws.int} to a
+    lower value when the wind speeds are low to get a sensible grid
+    spacing. }
+
+  \item{angle.scale}{The wind speed scale is by default shown at a 45
+    degree angle. Sometimes the placement of the scale may interfere with
+    an interesting feature. The user can therefore set \code{angle.scale}
+    to another value (between 0 and 360 degrees) to mitigate such
+    problems. For example \code{angle.scale = 315} will draw the scale
+    heading in a NW direction.}
+
+  \item{units}{The units shown on the wind speed scale. These are only
+    shown on the third highest \code{ws.int} interval to reduce chart
+    clutter.}
 
   \item{force.positive}{The default is \code{TRUE}. Sometimes if
     smoothing data with streep gradients it is possible for predicted
@@ -134,6 +156,22 @@ auto.text = TRUE, ...)  }
   defaults used in \code{polar.plot} are based on the analysis of data
   from many different sources. More advanced users may wish to modify
   the code and adopt other smoothing approaches.
+
+  These plots often show interesting features at higher wind speeds (see
+  references below). For these conditions there can be very few
+  measurements and therefore greater uncertainty in the calculation of
+  the surface. There are several ways in which this issue can be
+  tackled. First, it is possible to avoid smoothing altogether and use
+  \code{\link{polar.freq}}. Second, the effect of setting a minimum
+  number of measurements in each wind speed-direction bin can be
+  examined through \code{min.bin}. It is possible that a single point at
+  high wind speed conditions can strongly affect the surface
+  prediction. Therefore, setting \code{min.bin = 3}, for example, will
+  remove all wind speed-direction bins with fewer than 3 measurements
+  \emph{before} fitting the surface. Third, consider setting
+  \code{uncertainty = TRUE}. This option will show the predicted surface
+  together with upper and lower 95\% confidence intervals, which take
+  account of the frequency of measurements.
 
   Variants on \code{polar.plot} include \code{polar.annulus} and
   \code{polar.freq}.  }
@@ -197,6 +235,9 @@ polar.plot(mydata, pollutant = "nox", min.bin = 3)
 # plot by day of the week
 
 \dontrun{polar.plot(mydata, pollutant = "pm10", type = "weekday")}
+
+# show the 95\% confidence intervals in the surface fitting
+polar.plot(mydata, pollutant = "so2", uncertainty = TRUE)
 
 }
 

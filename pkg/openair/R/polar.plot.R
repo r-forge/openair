@@ -5,15 +5,21 @@ polar.plot <- function(polar,
                        resolution = "normal",
                        limits = c(0, 100),
                        exclude.missing = TRUE,
+                       uncertainty = FALSE,
                        cols = "default",
                        min.bin = 1,
                        upper = 10,
+                       ws.int = 5,
+                       angle.scale = 45,
+                       units = "(m/s)",
                        force.positive = TRUE,
                        k = 100,
                        main = "",
                        auto.text = TRUE, ...) {
     library(plyr)
- 
+
+    if (uncertainty) type <- "default" ## can't have conditioning here
+    
     ## extract variables of interest
     vars <- c("ws", "wd", "date", pollutant)
     if (type == "site") vars <- c("date", pollutant, "ws", "wd", "site")
@@ -28,8 +34,6 @@ polar.plot <- function(polar,
     max.ws <- ceiling(max(polar$ws, na.rm = TRUE))
     if(missing(upper)) upper <- max.ws
 
-    polar$wd[polar$wd == 0] <- 360
-
     ## for resolution of grid plotting (default = 101; fine =201)
     if (resolution == "normal") int <- 101
     if (resolution == "fine") int <- 201
@@ -40,9 +44,9 @@ polar.plot <- function(polar,
     wd <- seq(from = 10, to = 360, by = 10) ## wind directions from 10 to 360
     ws.wd <- expand.grid(ws = ws, wd = wd)
 
-    u <- ws.wd$ws * sin(pi * ws.wd$wd / 180) # #convert to polar coords
-    v <- ws.wd$ws * cos(pi * ws.wd$wd / 180)
-
+    u <- with(ws.wd, ws * sin(pi * wd / 180))  ## convert to polar coords
+    v <- with(ws.wd, ws * cos(pi * wd / 180))
+   
     ## data to predict over
     input.data <- expand.grid(u = seq(-upper, upper, length = int),
                               v = seq(-upper, upper, length = int))
@@ -64,20 +68,36 @@ polar.plot <- function(polar,
 ######################Smoothing#################################################
         if (force.positive) n <- 0.5 else n <- 1
 
-        Mgam <- gam(binned ^ n ~ s(u, v, k = k))
+        ## no uncertainty to calculate
+        if (!uncertainty) {
+            Mgam <- gam(binned ^ n ~ s(u, v, k = k))
+            pred <- predict.gam(Mgam, input.data)
+            results <- data.frame(u = input.data$u, v = input.data$v,
+                                  z = pred, cond = polar$cond[1])
+            
+        } else {
+            
+            ## uncertainties calculated, weighted by number of points in each bin
+            Mgam <- gam(binned ^ n ~ s(u, v, k = k), weights = binned.len)
+            pred <- predict.gam(Mgam, input.data, se = TRUE)
 
-        pred <- predict.gam(Mgam, input.data)
-        pred <- pred ^ (1 / n)
+            ## approximate 95 % CI
+            Lower <- (pred[[1]] - 2 * pred[[2]]) ^ (1 / n)
+            Upper <- (pred[[1]] + 2 * pred[[2]]) ^ (1 / n)
+            pred <- (pred[[1]]) ^ (1 / n)
+         
+            n <- length(pred)
+            results <-  data.frame(u = rep(input.data$u, 3), v = rep(input.data$v, 3),
+                                   z = c(pred, Lower, Upper),
+                                   cond = rep(c("prediction", "lower uncertainty",
+                                   "upper uncertainty"), each = n))
+        }
 
 #############################################################################
-
-        results <- data.frame(u = input.data$u, v = input.data$v,
-                              z = pred, cond = polar$cond[1])
-
-        if (exclude.missing) {
+        ## function to remove points too far from original data
+        exclude <- function(results) {
 
             ## exclude predictions too far from data (from mgcv)
-
             x <- seq(-upper, upper, length = int)
             y <- x
             res <- int
@@ -91,24 +111,30 @@ polar.plot <- function(polar,
             results$z[ind] <- NA
             results
         }
+        
+        if (exclude.missing) results <- ddply(results, .(cond), exclude)
+        
+        results
     }
 
 #############################################################################
-  
+    
     results.grid <- ddply(polar, .(cond), prepare.grid)
- 
+    
     ## remove wind speeds > upper to make a circle
     results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
     strip <- TRUE
     skip <- FALSE
-    if (type == "default") 	strip = FALSE ## remove strip
-
+    if (type == "default") strip <- FALSE ## remove strip
+    if (uncertainty) strip <- TRUE
+    
     ## auto-scaling
-    nlev = 200  ## preferred number of intervals
+    nlev <- 200  ## preferred number of intervals
 
     ## handle missing breaks arguments
-    if(missing(limits)) breaks <- pretty(results.grid$z, n = nlev) else breaks <- pretty(limits, n = nlev)
+    if(missing(limits)) breaks <- pretty(results.grid$z, n = nlev) else breaks <-
+        pretty(limits, n = nlev)
 
     nlev2 = length(breaks)
 
@@ -129,11 +155,9 @@ polar.plot <- function(polar,
               main = quick.text(main, auto.text),
               scales = list(draw = FALSE),
               xlim = c(-upper * 1.15, upper * 1.15),
-              ylim =c(-upper * 1.15, upper * 1.15),
+              ylim = c(-upper * 1.15, upper * 1.15),
               ...,
-
-              ## colorkey = list(labels = list(labels=as.character(col.scale),
-              ## at=col.scale, cex = 0.7)),
+              
               panel = function(x, y, z,subscripts,...) {
                   panel.levelplot(x, y, z,
                                   subscripts,
@@ -142,36 +166,24 @@ polar.plot <- function(polar,
                                   col.regions = col,
                                   labels = FALSE)
 
+                  angles <- seq(0, 2 * pi, length = 360)
+                
+                  sapply(seq(ws.int, 10 * ws.int, ws.int), function(x)
+                         llines(x * sin(angles), x * cos(angles), col = "grey", lty = 5))
+
+                  ltext(seq(ws.int, 10 * ws.int, by = ws.int) * sin(pi * angle.scale / 180),
+                        seq(ws.int, 10 * ws.int, by = ws.int) * cos(pi * angle.scale / 180),
+                        paste(seq(ws.int, 10 * ws.int, by = ws.int), c("", "",
+                                                       units, rep("", 7))), cex = 0.7)
+
                   ## add axis line to central polar plot
-                  llines(c(-upper, upper), c(0, 0), col = "grey20")
-                  llines(c(0, 0), c(-upper, upper), col = "grey20")
-
-                  ## annotate
-                  lsegments(seq(-upper, upper), rep(-.2, 2 * upper + 1),
-                            seq(-upper, upper), rep(.2, 2 * upper + 1))
-
-                  lsegments(rep(-.2, 2 * upper + 1), seq(-upper, upper),
-                            rep(.2, 2 * upper + 1),	seq(-upper, upper))
-
-                  ## larger ticks every 5
-                  lsegments(seq(0, upper, by = 5), rep(-0.5, 2 * upper + 1),
-                            seq(0 , upper, by = 5), rep(0.5, 2 * upper + 1))
-
-                  lsegments(seq(0, -upper, by = -5), rep(-0.5, 2 * upper + 1),
-                            seq(0 , -upper, by = -5), rep(0.5, 2 * upper + 1))
-
-                  lsegments(rep(-0.5, 2 * upper + 1), seq(0, upper, by = 5),
-                            rep(0.5, 2 * upper + 1), seq(0, upper, by = 5))
-
-                  lsegments(rep(-0.5, 2 * upper + 1), seq(0, -upper, by = -5),
-                            rep(0.5, 2 * upper + 1), seq(0, -upper, by = -5))
+                  larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
+                  larrows(0, -upper, 0, upper, code = 3, length = 0.1)
 
                   ltext(-upper * 1.07, 0, "W", cex = 0.7)
                   ltext(0, -upper * 1.07, "S", cex = 0.7)
                   ltext(0, upper * 1.07, "N", cex = 0.7)
                   ltext(upper * 1.07, 0, "E", cex = 0.7)
-
               })
-
 }
 
