@@ -142,6 +142,8 @@ polar.plot <- function(polar,
 
     col.scale = breaks
 
+    if (uncertainty) layout <- c(3, 1)
+
     levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
               as.table = TRUE,
               layout = layout,
