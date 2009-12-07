@@ -72,6 +72,7 @@ polar.plot <- function(polar,
         if (!uncertainty) {
             Mgam <- gam(binned ^ n ~ s(u, v, k = k))
             pred <- predict.gam(Mgam, input.data)
+            pred <- pred ^ (1 / n)
             results <- data.frame(u = input.data$u, v = input.data$v,
                                   z = pred, cond = polar$cond[1])
             
@@ -80,11 +81,14 @@ polar.plot <- function(polar,
             ## uncertainties calculated, weighted by number of points in each bin
             Mgam <- gam(binned ^ n ~ s(u, v, k = k), weights = binned.len)
             pred <- predict.gam(Mgam, input.data, se = TRUE)
+            uncer <- 2 * pred[[2]] ## for approx 95% CI
 
-            ## approximate 95 % CI
-            Lower <- (pred[[1]] - 2 * pred[[2]]) ^ (1 / n)
-            Upper <- (pred[[1]] + 2 * pred[[2]]) ^ (1 / n)
-            pred <- (pred[[1]]) ^ (1 / n)
+            ## do not weight for central prediction
+            Mgam <- gam(binned ^ n ~ s(u, v, k = k))
+            pred <- predict.gam(Mgam, input.data)
+            Lower <- (pred - uncer) ^ (1 / n)
+            Upper <- (pred + uncer) ^ (1 / n)
+            pred <- pred ^ (1 / n)
          
             n <- length(pred)
             results <-  data.frame(u = rep(input.data$u, 3), v = rep(input.data$v, 3),
