@@ -21,8 +21,8 @@ time the development will carried out on R-Forge
   \tabular{ll}{
     Package: \tab openair\cr
     Type: \tab Package\cr
-    Version: \tab Alpha pre-release\cr
-    Date: \tab 2009-10-01\cr
+    Version: \tab 0.2\cr
+    Date: \tab 2010-01-11\cr
     License: \tab GPL\cr
     LazyLoad: \tab yes\cr }
 
@@ -59,13 +59,13 @@ k.ropkins@its.leeds.ac.uk} directly.
 \author{
 David Carslaw and Karl Ropkins
 
-Maintainer: David Carslaw <d.c.carslaw@its.leeds.ac.uk>
+Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 
 }
 \references{
 Most reference details are given under the specific functions.
 
-Carslaw, D.C. and K. Ropkins (2009). Open-source tools for analysing air
+Carslaw, D.C. and K. Ropkins (2010). Open-source tools for analysing air
 pollution data. Institute for Transport Studies, University of Leeds.  }
 \keyword{methods}
 
