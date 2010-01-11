@@ -20,10 +20,10 @@ time.plot <- function(mydata,
                       key.columns = 1,
                       auto.text = TRUE, ...)   {
 
-    library(Hmisc)
-    library(lattice)
-    library(reshape)
-    library(plyr)
+    ##library(Hmisc)
+    ##library(lattice)
+    ##library(reshape)
+    ##library(plyr)
     ## basic function to plot single/multiple time series in flexible ways
     ## optionally includes several pre-deifined averaging periods
     ## can deal with wide range of date/time formats e.g. minute, 15-min, hourly, daily

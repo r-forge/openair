@@ -16,7 +16,7 @@ polar.plot <- function(polar,
                        k = 100,
                        main = "",
                        auto.text = TRUE, ...) {
-    library(plyr)
+    ##library(plyr)
 
     if (uncertainty) type <- "default" ## can't have conditioning here
     

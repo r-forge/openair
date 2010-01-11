@@ -123,7 +123,7 @@ convert.date <- function(mydata, format = "%d/%m/%Y %H:%M") {
 ## this function will reshape the data suitable for use in many openair functions
 
 prepare.model <- function(mydata, measured = "obs", modelled = "mod", pollutant = "nox") {
-    library(reshape)
+    ##library(reshape)
     if (missing(mydata)) stop("No data frame was supplied!")
 
     ## make sure there is not a field called site
@@ -283,7 +283,7 @@ useOuterStrips <-function (x, strip = strip.default, strip.left = strip.custom(h
 ### Function to import ERG data from MySQL database airpol
 import.ERG <- function(site = "my1", pollutant = "no2",
                        start.date = "2007-01-01", end.date = "2008-01-01") {
-    library(RODBC)
+    ##library(RODBC)
     Sys.setenv(tz = "GMT")
     con <- odbcConnect("airpol", uid="root", pwd="scotland")
 
@@ -339,7 +339,7 @@ make.package <- function(x) {
 #############################################################################################
 ## make a connection to DCC MySQL db
 connectdb <- function(){
-    library(RODBC)
+    ##library(RODBC)
     Sys.setenv(tz = "GMT")
     con <- odbcConnect("airpol", uid="root", pwd="scotland")
 }

@@ -12,9 +12,9 @@ smooth.trend <- function(mydata,
                          alpha = 0.2,
                          auto.text = TRUE,...)  {
 
-    library(mgcv)
-    library(lattice)
-    library(zoo)
+    ##library(mgcv)
+    ##library(lattice)
+    ##library(zoo)
 
     ## extract variables of interest
     if (type == "wd") vars <- c("date", pollutant, "wd")

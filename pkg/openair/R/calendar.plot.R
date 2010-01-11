@@ -17,7 +17,7 @@ calendar.plot <- function(mydata,
                           auto.text = TRUE,
                           ...) {
 
-    library(plyr)
+    ##library(plyr)
     ## extract variables of interest
     if (annotate == "date") vars <- c("date", pollutant)
     if (annotate == "wd") vars <- c("wd", "date", pollutant)

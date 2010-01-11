@@ -6,9 +6,10 @@
 ## Author: DCC with Mann-Kendall and Sen-Theil functions from
 ## Rand Wilcox
 ###############################################################################
-library(lattice)
-library(zoo)
-library(boot)
+
+##library(lattice)
+##library(zoo)
+##library(boot)
 
 MannKendall <- function(mydata,
                         pollutant = "nox",

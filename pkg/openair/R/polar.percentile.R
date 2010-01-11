@@ -11,8 +11,8 @@ polar.percentile <- function(polar,
 		auto.text = TRUE,...) {
 
 	#needs access to these packages
-	library(mgcv)    #for smoothing surfaces and removing noise
-	library(lattice) #basic plotting
+	##library(mgcv)    #for smoothing surfaces and removing noise
+	##library(lattice) #basic plotting
 
 	#extract variables of interest
 

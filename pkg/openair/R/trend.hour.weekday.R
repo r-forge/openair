@@ -8,9 +8,9 @@ trend.hour.weekday <-  function(mydata,
 				ylab = pollutant,
 				main = "",
 				auto.text = TRUE,...) {
-    library(lattice)
+    ##library(lattice)
    # library(latticeExtra)
-    library(Hmisc)
+    ##library(Hmisc)
 
 
 trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,

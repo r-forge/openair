@@ -8,8 +8,8 @@ wind.rose <- function(polar,
                       width = 1,
                       units = "(m/s)",
                       auto.text = TRUE,...) {
-    library(lattice)
-    library(reshape) # for rbind.fill
+    ##library(lattice)
+    ##library(reshape) # for rbind.fill
 
     vars <- c("ws", "wd", "date")
 
