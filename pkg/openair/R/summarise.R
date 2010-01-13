@@ -29,7 +29,10 @@ summarise <- function(mydata,
         stop (cat("There are some missing dates on line(s)", which(is.na(mydata$date))),"\n")
     }
 
-     ## print data types - helps with debugging
+    ## for plot
+    dateBreaks <- date.breaks(mydata$date)$major
+
+    ## print data types - helps with debugging
     print(unlist(sapply(mydata, class)))
 
     ## check to see if there is a field site and >1 site
@@ -79,9 +82,9 @@ summarise <- function(mydata,
     end.date <- as.POSIXct(ceil(max(mydata$date), period) - 3600)
 
     ## find time interval of data and pad any missing times
-        interval <- find.time.interval(mydata$date)
-        all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
-        mydata <- merge(mydata, all.dates, all = TRUE)
+    interval <- find.time.interval(mydata$date)
+    all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
+    mydata <- merge(mydata, all.dates, all = TRUE)
 
     mydata <- melt(mydata, id.var = "date")
 
@@ -95,14 +98,10 @@ summarise <- function(mydata,
         newindex <- ifelse(myruns > 1, myruns - 1, 0)
         starts <- cumsum.seq[newindex] + 1
         if (0 %in% newindex) starts = c(1, starts)
-
-        ## plot missing only if there are missing data of sufficient length
-        if (length(myruns > 0)){
-            with(mydata, lrect(as.numeric(date[starts]), 0, as.numeric(date[ends]),
-                  1, col = col, border = NA))}
+        data.frame(starts = mydata$date[starts], ends = mydata$date[ends])
     }
 
-    sum.stats <- function(mydata) {
+    summmary.stats <- function(mydata, period) {
 
         value <- mydata$value
         mis.dat <- sum(is.na(value))
@@ -131,7 +130,26 @@ summarise <- function(mydata,
         (x - rng[1]) / diff(rng)
     }
 
-    plt1 <- xyplot(value ~ date | variable , data = mydata, type = "n",
+    ## split data and calculate things needed for plot
+    split.dat <- split(mydata, mydata$variable)
+
+    monthly.mean <- lapply(split.dat, function(x) aggregate(x[, c("date", "value")],
+                                                            list(dates = format(x$date,
+                                                                 "%Y-%j")),  mean, na.rm = TRUE))
+
+    sum.stats <- lapply(split.dat, summmary.stats, period)
+
+    missing.dat <-  lapply(split.dat, plot.missing, na.len)
+
+    dummy.dat <- lapply(split.dat, head)
+    dummy.dat <- do.call(rbind, dummy.dat)
+
+    min.x <- as.numeric(min(mydata$date))
+    max.x <- as.numeric(max(mydata$date))
+    seq.year <- seq(start.date, end.date, by = period)
+
+
+    plt1 <- xyplot(value ~ date | variable , data = dummy.dat, type = "n",
                    ylim = c(0, 5.5),
                    ylab = "",
                    xlab = date,
@@ -147,32 +165,28 @@ summarise <- function(mydata,
 
                    par.strip.text = list(cex = 0.7),...,
                    panel = function(x, y, subscripts)  {
+                       panelNo <- panel.number()
 
-                       seq.year <- seq(start.date, end.date, by = period)
-
-                       panel.abline(v = date.breaks(mydata$date)$major, col = "grey85")
-
-                       sub.dat <- mydata[subscripts, c("date", "value")]
-
-                       monthly.mean <- aggregate(sub.dat, list(dates = format(sub.dat$date,
-                                                               "%Y-%j")),  mean, na.rm = TRUE)
+                       panel.abline(v = dateBreaks, col = "grey85")
 
                        ## plot the monthly mean data as a line
-                       monthly.mean$value <- 1 + range01(monthly.mean$value) * 4
+                       monthly.mean[[panelNo]]$value <- 1 + range01(monthly.mean[[panelNo]]$value) * 4
 
-                       panel.xyplot(monthly.mean$date, monthly.mean$value, type = "l",
+                       panel.xyplot(monthly.mean[[panelNo]]$date, monthly.mean[[panelNo]]$value, type = "l",
                                     col = col.trend,...)
 
                        ## plot all data region
                        with(mydata, lrect(as.numeric(min(date)), 0,
-                             as.numeric(max(date)), 1, col = col.data, border = NA))
+                                          as.numeric(max(date)), 1, col = col.data, border = NA))
 
-                       ## over-plot missing data
-                       plot.missing(mydata[subscripts,], na.len, col = col.mis)
-                       stats <- sum.stats(mydata[subscripts,])$results
-
-                       min.x <- as.numeric(min(mydata$date))
-                       max.x <- as.numeric(max(mydata$date))
+                       ## over-plot missing data - if there are any
+                       if (nrow(missing.dat[[panelNo]]) > 0)
+                       {
+                           lrect(as.numeric(missing.dat[[panelNo]]$starts), 0,
+                                 as.numeric(missing.dat[[panelNo]]$ends), 1, col = col.mis, border = NA)
+                       }
+                       stats <- sum.stats[[panelNo]]$results
+                       data.cap <- sum.stats[[panelNo]]$data.cap
 
                        ltext(min.x, 4, paste("missing = ", stats[1], " (", stats[2], "%)",
                                              sep = ""), cex = 0.6, pos = 4)
@@ -187,17 +201,14 @@ summarise <- function(mydata,
 
                        ltext(max.x, 2, paste("95th percentile =", stats[7]), cex = 0.6, pos = 2)
 
-                       ltext(seq.year, 5 , paste(sum.stats(mydata[subscripts,])$data.cap, "%")
-                             , cex = 0.6, col = "darkgreen", pos = 4)
+                       ltext(seq.year, 5 , paste(data.cap, "%"), cex = 0.6, col = "darkgreen", pos = 4)
                    })
 
     print(plt1, position = c(0, 0, 0.7, 1), more = TRUE)
 
     ## clip data to help show interesting part of distribution
     if (clip) {
-        DFsplit <- split(mydata, mydata$variable)
-
-        result <- lapply(DFsplit, function(.df) {
+        result <- lapply(split.dat, function(.df) {
             subset(.df, value < quantile(value, probs = percentile, na.rm = TRUE))
         })
 
