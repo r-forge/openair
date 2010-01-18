@@ -2,7 +2,7 @@ Package: openair
 Type: Package
 Title: Open-source tools for the analysis of air pollution data
 Version: 0.2
-Date: 2010-01-11
+Date: 2009-10-01
 Author: David Carslaw and Karl Ropkins
 Imports: proto, grid, plyr, reshape, mgcv, zoo, lattice, boot, RColorBrewer, splines, survival, Hmisc, ggplot2
 Suggests: RODBC, latticeExtra
@@ -11,3 +11,4 @@ Description: Tools to analyse, interpret and understand air pollution data. Data
 License: GPL4?
 LazyLoad: yes
 LazyData: yes
+Packaged: 2010-01-18 09:56:13 UTC; trakr

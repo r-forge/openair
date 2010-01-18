@@ -17,7 +17,9 @@ calendar.plot <- function(mydata,
                           auto.text = TRUE,
                           ...) {
 
-    ##library(plyr)
+    library(lattice)
+    library(plyr)
+
     ## extract variables of interest
     if (annotate == "date") vars <- c("date", pollutant)
     if (annotate == "wd") vars <- c("wd", "date", pollutant)
@@ -35,12 +37,12 @@ calendar.plot <- function(mydata,
                      strip.border = list(col = "black"),
                      axis.line = list(col = "black"),
                      par.strip.text = list(cex =1))
-            
+
     cal.theme <- list(strip.background = list(col = "grey90"),
                      strip.border = list(col = "transparent"),
                      axis.line = list(col = "transparent"),
                      par.strip.text = list(cex = 0.8))
-        
+
     lattice.options(default.theme = cal.theme)
 
     ## all the days in the year
@@ -110,7 +112,7 @@ calendar.plot <- function(mydata,
         mydata <- time.average(mydata, "day")
         mydata$date <- as.Date(mydata$date)
     }
-    
+
     mydata <- cut.data(mydata, type = "month")
     baseData <- mydata
 

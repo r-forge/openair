@@ -28,7 +28,7 @@ req.pcks <- c("proto", "grid", "plyr", "reshape")
 #rest loaded as namespaces in openair
 req.pcks <- all.pcks[!all.pcks %in% req.pcks]
    for (pck in req.pcks) {
-       if(pck %in% ins.pcks & packageHasNamespace(pck, .Library)) {
+       if(pck %in% ins.pcks & any(packageHasNamespace(pck, .libPaths()))) {
            suppressWarnings(namespaceImport("openair", pck))
        } else {
            message(paste("\nWARNING unable to namespace required package '", pck, "'", sep = ""))

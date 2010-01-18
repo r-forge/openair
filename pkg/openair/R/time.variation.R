@@ -13,8 +13,8 @@ time.variation <- function(mydata,
                            auto.text = TRUE,
                            alpha = 0.4, ...)   {
 
-    ##library(Hmisc)
-    ##library(lattice)
+    library(Hmisc)
+    library(lattice)
 
     ## extract variables of interest
     if (type == "wd") vars <- c("date", pollutant, "wd")
