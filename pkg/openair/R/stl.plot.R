@@ -4,8 +4,8 @@ stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,...)  {
     #NOTE! Currently this procedure will fill missing values by the mean of the whole
     # time series
 
-    ##library(lattice)
-    ##library(latticeExtra)
+    library(lattice)
+    library(latticeExtra)
     #extract variables of interest
     vars <- c("date", pollutant)
     mydata <- mydata[, vars]
