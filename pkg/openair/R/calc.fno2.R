@@ -6,9 +6,9 @@ calc.fno2 <- function(input,
                       theme = "bw", ...) {
 {
 
-    ##library(ggplot2)
-    ##library(lattice)
-    ##library(zoo)
+    library(ggplot2)
+    library(lattice)
+    library(zoo)
     ## function to prepare data ######################################################
     prepare <- function(input) {
 
