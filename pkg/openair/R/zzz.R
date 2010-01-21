@@ -13,7 +13,7 @@ ins.pcks <- .packages(all.available = TRUE)
 open.test <- 0
 
 #packages loaded as library
-req.pcks <- c("proto", "grid", "plyr", "reshape")
+req.pcks <- c("proto", "grid", "plyr", "reshape", "splines", "survival", "Hmisc", "lattice", "RColorBrewer")
     for (pck in req.pcks) {
         if(pck %in% ins.pcks) {
             suppressWarnings(require(pck, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
@@ -26,7 +26,7 @@ req.pcks <- c("proto", "grid", "plyr", "reshape")
     }    
 
 #rest loaded as namespaces in openair
-req.pcks <- all.pcks[!all.pcks %in% req.pcks]
+req.pcks <- all.pcks[!all.pcks %in% c("proto")]
    for (pck in req.pcks) {
        if(pck %in% ins.pcks & any(packageHasNamespace(pck, .libPaths()))) {
            suppressWarnings(namespaceImport("openair", pck))
@@ -63,9 +63,10 @@ if(open.test==0){
 
 openair.news <- function(){
   message("\nrecent updates to openair include:")
+  message("\nopenair namespace introduced")
   message("\nNEW function calendar.plot introduced")
   message("\ttype '?calendar.plot' for details")
-  message("\nEXTRA functionality added polar.plot")
+  message("\nEXTRA functionality added to polar.plot")
   message("\tplot surface uncertainity estimation")
   message("\ttype '?polar.plot' for details")
   message("\n")
