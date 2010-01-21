@@ -17,7 +17,7 @@ import.aurn <- function (file = file.choose(),
     date.name <- make.names(date.name)
     time.name <- make.names(time.name)
 
-    initial.ans <- import(file = file, header.at = header.at,
+    initial.ans <- import(file = file, header.at = header.at, na.strings = na.strings,
         data.at = data.at, date.name = date.name, date.break = date.break,
         time.name = time.name, misc.info = misc.info, is.site = NULL,
         bad.24 = bad.24, correct.time = correct.time, output = "working",
@@ -81,6 +81,13 @@ import.aurn <- function (file = file.choose(),
         if (!is.null(misc.info)) {
             comment(ans) <- initial.ans$misc
         }
+        ids <- which(is.na(ans$date))
+        if (length(ids) > 0) {
+            ans <- ans[-ids, ]
+            warning(paste("Missing dates detected, removing", 
+                length(ids), "lines"))
+        }
+
         return(ans)
     }
     else {
