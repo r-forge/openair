@@ -91,19 +91,6 @@ smooth.trend <- function(mydata,
                     mydata <- na.omit(results)
                 }
 
-        ## use loess smooth if <12 points
-        if (length(na.omit(mydata$means)) < 12) {
-            mydata <- na.omit(mydata)
-
-            Loess <- loess(means ~ as.numeric(dates), data = mydata, span = 0.8, degree = 1,
-                           family ="gaussian")
-            predicted <- predict(Loess)
-            results <- data.frame(date = mydata$dates, conc = mydata$means, cond = cond)
-            results <- cbind(results, pred = predicted, lower = NA, upper = NA)
-            results
-
-        } else { ## enough data to calculate uncertainties
-
             ## can't deseason less than 2 years of data
             if (nrow(mydata) < 24) deseason <- FALSE
 
@@ -130,12 +117,12 @@ smooth.trend <- function(mydata,
             }
 
             if (!simulate) {  ## just plot the data
-                mod <- gam(conc ~ s(as.numeric(date)), data = results)
+                tryCatch({mod <- gam(conc ~ s(as.numeric(date)), data = results)
                 pred <- predict(mod, results, se = TRUE)
 
                 results <- cbind(results, pred = pred$fit,
                                  lower = pred$fit - 2 * pred$se.fit,
-                                 upper = pred$fit + 2 * pred$se.fit)
+                                 upper = pred$fit + 2 * pred$se.fit)},  error = function(x) return)
 
             } else {
 
@@ -176,48 +163,21 @@ smooth.trend <- function(mydata,
                                  upper = percentiles[2, ])
             }
             results
-        }
+       # }
     }
 
-    split.data <- split(mydata, mydata$cond)
-    split.data <- lapply(split.data, function(x) process.cond(x))
-    split.data <- do.call(rbind, split.data)
+    split.data <- ddply(mydata, .(cond), process.cond)
 
     ## define the levels for plotting
 
-    if (type == "wd") {
-
-        layout = c(3, 3)
-
-    }
-
-    if (type == "hour") {
-        levels(split.data$cond) <- paste("hour = ", 0:23)
-
-        layout = c(6, 4)
-    }
-
-    if (type == "weekday") {
-        weekdays <- weekday.name
-
-        split.data$cond <- ordered(split.data$cond, levels = weekdays)
-
-        layout = c(3, 3)
-    }
-
-    if (type == "ws"){
-        ws.levels = levels(split.data$cond)
-        ws.levels <- gsub("[,]", " to ", ws.levels)
-        ws.levels <- gsub("[(]|[)]|[[]|[]]", "", ws.levels)
-        levels(split.data$cond) <- ws.levels
-        layout = c(4, 2)
-    }
+    if (type == "wd") layout = c(3, 3)
 
     strip <- TRUE
     skip <- FALSE
-    if (type == "default") 	strip = FALSE ## remove strip
+    if (type == "default") strip <- FALSE ## remove strip
     if (type == "wd") skip <-  c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE,
         FALSE, FALSE)
+
 
     xyplot(conc ~ date | cond, data = split.data,
            as.table = TRUE,
@@ -230,20 +190,17 @@ smooth.trend <- function(mydata,
            ...,
 
            panel = function(x, y, subscripts,...) {
-               panel.shade(split.data, start.year, end.year)
 
-               x1 <- c(split.data$date[subscripts],
-                       rev(split.data$date[subscripts]))
-               y1 <- c(split.data$lower[subscripts],
-                       rev(split.data$upper[subscripts]))
-               if (ci) lpolygon(x1, y1, col = rgb(1, 0, 0, alpha),
-                                border = NA)
+               panel.shade(split.data, start.year, end.year, ylim = current.panel.limits()$ylim)
+
+               x1 <- c(split.data$date[subscripts], rev(split.data$date[subscripts]))
+               y1 <- c(split.data$lower[subscripts], rev(split.data$upper[subscripts]))
+               if (ci) lpolygon(x1, y1, col = rgb(1, 0, 0, alpha), border = NA)
 
                panel.xyplot(x, y, type = "b",...)
 
                llines(split.data$date[subscripts], split.data$pred[subscripts],
                       lwd = 2, col = rgb(1, 0,0))
-
 
            })
 

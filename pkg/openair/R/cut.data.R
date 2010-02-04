@@ -10,9 +10,10 @@ cut.data <- function(mydata, type = "default") {
     if (type %in% conds == FALSE) { ## generic, user-defined
         ## split by four quantiles unless it is a factor, in which case keep as is
 
-        if (is.factor(mydata[, type])) {
+        if (is.factor(mydata[, type]) | is.character(mydata[, type])) {
 
-            mydata$cond <- mydata[, type]
+            mydata$cond <- as.character(mydata[, type])
+
 
         } else {
 

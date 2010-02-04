@@ -26,7 +26,10 @@ lty = 1:length(pollutant),
 lwd = 1,
 key = TRUE,
 strip = TRUE,
+log = FALSE,
+smooth = FALSE,
 key.columns = 1,
+name.pol = pollutant,
 auto.text = TRUE, ...)
 }
 
@@ -126,10 +129,30 @@ auto.text = TRUE, ...)
 
   \item{strip}{Should a strip be drawn? The default is \code{TRUE}.}
 
+   \item{log}{Should the y-axis appear on a log scale? The default is
+   \code{FALSE}. If \code{TRUE} a well-formatted log10 scale is
+   used. This can be useful for plotting data for several different
+   pollutants that exist on very different scales. It is therefore
+   useful to use \code{log = TRUE} together with \code{group = TRUE}.}
+
+ \item{smooth}{Should a smooth line be applied to the data? The default
+   is \code{FALSE}.}
+
+ \item{ci}{If a smooth fit line is applied, then \code{ci} determines
+ whether the 95\% confidence intervals aer shown.}
+
   \item{key.columns}{Number of columns to be used in the key. With many
   pollutants a single column can make to key too wide. The user can thus
   choose to use several columns by setting \code{columns} to be less
   than the number of pollutants.}
+
+\item{name.pol}{This option can be used to give alternative names for
+  the variables plotted. Instead of taking the column headings as names,
+  the user can supply replacements. For example, if a column had the
+  name "nox" and the user wanted a different description, then setting
+  \code{pol.name = "nox before change"} can be used. If more than one
+  pollutant is plotted then use \code{c} e.g. \code{pol.name = c("nox
+  here", "o3 there")}.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
     titles and axis labels will automatically try and format pollutant
