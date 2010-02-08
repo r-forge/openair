@@ -28,6 +28,7 @@ key = TRUE,
 strip = TRUE,
 log = FALSE,
 smooth = FALSE,
+ci = TRUE,
 key.columns = 1,
 name.pol = pollutant,
 auto.text = TRUE, ...)

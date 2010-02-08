@@ -10,7 +10,6 @@ scatter.plot <- function(mydata,
                          percentile = 95,
                          type = "default",
                          layout = c(1, 1),
-
                          smooth = TRUE,
                          linear = FALSE,
                          ci = TRUE,
@@ -78,8 +77,8 @@ scatter.plot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 ################################################################################################
+    if (type == "default") vars <- c("date", x, y) else  vars <- c("date", x, y, type)
 
-    vars <- c("date", x, y)
 
     ## data checks
     mydata <- check.prep(mydata, vars, type)

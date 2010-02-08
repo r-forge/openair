@@ -103,12 +103,10 @@ smooth.trend <- function(mydata,
 
                 ssd <- stl(myts, s.window = 35, robust = TRUE, s.degree = 0)
 
-                deseas <- ssd$time.series[, "trend"] +
-                    ssd$time.series[, "remainder"]
+                deseas <- ssd$time.series[, "trend"] + ssd$time.series[, "remainder"]
                 deseas <- as.vector(deseas)
 
-                results <- data.frame(date = dates, conc = as.vector(deseas),
-                                      cond = cond)
+                results <- data.frame(date = dates, conc = as.vector(deseas), cond = cond)
 
             } else {
 
@@ -163,7 +161,6 @@ smooth.trend <- function(mydata,
                                  upper = percentiles[2, ])
             }
             results
-       # }
     }
 
     split.data <- ddply(mydata, .(cond), process.cond)

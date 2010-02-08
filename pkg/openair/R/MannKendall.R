@@ -177,7 +177,7 @@ MannKendall <- function(mydata,
 
                   panel = function(x, y, subscripts,...){
                       ## year shading
-                      panel.shade(split.data, start.year, end.year)
+                      panel.shade(split.data, start.year, end.year, ylim = current.panel.limits()$ylim)
 
                       panel.xyplot(x, y, type = "b",...)
 
@@ -214,7 +214,7 @@ MannKendall <- function(mydata,
 
 
 
-panel.shade <- function(split.data, start.year, end.year) {
+panel.shade <- function(split.data, start.year, end.year, ylim) {
     ## for polygons on lattice plots - shading alternate years
 
     x1 <- as.Date(seq(ISOdate(start.year, 1, 1),
@@ -224,6 +224,13 @@ panel.shade <- function(split.data, start.year, end.year) {
     rng <- range(split.data$conc, na.rm = TRUE) ## range of data
     y1 <- min(split.data$conc, na.rm = TRUE) - 0.1 * abs(rng[2] - rng[1])
     y2 <- max(split.data$conc, na.rm = TRUE) + 0.1 * abs(rng[2] - rng[1])
+
+    ## if user selects specific limits
+
+    if (!missing(ylim)) {
+         y1 <- ylim[1] - 0.1 * abs(ylim[2] - ylim[1])
+         y2 <- ylim[2] + 0.1 * abs(ylim[2] - ylim[1])
+    }
 
     sapply(seq_along(x1), function(x) lpolygon(c(x1[x], x1[x], x2[x], x2[x]),
                                                c(y1, y2, y2, y1),
