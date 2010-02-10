@@ -256,38 +256,7 @@ scatter.plot <- function(mydata,
     if (method == "density") print(pltkernel)
 }
 
-panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., se = TRUE,
-                       level = 0.95, n = 100, col = plot.line$col, col.se = col,
-                       lty = plot.line$lty, lwd = plot.line$lwd, alpha = plot.line$alpha,
-                       alpha.se = 0.25, border = NA, subscripts, group.number, group.value,
-                       type, col.line, col.symbol, fill, pch, cex, font, fontface,
-                       fontfamily)
-{
-    library(mgcv)
 
-    thedata <- data.frame(x = x, y = y)
-    tryCatch({mod <- gam(y ~ s(x), se = TRUE, data = thedata)
-
-
-              lims <- current.panel.limits()
-              xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
-              xseq <- seq(xrange[1], xrange[2], length = n)
-
-              pred <- predict(mod, data.frame(x = xseq), se = se)
-              if (se) {
-                  std <- qnorm(level / 2 + 0.5)
-                  panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -
-                                                        std * pred$se, rev(pred$fit + std * pred$se)),
-                                col = col.se, alpha = alpha.se, border = border)
-                  pred <- pred$fit
-              }
-
-
-              panel.lines(xseq, pred, col = col, alpha = alpha, lty = lty,
-                          lwd = 2)
-
-          }, error = function(x) return)
-}
 
 panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..., se = TRUE,
                           level = 0.95, n = 100, col = plot.line$col, col.se = col,

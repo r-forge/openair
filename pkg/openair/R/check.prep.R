@@ -7,25 +7,20 @@ check.prep <- function(mydata, Names, type, remove.calm = TRUE) {
 
     ## deal with conditioning variable if present, if user-defined, must exist in data
     ## pre-defined types
-    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend", "monthyear")
-    if ((type %in% conds) & (type %in% Names == FALSE)) {
-        Names <- Names
-    } else {
-        Names <- c(Names, type)
-    }
+    ## existing conditioning variables that only depend on date (which is checked)
+    conds <- c("default", "year", "hour", "month", "season", "weekday", "weekend", "monthyear")
+    all.vars <- unique(c(names(mydata), conds))
 
-    Names <- unique(Names)
-
-    ## first check all variable names are present and stop if they are not
-    ## tell user which ones are missing
-
-    varNames <- names(mydata)
-    matching <- Names %in% varNames
+    varNames <- c(Names, type) ## names we want to be there
+    matching <- varNames %in% all.vars
 
     if (any(!matching)) {
         ## not all variables are present
-        stop(cat("Can't find the variable(s)", Names[!matching], "\n"))
+        stop(cat("Can't find the variable(s)", varNames[!matching], "\n"))
     }
+
+    ## add type to names if not in pre-defined list
+    if (type %in% conds == FALSE) Names <- c(Names, type)
 
     ## just select data needed
     mydata <- mydata[, Names]

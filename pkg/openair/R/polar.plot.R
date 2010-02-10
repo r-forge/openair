@@ -19,11 +19,9 @@ polar.plot <- function(polar,
     ##library(plyr)
 
     if (uncertainty) type <- "default" ## can't have conditioning here
-    
+
     ## extract variables of interest
     vars <- c("ws", "wd", "date", pollutant)
-    if (type == "site") vars <- c("date", pollutant, "ws", "wd", "site")
-    if (type == "temp") vars <- c("date", pollutant, "ws", "wd", "temp")
 
     polar <- check.prep(polar, vars, type)
     polar <- na.omit(polar)
@@ -46,7 +44,7 @@ polar.plot <- function(polar,
 
     u <- with(ws.wd, ws * sin(pi * wd / 180))  ## convert to polar coords
     v <- with(ws.wd, ws * cos(pi * wd / 180))
-   
+
     ## data to predict over
     input.data <- expand.grid(u = seq(-upper, upper, length = int),
                               v = seq(-upper, upper, length = int))
@@ -75,9 +73,9 @@ polar.plot <- function(polar,
             pred <- pred ^ (1 / n)
             results <- data.frame(u = input.data$u, v = input.data$v,
                                   z = pred, cond = polar$cond[1])
-            
+
         } else {
-            
+
             ## uncertainties calculated, weighted by number of points in each bin
             Mgam <- gam(binned ^ n ~ s(u, v, k = k), weights = binned.len)
             pred <- predict.gam(Mgam, input.data, se = TRUE)
@@ -89,7 +87,7 @@ polar.plot <- function(polar,
             Lower <- (pred - uncer) ^ (1 / n)
             Upper <- (pred + uncer) ^ (1 / n)
             pred <- pred ^ (1 / n)
-         
+
             n <- length(pred)
             results <-  data.frame(u = rep(input.data$u, 3), v = rep(input.data$v, 3),
                                    z = c(pred, Lower, Upper),
@@ -115,16 +113,16 @@ polar.plot <- function(polar,
             results$z[ind] <- NA
             results
         }
-        
+
         if (exclude.missing) results <- ddply(results, .(cond), exclude)
-        
+
         results
     }
 
 #############################################################################
-    
+
     results.grid <- ddply(polar, .(cond), prepare.grid)
-    
+
     ## remove wind speeds > upper to make a circle
     results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
@@ -132,7 +130,7 @@ polar.plot <- function(polar,
     skip <- FALSE
     if (type == "default") strip <- FALSE ## remove strip
     if (uncertainty) strip <- TRUE
-    
+
     ## auto-scaling
     nlev <- 200  ## preferred number of intervals
 
@@ -163,7 +161,7 @@ polar.plot <- function(polar,
               xlim = c(-upper * 1.15, upper * 1.15),
               ylim = c(-upper * 1.15, upper * 1.15),
               ...,
-              
+
               panel = function(x, y, z,subscripts,...) {
                   panel.levelplot(x, y, z,
                                   subscripts,
@@ -173,7 +171,7 @@ polar.plot <- function(polar,
                                   labels = FALSE)
 
                   angles <- seq(0, 2 * pi, length = 360)
-                
+
                   sapply(seq(ws.int, 10 * ws.int, ws.int), function(x)
                          llines(x * sin(angles), x * cos(angles), col = "grey", lty = 5))
 

@@ -60,11 +60,8 @@ time.plot <- function(mydata,
     }
 ###################################################################################
 
-    if (type == "default") {
         vars <- c("date", pollutant)
-    } else {
-        vars <- c("date", pollutant, type)
-    }
+
 ##### warning messages and other checks ################################################################
     if (type =="site" & length(pollutant) > 1) stop("Only one pollutant allowed
 with option type = 'site'")

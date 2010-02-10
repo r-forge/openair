@@ -97,8 +97,9 @@ least two other variables to plot.}
     (approximately equal numbers of counts in each of the four
     splits). This offers great flexibility for understanding the
     variation of different variables dependent on another. See function
-    \code{cut.data} for further details. Note option "site" is not yet
-    available.}
+    \code{cut.data} for further details. Note there is also an option
+    "site", which is used for situations where there is a column "site"
+    and multiple sites are present..}
 
 
   \item{layout}{Determines how the panels are laid out. By default,
@@ -228,6 +229,8 @@ FALSE, linear = TRUE, avg.time = "day")
 scatter.plot(mydata, x = "nox", y = "no2", type = "year", smooth =
 FALSE, linear = TRUE, avg.time = "day", log.x = TRUE, log.y = TRUE)
 
+# also works with the x-axis in date format (alternative to time.plot)
+scatter.plot(mydata, x = "date", y = "no2", avg.time = "month", key = FALSE)
 
 # use hexagonal binning
 \dontrun{

@@ -10,71 +10,101 @@ smooth.trend(mydata,
 pollutant = "nox",
 deseason = FALSE,
 type = "default",
+statistic = "mean",
+ percentile = 95,
 simulate = FALSE,
-n = 200,
+ n = 200,
 autocor = FALSE,
-ylab = pollutant,
-main = "",
+cols = "brewer1",
+ ylab = pollutant,
+lty = 1,
+ lwd = 1,
+ key.columns = length(percentile),
+ main = "",
 ci = FALSE,
 alpha = 0.2,
-auto.text = TRUE, ...)
+auto.text = TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mydata}{A data frame containing the field \code{date} and at least
-one other parameter for which a trend test is required; typically (but
-not necessarily) a pollutant.}
+    one other parameter for which a trend test is required; typically (but
+    not necessarily) a pollutant.}
 
   \item{pollutant}{The parameter for which a trend test is
     required. Mandatory.}
 
   \item{deseason}{Should the data be de-deasonalized first? If
-  \code{TRUE} the function \code{stl} is used (seasonal trend
-  decomposition using loess). Note that if \code{TRUE} missing data are
-  first linearly interpolated because \code{stl} cannot handle missing
-  data.}
+    \code{TRUE} the function \code{stl} is used (seasonal trend
+    decomposition using loess). Note that if \code{TRUE} missing data are
+    first linearly interpolated because \code{stl} cannot handle missing
+    data.}
 
   \item{type}{The type of analysis to be done. The default is will
-produce a single plot using the entire data. Other types include
-\code{hour} (for hour of the day), \code{weekday} (for day of the week),
-\code{month} (for month of the year), \code{wd} (wind direction split
-into eight sectors and \code{ws} (wind speed split into eight
-quantiles). Finally, there is an option \code{site}, which requires a
-slightly different format. If \code{site} is used a data frame with
-headings \code{date}, a pollutant and \code{site} is required. It is
-also possible to choose \code{type} as another variable in the data
-frame. For example, \code{type = "o3"} will plot four wind roses for
-different levels of ozone, split into four quantiles (approximately
-equal numbers of counts in each of the four splits). This offers great
-flexibility for understanding the variation of different variables
-dependent on another. See function \code{cut.data} for further information.}
+    produce a single plot using the entire data. Other types include
+    \code{hour} (for hour of the day), \code{weekday} (for day of the week),
+    \code{month} (for month of the year), \code{wd} (wind direction split
+    into eight sectors and \code{ws} (wind speed split into eight
+    quantiles). Finally, there is an option \code{site}, which requires a
+    slightly different format. If \code{site} is used a data frame with
+    headings \code{date}, a pollutant and \code{site} is required. It is
+    also possible to choose \code{type} as another variable in the data
+    frame. For example, \code{type = "o3"} will plot four wind roses for
+    different levels of ozone, split into four quantiles (approximately
+    equal numbers of counts in each of the four splits). This offers great
+    flexibility for understanding the variation of different variables
+    dependent on another. See function \code{cut.data} for further
+    information.}
+
+   \item{statistic}{Statistic used for calculating monthly
+   values. Default is \code{"mean"}, but can also be
+   \code{"percentile"}. See \code{time.average} for more details.}
+
+ \item{percentile}{Percentile value(s) to use if \code{statistic =
+ "percentile"} is chosen. Can be a vector of numbers
+ e.g. \code{percentile = c(5, 50, 95)} will plot the 5th, 50th and 95th
+ percentile values together on the same plot.}
+
 
   \item{simulate}{Should simulations be carried out to determine the
-Mann-Kendall tau and p-value. The default is \code{FALSE}. If
-\code{TRUE}, bootstrap simulations are undertaken, which also account
-for autocorrelation.}
+    Mann-Kendall tau and p-value. The default is \code{FALSE}. If
+    \code{TRUE}, bootstrap simulations are undertaken, which also account
+    for autocorrelation.}
 
   \item{n}{Number of bootstrap simulations if \code{simulate = TRUE}.}
 
   \item{autocor}{Should autocorrelation be considered in the trend
-uncertainty estimates? The default is \code{FALSE}. Generally,
-accounting for autocorrelation increases the uncertainty of the trend
-estimate sometimes by a large amount.}
+    uncertainty estimates? The default is \code{FALSE}. Generally,
+    accounting for autocorrelation increases the uncertainty of the trend
+    estimate sometimes by a large amount.}
+
+   \item{cols}{Colours to use. Can be a vector of colours
+   e.g. \code{cols = c("black", "green")} or pre-defined openair colours
+   --- see \code{open.colours} for more details.}
 
   \item{ylab}{y-axis label.}
 
+  \item{lty}{Line type to use, can be a vector of types if the option
+    \code{statistic = "percentile"} is used e.g. \code{lty = c(5, 1, 5)}.}
+
+  \item{lwd}{Line width to use, can be a vector of widths if the option
+    \code{statistic = "percentile"} is used e.g. \code{lwd = c(1, 2, 1)}.}
+
+   \item{key.columns}{Number of columns used if a key is drawn when using
+    the option \code{statistic = "percentile"}.}
+
   \item{main}{Title of plot, if required.}
 
-   \item{ci}{Should confidence intervals be plotted? The default is
-     \code{FALSE}.}
+  \item{ci}{Should confidence intervals be plotted? The default is
+    \code{FALSE}.}
 
-   \item{alpha}{The alpha transparency of shaded confidence intervals -
-   if plotted. A value of 0 is fully transparent and 1 is fully opaque.}
+  \item{alpha}{The alpha transparency of shaded confidence intervals -
+    if plotted. A value of 0 is fully transparent and 1 is fully opaque.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
-  \code{TRUE} titles and axis labels will automatically try and format
-  pollutant names and units properly e.g.  by subscripting the
-  \sQuote{2} in NO2.}
+    \code{TRUE} titles and axis labels will automatically try and format
+    pollutant names and units properly e.g.  by subscripting the
+    \sQuote{2} in NO2.}
 
   \item{\dots}{Other graphical parameters e.g. pch = 16 for filled circles.}
 }
@@ -106,7 +136,9 @@ setting \code{type} - see examples below.
 %\note{ ~~further notes~~
 
 %  ~Make other sections like Warning with
-%  \section{Warning }{....} ~
+\section{Warning }{If the option \code{deseason = TRUE} is set and there
+are missing data after aggregation to monthly values, missing months
+will be linearly interpolated.}
 %}
 
 \seealso{\code{\link{MannKendall}} for an alternative method of
@@ -120,6 +152,14 @@ smooth.trend(mydata, pollutant = "nox")
 
 # trend plot by each of 8 wind sectors
 smooth.trend(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
+
+# percentiles
+smooth.trend(mydata, pollutant = "o3", statistic = "percentile",
+percentile = 95)
+
+# several percentiles with control over lines used
+smooth.trend(mydata, pollutant = "o3", statistic = "percentile",
+percentile = c(5, 50, 95), lwd = c(1, 2, 1), lty = c(5, 1, 5))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
