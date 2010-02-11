@@ -11,16 +11,18 @@ pollutant = "nox",
 deseason = FALSE,
 type = "default",
 statistic = "mean",
- percentile = 95,
+percentile = 95,
 simulate = FALSE,
- n = 200,
+n = 200,
 autocor = FALSE,
 cols = "brewer1",
- ylab = pollutant,
+ylab = pollutant,
 lty = 1,
- lwd = 1,
- key.columns = length(percentile),
- main = "",
+lwd = 1,
+pch = 1,
+cex = 1,
+key.columns = length(percentile),
+main = "",
 ci = FALSE,
 alpha = 0.2,
 auto.text = TRUE,...)
@@ -88,7 +90,17 @@ auto.text = TRUE,...)
     \code{statistic = "percentile"} is used e.g. \code{lty = c(5, 1, 5)}.}
 
   \item{lwd}{Line width to use, can be a vector of widths if the option
-    \code{statistic = "percentile"} is used e.g. \code{lwd = c(1, 2, 1)}.}
+    \code{statistic = "percentile"} is used e.g. \code{lwd = c(1, 2,
+      1)}.}
+
+   \item{pch}{Plot symbol to use, can be a vector of symbols if the option
+    \code{statistic = "percentile"} is used e.g. \code{pch = c(1, 2,
+      1)}. To remove symbols altogether use \code{pch = NA}.}
+
+   \item{cex}{Plot symbol size, can be a vector of sizes if the option
+    \code{statistic = "percentile"} is used e.g. \code{cex = c(1, 2,
+    4)}.}
+
 
    \item{key.columns}{Number of columns used if a key is drawn when using
     the option \code{statistic = "percentile"}.}

@@ -12,6 +12,8 @@ smooth.trend <- function(mydata,
                          ylab = pollutant,
                          lty = 1,
                          lwd = 1,
+                         pch = 1,
+                         cex = 1,
                          key.columns = length(percentile),
                          main = "",
                          ci = FALSE,
@@ -158,8 +160,8 @@ smooth.trend <- function(mydata,
     key.lab <- levels(split.data$group)
 
     if (npol > 1) {
-        key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
-                    text = list(lab = key.lab),  space = "bottom", columns = key.columns)
+        key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd, pch = pch, type = "b",
+                    cex = cex), text = list(lab = key.lab),  space = "bottom", columns = key.columns)
     } else {
         key <- NULL ## either there is a key or there is not
     }
@@ -171,6 +173,8 @@ smooth.trend <- function(mydata,
            key = key,
            lwd = lwd,
            lty = lty,
+           pch = pch,
+           cex = cex,
            skip = skip,
            xlab = "year",
            ylab = quick.text(ylab, auto.text),
@@ -180,14 +184,16 @@ smooth.trend <- function(mydata,
            panel = panel.superpose,
            ...,
 
-           panel.groups = function(x, y, group.number, lwd, lty, col, col.line, subscripts, type = "b",...) {
+           panel.groups = function(x, y, group.number, lwd, lty, pch, col, col.line, col.symbol,
+           subscripts, type = "b",...) {
 
                if (group.number == 1) {  ## otherwise this is called every time
 
                    panel.shade(split.data, start.year, end.year, ylim = current.panel.limits()$ylim)
 
                }
-               panel.xyplot(x, y, type = "l", lwd = lwd, lty = lty, col.line = myColors[group.number],...)
+               panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
+                            col.line = myColors[group.number],col.symbol = myColors[group.number], ...)
 
                panel.gam(x, y, col = "grey40", col.se = "black", simulate = simulate, n.sim = n,
                          autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
