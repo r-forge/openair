@@ -67,7 +67,11 @@ time.plot <- function(mydata,
 with option type = 'site'")
 
     ## also ckeck that column "site" is present when type set to "default"
-    if (type == "default" & "site" %in% names(mydata)) {
+    ## but also check to see if dates are duplicated, if not, OK to proceed
+    len.all <- length(mydata$date)
+    len.unique <- length(unique(mydata$date))
+
+    if (type == "default" & "site" %in% names(mydata) & len.all != len.unique) {
         if (length(unique(factor(mydata$site))) > 1) stop("More than one site has been detected: choose type = 'site' and a single pollutant")
     }
 

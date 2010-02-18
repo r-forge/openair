@@ -143,6 +143,12 @@ scatter.plot <- function(mydata,
 
     if (!theStrip) strip <- FALSE
 
+    ## special wd layout
+    skip <- FALSE
+    if (type == "wd") {
+        layout <- c(3, 3)
+        skip <- c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
+    }
 
     if (method == "scatter") {
         pltscatter <- xyplot(myform,  data = mydata, groups = site,
@@ -154,7 +160,8 @@ scatter.plot <- function(mydata,
                              scales = scales,
                              key = key,
                              strip = strip,
-
+                             layout = layout,
+                             skip = skip,
                              yscale.components = yscale.components.log10,
                              xscale.components = xscale.components.log10,
                              panel =  panel.superpose,...,

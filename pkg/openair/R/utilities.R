@@ -17,8 +17,10 @@ weekday.abb <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
 find.time.interval <- function(dates) {
     ## assumes date is ordered before we get here
-    ## id of highest frequency of gaps
-    id <- which.max(table(diff(as.numeric(dates))))
+
+    ## could have several sites, dates may be unordered
+    ## find the most common time gap in all the data
+    id <- which.max(table(diff(as.numeric(sort(unique(dates))))))
     seconds <- as.numeric(names(id))
 
     if (class(dates)[1] == "POSIXt") seconds <- paste(seconds, "sec")
@@ -48,6 +50,7 @@ date.pad <- function(mydata, type = "default") {
 
         ## find time interval of data
         interval <- find.time.interval(mydata$date)
+
         all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
         mydata <- merge(mydata, all.dates, all = TRUE)
         if (type == "site") mydata$site <- site
