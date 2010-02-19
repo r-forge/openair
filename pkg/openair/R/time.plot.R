@@ -173,7 +173,7 @@ with option type = 'site'")
     dates <- date.breaks(mydata$date)$major ## for date scale
     formats <- date.breaks(mydata$date)$format
 
-    scales <- list(x = list(at = dates, format = formats, relation = "free"), y = list(log = nlog))
+    scales <- list(x = list(at = dates, format = formats), y = list(log = nlog))
 
     xlim <- range(mydata$date)
 
@@ -209,7 +209,7 @@ with option type = 'site'")
         strip.left <- strip.custom(par.strip.text = list(cex = 0.9), horizontal = FALSE)
         dates <- as.POSIXct(unique(trunc(mydata$date, "months")), "GMT")
 
-        scales <- list(x = list(at = dates, format = "%d-%b", relation = "free"), y = list(log = nlog))
+        scales <- list(x = list(at = dates, format = "%d-%b", relation = "sliced"), y = list(log = nlog))
 
         xlim <- dlply(mydata, .(year), function (x) range(x$date))
 
@@ -251,6 +251,7 @@ with option type = 'site'")
            yscale.components = yscale.components.log10,
            panel =  panel.superpose,...,
            panel.groups = function(x, y, col.line, col, col.se, type, group.number, lty, lwd, subscripts,...) {
+
                if (group.number == 1) {
                    panel.grid(-1, 0)
                    panel.abline(v = dates, col = "grey90")
@@ -260,6 +261,7 @@ with option type = 'site'")
                    panel.abline(v = dates, col = "grey90")
                    panel.grid(-1, 0)
                }
+
                panel.xyplot(x, y, type = "l", lty = lty, lwd = lwd, col.line = myColors[group.number],...)
                if (smooth) panel.gam(x, y, col = "grey40", col.se = "black",
                                                        lty = 1, lwd = 1, se = ci, ...)
