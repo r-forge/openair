@@ -38,8 +38,11 @@ summarise <- function(mydata,
 
     ## check to see if there is a field site and >1 site
     ## if several sites and no pollutant supplied, use first numeric
+    ## but also check to see if dates are duplicated, if not, OK to proceed
+    len.all <- length(mydata$date)
+    len.unique <- length(unique(mydata$date))
 
-    if ("site" %in% names(mydata)) {
+    if ("site" %in% names(mydata) & len.all != len.unique) {
         if (length(levels(mydata$site)) > 1) {
             ## get rid of unused factor levels if subset previously used
             mydata$site <- factor(mydata$site)
