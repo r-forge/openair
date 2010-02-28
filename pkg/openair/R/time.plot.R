@@ -60,7 +60,7 @@ time.plot <- function(mydata,
     }
 ###################################################################################
 
-        vars <- c("date", pollutant)
+    vars <- c("date", pollutant)
 
 ##### warning messages and other checks ################################################################
     if (type =="site" & length(pollutant) > 1) stop("Only one pollutant allowed
@@ -77,9 +77,9 @@ with option type = 'site'")
 
     if (length(percentile) > 1 & length(pollutant) > 1) {stop("Only one pollutant allowed when considering more than one percentile")}
 
-     if (!missing(statistic) & missing(avg.time)) {
-         warning("No averaging time applied, using avg.time ='month'")
-     avg.time <- "month"}
+    if (!missing(statistic) & missing(avg.time)) {
+        warning("No averaging time applied, using avg.time ='month'")
+        avg.time <- "month"}
 
 #######################################################################################################
 
@@ -104,9 +104,10 @@ with option type = 'site'")
             if (missing(group)) group <- TRUE
 
         } else {
-        mydata <- time.average(mydata, period = avg.time,
-        data.thresh = data.thresh, statistic = statistic, percentile = percentile)
-    }
+            mydata <- time.average(mydata, period = avg.time,
+                                   data.thresh = data.thresh, statistic = statistic,
+                                   percentile = percentile)
+        }
     }
 
     mydata <- cut.data(mydata, type)
@@ -125,7 +126,6 @@ with option type = 'site'")
     } else {
         ## should always be in this order
         names(mydata)[2:3] <- c("value", "variable")
-        mylab <- levels(factor(mydata$variable))
     }
 
     ## number of pollutants (or sites for type = "site")
@@ -149,19 +149,18 @@ with option type = 'site'")
     ## ylabs for more than one pollutant
     if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ")
 
-    mylab <- sapply(seq_along(pollutant), function(x)
-                    quick.text(pollutant[x], auto.text))
+    mylab <- sapply(seq_along(pollutant), function(x) quick.text(pollutant[x], auto.text))
 
     if (type == "site") {
-        mylab <- as.character(unique(mydata$variable))
+        mylab <- levels(mydata$variable)
         if (!group) layout <- c(1, npol)
         if (group) layout <- c(1, 1)
     }
 
     ## user-supplied names
     if (!missing(name.pol)) {mylab <- sapply(seq_along(name.pol), function(x)
-                                            quick.text(name.pol[x], auto.text))
-                            }
+                                             quick.text(name.pol[x], auto.text))
+                         }
 
     ## set up colours
     myColors <- open.colours(cols, npol)
@@ -183,7 +182,7 @@ with option type = 'site'")
         strip <- FALSE
         myform <- formula("value ~ date | variable")
         ## proper names of labelling
-        pol.name <- sapply(unique(mydata$variable), function(x) quick.text(x, auto.text))
+        pol.name <- sapply(levels(mydata$variable),  function(x) quick.text(x, auto.text))
 
         if (npol == 1) {
             strip.left <- FALSE
@@ -195,9 +194,7 @@ with option type = 'site'")
         scales <- list(x = list(at = dates, format = formats), y = list(relation = "free",
                                                                rot = 0, log = nlog))
 
-
         if (missing(lty)) lty <- 1 ## don't need different line types here
-
     }
 
     ## if stacking of plots by year is needed
@@ -235,7 +232,6 @@ with option type = 'site'")
         strip.left <- FALSE
     }
 
-
     xyplot(myform,  data = mydata, groups = variable,
            as.table = TRUE,
            layout = layout,
@@ -264,7 +260,7 @@ with option type = 'site'")
 
                panel.xyplot(x, y, type = "l", lty = lty, lwd = lwd, col.line = myColors[group.number],...)
                if (smooth) panel.gam(x, y, col = "grey40", col.se = "black",
-                                                       lty = 1, lwd = 1, se = ci, ...)
+                                     lty = 1, lwd = 1, se = ci, ...)
 
            }
            )
