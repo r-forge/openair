@@ -1,65 +1,148 @@
+## The code below is modified from that supplied by Felix Andrews
+## (http://n4.nabble.com/proposal-for-new-axis-Date-axis-POSIXct-td976219.html#a1462140)
+## Used in openair functions that plot date/times
 
-date.breaks <- function(mydate) {
-    ## adapted from Hadley Wickham (ggplot2)
-    ## Time breaks
-    ## Automatically compute sensible axis breaks for time data
-    ##
-    ## mydate is a
-
-    time_breaks <- function(seconds) {
-        days <- seconds / 86400
-        if (days > 5) {
-            return(date_breaks(days))
-        }
-
-        ## seconds, minutes, hours, days
-        length <- cut(seconds, c(0, 60, 3600, 24 * 3600, Inf) * 1.1, labels=FALSE)
-        duration <- c(1, 60, 3600, 24 * 3600)
-        units <- round(seconds / duration[length])
-
-        major_mult <- ceiling(diff(pretty(c(0, units)))[1])
-        minor_mult <- ceiling(diff(pretty(c(0, units), n = 15))[1])
-        major <-  c("sec", "min",   "hour",  "day")[length]
-        format <-  c("%S", "%M.%S", "%H:%M", "%d-%b")[length]
-
-        list(
-             major = paste(major_mult, major),
-             minor = paste(minor_mult, major),
-             format = format
-             )
-
+dateBreaks <-
+    function(x, n = 7, min.n = round(n / 2), do.format = TRUE)
+{
+    isDate <- inherits(x, "Date")
+    zz <- range(as.POSIXct(x))
+    ## specify the set of pretty timesteps
+    MIN <- 60
+    HOUR <- MIN * 60
+    DAY <- HOUR * 24
+    YEAR <- DAY * 365.25
+    MONTH <- YEAR / 12
+    steps <-
+        list("1 sec" = list(1, format = "%S", start = "mins"),
+             "2 secs" = list(2),
+             "5 secs" = list(5),
+             "10 secs" = list(10),
+             "15 secs" = list(15),
+             "30 secs" = list(30, format = "%H:%M:%S"),
+             "1 min" = list(1*MIN, format = "%H:%M"),
+             "2 mins" = list(2*MIN, start = "hours"),
+             "5 mins" = list(5*MIN),
+             "10 mins" = list(10*MIN),
+             "15 mins" = list(15*MIN),
+             "30 mins" = list(30*MIN),
+             "1 hour" = list(1*HOUR),
+             "3 hours" = list(3*HOUR, start = "days"),
+             "6 hours" = list(6*HOUR, format = "%b %d %H:%M"),
+             "12 hours" = list(12*HOUR),
+             "1 DSTday" = list(1*DAY, format = "%b %d"),
+             "2 DSTdays" = list(2*DAY),
+             "1 week" = list(7*DAY, start = "weeks"),
+             "2 weeks" = list(14*DAY),
+             "1 month" = list(1*MONTH, format = "%Y %b"),
+             "3 months" = list(3*MONTH, start = "years"),
+             "6 months" = list(6*MONTH, format = "%Y-%m"),
+             "1 year" = list(1*YEAR, format = "%Y"),
+             "2 years" = list(2*YEAR, start = "decades"),
+             "5 years" = list(5*YEAR),
+             "10 years" = list(10*YEAR),
+             "20 years" = list(20*YEAR, start = "centuries"),
+             "50 years" = list(50*YEAR),
+             "100 years" = list(100*YEAR),
+             "200 years" = list(200*YEAR),
+             "500 years" = list(500*YEAR),
+             "1000 years" = list(1000*YEAR))
+    ## carry forward 'format' and 'start' to following steps
+    for (i in seq_along(steps)) {
+        if (is.null(steps[[i]]$format))
+            steps[[i]]$format <- steps[[i-1]]$format
+        if (is.null(steps[[i]]$start))
+            steps[[i]]$start <- steps[[i-1]]$start
+        steps[[i]]$spec <- names(steps)[i]
     }
-
-    ## Date breaks
-    ## Automatically compute sensible axis breaks for date data
-
-    date_breaks <- function(days) {
-        length <- cut(days, c(0, 10, 56, 365, 730, 5000, Inf), labels = FALSE)
-
-        major <-
-            c("days", "weeks", "months", "3 months", "years", "5 years")[length]
-        minor <-
-            c("10 years", "days", "weeks", "months", "months", "years")[length]
-        format <-
-            c("%d-%b", "%d-%b", "%b-%y", "%b-%y", "%Y", "%Y")[length]
-
-        list(major = major, minor = minor, format = format)
+    ## crudely work out number of steps in the given interval
+    xspan <- diff(as.numeric(zz))
+    nsteps <- sapply(steps, function(s) {
+        xspan / s[[1]]
+    })
+    init.i <- which.min(abs(nsteps - n))
+    ## calculate actual number of ticks in the given interval
+    calcSteps <- function(s) {
+        startTime <- trunc(min(zz), units = s$start)
+        at <- seq(startTime, max(zz), by = s$spec)
+        at <- at[(min(zz) <= at) & (at <= max(zz))]
+        at
     }
-
-       if ("Date" %in% class(mydate)) {
-           mydate <- as.POSIXct(mydate, "GMT")
-           seconds <- as.numeric(max(mydate)) - as.numeric(min(mydate))
-
-       } else {
-    seconds <- as.numeric(max(mydate)) - as.numeric(min(mydate))
+    init.at <- calcSteps(steps[[init.i]])
+    init.n <- length(init.at)
+    ## bump it up if below acceptable threshold
+    while (init.n < min.n) {
+        init.i <- init.i - 1
+        if (init.i == 0) stop("range too small for min.n")
+        init.at <- calcSteps(steps[[init.i]])
+        init.n <- length(init.at)
+    }
+    makeOutput <- function(at, s) {
+  #      if (do.format) {
+         #   print(s$format)
+           # format(at, s$format)
+           theFormat <- s$format[1]
+    #    } else {
+            if (isDate) theOutput <- as.Date(round(at, units = "days"))
+            else theOutput <- as.POSIXct(at)
+           list(major = theOutput, format = theFormat)
+     #   }
+    }
+    if (init.n == n) ## perfect
+        return(makeOutput(init.at, steps[[init.i]]))
+    if (init.n > n) {
+        ## too many ticks
+        new.i <- init.i + 1
+        new.i <- min(new.i, length(steps))
+    } else {
+        ## too few ticks
+        new.i <- init.i - 1
+        new.i <- max(new.i, 1)
+    }
+    new.at <- calcSteps(steps[[new.i]])
+    new.n <- length(new.at)
+    ## work out whether new.at or init.at is better
+    if (new.n < min.n)
+        new.n <- -Inf
+    if (abs(new.n - n) < abs(init.n - n))
+        return(makeOutput(new.at, steps[[new.i]]))
+    else
+        return(makeOutput(init.at, steps[[init.i]]))
 }
 
-    date.format <- time_breaks(seconds)
-
-    dates <- as.POSIXct(levels(cut(mydate, date.format$major, right = TRUE,
-                                   include.lowest = TRUE)), "GMT")
-
-    ## return actual date intervals (POSIXct) and a format
-    dates <-  list(major = dates, format = date.format$format)
-
+## utility function, extending the base function of same name
+trunc.POSIXt <-
+    function(x, units = c("secs", "mins", "hours", "days",
+                "weeks", "months", "years", "decades", "centuries"),
+             start.on.monday = TRUE)
+{
+    x <- as.POSIXlt(x)
+    if (units %in% c("secs", "mins", "hours", "days"))
+        return(base::trunc.POSIXt(x, units))
+    x <- base::trunc.POSIXt(x, "days")
+    if (length(x$sec))
+        switch(units,
+               weeks = {
+                   x$mday <- x$mday - x$wday
+                   if (start.on.monday)
+                       x$mday <- x$mday + ifelse(x$wday > 0L, 1L, -6L)
+               },
+               months = {
+                   x$mday <- 1
+               },
+               years = {
+                   x$mday <- 1
+                   x$mon <- 0
+               },
+               decades = {
+                   x$mday <- 1
+                   x$mon <- 0
+                   x$year <- (x$year %/% 10) * 10
+               },
+               centuries = {
+                   x$mday <- 1
+                   x$mon <- 0
+                   x$year <- (x$year %/% 100) * 100
+               })
+    x
 }

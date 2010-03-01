@@ -22,6 +22,7 @@ time.plot <- function(mydata,
                       ci = TRUE,
                       key.columns = 1,
                       name.pol = pollutant,
+                      date.breaks = 7,
                       auto.text = TRUE, ...)   {
 
 
@@ -169,8 +170,8 @@ with option type = 'site'")
     myform <- formula("value ~ date")
     strip <- TRUE
     strip.left <- FALSE
-    dates <- date.breaks(mydata$date)$major ## for date scale
-    formats <- date.breaks(mydata$date)$format
+    dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale
+    formats <- dateBreaks(mydata$date, date.breaks)$format
 
     scales <- list(x = list(at = dates, format = formats), y = list(log = nlog))
 

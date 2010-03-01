@@ -25,6 +25,7 @@ key.columns = length(percentile),
 main = "",
 ci = FALSE,
 alpha = 0.2,
+date.breaks = 7,
 auto.text = TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -111,7 +112,15 @@ auto.text = TRUE,...)
     \code{FALSE}.}
 
   \item{alpha}{The alpha transparency of shaded confidence intervals -
-    if plotted. A value of 0 is fully transparent and 1 is fully opaque.}
+    if plotted. A value of 0 is fully transparent and 1 is fully
+    opaque.}
+
+   \item{date.breaks}{Number of major x-axis intervals to use. The
+    function will try and choose a sensible number of dates/times as
+    well as formatting the date/time appropriately to the range being
+    considered. This does not always work as desired automatically. The user can
+    therefore increase or decrease the number of intervals by adjusting
+    the value of \code{date.breaks} up or down. }
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
     \code{TRUE} titles and axis labels will automatically try and format

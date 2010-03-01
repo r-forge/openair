@@ -19,7 +19,8 @@ dec.place = 2,
 ylab = pollutant,
 main = "",
 auto.text = TRUE,
-autocor = FALSE, ...)
+autocor = FALSE,
+date.breaks = 7, ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -82,6 +83,13 @@ value of the trend, choose alpha = 0.01 etc.}
 uncertainty estimates? The default is \code{FALSE}. Generally,
 accounting for autocorrelation increases the uncertainty of the trend
 estimate - sometimes by a large amount.}
+
+ \item{date.breaks}{Number of major x-axis intervals to use. The
+    function will try and choose a sensible number of dates/times as
+    well as formatting the date/time appropriately to the range being
+    considered. This does not always work as desired automatically. The user can
+    therefore increase or decrease the number of intervals by adjusting
+    the value of \code{date.breaks} up or down. }
 
   \item{\dots}{Other graphical parameters.}
 }

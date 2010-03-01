@@ -23,6 +23,7 @@ col.data = "lightblue",
 col.mis = rgb(0.65, 0.04, 0.07),
 col.hist = "forestgreen",
 main = "",
+date.breaks = 7,
 auto.text = TRUE,
 ...)
 }
@@ -77,6 +78,13 @@ auto.text = TRUE,
 \item{col.hist}{Colour for the histogram or density plot.}
 
 \item{main}{The title of the plot, if required.}
+
+ \item{date.breaks}{Number of major x-axis intervals to use. The
+    function will try and choose a sensible number of dates/times as
+    well as formatting the date/time appropriately to the range being
+    considered. This does not always work as desired automatically. The user can
+    therefore increase or decrease the number of intervals by adjusting
+    the value of \code{date.breaks} up or down. }
 
 \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format

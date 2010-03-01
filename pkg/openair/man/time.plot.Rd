@@ -31,6 +31,7 @@ smooth = FALSE,
 ci = TRUE,
 key.columns = 1,
 name.pol = pollutant,
+date.breaks = 7,
 auto.text = TRUE, ...)
 }
 
@@ -153,7 +154,14 @@ auto.text = TRUE, ...)
   name "nox" and the user wanted a different description, then setting
   \code{pol.name = "nox before change"} can be used. If more than one
   pollutant is plotted then use \code{c} e.g. \code{pol.name = c("nox
-  here", "o3 there")}.}
+    here", "o3 there")}.}
+
+    \item{date.breaks}{Number of major x-axis intervals to use. The
+    function will try and choose a sensible number of dates/times as
+    well as formatting the date/time appropriately to the range being
+    considered. This does not always work as desired automatically. The user can
+    therefore increase or decrease the number of intervals by adjusting
+    the value of \code{date.breaks} up or down. }
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
     titles and axis labels will automatically try and format pollutant

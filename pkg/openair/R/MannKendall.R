@@ -22,7 +22,8 @@ MannKendall <- function(mydata,
                         ylab = pollutant,
                         main = "",
                         auto.text = TRUE,
-                        autocor = FALSE,...)  {
+                        autocor = FALSE,
+                        date.breaks = 7,...)  {
 
     ## extract variables of interest
     if (type == "wd") vars <- c("date", pollutant, "wd")
@@ -173,7 +174,9 @@ MannKendall <- function(mydata,
                   as.table = TRUE,
                   layout = layout,
                   skip = skip,
-                  strip = strip,...,
+                  strip = strip,
+                   scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
+                                                         dateBreaks(mydata$date)$format)),...,
 
                   panel = function(x, y, subscripts,...){
                       ## year shading

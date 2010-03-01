@@ -18,6 +18,7 @@ smooth.trend <- function(mydata,
                          main = "",
                          ci = FALSE,
                          alpha = 0.2,
+                         date.breaks = 7,
                          auto.text = TRUE,...)  {
 
     ##library(mgcv)
@@ -179,8 +180,8 @@ smooth.trend <- function(mydata,
            xlab = "year",
            ylab = quick.text(ylab, auto.text),
            main = quick.text(main, auto.text),
-           scales = list(x = list(at =date.breaks(mydata$date)$major, format =
-                                                         date.breaks(mydata$date)$format)),
+           scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
+                                                         dateBreaks(mydata$date)$format)),
            panel = panel.superpose,
            ...,
 

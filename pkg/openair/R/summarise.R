@@ -13,6 +13,7 @@ summarise <- function(mydata,
                       col.mis = rgb(0.65, 0.04, 0.07),
                       col.hist = "forestgreen",
                       main = "",
+                      date.breaks = 7,
                       auto.text = TRUE,...) {
 
     library(lattice)
@@ -31,7 +32,7 @@ summarise <- function(mydata,
     }
 
     ## for plot
-    dateBreaks <- date.breaks(mydata$date)$major
+    dateBreaks <- dateBreaks(mydata$date, date.breaks)$major
 
     ## print data types - helps with debugging
     print(unlist(sapply(mydata, class)))
