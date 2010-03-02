@@ -1,96 +1,38 @@
-import.aurn <- function (file = file.choose(),
-                         header.at = 5,
-                         data.at = 7,
-                         na.strings = c("No data", "", "NA"),
-                         date.name = "Date",
-                         date.break = "-",
-                         time.name = "time",
-                         misc.info = c(1, 2, 3, 4),
-                         is.site = 4,
-                         bad.24 = TRUE,
-                         correct.time = -3600,
-                         output = "final",
-                         data.order = c("value", "status", "unit"),
-                         simplify.names = TRUE, ...)
-{
 
-    date.name <- make.names(date.name)
-    time.name <- make.names(time.name)
+import.aurn <- function(site = "my1", year = 2009, pollutant = "all") {
+    site <- toupper(site)
 
-    initial.ans <- import(file = file, header.at = header.at, na.strings = na.strings,
-        data.at = data.at, date.name = date.name, date.break = date.break,
-        time.name = time.name, misc.info = misc.info, is.site = NULL,
-        bad.24 = bad.24, correct.time = correct.time, output = "working",
-        ...)
-    site.1 <- read.table(file, header = FALSE, sep = initial.ans$ops$sep,
-        skip = (is.site - 1), nrows = 1, colClasses = "character",
-        col.names = initial.ans$names, fill = TRUE, flush = TRUE)
-    site.1 <- site.1[1:length(initial.ans$names)]
-    names(site.1) <- make.names(initial.ans$names, unique = TRUE)
-    site.1 <- site.1[!names(site.1) == date.name]
-    site.1 <- site.1[!names(site.1) == time.name]
-    site.2 <- as.vector(sapply(site.1[!as.character(site.1) ==
-        ""], function(x) {
-        grep(x, as.character(site.1), fixed = TRUE)
-    }))
-    if (length(site.2) > 1) {
-        site.3 <- c(site.2[2:length(site.2)] - 1, ncol(site.1))
-    }
-    else {
-        site.3 <- ncol(site.1)
-    }
-    site.names <- as.character(as.vector(site.1[site.2]))
-    initial.ans$data <- lapply(1:(length(site.2)), function(x) {
-        ans <- initial.ans$data[site.2[x]:site.3[x]]
-        ans.names <- names(ans)
-        if (simplify.names == TRUE) {
-            ans.names[grep("carbon.monoxide", ans.names, ignore.case = TRUE)] <- "co"
-            ans.names[grep("pm10.particulate.matter", ans.names,
-                ignore.case = TRUE)] <- "pm10"
-            ans.names[grep("non.volatile.pm10", ans.names, ignore.case = TRUE)] <- "nv.pm10"
-            ans.names[grep("volatile.pm10", ans.names, ignore.case = TRUE)] <- "v.pm10"
-            ans.names[grep("pm2.5.particulate.matter", ans.names,
-                ignore.case = TRUE)] <- "pm2.5"
-            ans.names[grep("non.volatile.pm2.5", ans.names, ignore.case = TRUE)] <- "nv.pm2.5"
-            ans.names[grep("volatile.pm2.5", ans.names, ignore.case = TRUE)] <- "v.pm2.5"
-            ans.names[grep("nitric.oxide", ans.names, ignore.case = TRUE)] <- "no"
-            ans.names[grep("nitrogen.oxides", ans.names, ignore.case = TRUE)] <- "nox"
-            ans.names[grep("nitrogen.dioxide", ans.names, ignore.case = TRUE)] <- "no2"
-            ans.names[grep("ozone", ans.names, ignore.case = TRUE)] <- "o3"
-            ans.names[grep("sulphur.dioxide", ans.names, ignore.case = TRUE)] <- "so2"
-        }
-        for (i in 1:length(data.order)) {
-            if (data.order[i] == "value") {
-            }
-            else {
-                ans.names[grep(data.order[i], ans.names, ignore.case = TRUE)] <- paste(data.order[i],
-                  ".", ans.names[(grep(data.order[i], ans.names,
-                    ignore.case = TRUE)) - (i - 1)], sep = "")
-            }
-        }
-        names(ans) <- ans.names
-        site <- rep(site.names[x], nrow(initial.ans$data))
-        ans <- cbind(date = initial.ans$date, site = site, ans)
-    })
-    initial.ans$data <- do.call(rbind.fill, initial.ans$data)
-    if (simplify.names == TRUE) {
-        initial.ans$misc <- c(initial.ans$misc, "import.aurn operation: simplify names applied")
-    }
-    if (!output == "working") {
-        ans <- initial.ans$data
-        if (!is.null(misc.info)) {
-            comment(ans) <- initial.ans$misc
-        }
-        ids <- which(is.na(ans$date))
-        if (length(ids) > 0) {
-            ans <- ans[-ids, ]
-            warning(paste("Missing dates detected, removing", 
-                length(ids), "lines"))
-        }
+    files <- lapply(site, function (x) paste("http://www.airquality.co.uk/R_data/", x, "_", year, ".RData", sep = ""))
+    files <- do.call(c, files)
 
-        return(ans)
+    loadData <- function(x) {
+        tryCatch({load(url(x), envir=.GlobalEnv)}, error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
     }
-    else {
-        return(initial.ans)
-    }
+
+    thedata <- lapply(files, loadData)
+    closeAllConnections()
+    theObjs <- unlist(thedata)
+    ## note unlist will drop NULLs from non-existant sites/years
+    mylist <- lapply(theObjs, get)
+
+    thedata <- do.call(rbind.fill, mylist)
+    thedata$site <- factor(thedata$site, levels = unique(thedata$site))
+
+    ## change names
+    names(thedata) <- tolower(names(thedata))
+
+    ## change nox as no2
+    id <- which(names(thedata) %in% "noxasno2")
+    if (length(id) == 1) names(thedata)[id] <- "nox"
+
+    ## if particular pollutants have been selected
+    if (!missing(pollutant)) thedata <- thedata[, c("date", pollutant, "site")]
+    rm(list = theObjs, pos = 1)
+
+    ## warning about recent, possibly unratified data
+    timeDiff <- difftime(Sys.time(),  max(thedata$date), units='days')
+    if (timeDiff < 180) {
+    warning("You have selected some data that is less than 6-months old. This most recent data is not yet ratified and may be changed during the QA/QC process. For complete information about the ratification status of a data set, please use the online tool at: http://www.airquality.co.uk/data_and_statistics.php?action=da_1&go=Go.")}
+
+    thedata
 }

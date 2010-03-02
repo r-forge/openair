@@ -1,7 +1,7 @@
 Package: openair
 Type: Package
 Title: Open-source tools for the analysis of air pollution data
-Version: 0.2-10
+Version: 0.2-11
 Date: 2009-10-01
 Author: David Carslaw and Karl Ropkins
 Imports: proto, grid, plyr, reshape, mgcv, zoo, lattice, boot, RColorBrewer, splines, survival, Hmisc, ggplot2
