@@ -8,7 +8,7 @@
   \code{openair} package. Files are imported from a remote server
   operated by AEA that provides air quality data files as R data objects. }
 
-\usage{site = "my1", year = 2009, pollutant = "all"}
+\usage{thedata <- import.aurn(site = "my1", year = 2009, pollutant = "all")}
 
 %- maybe also 'usages' for other objects documented here.
 \arguments{
