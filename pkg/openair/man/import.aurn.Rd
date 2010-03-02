@@ -42,11 +42,195 @@ bandwidth. Third, the function completely avoids any need for data
 manipulation or setting time formats, time zones etc. Finally, it is
 easy to import many years of data beyond the current limit of about
 64,000 lines. The final point makes it possible to download several long
-time series in one go.
+time series in one go. The function also has the advantage that the
+proper site name is imported and used in \code{openair} functions.
 
 The site codes and pollutant names can be upper or lower case. The
 function will issue a warning when data less than six months old is
-downloaded, which may not be ratified.}
+downloaded, which may not be ratified.
+
+While the function is being developed, the following site codes should
+help with selection.
+\itemize{
+\item A3 London A3 Roadside
+\item ABD Aberdeen
+\item ABD7 Aberdeen Union Street Roadside
+\item ACTH Auchencorth Moss
+\item AH Aston Hill
+\item BAR2 Barnsley 12
+\item BAR3 Barnsley Gawber
+\item BARN Barnsley
+\item BATH Bath Roadside
+\item BEL Belfast East
+\item BEL2 Belfast Centre
+\item BEL4 Belfast Clara St
+\item BEX London Bexley
+\item BHAM Birmingham
+\item BIL Billingham
+\item BIR Bircotes
+\item BIR1 Birmingham Tyburn
+\item BIR2 Birmingham East
+\item BIRM Birmingham Centre
+\item BIRT Birmingham Tyburn Roadside
+\item BLAC Blackpool
+\item BLC2 Blackpool Marton
+\item BLCB Blackburn Darwen Roadside
+\item BOLT Bolton
+\item BORN Bournemouth
+\item BOT Bottesford
+\item BRAD Bradford Centre
+\item BREN London Brent
+\item BRI London Bridge Place
+\item BRIS Bristol Centre
+\item BRIT Brighton Roadside
+\item BRN Brentford Roadside
+\item BRS2 Bristol Old Market
+\item BRS8 Bristol St Paul's
+\item BRT3 Brighton Preston Park
+\item BURY Bury Roadside
+\item BUSH Bush Estate
+\item BY1 Bromley Roadside
+\item BY2 London Bromley
+\item CA1 Camden
+\item CAM Cambridge Roadside
+\item CAMB Cambridge
+\item CAN London Canvey
+\item CANT Canterbury
+\item CAR Cardiff
+\item CARD Cardiff Centre
+\item CARL Carlisle Roadside
+\item CHIL Chilworth
+\item CHP Chepstow A48
+\item CHS6 Chesterfield
+\item CHS7 Chesterfield Roadside
+\item CLL Central London
+\item CLL2 London Bloomsbury
+\item COV2 Coventry Centre
+\item COV3 Coventry Memorial Park
+\item CRD London Cromwell Road
+\item CRD2 London Cromwell Road 2
+\item CWMB Cwmbran
+\item DERY Derry
+\item DUMF Dumfries
+\item EAGL Stockton-on-Tees Eaglescliffe
+\item ECCL Salford Eccles
+\item ED Edinburgh Centre
+\item ED3 Edinburgh St Leonards
+\item EX Exeter Roadside
+\item FEA Featherstone
+\item FW Fort William
+\item GDF Great Dun Fell
+\item GLA Glasgow City Chambers
+\item GLA3 Glasgow Centre
+\item GLA4 Glasgow
+\item GLAS Glasgow Hope St
+\item GLAZ Glazebury
+\item GRA2 Grangemouth Moray
+\item GRAN Grangemouth
+\item HAR Harwell
+\item HARR London Harrow
+\item HG1 Haringey Roadside
+\item HG2 London Haringey
+\item HIL London Hillingdon
+\item HM High Muffles
+\item HOPE Stanford-le-Hope Roadside
+\item HORE Horley
+\item HORS London Westminster
+\item HOVE Hove Roadside
+\item HR3 London Harrow Stanmore
+\item HRL London Harlington
+\item HS1 Hounslow Roadside
+\item HUL2 Hull Freetown
+\item HULL Hull Centre
+\item INV2 Inverness
+\item ISL London Islington
+\item LB Ladybower
+\item LEAM Leamington Spa
+\item LED6 Leeds Headingley
+\item LEED Leeds Centre
+\item LEIC Leicester Centre
+\item LEOM Leominster
+\item LERW Lerwick
+\item LH Lullington Heath
+\item LINC Lincoln Roadside
+\item LIVR Liverpool Centre
+\item LN Lough Navar
+\item LON6 London Eltham
+\item LV6 Liverpool Queen's Drive Roadside
+\item LVP Liverpool Speke
+\item LW1 London Lewisham
+\item MAN Manchester Town Hall
+\item MAN3 Manchester Piccadilly
+\item MAN4 Manchester South
+\item MH Mace Head
+\item MID Middlesbroug
+\item MY1 London Marylebone Road
+\item NCA3 Newcastle Cradlewell Roadside
+\item NEWC Newcastle Centre
+\item NO10 Norwich Forum Roadside
+\item NOR1 Norwich Roadside
+\item NOR2 Norwich Centre
+\item NOTT Nottingham Centre
+\item NPT3 Newport
+\item NTON Northampton
+\item OLDB Sandwell Oldbury
+\item OSY St Osyth
+\item OX Oxford Centre Roadside
+\item OX3 Oxford St Ebbes
+\item PEMB Narberth
+\item PLYM Plymouth Centre
+\item PMTH Portsmouth
+\item PRES Preston
+\item PT Port Talbot
+\item PT4 Port Talbot Margam
+\item REA1 Reading New Town
+\item READ Reading
+\item REDC Redcar
+\item ROCH Rochester Stoke
+\item ROTH Rotherham Centre
+\item RUGE Rugeley
+\item SALT Saltash Roadside
+\item SCN2 Scunthorpe Town
+\item SCUN Scunthorpe
+\item SDY Sandy Roadside
+\item SEND Southend-on-Sea
+\item SHE Sheffield Tinsley
+\item SHE2 Sheffield Centre
+\item SIB Sibton
+\item SOM Somerton
+\item SOUT Southampton Centre
+\item STE Stevenage
+\item STEW Stewartby
+\item STOC Stockport
+\item SUN2 Sunderland Silksworth
+\item SUND Sunderland
+\item SUT1 Sutton Roadside
+\item SUT3 London Sutton
+\item SV Strath Vaich
+\item SWA1 Swansea Roadside
+\item SWAN Swansea
+\item TED London Teddington
+\item TH2 Tower Hamlets Roadside
+\item THUR Thurrock
+\item TRAN Wirral Tranmere
+\item WA2 London Wandsworth
+\item WAL Walsall Alumwell
+\item WAL2 Walsall Willenhall
+\item WAR Warrington
+\item WBRO Sandwell West Bromwich
+\item WC Wharleycroft
+\item WEYB Weybourne
+\item WFEN Wicken Fen
+\item WIG3 Wigan Leigh
+\item WIG5 Wigan Centre
+\item WL West London
+\item WOLV Wolverhampton Centre
+\item WRAY Wray
+\item WREX Wrexham
+\item YARM Stockton-on-Tees Yarm
+\item YW Yarner Wood
+}
+}
 
 \value{Returns a data frame of hourly mean values with date in POSIXct
   class and time zone GMT. }
