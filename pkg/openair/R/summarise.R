@@ -162,8 +162,8 @@ summarise <- function(mydata,
 
                    ## override scaling for more sensible date/time breaks
                    scales = list(y = list(draw = FALSE), x = list(at =
-                                                         date.breaks(mydata$date)$major, format =
-                                                         date.breaks(mydata$date)$format)),
+                                                         dateBreaks(mydata$date, date.breaks)$major, format =
+                                                         dateBreaks(mydata$date, date.breaks)$format)),
                    layout = c(1, length(unique(mydata$variable))),
                    strip = FALSE,
                    strip.left = strip.custom(horizontal = FALSE, factor.levels = pol.name),
