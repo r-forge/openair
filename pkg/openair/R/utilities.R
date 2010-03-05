@@ -78,8 +78,12 @@ rolling.mean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rollin
 
     calc.rolling <- function(mydata, pollutant, hours, new.name, data.capture) {
 
+        ## pad missing hours
+        mydata <- date.pad(mydata)
+
         roll <- function(x, i, hours, new.name, data.capture) {
             dat <- x[i:(i + hours - 1)]
+
             if (length(na.omit(dat)) >= round(hours * data.capture / 100)) {
                 res <- mean(dat, na.rm = TRUE)
             } else {
@@ -87,10 +91,11 @@ rolling.mean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rollin
             }
             res
         }
-        ## print(nrow(mydata))
-        res <- sapply(1:(nrow(mydata) - hours), function(i) roll(mydata[ , pollutant], i,
+
+        res <- sapply(1:(nrow(mydata) - hours + 1), function(i) roll(mydata[ , pollutant], i,
                                                                  hours, new.name, data.capture))
-        res <- c(res, rep(NA, hours)) ## pad missing data
+
+        res <- c(rep(NA, (hours - 1)), res) ## pad missing data
         mydata <- cbind(mydata, res)
         names(mydata)[ncol(mydata)] <- new.name
         mydata
