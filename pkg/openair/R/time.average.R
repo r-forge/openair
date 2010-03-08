@@ -45,7 +45,7 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
         ## cut into sections dependent on period
         mydata$cuts <- cut(mydata$date, period)
 
-        newMean <- function(x, data.thresh) {
+        newMean <- function(x, data.thresh, na.rm) {
             ## calculate mean only if above data capture threshold
             if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
                 res <- eval(parse(text = form))
@@ -55,9 +55,12 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
             res
         }
 
+        ## only use  newMean method if necessary for speed
+        if (data.thresh > 0) meanMethod <- "newMean" else meanMethod <- "mean"
+
         dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                         drop = FALSE], list(date = mydata$cuts), newMean,
-                              data.thresh = data.thresh)
+                         drop = FALSE], list(date = mydata$cuts), get(meanMethod),
+                              na.rm = TRUE,  data.thresh = data.thresh)
 
         dailymet$date <- as.POSIXct(dailymet$date, "GMT")
 

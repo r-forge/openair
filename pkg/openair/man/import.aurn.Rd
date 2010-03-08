@@ -14,11 +14,11 @@
 \arguments{
 \item{site}{Site code of the AURN site to import e.g. "my1" is
 Marylebone Road. Several sites can be imported with \code{site =
-c("my1", "nott")} - to import Marylebone Road and Nottingham for
+c("my1", "nott")} --- to import Marylebone Road and Nottingham for
 example.}
 
   \item{year}{Year or years to import. To import a sequence of years
-  from 1990 to 200 use \code{year = 1990:2000}. To import several
+  from 1990 to 2000 use \code{year = 1990:2000}. To import several
   specfic years use \code{year = c(1990, 1995, 2000)} for example.}
 
   \item{pollutant}{Pollutants to import. If omitted will import all
