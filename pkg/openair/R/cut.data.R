@@ -19,12 +19,12 @@ cut.data <- function(mydata, type = "default") {
 
             mydata$cond <- cut(mydata[, type], unique(quantile(mydata[, type],
                                                                probs = seq(0, 1, length = 5),
-                                                        na.rm = TRUE)), include.lowest = TRUE,
+                                                               na.rm = TRUE)), include.lowest = TRUE,
                                labels = FALSE)
 
             temp.levels <- levels(cut(mydata[, type], unique(quantile(mydata[, type],
                                                                       probs = seq(0, 1, length = 5),
-                                                               na.rm = TRUE)),
+                                                                      na.rm = TRUE)),
                                       include.lowest = TRUE))
 
             mydata$cond <- as.factor(mydata$cond)
@@ -35,8 +35,19 @@ cut.data <- function(mydata, type = "default") {
 
     }
 
-    if (type == "default") mydata$cond <- mydata$cond <- paste(format(min(mydata$date),
-        "%d %B %Y"), " to ", format(max(mydata$date), "%d %B %Y"), sep = "")
+    if (type == "default") {
+        ## shows dates (if available)
+        ## not always available e.g. scatter.plot
+        if ("date" %in% names(mydata)) {
+
+            mydata$cond <- paste(format(min(mydata$date), "%d %B %Y"), " to ",
+                                 format(max(mydata$date), "%d %B %Y"), sep = "")
+
+        } else {
+            mydata$cond <- "all data"
+        }
+
+    }
 
     if (type == "year") mydata$cond <- format(mydata$date, "%Y")
 
@@ -46,10 +57,10 @@ cut.data <- function(mydata, type = "default") {
                           mydata$cond <- ordered(mydata$cond, levels = month.name)
                           period <- "annual"} #does not make sense otherwise
 
-     if (type == "monthyear") {
-         mydata$cond <- format(mydata$date, "%B %Y")
-          mydata$cond <- ordered(mydata$cond, levels = unique(mydata$cond))
-     }
+    if (type == "monthyear") {
+        mydata$cond <- format(mydata$date, "%B %Y")
+        mydata$cond <- ordered(mydata$cond, levels = unique(mydata$cond))
+    }
 
     if (type == "season") {
         mydata$cond <- "winter" ## define all as winter first, then assign others

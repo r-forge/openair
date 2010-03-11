@@ -2,7 +2,7 @@
 scatter.plot <- function(mydata,
                          x = "nox",
                          y = "no2",
-                          method = "scatter",
+                         method = "scatter",
                          group = FALSE,
                          avg.time = "default",
                          data.thresh = 0,
@@ -77,7 +77,14 @@ scatter.plot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 ################################################################################################
-    vars <- c("date", x, y)
+    if (type %in%  c("year", "hour", "month", "season", "weekday", "weekend", "monthyear")) {
+
+        vars <- c("date", x, y)
+
+    } else {
+
+        vars <- c(x, y)
+    }
 
     ## data checks
     mydata <- check.prep(mydata, vars, type)
