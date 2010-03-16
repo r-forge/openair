@@ -8,7 +8,8 @@
   \code{openair} package. Files are imported from a remote server
   operated by AEA that provides air quality data files as R data objects. }
 
-\usage{thedata <- import.aurn(site = "my1", year = 2009, pollutant = "all")}
+\usage{thedata <- import.aurn(site = "my1", year = 2009, pollutant =
+"all", hc = FALSE)}
 
 %- maybe also 'usages' for other objects documented here.
 \arguments{
@@ -24,6 +25,12 @@ example.}
   \item{pollutant}{Pollutants to import. If omitted will import all
   pollutants ffrom a site. To import only NOx and NO2 for example use
   \code{pollutant = c("nox", "no2")}.}
+
+\item{hc}{A few sites have hydrocarbon measurements available and
+  setting \code{hc = TRUE} will ensure hydrocarbon data are
+  imported. The default is however not to as most users will not be
+  interested in using hydrocarbon data and the resulting data frames are
+  considerably larger.}
 
 }
 
@@ -252,6 +259,9 @@ pollutant = c("nox", "no2", "o3"))}
 
 ## import over 20 years of Mace Head O3 data!
 \dontrun{o3 <- import.aurn(site = "mh", year = 1987:2009)}
+
+## import hydrocarbon (and other) data from Marylebone Road
+\dontrun{mary <- import.aurn(site = "my1", year =1998, hc = TRUE)}
 
 }
 \keyword{methods}
