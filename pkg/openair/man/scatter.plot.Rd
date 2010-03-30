@@ -30,11 +30,13 @@ xlab = x,
 pch = 1,
 lwd = 1
 key = TRUE,
+key.title = type,
+key.columns = 1,
 strip = TRUE,
 log.x = FALSE,
 log.y = FALSE,
- nbin = 256,
-key.columns = 1,
+nbin = 256,
+continuous = FALSE,
 auto.text = TRUE, ...)
 }
 
@@ -139,6 +141,13 @@ least two other variables to plot.}
 
   \item{key}{Should a key be drawn? The default is \code{TRUE}.}
 
+  \item{key.title}{The title of the key (if used).}
+
+   \item{key.columns}{Number of columns to be used in the key. With many
+  pollutants a single column can make to key too wide. The user can thus
+  choose to use several columns by setting \code{columns} to be less
+  than the number of pollutants.}
+
   \item{strip}{Should a strip be drawn? The default is \code{TRUE}.}
 
    \item{log.x}{Should the x-axis appear on a log scale? The default is
@@ -150,12 +159,15 @@ least two other variables to plot.}
    used. This can be useful for checking linearity once logged.}
 
  \item{nbin}{Number of bins used for kernel density output using method
- \code{"density"}.}
+   \code{"density"}.}
 
-  \item{key.columns}{Number of columns to be used in the key. With many
-  pollutants a single column can make to key too wide. The user can thus
-  choose to use several columns by setting \code{columns} to be less
-  than the number of pollutants.}
+ \item{continuous}{When this option is \code{TRUE} a plot of x vs. y
+ will be made, colour-coded by levels of \code{type}. A continuous
+ separate colour scale is shown. If \code{continuous = FALSE} and
+ \code{type} is numeric then the plot of x vs. y is shown by different
+ \emph{quantiles} of \code{type}. Note that all data will be used, even
+ if several sites are present. Sometimes it may be useful to subset for
+ an individual site. See example below.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
     titles and axis labels will automatically try and format pollutant
@@ -216,6 +228,14 @@ scatter.plot(mydata, x = "nox", y = "no2", type = "year")
 # scatter plot by day of the week, removing key at bottom
 scatter.plot(mydata, x = "nox", y = "no2", type = "weekday", key =
 FALSE)
+
+# example of the use of continuous where colour is used to show
+# different levels of a third (numeric) variable
+# plot daily averages and choose a filled plot symbol (pch = 16)
+# select only 2004
+dat2004 <- select.by.date(mydata, year = 2004)
+scatter.plot(dat2004, x = "nox", y = "no2", type = "co", continuous =
+ TRUE, avg.time = "day", pch = 16)
 
 # show linear fit, by year
 scatter.plot(mydata, x = "nox", y = "no2", type = "year", smooth =

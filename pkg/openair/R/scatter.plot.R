@@ -20,11 +20,13 @@ scatter.plot <- function(mydata,
                          pch = 1,
                          lwd = 1,
                          key = TRUE,
+                         key.title = type,
+                         key.columns = 1,
                          strip = TRUE,
                          log.x = FALSE,
                          log.y = FALSE,
                          nbin = 256,
-                         key.columns = 1,
+                         continuous = FALSE,
                          auto.text = TRUE, ...)   {
 
     ## basic function to plot single/multiple time series in flexible waysproduce scatter plot
@@ -77,7 +79,7 @@ scatter.plot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 ################################################################################################
-    if (type %in%  c("year", "hour", "month", "season", "weekday", "weekend", "monthyear")) {
+    if (type %in%  c("year", "hour", "month", "season", "weekday", "weekend", "monthyear") | !missing(avg.time)) {
 
         vars <- c("date", x, y)
 
@@ -93,7 +95,34 @@ scatter.plot <- function(mydata,
     if (avg.time != "default") mydata <- time.average(mydata, period = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
 
-    mydata <- cut.data(mydata, type)
+    ## continuous colors
+    if (continuous & method == "scatter") {
+        ## check to see if type is numeric/integer
+        if (class(mydata[, type]) %in% c("integer", "numeric") == FALSE) stop(paste("Continuous colour coding requires ", type , " to be numeric", sep = ""))
+
+        ## define spectrum of colours
+        if (missing(cols)) cols <- "default" ## better default colours for this
+        thecol <- open.colours(cols, 100)[cut(mydata[, type], 100, label = FALSE)]
+
+        min.col <- min(mydata[, type], na.rm = TRUE)
+        max.col <- max(mydata[, type], na.rm = TRUE)
+        mydata$cond <- "default"
+
+        if (missing(pch)) pch <- 3
+
+        if (missing(main)) main <- paste(x, "vs.", y, "by levels of", type)
+        key <- FALSE
+        group <- TRUE
+        legend <- list(right = list(fun = draw.colorkey, args =
+                       list(key = list(col = open.colours(cols, 100),
+                            at = seq(min.col, max.col, length = 100)),
+                            draw = FALSE)))
+    } else {
+
+        mydata <- cut.data(mydata, type)
+        legend <- NULL
+
+    }
 
     ## The aim to to get colums "date", "site" then turn to column data using melt
     ## Finally end up with "date", "value", "variable"
@@ -139,11 +168,13 @@ scatter.plot <- function(mydata,
         scales <- list(y = list(rot = 0, log = nlog.y), x = list(log = nlog.x))
     }
 
-    if (key) {
+    if (key & type != "default") {
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
 
         key <- list(points = list(col = myColors[1:npol]), pch = pch,
-                    text = list(lab = pol.name),  space = "bottom", columns = key.columns)
+                    text = list(lab = pol.name),  space = "bottom", columns = key.columns,
+                    title = quick.text(key.title, auto.text), cex.title = 1.2,
+                    border = "grey")
     } else {
         key <- NULL ## either there is a key or there is not
     }
@@ -158,6 +189,8 @@ scatter.plot <- function(mydata,
     }
 
     if (method == "scatter") {
+
+
         pltscatter <- xyplot(myform,  data = mydata, groups = site,
                              as.table = TRUE,
                              pch = pch,
@@ -171,6 +204,7 @@ scatter.plot <- function(mydata,
                              skip = skip,
                              yscale.components = yscale.components.log10,
                              xscale.components = xscale.components.log10,
+                             legend = legend,
                              panel =  panel.superpose,...,
                              panel.groups = function(x, y, col.symbol, col, col.line, lwd, lty, type,
                              group.number,
@@ -178,7 +212,12 @@ scatter.plot <- function(mydata,
                                  if (group.number == 1) panel.grid(-1, -1)
                                  if (!group) panel.grid(-1, -1)
 
-                                 panel.xyplot(x, y, col.symbol = myColors[group.number], as.table = TRUE,...)
+                                 if (continuous) panel.xyplot(x, y, col.symbol =
+                                                              thecol[subscripts],
+                                                              as.table = TRUE,...)
+                                 if (!continuous) panel.xyplot(x, y, col.symbol =
+                                                               myColors[group.number],
+                                                               as.table = TRUE,...)
                                  if (smooth) panel.gam(x, y, col = "grey40", col.se = "black",
                                                        lty = 1, lwd = 1, se = ci, ...)
                                  if (linear) panel.linear(x, y, col = "grey40", lwd = 1, lty = 5,
