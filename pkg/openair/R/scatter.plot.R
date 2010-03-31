@@ -186,7 +186,7 @@ scatter.plot <- function(mydata,
 
     ## special wd layout
     skip <- FALSE
-    if (type == "wd") {
+    if (type == "wd" & !continuous) {
         layout <- c(3, 3)
         skip <- c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
     }
