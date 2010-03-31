@@ -95,6 +95,9 @@ scatter.plot <- function(mydata,
     if (avg.time != "default") mydata <- time.average(mydata, period = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
 
+    ## remove missing data
+    mydata <- na.omit(mydata)
+
     ## continuous colors
     if (continuous & method == "scatter") {
         ## check to see if type is numeric/integer
@@ -108,7 +111,7 @@ scatter.plot <- function(mydata,
         max.col <- max(mydata[, type], na.rm = TRUE)
         mydata$cond <- "default"
 
-        if (missing(pch)) pch <- 3
+        if (missing(pch)) pch <- 16
 
         if (missing(main)) main <- paste(x, "vs.", y, "by levels of", type)
         key <- FALSE
@@ -133,7 +136,7 @@ scatter.plot <- function(mydata,
     mydata <- mydata[, vars]
     mydata <- rename(mydata, c(cond = "site")) ## change to name "site"
 
-    mydata <- na.omit(mydata)
+    
     theStrip <- strip
 
     ## number of pollutants (or sites for type = "site")
