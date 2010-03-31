@@ -154,6 +154,15 @@ scatter.plot <- function(mydata,
 
     scales <- list(x = list(log = nlog.x), y = list(log = nlog.y))
 
+    if (x == "date") { ## get proper date scaling
+        date.breaks <- 7
+        dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale
+        
+        scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
+                                                         dateBreaks(mydata$date)$format),
+         y = list(log = nlog.y))
+    }
+
     pol.name <- sapply( unique(levels(factor(mydata$site))), function(x) quick.text(x, auto.text))
 
     ## if logs are chosen, ensure data >0 for line fitting etc
@@ -212,8 +221,16 @@ scatter.plot <- function(mydata,
                              panel.groups = function(x, y, col.symbol, col, col.line, lwd, lty, type,
                              group.number,
                              subscripts,...) {
-                                 if (group.number == 1) panel.grid(-1, -1)
-                                 if (!group) panel.grid(-1, -1)
+                                 if (group.number == 1 & x.nam != "date") panel.grid(-1, -1)
+                                 if (group.number == 1 & x.nam == "date") {
+                                     panel.abline(v = dates, col = "grey90")
+                                      panel.grid(-1, 0)
+                                 }
+                                 if (!group & x.nam != "date") panel.grid(-1, -1)
+                                 if (!group & x.nam == "date") {
+                                     panel.abline(v = dates, col = "grey90")
+                                      panel.grid(-1, 0)
+                                 }
 
                                  if (continuous) panel.xyplot(x, y, col.symbol =
                                                               thecol[subscripts],

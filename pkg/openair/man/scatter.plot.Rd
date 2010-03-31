@@ -42,8 +42,7 @@ auto.text = TRUE, ...)
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{mydata}{A data frame. Must include a \code{date} field and at
-least two other variables to plot.}
+\item{mydata}{A data frame containing at least two numeric variables to plot.}
 
   \item{x}{Name of the x-variable to plot.}
 
