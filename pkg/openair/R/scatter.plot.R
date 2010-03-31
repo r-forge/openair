@@ -157,9 +157,10 @@ scatter.plot <- function(mydata,
     if (x == "date") { ## get proper date scaling
         date.breaks <- 7
         dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale
-        
+        xlim <- range(mydata$date)
         scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
-                                                         dateBreaks(mydata$date)$format),
+                                                         dateBreaks(mydata$date)$format,
+                      relation = "sliced"),
          y = list(log = nlog.y))
     }
 
