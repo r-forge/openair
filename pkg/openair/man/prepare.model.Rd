@@ -6,7 +6,8 @@
   Utility function to prepare input data for use in openair functions
 }
 \usage{
-mydata <- prepare.model(mydata, measured = "obs", modelled = "mod")
+mydata <- prepare.model(mydata, measured = "obs", modelled = "mod",
+pollutant = "nox")
 }
 
 
@@ -20,6 +21,8 @@ mydata <- prepare.model(mydata, measured = "obs", modelled = "mod")
 
 \item{modelled}{Name of a variable in \code{mydata} that respresents
   measured values.}
+
+\item{pollutant}{Name of a pollutant being used for model-measurement comparison.}
 
 }
 
@@ -39,7 +42,8 @@ mydata <- prepare.model(mydata, measured = "obs", modelled = "mod")
 ## Given, for example, a data frame with the date, mod, meas field names
 ## it is run as shown below:
 
-## mydata <- prepare.model(mydata, measured = "meas", modelled = "mod")
+## mydata <- prepare.model(mydata, measured = "meas", modelled = "mod",
+   pollutant  = "o3")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -144,7 +144,7 @@ scatter.plot <- function(mydata,
     if (missing(pch)) pch <- seq(npol)
 
     ## layout - stack vertically
-    if (missing(layout) & !group) layout <- c(1, npol)
+    if (missing(layout) & !group) layout <- NULL 
 
     ## set up colours
     myColors <- open.colours(cols, npol)
