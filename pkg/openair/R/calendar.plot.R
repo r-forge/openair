@@ -13,6 +13,7 @@ calendar.plot <- function(mydata,
                           annotate = "date",
                           statistic = "mean",
                           cols = "heat",
+                          limits = c(0, 100),
                           main = quick.text((paste(pollutant, "in", year))),
                           auto.text = TRUE,
                           ...) {
@@ -133,7 +134,7 @@ calendar.plot <- function(mydata,
 
     ## set up scales
     nlev <- 200
-    breaks <- pretty(mydata$conc.mat, n = nlev)
+     if(missing(limits)) breaks <- pretty(mydata$conc.mat, n = nlev) else breaks <- pretty(limits,n = nlev)
     nlev2 <- length(breaks)
     col <- open.colours(cols, (nlev2 - 1))
     col.scale <- breaks

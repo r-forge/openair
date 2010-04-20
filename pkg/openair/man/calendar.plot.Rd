@@ -16,6 +16,7 @@ type = "default",
 annotate = "date",
 statistic = "mean",
 cols = "heat",
+limits = c(0, 100),
 main = quick.text((paste(pollutant, "in", year))),
 auto.text = TRUE,
 ...)  }
@@ -46,6 +47,14 @@ calculated.}
     defined the user can supply a list of colour names recognised by R
     (type \code{colours()} to see the full list). An example would be
     \code{cols = c("yellow", "green", "blue")}}
+
+   \item{limits}{Use this option to manually set the colour scale
+   limits. This is useful in the case when there is a need for two or
+   more plots and a consistent scale is needed on each. Set the limits
+   to cover the maximimum range of the data for all plots of
+   interest. For example, if one plot had data covering 0--60 and
+   another 0--100, then set \code{limits = c(0, 100)}. Note that data
+   will be ignored if outside the limits range.}
 
   \item{main}{The plot title; default is pollutant and year.}
 
