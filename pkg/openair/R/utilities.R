@@ -226,8 +226,17 @@ select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year 
 #############################################################################################
 ## function to import LAQN data from ERG website
 
-import.LAQN <- function(x) {
-    aq <- import(x, date.name = "ReadingDateTime", time.name = "ReadingDateTime")
+import.LAQN <- function(...){ import.laqn(...) }
+
+import.laqn <- function(x = file.choose()) {
+    aq <- import(x, date.name = "ReadingDateTime", time.name = "ReadingDateTime", output = "working")
+    aq <- cbind(date = aq$date, aq$data)
+    ids <- which(is.na(aq$date))
+    if (length(ids) > 0) {
+       aq <- aq[-ids, ]
+       warning(paste("Missing dates detected, removing", 
+         length(ids), "lines"))
+    }
     names(aq)[2] <- "site"
     aq <- subset(aq, select = c(site, date, Species, Value))
     aq <- melt(aq, meas= "Value")
@@ -240,8 +249,12 @@ import.LAQN <- function(x) {
         aq <- subset(aq, select = -site)
     }
     names(aq) <- tolower(names(aq))
+    print(unlist(sapply(aq, class)))
     aq
 }
+
+
+
 #############################################################################################
 
 useOuterStrips <-function (x, strip = strip.default, strip.left = strip.custom(horizontal = FALSE),
