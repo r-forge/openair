@@ -1,4 +1,7 @@
-import.ADMS.mop <- function(file=file.choose()
+
+import.ADMS.mop <- function(...) { import.adms.mop(...) }
+
+import.adms.mop <- function(file=file.choose()
     , drop.case=TRUE, drop.input.dates=TRUE
     , drop.delim=TRUE, add.prefixes = TRUE 
     , ...)
