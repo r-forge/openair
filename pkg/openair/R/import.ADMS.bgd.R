@@ -1,4 +1,7 @@
-import.ADMS.bgd <- function(file=file.choose(), drop.case=TRUE, drop.input.dates=TRUE, keep.units=TRUE
+import.ADMS.bgd <- function(...){ import.adms.bgd(...) }
+
+import.adms.bgd <- function(file=file.choose()
+    , drop.case=TRUE, drop.input.dates=TRUE, keep.units=TRUE, test.file.structure=TRUE
     , ...
 ){
 ans <- readLines(file, n=2)
@@ -6,10 +9,12 @@ allowed.formats <- c(
     "BackgroundVersion2"
 )
 ans.2 <- suppressWarnings(as.numeric(ans[2]))
-if( !ans[1] %in% allowed.formats | is.na(ans.2) ) {
-    stop("File not recognised ADMS.bgd structure\n       [please contact openair if valid]"
-        , call. = FALSE
-    )
+if(test.file.structure){
+  if( !ans[1] %in% allowed.formats | is.na(ans.2) ) {
+      stop("File not recognised ADMS.bgd structure\n       [please contact openair if valid]"
+          , call. = FALSE
+      )
+  }
 }
 ans <- readLines(file, n= 2*ans.2 + 4)
 file.names <- ans[3:(ans.2 + 2)]
