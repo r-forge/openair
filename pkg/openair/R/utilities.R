@@ -228,8 +228,8 @@ select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year 
 
 import.LAQN <- function(...){ import.laqn(...) }
 
-import.laqn <- function(x = file.choose()) {
-    aq <- import(x, date.name = "ReadingDateTime", time.name = "ReadingDateTime", output = "working")
+import.laqn <- function(file = file.choose()) {
+    aq <- import(file, date.name = "ReadingDateTime", time.name = "ReadingDateTime", output = "working")
     aq <- cbind(date = aq$date, aq$data)
     ids <- which(is.na(aq$date))
     if (length(ids) > 0) {
