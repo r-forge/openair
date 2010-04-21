@@ -1,20 +1,22 @@
 \name{import.LAQN}
 \alias{import.LAQN}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\alias{import.laqn}
 \title{Import data from the London Air Quality Network (LAQN)}
 \description{
   Function to help import LAQN air quality and meteorological data for
   use in \code{openair}
 }
 \usage{
-mydata <- import.LAQN(x)
-}
+mydata <- import.LAQN(file = file.choose())
 
+mydata <- import.laqn(file = file.choose())
+}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x}{File path to file to import.}
-
+\item{file}{File to be imported. Default, \code{file.choose()}, 
+opens browser. Alternatively, can be a character vector setting 
+file (and path), R connection, or url. }
 
 
 }
