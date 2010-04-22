@@ -4,6 +4,10 @@
 \alias{import.ADMS}
 \alias{import.adms.bgd}
 \alias{import.ADMS.bgd}
+\alias{import.adms.met}
+\alias{import.ADMS.met}
+\alias{import.adms.mop}
+\alias{import.ADMS.mop}
 
 \title{ ADMS data import function(s) for openair }
 \description{
@@ -17,14 +21,26 @@
 mydata <- import.adms(file = file.choose(), 
 		file.type="unknown", ...)
 
-mydata <- import.ADMS(file = file.choose(), ...)
+mydata <- import.ADMS(...)
 
 mydata <- import.adms.bgd(file = file.choose(), 
 		drop.case = TRUE, drop.input.dates = TRUE, keep.units = TRUE, 
-		test.file.structure = TRUE, ...)
+		simplify.names = TRUE, test.file.structure = TRUE, ...)
 
-mydata <- import.ADMS.bgd(file = file.choose(), ...)
+mydata <- import.ADMS.bgd(...)
 
+mydata <- import.adms.met(file = file.choose(), 
+		drop.case = TRUE, drop.input.dates = TRUE, keep.units = TRUE, 
+		simplify.names = TRUE, test.file.structure = TRUE, ...)
+
+mydata <- import.ADMS.met(...)
+
+mydata <- import.adms.mop(file = file.choose(), 
+		drop.case = TRUE, drop.input.dates = TRUE, keep.units = TRUE, 
+		simplify.names = TRUE, test.file.structure = TRUE, 
+		drop.delim = TRUE, add.prefixes = TRUE, ...)
+
+mydata <- import.ADMS.mop(...)
  
 }
 
@@ -60,34 +76,52 @@ mydata <- import.ADMS.bgd(file = file.choose(), ...)
 
   \item{test.file.structure}{ Option to test file structure before trying to import. Default, 
   \code{TRUE}, tests for expected file structure and halts import operation if not found. 
-  Alternative, \code{FALSE}, forces import regardless of structure. 
-
-  (NOTE: currently, \code{.bgd} files only.) }
+  Alternative, \code{FALSE}, forces import regardless of structure. } 
 
   \item{simplify.names}{ Option to simplify data names in accordance with common \code{openair} 
   practices. Default, \code{TRUE}. Alternative, \code{FALSE}, returns data with names as 
   interpreted by standard R. 
 
-  (NOTE 1: Some ADMS file data names include symbols or structures that 
-  R does not allow, so \code{simplify.names=FALSE} can produce some interesting results.)  
+  (NOTE 1: currently, \code{.met} files only.)
 
-  (NOTE 2: currently, \code{.bgd} files only.)}
+  (NOTE 2: Some ADMS file data names include some symbols and structures that R does not allow as 
+  part of a name, so some renaming is automatic regardless of \code{simplify.names} setting. 
+  For example, brackets or symbols are removed from names or repaced with ".", and names in the 
+  form "1/x" are returned as "recip.x".) }  
 
-  \item{...}{Additional arguments. For \code{import.adms} and \code{import.adms.bgd}, these are passed on to and handled 
-  by \code{read.csv}. For \code{import.ADMS} and \code{import.ADMS.bgd}, these are passed onto the associated .adms. function, 
-  handled by that or, in turn, passed on to \code{read.csv}. 
+  \item{drop.delim}{ Option to remove delim columns from the data frame. ADMS .mop files include 
+  two columns, "INPUT_DATA:" and "PROCESSED_DATA:", to separate model input and output types. 
+  Default, \code{TRUE}, removes these. Alternative, \code{FALSE}, retains them as part of import. 
 
-  (Note: .ADMS. functions are wrappers for equivalent .adms. functions to 
+  (NOTE: currently, \code{.mop} files only.)}
+
+  \item{add.prefixes}{ Option to add prefixes to data names. ADMS .mop files include a number of
+  input and process data types with shared names. Prefixes can be automatically added to these so 
+  individual data can be readily identified in the R/openair environment. Default, \code{TRUE}, 
+  adds "process." as a prefix to processed data. Other options include: \code{FALSE} which uses no 
+  prefixes and leave all name rationalisation to R, and character vectors which are treated as the 
+  required prefixes. If one vector is sent, this is treated as processed data prefix. If two (or more) 
+  vectors are sent, the first and second are treated as the input and processed data prefixes, 
+  respectively. For example, the argument (\code{add.prefixes="out"}) would add the "out" prefix to 
+  processed data names, while the argument (\code{add.prefixes=c("in","out")}) would add "in" and 
+  "out" prefixes to input and output data names, respectively. 
+
+  (NOTE: currently, \code{.mop} files only.)}
+
+  \item{...}{Additional arguments. For \code{import.adms} and \code{import.adms...} daughters, these are passed on to and handled 
+  by \code{read.csv}. For \code{import.ADMS} and \code{import.ADMS...} daughters, these are passed onto the associated .adms. function, 
+  and handled by that function or, in turn, passed on the associated import function or \code{read.csv}. 
+
+  (Note: ...ADMS... functions are wrappers for equivalent ...adms... functions to 
   allow use of upper and lower ADMS in function calls.)}       
 
 } 
 
 \details{ The \code{import.adms...} function family were developed to help import various 
-ADMS file types into openair. In most cases the import function(s) should be used in their 
-default configurations, e.g. \code{mydata <- import.adms()}. However, where file variations 
-are encountered or more direct control is required, specific functions can be called directly, 
-and fine tuned using arguments.   
-}
+ADMS file types into openair. In most cases the parent import function should work in 
+default configuration, e.g. \code{mydata <- import.adms()}. However, where file variations 
+are encountered or more direct control is required, specific functions can be called using the 
+\code{file.type} argument and fine tuned using arguments, or used directly. }
 
 \value{ The function returns a data
 frame for use in openair. By comparison to the original file, the
@@ -99,11 +133,13 @@ some other parameters may be reset to openair standards (e.g. "ws", "wd" and
 "temp"). Data units information may also be retained as part of the data 
 frame comment. }
 
-\author{ Karl Ropkins and David Carslaw, with significant input, help and advice 
-from Matthew Williams (CERC) also gratefully acknowledged. }
+\note{Times are assumed to be in GMT.}
 
 \section{Warning }{The \code{import.adms} function family is currently released as a
 test version only.}
+
+\author{ Karl Ropkins and David Carslaw, with significant input, help and advice 
+from Matthew Williams (CERC) also gratefully acknowledged. }
 
 \seealso{Generic import function \code{\link{import}}, for possible alternative import methods. 
 Other dedicated import functions available for other file types, including
