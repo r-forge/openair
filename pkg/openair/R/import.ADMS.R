@@ -1,4 +1,4 @@
-import.ADMS <- function(file=file.choose(), ...) { import.adms(file=file, ...) }
+import.ADMS <- function(file=file.choose(), ...) { import.adms(...) }
 
 import.adms <- function(file=file.choose(), file.type="unknown", ...){
 
