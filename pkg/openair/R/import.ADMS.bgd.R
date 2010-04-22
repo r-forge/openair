@@ -8,7 +8,7 @@ ans <- readLines(file, n=2)
 allowed.formats <- c(
     "BackgroundVersion2"
 )
-ans.2 <- suppressWarnings(as.numeric(ans[2]))
+ans.2 <- suppressWarnings(as.numeric(as.character(ans[2])))
 if(test.file.structure){
   if( !ans[1] %in% allowed.formats | is.na(ans.2) ) {
       stop("File not recognised ADMS.bgd structure\n       [please contact openair if valid]"
@@ -29,6 +29,7 @@ ans <- read.csv(file, header=FALSE, skip=(2*ans.2 + 6)
     , na.strings = c("", "NA", "-999", "-999.0") 
     , ...
 )
+ans[] <- lapply(ans, function(x) { replace(x, x == -999, NA) })
 ########################
 #screening for missing data
 #confirm formats, if they get any with bgd files, etc.
