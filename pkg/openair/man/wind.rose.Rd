@@ -77,7 +77,10 @@ if wind speeds are from a met mast that is lower than 10 m height.  }
 \author{David Carslaw}
 %\note{ ~~further notes~~
 
-% ~Make other sections like Warning with \section{Warning }{....} ~
+\section{Warning }{Note that \code{wind.rose} is designed to work with
+  UK Met Office files. Wind directions of 0 degrees are assumed to be
+  calms. The function will assume any data with wind speed = 0 or wind
+  direction = 0 will be calm.} 
 %}
 \seealso{\code{\link{polar.freq}} for a more flexible version that
 considers other statistics and pollutant concentrations.}

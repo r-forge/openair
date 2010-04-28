@@ -58,6 +58,7 @@ check.prep <- function(mydata, Names, type, remove.calm = TRUE) {
             } else { ## only used for wind.rose
                 mydata$wd[mydata$wd == 0] <- -999
                 mydata$wd[mydata$ws == 0] <- -999 ## some times met data wrong, need both here!
+                mydata$ws[mydata$wd == -999] <- 0
             }
             mydata$wd <- 10 * round(mydata$wd / 10)
             mydata$wd[mydata$wd == 0] <- 360   # angles <5 should be in 360 bin

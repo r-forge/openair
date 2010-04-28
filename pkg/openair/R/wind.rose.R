@@ -14,32 +14,42 @@ wind.rose <- function(polar,
     vars <- c("ws", "wd", "date")
 
     polar <- check.prep(polar, vars, type, remove.calm = FALSE)
-    ## calms given a negative number
-
+    
     polar <- na.omit(polar)
-
+    
     polar$wd <- angle * round(polar$wd / angle)
-    polar$wd[polar$wd == 0] <- 360
+    polar$wd[polar$wd == 0] <- 360  
 
-    ## split into four categories, depending on the interval
-    polar$ws <- ws.int * floor(polar$ws / ws.int)
-    polar$ws[polar$ws > 3 * ws.int] <- 4 * ws.int
+    ## split into four categories, depending on the interval, but check max first
+    breaks <- ws.int * 0:3
 
-
+    if (max(breaks) < max(polar$ws, na.rm = TRUE)) {
+        breaks <- c(breaks, max(polar$ws, na.rm = TRUE))
+    } else {
+        breaks <- c(breaks, 4 * ws.int)
+    }
+    
+   
+    polar$ws <- cut(polar$ws, breaks = breaks, include.lowest = FALSE)
+    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(polar$ws))
+    theLabels <- gsub("[,]", "-", theLabels)
+    
+    
     prepare.grid <- function(polar) {
         wd <- factor(polar$wd)
-        ws <- factor(polar$ws)
-        cats <- length(levels(ws)) ## number of levels
-        labs <- c("ws1", "ws2", "ws3", "ws4")
-        levels(ws) <- labs[1:cats]
-        weights <- prop.table(table(wd, ws))    ## fraction by ws/wd
-        weights <- as.data.frame.matrix(weights)
+        
+        ## easy labels to refer to
+        levels(polar$ws) <- c("ws1", "ws2", "ws3", "ws4")
 
+        calm <- length(which(is.na(polar$ws))) / nrow(polar)
+        ## put in calms to ensure all are counted
+        polar$ws[which(is.na(polar$ws))] <- "ws1"
+            
+        weights <- prop.table(table(polar$wd, polar$ws))    ## fraction by ws/wd
+        weights <- as.data.frame.matrix(weights)
         ## get cumsum for plotting
         weights <- data.frame(t(apply(weights, 1, cumsum)))
-        calm <- 0
-        ## a test to see if there are any calms in period
-        if (any(as.numeric(rownames(weights)) < 0))  calm <- max(weights[1, ])
+        
         weights$cond <- polar$cond[1]
         weights$wd <- as.numeric(row.names(weights))
         weights <- subset(weights, wd > 0)
@@ -73,12 +83,7 @@ wind.rose <- function(polar,
     ## the colours
     col <- open.colours(cols, 4)
 
-    ## if missing data due to low wind speeds and choice of ws.int, fill gaps
-    if (!"ws2" %in% names(results.grid)) results.grid$ws2 <- results.grid$ws1
-    if (!"ws3" %in% names(results.grid)) results.grid$ws3 <- results.grid$ws2
-    if (!"ws4" %in% names(results.grid)) results.grid$ws4 <- results.grid$ws3
-    ## max frequency to set plot limits
-    max.freq <- max(subset(results.grid, select = c(ws1, ws2, ws3, ws4)), na.rm = TRUE)
+    max.freq <- max(results.grid[, 1:4], na.rm = TRUE)
 
     plt <- xyplot(ws1 ~ wd | cond,
                   xlim = c(-max.freq - 0.02, max.freq + 0.02),
@@ -134,8 +139,7 @@ wind.rose <- function(polar,
         grid.polygon(x1 + (x - 1) / 10, c(y1 - x * int, y1 + x * int, y1 + x * int, y1 - x * int),
                      gp = gpar(fill = col[x], col = col[x]))
 
-        grid.text(paste(x * ws.int, "-", (x + 1) * ws.int, sep = ""),
-                  (0.35 + (x - 1) / 10), 0.02, just = "bottom", gp = gpar(cex = 0.8))
+        grid.text(theLabels[x], (0.35 + (x - 1) / 10), 0.02, just = "bottom", gp = gpar(cex = 0.8))
     }
 
     sapply(1:4, add.ws.scale)
