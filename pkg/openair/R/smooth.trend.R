@@ -83,7 +83,7 @@ smooth.trend <- function(mydata,
         cond <- mydata$variable[1]
 
         mydata <- time.average(mydata, period = "month", statistic = statistic, percentile = percentile)
-        mydata$date <- as.Date(mydata$date)
+    
 
         if (type == "season") { ## special case
 
@@ -91,13 +91,13 @@ smooth.trend <- function(mydata,
             ## winter stradles 2 years, need to deal with this
             results$month <- as.numeric(format(results$date, "%m"))
             results$year <- as.numeric(format(results$date, "%Y"))
-            results$year[results$month == 12] <-
-            results$year[results$month == 12] + 1
+            results$year[results$month == 12] <- results$year[results$month == 12] + 1
             ## remove missing for proper aggregation
 
             results <- subset(results, select = -cond)
             results <- aggregate(results, list(results$year), mean, na.rm = TRUE)
-            class(results$date) <- "Date"
+       
+            class(results$date) <- c("POSIXt", "POSIXct")
             results$cond <- cond
             mydata <- na.omit(results)
 
@@ -187,6 +187,7 @@ smooth.trend <- function(mydata,
 
            panel.groups = function(x, y, group.number, lwd, lty, pch, col, col.line, col.symbol,
            subscripts, type = "b",...) {
+              
 
                if (group.number == 1) {  ## otherwise this is called every time
 
@@ -195,7 +196,7 @@ smooth.trend <- function(mydata,
                }
                panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
                             col.line = myColors[group.number],col.symbol = myColors[group.number], ...)
-
+               
                panel.gam(x, y, col = "grey40", col.se = "black", simulate = simulate, n.sim = n,
                          autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
@@ -218,6 +219,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
     ## Uses a GAM (mgcv) to fit smooth
     ## Optionally can plot 95% confidence intervals and run bootstrap simulations
     ## to estimate uncertainties. Simple block bootstrap is also available for correlated data
+   
     thedata <- data.frame(x = x, y = y)
     tryCatch({
 
@@ -230,6 +232,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
             xseq <- seq(xrange[1], xrange[2], length = n)
 
             pred <- predict(mod, data.frame(x = xseq), se = se)
+           
             if (se) {
                 std <- qnorm(level / 2 + 0.5)
                 panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -

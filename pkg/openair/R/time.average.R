@@ -45,18 +45,25 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
         ## cut into sections dependent on period
         mydata$cuts <- cut(mydata$date, period)
 
-        newMean <- function(x, data.thresh, na.rm) {
+        
+        ## two methods of calculating stats, one that takes account of data capture (slow), the
+        ## other not (faster)
+        newMethod <- function(x, data.thresh, na.rm) {
             ## calculate mean only if above data capture threshold
             if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
                 res <- eval(parse(text = form))
             } else {
-                res <- NA
+                NA
             }
             res
         }
 
+        standardMethod <- function(x, data.thresh, na.rm) {res  <- eval(parse(text = form))
+                                       res}
+       
+
         ## only use  newMean method if necessary for speed
-        if (data.thresh > 0) meanMethod <- "newMean" else meanMethod <- "mean"
+        if (data.thresh > 0) meanMethod <- "newMethod" else meanMethod <-  "standardMethod" 
 
         dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                          drop = FALSE], list(date = mydata$cuts), get(meanMethod),

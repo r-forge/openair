@@ -6,6 +6,7 @@ dateBreaks <-
     function(x, n = 7, min.n = round(n / 2), do.format = TRUE)
 {
     isDate <- inherits(x, "Date")
+   
     zz <- range(as.POSIXct(x))
     ## specify the set of pretty timesteps
     MIN <- 60
@@ -79,12 +80,15 @@ dateBreaks <-
     }
     makeOutput <- function(at, s) {
   #      if (do.format) {
-         #   print(s$format)
-           # format(at, s$format)
+           if (isDate) at <- as.Date(at)
            theFormat <- s$format[1]
+         
     #    } else {
-            if (isDate) theOutput <- as.Date(round(at, units = "days"))
-            else theOutput <- as.POSIXct(at)
+            if (isDate) {theOutput <- as.Date(at)#round(at, units = "days"))
+                     } else {
+                         
+                         theOutput <- as.POSIXct(at)
+                     }
            list(major = theOutput, format = theFormat)
      #   }
     }
