@@ -83,11 +83,6 @@ smooth.trend <- function(mydata,
         cond <- mydata$variable[1]
 
         mydata <- time.average(mydata, period = "month", statistic = statistic, percentile = percentile)
-<<<<<<< .mine
-     #   mydata$date <- as.Date(mydata$date)
-=======
-    
->>>>>>> .r117
 
         if (type == "season") { ## special case
 
@@ -100,13 +95,9 @@ smooth.trend <- function(mydata,
 
             results <- subset(results, select = -cond)
             results <- aggregate(results, list(results$year), mean, na.rm = TRUE)
-<<<<<<< .mine
-        #    class(results$date) <- "Date"
-            class(results$date) <- c("POSIXt", "POSIXct")
-=======
        
             class(results$date) <- c("POSIXt", "POSIXct")
->>>>>>> .r117
+
             results$cond <- cond
             mydata <- na.omit(results)
 

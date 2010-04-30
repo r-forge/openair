@@ -84,7 +84,7 @@ dateBreaks <-
            theFormat <- s$format[1]
          
     #    } else {
-            if (isDate) {theOutput <- as.Date(at)#round(at, units = "days"))
+            if (isDate) {theOutput <- as.Date(at)
                      } else {
                          
                          theOutput <- as.POSIXct(at)
