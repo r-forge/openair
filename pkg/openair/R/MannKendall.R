@@ -219,6 +219,16 @@ MannKendall <- function(mydata,
 
 panel.shade <- function(split.data, start.year, end.year, ylim) {
     ## for polygons on lattice plots - shading alternate years
+<<<<<<< .mine
+    
+    x1 <- as.POSIXct(seq(ISOdate(start.year, 1, 1),
+                      ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
+    x2 <- as.POSIXct(seq(ISOdate(start.year + 1, 1, 1),
+                      ISOdate(end.year + 2, 1, 1), by = "2 years"), "GMT")
+    if (class(split.data$date)  == "Date") {x1 <- as.Date(x1)
+                                            x2 <- as.Date(x2)
+                                        }
+=======
     
     x1 <- as.POSIXct(seq(ISOdate(start.year, 1, 1),
                       ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
@@ -227,6 +237,7 @@ panel.shade <- function(split.data, start.year, end.year, ylim) {
     if (class(split.data$date)[1]  == "Date") {x1 <- as.Date(x1)
                                             x2 <- as.Date(x2)
                                         }
+>>>>>>> .r117
     rng <- range(split.data$conc, na.rm = TRUE) ## range of data
     y1 <- min(split.data$conc, na.rm = TRUE) - 0.1 * abs(rng[2] - rng[1])
     y2 <- max(split.data$conc, na.rm = TRUE) + 0.1 * abs(rng[2] - rng[1])
