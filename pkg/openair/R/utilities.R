@@ -223,35 +223,6 @@ select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year 
 }
 
 
-#############################################################################################
-## function to import LAQN data from ERG website
-
-import.LAQN <- function(...){ import.laqn(...) }
-
-import.laqn <- function(file = file.choose()) {
-    aq <- import(file, date.name = "ReadingDateTime", time.name = "ReadingDateTime", output = "working")
-    aq <- cbind(date = aq$date, aq$data)
-    ids <- which(is.na(aq$date))
-    if (length(ids) > 0) {
-       aq <- aq[-ids, ]
-       warning(paste("Missing dates detected, removing", 
-         length(ids), "lines"))
-    }
-    names(aq)[2] <- "site"
-    aq <- subset(aq, select = c(site, date, Species, Value))
-    aq <- melt(aq, meas= "Value")
-    aq <- cast(aq, ... ~ Species)
-    aq <- subset(aq, select = -variable)
-    ## if met data
-    if (length(which(names(aq) %in% c("WDIR", "WSPD"))) == 2) {
-        ids <- which(names(aq) %in% c("WDIR", "WSPD"))
-        names(aq)[ids] <- c("wd", "ws")
-        aq <- subset(aq, select = -site)
-    }
-    names(aq) <- tolower(names(aq))
-    print(unlist(sapply(aq, class)))
-    aq
-}
 
 
 

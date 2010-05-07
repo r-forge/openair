@@ -56,6 +56,9 @@ The site codes and pollutant names can be upper or lower case. The
 function will issue a warning when data less than six months old is
 downloaded, which may not be ratified.
 
+All units are expressed in mass terms for gaseous species (ug/m3 for NO,
+NO2, NOx, SO2 and hydrocarbons; and mg/m3 for CO).
+
 While the function is being developed, the following site codes should
 help with selection.
 \itemize{
