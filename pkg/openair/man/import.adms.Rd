@@ -138,8 +138,7 @@ frame comment. }
 \section{Warning }{The \code{import.adms} function family is currently released as a
 test version only.}
 
-\author{ Karl Ropkins and David Carslaw, with significant input, help and advice 
-from Matthew Williams (CERC) also gratefully acknowledged. }
+\author{ Karl Ropkins, David Carslaw and Matthew Williams (CERC). }
 
 \seealso{Generic import function \code{\link{import}}, for possible alternative import methods. 
 Other dedicated import functions available for other file types, including
