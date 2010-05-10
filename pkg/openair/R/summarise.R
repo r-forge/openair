@@ -98,6 +98,11 @@ summarise <- function(mydata,
     all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
     mydata <- merge(mydata, all.dates, all = TRUE)
 
+    ## means for trend line
+    monthly.mean <- time.average(mydata, "day")
+    monthly.mean <- melt(monthly.mean, id.var = "date")
+    monthly.mean <- split(monthly.mean, monthly.mean$variable)
+
     mydata <- melt(mydata, id.var = "date")
 
     plot.missing <- function(mydata, na.len, col = "red") {
@@ -144,10 +149,6 @@ summarise <- function(mydata,
 
     ## split data and calculate things needed for plot
     split.dat <- split(mydata, mydata$variable)
-
-    monthly.mean <- lapply(split.dat, function(x) aggregate(x[, c("date", "value")],
-                                                            list(dates = format(x$date,
-                                                                 "%Y-%j")),  mean, na.rm = TRUE))
 
     sum.stats <- lapply(split.dat, summmary.stats, period)
 
