@@ -57,7 +57,7 @@ function will issue a warning when data less than six months old is
 downloaded, which may not be ratified.
 
 The data are imported by stacking sites on top of one another and will
-have field names \code{site}, \code{code} (the site code} and
+have field names \code{site}, \code{code} (the site code) and
 \code{pollutant}. Sometimes it is useful to have columns of site
 data. This can be done using the \code{reshape} function --- see
 examples below.
