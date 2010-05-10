@@ -74,7 +74,6 @@ While the function is being developed, the following site codes should
 help with selection. We will also make available other meta data such as
 site type and location to make it easier to select sites based on other
 information.
-
 \itemize{
   \item A30 A3 - AURN
 \item AR1 Chichester - Lodsworth
