@@ -44,30 +44,31 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
 
         ## cut into sections dependent on period
         mydata$cuts <- cut(mydata$date, period)
+      
+        if (data.thresh > 0) {
 
-        
-        ## two methods of calculating stats, one that takes account of data capture (slow), the
-        ## other not (faster)
-        newMethod <- function(x, data.thresh, na.rm) {
-            ## calculate mean only if above data capture threshold
-            if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
-                res <- eval(parse(text = form))
-            } else {
-                res <- NA
-            }
-            res
+            ## two methods of calculating stats, one that takes account of data capture (slow), the
+            ## other not (faster)
+            newMethod <- function(x, data.thresh, na.rm) {
+                ## calculate mean only if above data capture threshold
+                if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
+                    res <- eval(parse(text = form))
+                } else {
+                    res <- NA
+                }
+                res
+            }            
+            
+            dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                                         drop = FALSE], list(date = mydata$cuts), newMethod,
+                                  na.rm = TRUE,  data.thresh = data.thresh)
+
+        } else {
+
+            dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                                         drop = FALSE], list(date = mydata$cuts), mean, na.rm = TRUE)
+
         }
-
-        standardMethod <- function(x, data.thresh, na.rm) {res  <- eval(parse(text = form))
-                                       res}
-       
-
-        ## only use  newMean method if necessary for speed
-        if (data.thresh > 0) meanMethod <- "newMethod" else meanMethod <-  "standardMethod" 
-
-        dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                         drop = FALSE], list(date = mydata$cuts), get(meanMethod),
-                              na.rm = TRUE,  data.thresh = data.thresh)
 
         dailymet$date <- as.POSIXct(dailymet$date, "GMT")
 
@@ -82,7 +83,7 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
             dailymet <- subset(dailymet, select = c(-u, -v))
         }
 
-         if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
+        if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
 
         dailymet
     }
