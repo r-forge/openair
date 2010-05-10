@@ -52,7 +52,7 @@ polar.annulus <- function(polar,
     if (resolution == "fine") int <- 0.1
     if (resolution == "ultra.fine") int <- 0.05  # very large files!
 
-    len.int <- 20 / int + 1 ## number of x and y points to make up surface
+    len.int <- 20 / int + 1 ## number of x and y points to make up surfacexb
 
     prepare.grid <- function(polar) {
 
@@ -301,8 +301,8 @@ polar.annulus <- function(polar,
                   if (period == "trend")
                   {
                       if (date.pad) {
-                          date.start <- all.dates$date[1]
-                          date.end <- all.dates$date[nrow(all.dates)]
+                          date.start <- min(all.dates$date)
+                          date.end <- max(all.dates$date)
                       } else {
                           date.start <- polar$date[1]
                           date.end <- polar$date[nrow(polar)]

@@ -56,6 +56,12 @@ The site codes and pollutant names can be upper or lower case. The
 function will issue a warning when data less than six months old is
 downloaded, which may not be ratified.
 
+The data are imported by stacking sites on top of one another and will
+have field names \code{site}, \code{code} (the site code} and
+\code{pollutant}. Sometimes it is useful to have columns of site
+data. This can be done using the \code{reshape} function --- see
+examples below.
+
 All units are expressed in mass terms for gaseous species (ug/m3 for NO,
 NO2, NOx, SO2 and hydrocarbons; and mg/m3 for CO).
 
@@ -265,6 +271,20 @@ pollutant = c("nox", "no2", "o3"))}
 
 ## import hydrocarbon (and other) data from Marylebone Road
 \dontrun{mary <- import.aurn(site = "my1", year =1998, hc = TRUE)}
+
+## reshape the data so that each column represents a pollutant/site
+\dontrun{thedata <- import.aurn(site = c("nott", "kc1"), year = 2008,
+pollutant = "o3")
+thedata <- reshape(thedata, idvar = "date", timevar = "code", direction
+= "wide")
+## thedata now has columns o3.MY1 and o3.KC1
+## can also get rid of columns, in this case site:
+thedata <- reshape(thedata, idvar = "date", timevar = "code", direction
+= "wide", drop = "site")
+## now can export as a csv file:
+write.csv(thedata, file = "~/temp/thedata.csv")
+
+}
 
 }
 \keyword{methods}

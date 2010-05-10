@@ -38,7 +38,7 @@ example.}
   \code{units = "volume"} to use ppb etc. PM10 TEOM data are multiplied
   by 1.3 and PM2.5 have no correction applied. We are considering how
   best to express PM units in the light of the wide range of measurement
-  techniques now employed in teh UK e.g. FDMS.}
+  techniques now employed in the UK e.g. FDMS.}
 
 }
 
@@ -63,6 +63,12 @@ proper site name is imported and used in \code{openair} functions.
 The site codes and pollutant names can be upper or lower case. The
 function will issue a warning when data less than six months old is
 downloaded, which may not be ratified.
+
+The data are imported by stacking sites on top of one another and will
+have field names \code{date}, \code{site}, \code{code} (the site code} and
+pollutant(s). Sometimes it is useful to have columns of site
+data. This can be done using the \code{reshape} function --- see
+examples below.
 
 While the function is being developed, the following site codes should
 help with selection. We will also make available other meta data such as
@@ -561,6 +567,20 @@ pollutant = c("nox", "no2", "o3"))}
 
 ## import met data too...
 \dontrun{my1 <- import.kcl(site = "my1", year = 2008, met = TRUE)}
+
+## reshape the data so that each column represents a pollutant/site
+\dontrun{thedata <- import.kcl(site = c("my1", "kc1"), year = 2008,
+pollutant = "o3")
+thedata <- reshape(thedata, idvar = "date", timevar = "code", direction
+= "wide")
+## thedata now has columns o3.MY1 and o3.KC1
+## can also get rid of columns, in this case site:
+thedata <- reshape(thedata, idvar = "date", timevar = "code", direction
+= "wide", drop = "site")
+## now can export as a csv file:
+write.csv(thedata, file = "~/temp/thedata.csv")
+
+}
 
 
 }

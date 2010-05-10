@@ -42,6 +42,8 @@ cut.data <- function(mydata, type = "default") {
 
             mydata$cond <- paste(format(min(mydata$date), "%d %B %Y"), " to ",
                                  format(max(mydata$date), "%d %B %Y"), sep = "")
+            ## order the data by date
+            mydata <- mydata[order(mydata$date), ]
 
         } else {
             mydata$cond <- "all data"
