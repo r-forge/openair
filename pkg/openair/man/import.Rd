@@ -75,7 +75,7 @@ etc). }
 
 \item{time.format}{ The time format the imported data was logged in. 
 Allows most common formats, e.g.: "GMT" (default), "UTC", etc. 
-See \code{\link{as.POSIX*}} functions for further information. }
+See \code{as.POSIX*} functions for further information. }
 
 \item{is.ws}{ Wind speed information identifier. Default
 NULL turns this option off. When set to valid header/data column name,

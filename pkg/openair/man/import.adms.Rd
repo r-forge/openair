@@ -127,7 +127,7 @@ are encountered or more direct control is required, specific functions can be ca
 frame for use in openair. By comparison to the original file, the
 resulting data frame is modified as follows: Time and date information
 will combined in a single column "date", formatted as a conventional
-timeseries (\code{\link{as.POSIX*}}). If name simplification was requested
+timeseries (\code{as.POSIX*}). If name simplification was requested
 (\code{simplify.names = TRUE}), common chemical names may be simplified, and 
 some other parameters may be reset to openair standards (e.g. "ws", "wd" and 
 "temp"). Data units information may also be retained as part of the data 

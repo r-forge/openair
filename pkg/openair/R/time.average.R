@@ -53,7 +53,7 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
             if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
                 res <- eval(parse(text = form))
             } else {
-                NA
+                res <- NA
             }
             res
         }
