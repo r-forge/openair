@@ -1,4 +1,3 @@
-
 import.ADMS.met <- function(...) { import.adms.met(...) }
 
 import.adms.met <- function(file = file.choose()
@@ -27,19 +26,26 @@ import.adms.met <- function(file = file.choose()
 
     test <- as.character(met[variables+2,1])[1]
     variables <- as.character(met[2:(variables +1),])
+    ans <- length(variables) + 3
 
     #file structure test 2
     if(test.file.structure){
       #check data where should be
       if( test!="DATA:" ) {
-        stop("File not recognised ADMS.met structure\n       [please contact openair if valid]"
-          , call. = FALSE
-        )
+        #hunt DATA:
+        ans <- readLines(file)
+        ans <- which(ans=="DATA:")
+        if(length(ans)<1) {
+          stop("File ADMS.bgd DATA marker not found\n       [please contact openair if valid]"
+            , call. = FALSE
+          )
+        }
       }
     }
 
-    met <- read.csv(file, skip = length(variables) + 3, header = FALSE,
+    met <- read.csv(file, skip = ans, header = FALSE,
                     na.strings = c("-999", "-999.0"))
+    met[] <- lapply(met, function(x) { replace(x, x == -999, NA) })
     ## remove variables where all row are NA
     met <- met[ , sapply(met, function(x) !all(is.na(x)))]
     names(met) <- make.names(variables, unique=TRUE) 

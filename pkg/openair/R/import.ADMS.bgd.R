@@ -1,4 +1,4 @@
-import.ADMS.bgd <- function(...){ import.adms.bgd(...) }
+import.ADMS.bgd <- function(...) { import.adms.bgd(...) }
 
 import.adms.bgd <- function(file=file.choose()
     , drop.case=TRUE, drop.input.dates=TRUE, keep.units=TRUE, test.file.structure=TRUE
@@ -23,9 +23,23 @@ if(drop.case) {
 }
 ans <- ans[(ans.2+4):(2*ans.2 + 4)]
 units <- paste(ans[1], ans[2], sep=" ")
-
-units <- paste(units, paste(ans[3:length(ans)], collapse=", "), sep=", ")
-ans <- read.csv(file, header=FALSE, skip=(2*ans.2 + 6)
+if(length(ans)>2){
+  units <- paste(units, paste(ans[3:length(ans)], collapse=", "), sep=", ")
+}
+#check for data label
+ans <- readLines(file, n= 2*ans.2 + 6)
+if(ans[length(ans)]=="DATA:"){
+   ans.2 <- 2*ans.2+6
+} else {
+   ans <- readLines(file)
+   ans.2 <- which(ans=="DATA:")
+   if(length(ans.2)<1) {
+      stop("File ADMS.bgd DATA marker not found\n       [please contact openair if valid]"
+          , call. = FALSE
+      )
+   }
+}
+ans <- read.csv(file, header=FALSE, skip=ans.2
     , na.strings = c("", "NA", "-999", "-999.0") 
     , ...
 )
@@ -34,20 +48,13 @@ ans[] <- lapply(ans, function(x) { replace(x, x == -999, NA) })
 #screening for missing data
 #confirm formats, if they get any with bgd files, etc.
 #might not be necessary
-
 date<- paste(ans[,1], ans[,2], ans[,3], sep = "-")
 date <- as.POSIXct(strptime(date, format = "%Y-%j-%H"), "GMT")
-
+ans <- cbind(date=date,ans)
+names(ans) <- c("date", "bgd.year", "bgd.day", "bgd.hour", file.names)
 if(drop.input.dates==TRUE){
-    ans <- ans[,4:ncol(ans)]
-} else {
-    file.names <- c(
-        "bgd.year","bgd.day","bgd.hour",
-        file.names
-    ) 
-}
-names(ans) <- file.names
-ans <- cbind(date=date, ans)
+    ans <- ans[, c(1, 5:ncol(ans))]
+} 
 if(keep.units) { 
     comment(ans) <- c(comment(ans), units)
 }
@@ -55,19 +62,16 @@ if(keep.units) {
 #error handling for bad days
 ids <- which(is.na(ans$date))
 if (length(ids) > 0) {
-
     if(length(ids)==nrow(ans)) {
         stop("Invalid date (and time) format requested\n       [compare openair import settings and data structure]"
             , call. = FALSE
         )
     }
-
     ans <- ans[-ids, ]
     reply <- paste("Missing dates detected, removing", length(ids), "line", sep=" ")
     if(length(ids)>1) { reply <- paste(reply,"s",sep="") }
     warning(reply, call. = FALSE)
 }
-
 print(unlist(sapply(ans, class)))
 ans
 }
