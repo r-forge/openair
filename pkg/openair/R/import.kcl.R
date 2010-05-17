@@ -29,7 +29,11 @@ import.kcl <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE
     names(thedata) <- tolower(names(thedata))
 
     ## if particular pollutants have been selected
-    if (!missing(pollutant)) thedata <- thedata[, c("date", pollutant, "site", "code")]
+    if (!missing(pollutant)) {
+        if (pollutant != "all") {
+            thedata <- thedata[, c("date", pollutant, "site", "code")]
+        }
+    }
 
     ## change units to mass units
     if (units == "mass") {
