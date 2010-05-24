@@ -70,7 +70,9 @@ value of the trend, choose alpha = 0.01 etc.}
   \item{dec.place}{The number of decimal places to display the trend
   estimate at. The default is 2.}
 
-  \item{ylab}{y-axis label.}
+\item{ylab}{y-axis label.}
+
+ \item{xlab}{x-axis label.}
 
   \item{main}{Title of plot, if required.}
 

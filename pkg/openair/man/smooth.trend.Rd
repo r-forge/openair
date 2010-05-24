@@ -85,7 +85,9 @@ auto.text = TRUE,...)
    e.g. \code{cols = c("black", "green")} or pre-defined openair colours
    --- see \code{open.colours} for more details.}
 
-  \item{ylab}{y-axis label.}
+ \item{ylab}{y-axis label.}
+
+  \item{xlab}{x-axis label.}
 
   \item{lty}{Line type to use, can be a vector of types if the option
     \code{statistic = "percentile"} is used e.g. \code{lty = c(5, 1, 5)}.}
