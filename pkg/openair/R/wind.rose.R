@@ -3,12 +3,6 @@ pollution.rose <- function(polar,
          breaks = 6, paddle = FALSE, key.position = "right",
          ...)
 {
-
-    if(!pollutant %in% names(polar))
-        stop(paste("pollutant '", pollutant, "' missing or not extractable"
-            , sep = ""))
-
-    polar$ws <- polar[ ,pollutant]
     if(is.null(breaks)) { breaks <- 6 }
     if(is.numeric(breaks) & length(breaks) == 1){  
         breaks2 <- co.intervals(polar[ ,pollutant][is.finite(polar[ ,pollutant])], number = 10, overlap = 0)
@@ -16,7 +10,7 @@ pollution.rose <- function(polar,
         breaks <- breaks[breaks >= min(polar[ ,pollutant], na.rm = TRUE)]
     }
     wind.rose(
-        polar, paddle = paddle, key.position = key.position, 
+        polar, pollutant = pollutant, paddle = paddle, key.position = key.position, 
         key.name = key.name, units = units, breaks = breaks, ...
     )
 }
@@ -25,7 +19,7 @@ pollution.rose <- function(polar,
 wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "default", 
     main = "", grid.line = 5, width = 1, units = "(m/s)", auto.text = TRUE,
     breaks = 4, paddle = TRUE, key.name = "", key.position = "bottom", 
-    key = NULL, dig.lab = 5, output = "graph", ...) 
+    key = NULL, dig.lab = 5, pollutant = NULL, output = "graph", ...) 
 {
 
     if(360 / angle != round(360 / angle)){
@@ -34,8 +28,8 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
         )
     }
     if(angle < 3) { 
-       warning("angle too small; enforcing 'angle = 3'")
-       angle <- 3
+        warning("angle too small; enforcing 'angle = 3'")
+        angle <- 3
     }
     temp <- c("right", "left", "top", "bottom")
     key.position <- pmatch(key.position, temp)
@@ -46,33 +40,41 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
         )
     } 
     key.position <- temp[key.position]
-
+ 
     vars <- c("ws", "wd", "date")
+    if(!is.null(pollutant)){ vars <- c(vars, pollutant) }
     polar <- check.prep(polar, vars, type, remove.calm = FALSE)
     polar <- na.omit(polar)
+    if(is.null(pollutant)){
+        polar$.z.poll <- polar$ws
+    } else {
+        names(polar)[names(polar) == pollutant] <- ".z.poll"
+    }
+    if(type == "ws") {type <- "ws.1"} #because we use differently calms and cond
+
     #IEEE rounding .5 to even, so to prevent odd/even bunching with ceiling
     polar$wd <- angle * ceiling(polar$wd / angle - 0.5)
     polar$wd[polar$wd == 0] <- 360
     if(length(breaks)==1) { 
         breaks <- 0:(breaks - 1) * ws.int 
     } 
-    if (max(breaks) < max(polar$ws, na.rm = TRUE)) { 
-        breaks <- c(breaks, max(polar$ws, na.rm = TRUE))
+    if (max(breaks) < max(polar$.z.poll, na.rm = TRUE)) { 
+        breaks <- c(breaks, max(polar$.z.poll, na.rm = TRUE))
     }
-    if (min(breaks) > min(polar$ws, na.rm = TRUE)) { 
-        breaks <- c(min(polar$ws, na.rm = TRUE),breaks)
+    if (min(breaks) > min(polar$.z.poll, na.rm = TRUE)) { 
+        breaks <- c(min(polar$.z.poll, na.rm = TRUE),breaks)
     }
     #stop replication in break calls generating cut error
     breaks <-unique(breaks)
-    polar$ws <- cut(polar$ws, breaks = breaks, include.lowest = FALSE, dig.lab = dig.lab)
-    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(polar$ws))
+    polar$.z.poll <- cut(polar$.z.poll, breaks = breaks, include.lowest = FALSE, dig.lab = dig.lab)
+    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(polar$.z.poll))
     theLabels <- gsub("[,]", "-", theLabels)
     prepare.grid <- function(polar) {
         wd <- factor(polar$wd)
-        levels(polar$ws) <- c(paste("ws", 1:length(theLabels), sep=""))
-        calm <- length(which(is.na(polar$ws)))/nrow(polar)
-        polar$ws[which(is.na(polar$ws))] <- "ws1"
-        weights <- prop.table(table(polar$wd, polar$ws))
+        levels(polar$.z.poll) <- c(paste(".z.poll", 1:length(theLabels), sep=""))
+        calm <- length(which(polar$wd < 0))/nrow(polar)
+        polar$.z.poll[which(is.na(polar$.z.poll))] <- ".z.poll1"
+        weights <- prop.table(table(polar$wd, polar$.z.poll))
         weights <- as.data.frame.matrix(weights)
         weights <- data.frame(t(apply(weights, 1, cumsum)))
         weights$cond <- polar$cond[1]
@@ -138,7 +140,7 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
     )
     names(legend)[1] <- key.position
 
-    plt <- xyplot(ws1 ~ wd | cond, xlim = c(-max.freq - off.set, 
+    plt <- xyplot(.z.poll1 ~ wd | cond, xlim = c(-max.freq - off.set, 
         max.freq + off.set), ylim = c(-max.freq - off.set, max.freq + 
         off.set), data = results.grid, type = "n", xlab = "", ylab = "", 
         main = quick.text(main, auto.text), as.table = TRUE, 
@@ -154,9 +156,9 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
                 with(subdata, {
                     for(j in 1:length(theLabels)){
                         if(j==1){
-                            temp <- "poly(wd[i], 0, ws1[i], width * box.widths[1], col[1])"  
+                            temp <- "poly(wd[i], 0, .z.poll1[i], width * box.widths[1], col[1])"  
                         } else {                              
-                            temp <- paste("poly(wd[i], ws", j-1, "[i], ws", j, "[i], width * box.widths[", j 
+                            temp <- paste("poly(wd[i], .z.poll", j-1, "[i], .z.poll", j, "[i], width * box.widths[", j 
                                 ,"], col[", j, "])", sep="")
                         }
                         eval(parse(text= temp))
@@ -181,3 +183,4 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
         plt
     }
 }
+
