@@ -27,6 +27,7 @@ wind.rose(polar,
 	key = NULL,
 	paddle = TRUE,
 	dig.lab = 5,
+        pollutant = NULL,
 	output = "graph",
 	...)
 
@@ -118,12 +119,13 @@ ans <- pullution.rose(...)
   number formatting is used in break point and key labelling. Default 
   5.}
 
+  \item{pollutant}{Alternative data series to be sampled 
+  instead of wind speed. The \code{wind.rose} default NULL is equivalent 
+  to \code{pollutant = "ws"}.}  
+
   \item{output}{The type of output returned by call. Default, 
   \code{graph}, returns the rose plot itself. Alternative, 
   \code{data}, plots the rose but returns the plot data frame.}
-
-  \item{pollutant}{In \code{pollution.rose} the data series to sample 
-  instead of wind speed. Default \code{nox}.}  
 
   \item{\dots}{For \code{pollution.rose} other parameters that are 
   passed on to \code{wind.rose}. For \code{wind.rose} other parameters 
@@ -139,13 +141,19 @@ ans <- pullution.rose(...)
   as a percentage) of time that the wind is from a certain angle and 
   wind speed range.
 
-  The \code{pollution.rose} uses the same plotting structure but 
+  By default \code{wind.rose} will plot a wind rose in using 
+  "paddle" style segments and placing the scale key below the plot. 
+  
+  The argument \code{pollutant} uses the same plotting structure but 
   substiutes another data series, defined by \code{pollutant}, for 
   wind speed. 
 
-  By default \code{wind.rose} will plot a wind rose in using 
-  "paddle" style segments and placing the scale key below the plot. 
-  By default \code{pollution.rose} will plot a pollution rose of 
+  \code{pollution.rose} is a \code{wind.rose} wrapper which brings 
+  \code{pollutant} forward in the argument list, and attempts to 
+  sensibly rescale break points based on the \code{pollutant} data 
+  range by by-passing \code{ws.int}.
+ 
+  By default, \code{pollution.rose} will plot a pollution rose of 
   \code{nox} using "wedge" style segments and placing the scale 
   key to the right of the plot.
 

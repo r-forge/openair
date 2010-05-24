@@ -186,7 +186,7 @@ function \code{\link{import.aurn}}. Other dedicated import functions available f
 ##  "http://www.airquality.co.uk/archive/data_files/15min_site_data/BEX_2008.csv")
 
 #analysis
-## diurnal.error(so2.15min.data.again, pollutant="so2")
+## time.variation(so2.15min.data.again, pollutant="so2")
 
 }
 \keyword{methods}
