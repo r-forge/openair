@@ -76,6 +76,7 @@ import.aurn.csv <- function (file = file.choose(), header.at = 5, data.at = 7, n
             warning(paste("Missing dates detected, removing", 
                 length(ids), "lines"))
         }
+        print(unlist(sapply(ans, class)))
         return(ans)
     }
     else {
