@@ -56,8 +56,8 @@ character separating days, months and years in date information. For
 example, "-" in "01-01-2009". }
 
 \item{date.order}{ The order of date
-information, using d for days, m for months and y for years. So, "dmy"
-or "mdy" for common UK or US logger date stamp formats. Allows any
+information, using d for days, j for Julian date, m for months and y for years. 
+So, "dmy" or "mdy" for common UK or US logger date stamp formats. Allows any
 logical combination ("y", "ymd", etc). }
 
 \item{time.name}{ Header name of column (or columns) holding time 
