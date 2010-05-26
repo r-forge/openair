@@ -64,46 +64,52 @@ time.average <- function(mydata, period = "day", data.thresh = 0,
                                   na.rm = TRUE,  data.thresh = data.thresh)
         }
 
-            if (data.thresh == 0 & statistic != "mean") {
-                
-                dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                                             drop = FALSE], list(date = mydata$cuts),
-                                      function (x) eval(parse(text = form)))
+        if (data.thresh == 0 & statistic != "mean") {
+            
+            dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                                         drop = FALSE], list(date = mydata$cuts),
+                                  function (x) eval(parse(text = form)))
 
-            }
+        }
 
-            if (data.thresh == 0 & statistic == "mean") {
-               
-                dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                                             drop = FALSE], list(date = mydata$cuts), mean, na.rm = TRUE)
+        if (data.thresh == 0 & statistic == "mean") {
+            
+            dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                                         drop = FALSE], list(date = mydata$cuts), mean, na.rm = TRUE)
 
-           }
+        }
+        ## return same date class as went in...
+        if (class(mydata$date)[1] == "Date") {
+            dailymet$date <- as.Date(dailymet$date)
+            
+        } else {
 
             dailymet$date <- as.POSIXct(dailymet$date, "GMT")
-
-            if ("wd" %in% names(mydata)) {
-                ## mean wd
-                dailymet <- within(dailymet, wd <- as.vector(atan2(u, v) * 360 / 2 / pi))
-
-                ## correct for negative wind directions
-                ids <- which(dailymet$wd < 0)  ## ids where wd < 0
-                dailymet$wd[ids] <- dailymet$wd[ids] + 360
-
-                dailymet <- subset(dailymet, select = c(-u, -v))
-            }
-
-            if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
-
-            dailymet
         }
 
-        ## split if several sites
-        if ("site" %in% names(mydata)) { ## split by site
-            mydata$site <- factor(mydata$site)
-            mydata <- ddply(mydata, .(site), calc.mean, start.date)
-            mydata
-        } else {
-            mydata <- calc.mean(mydata, start.date)
-            mydata
+        if ("wd" %in% names(mydata)) {
+            ## mean wd
+            dailymet <- within(dailymet, wd <- as.vector(atan2(u, v) * 360 / 2 / pi))
+
+            ## correct for negative wind directions
+            ids <- which(dailymet$wd < 0)  ## ids where wd < 0
+            dailymet$wd[ids] <- dailymet$wd[ids] + 360
+
+            dailymet <- subset(dailymet, select = c(-u, -v))
         }
+
+        if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
+
+        dailymet
     }
+
+    ## split if several sites
+    if ("site" %in% names(mydata)) { ## split by site
+        mydata$site <- factor(mydata$site)
+        mydata <- ddply(mydata, .(site), calc.mean, start.date)
+        mydata
+    } else {
+        mydata <- calc.mean(mydata, start.date)
+        mydata
+    }
+}

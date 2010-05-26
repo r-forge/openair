@@ -49,7 +49,11 @@ date.pad <- function(mydata, type = "default") {
         end.date <- max(mydata$date, na.rm = TRUE)
 
         ## find time interval of data
-        interval <- find.time.interval(mydata$date)
+        if (class(mydata$date)[1] == "Date") {
+            interval <- "day"
+        } else {
+            interval <- find.time.interval(mydata$date)
+        }
 
         all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
         mydata <- merge(mydata, all.dates, all = TRUE)
