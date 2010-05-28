@@ -175,7 +175,7 @@ smooth.trend <- function(mydata,
            key = key,
            lwd = lwd,
            lty = lty,
-           pch = pch
+           pch = pch,
            cex = cex,
            skip = skip,
            xlab = quick.text(xlab, auto.text),
