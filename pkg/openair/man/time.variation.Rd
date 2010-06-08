@@ -67,7 +67,8 @@ alpha = 0.4,...)
     levels of ozone, split into four quantiles (approximately equal
     numbers of counts in each of the four splits). This offers great
     flexibility for understanding the variation of different variables
-    dependent on another.}
+    dependent on another. See function \code{cut.data} for further
+    details.}
 
   \item{ci}{Should confidence intervals be shown? The default is
     \code{TRUE}. Setting this to \code{FALSE} can be useful if multiple
@@ -152,6 +153,19 @@ pollutant = "pm10", ylab = "pm10 (ug/m3)")
 
 # multiple pollutants with concentrations normalised
 time.variation(mydata, pollutant = c("nox", "co"), normalise = TRUE)
+
+# show BST/GMT variation (see ?cut.data for more details)
+# the NOx plot shows the profiles are very similar when expressed in
+# local time, showing that the profile is dominated by a local source
+# that varies by local time and not by GMT i.e. road vehicle emissions
+
+time.variation(mydata, pollutant = "nox", type = "gmtbst")
+
+# By contrast, a variable such as wind speed shows a clear shift when
+#  expressed in local time. These two plots can help show whether the
+#  variation is dominated by man-made influences or natural processes
+
+time.variation(mydata, pollutant = "ws", type = "gmtbst")
 
 ## sub plots can be extracted, in which case set key = TRUE
 ## plots are retruned in a list e.g. to get the diurnal plot of NO2:

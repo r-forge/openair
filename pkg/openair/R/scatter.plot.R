@@ -79,7 +79,7 @@ scatter.plot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 ################################################################################################
-    if (type %in%  c("year", "hour", "month", "season", "weekday", "weekend", "monthyear") | !missing(avg.time)) {
+    if (type %in%  c("year", "hour", "month", "season", "weekday", "weekend", "monthyear", "gmtbst", "bstgmt") | !missing(avg.time)) {
 
         vars <- c("date", x, y)
 

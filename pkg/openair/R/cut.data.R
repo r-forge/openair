@@ -5,7 +5,8 @@ cut.data <- function(mydata, type = "default") {
     ## If another added, then amend check.prep
 
     ## adds a column "cond"
-    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend", "monthyear")
+    conds <- c("default", "year", "hour", "month", "season", "weekday", "ws", "site", "weekend", "monthyear",
+               "bstgmt", "gmtbst")
 
     if (type %in% conds == FALSE) { ## generic, user-defined
         ## split by four quantiles unless it is a factor, in which case keep as is
@@ -109,6 +110,26 @@ cut.data <- function(mydata, type = "default") {
                    }
 
     if (type == "site") mydata$cond <- mydata$site
+
+    if (type == "gmtbst" | type == "bstgmt") {
+        ## how to extract BST/GMT
+        ## first format date in local time
+        mydata$date <- format(mydata$date, usetz = TRUE, tz = "Europe/London")
+        ## extract ids where BST/GMT
+        id.BST <- grep("BST", mydata$date)
+        id.GMT <- grep("GMT", mydata$date)
+
+        bst <- mydata[id.BST, ]
+        bst$cond <- "BST hours"
+
+        gmt <- mydata[id.GMT, ]
+        gmt$cond <- "GMT hours"
+        
+        mydata <- rbind.fill(bst, gmt)
+        mydata$date <- as.POSIXct(mydata$date, "GMT")
+        mydata <- mydata[order(mydata$date), ]
+
+    }
 
     mydata
 
