@@ -170,13 +170,31 @@ one more label than date")
 
     if (length(grep("/", as.character(dates))) > 0) {
 
-        dates <- as.POSIXct(strptime(dates, "%d/%m/%Y"), "GMT")
+        if (class(mydata$date)[1] == "Date") {
+
+            dates <- as.Date(as.POSIXct(strptime(dates, "%d/%m/%Y"), "GMT"))
+
+        } else {
+
+            dates <- as.POSIXct(strptime(dates, "%d/%m/%Y"), "GMT")
+
+        }
 
     } else { ## asume format yyyy-mm-dd
 
-        dates <- as.POSIXct(dates, "GMT")
+        if (class(mydata$date)[1] == "Date") {
+
+            dates <- as.Date(dates)
+
+        } else {
+
+            dates <- as.POSIXct(dates, "GMT")
+
+        }
+
 
     }
+
 
     mydata$site <- cut(as.numeric(mydata$date), breaks = c(0, as.numeric(dates),
                                                 max(mydata$date)), labels = labels,
@@ -311,7 +329,9 @@ panel.smooth.spline <-
 }
 
 ### panel functions for plots based on lattice ####################################################
-panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., se = TRUE,
+
+panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FALSE, n.sim = 200,
+                       autocor = FALSE, se = TRUE,
                        level = 0.95, n = 100, col = plot.line$col, col.se = col,
                        lty = plot.line$lty, lwd = plot.line$lwd, alpha = plot.line$alpha,
                        alpha.se = 0.25, border = NA, subscripts, group.number, group.value,
@@ -319,30 +339,93 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., se = TRUE,
                        fontfamily)
 {
     library(mgcv)
+    ## panel function to add a smooth line to a plot
+    ## Uses a GAM (mgcv) to fit smooth
+    ## Optionally can plot 95% confidence intervals and run bootstrap simulations
+    ## to estimate uncertainties. Simple block bootstrap is also available for correlated data
 
     thedata <- data.frame(x = x, y = y)
-    tryCatch({mod <- gam(y ~ s(x), se = TRUE, data = thedata)
+    tryCatch({
+
+        if (!simulate) {
+            mod <- gam(y ~ s(x), se = TRUE, data = thedata)
 
 
-              lims <- current.panel.limits()
-              xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
-              xseq <- seq(xrange[1], xrange[2], length = n)
+            lims <- current.panel.limits()
+            xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
+            xseq <- seq(xrange[1], xrange[2], length = n)
 
-              pred <- predict(mod, data.frame(x = xseq), se = se)
-              if (se) {
-                  std <- qnorm(level / 2 + 0.5)
-                  panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -
-                                                        std * pred$se, rev(pred$fit + std * pred$se)),
-                                col = col.se, alpha = alpha.se, border = border)
-                  pred <- pred$fit
-              }
+            pred <- predict(mod, data.frame(x = xseq), se = se)
 
+            if (se) {
+                std <- qnorm(level / 2 + 0.5)
+                panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -
+                                                      std * pred$se, rev(pred$fit + std * pred$se)),
+                              col = col.se, alpha = alpha.se, border = border)
+                pred <- pred$fit
+            }
 
-              panel.lines(xseq, pred, col = col, alpha = alpha, lty = lty,
-                          lwd = 2)
+            panel.lines(xseq, pred, col = col, alpha = alpha, lty = lty, lwd = 2)
+        } else { ## simulations required
 
-          }, error = function(x) return)
+            sam.size <- length(x)
+            print(sam.size)
+            lims <- current.panel.limits()
+            xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
+            xseq <- seq(xrange[1], xrange[2], length = sam.size)
+
+            boot.pred <- matrix(nrow = sam.size, ncol = n.sim)
+
+            print ("Taking bootstrap samples. Please wait...")
+
+            ## set up bootstrap
+            block.length <- 1
+
+            if (autocor) block.length <- round(sam.size ^ (1 / 3))
+            index <- samp.boot.block(sam.size, n.sim, block.length)
+
+            ## predict first
+            mod <- gam(y ~ s(x), data = thedata)
+
+            residuals <- residuals(mod) ## residuals of the model
+
+            pred.input <- predict(mod, thedata)
+
+            for (i in 1:n.sim) {
+                ## make new data
+                new.data <- data.frame(x = xseq, y = pred.input + residuals[index[, i]])
+
+                mod <- gam(y ~ s(x),  data = new.data)
+
+                pred <- predict(mod, new.data)
+
+                boot.pred[, i] <- as.vector(pred)
+
+            }
+
+            ## calculate percentiles
+            percentiles <- apply(boot.pred, 1, function(x) quantile(x, probs = c(0.025, 0.975)))
+
+            results <- as.data.frame(cbind(pred = rowMeans(boot.pred),
+                                           lower = percentiles[1, ], upper = percentiles[2, ]))
+
+            if (se) {
+
+                panel.polygon(x = c(xseq, rev(xseq)), y = c(results$lower, rev(results$upper)),
+                              col = col.se, alpha = alpha.se, border = border)
+
+            }
+
+            panel.lines(xseq, pred.input, col = col, alpha = alpha, lty = lty, lwd = 2)
+
+        }
+
+    }, error = function(x) return)
 }
+
+
+
+
 
 panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..., se = TRUE,
                           level = 0.95, n = 100, col = plot.line$col, col.se = col,

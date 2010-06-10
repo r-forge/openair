@@ -8,7 +8,7 @@ summarise <- function(mydata,
                       pollutant = "nox",
                       period = "year",
                       breaks = 20,
-                      col.trend = "lightgoldenrod2",
+                      col.trend = "darkgoldenrod2",
                       col.data = "lightblue",
                       col.mis = rgb(0.65, 0.04, 0.07),
                       col.hist = "forestgreen",
@@ -64,7 +64,7 @@ summarise <- function(mydata,
 
             mydata <- reshape(mydata, idvar = "date", timevar = "variable", direction = "wide")
             names(mydata)[2 : ncol(mydata)] <-   site.names
-         
+
             warning(paste("More than one site detected, using", pollutant))
         }
     }

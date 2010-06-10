@@ -96,7 +96,7 @@ smooth.trend <- function(mydata,
 
             results <- subset(results, select = -cond)
             results <- aggregate(results, list(results$year), mean, na.rm = TRUE)
-       
+
             class(results$date) <- c("POSIXt", "POSIXct")
 
             results$cond <- cond
@@ -188,7 +188,7 @@ smooth.trend <- function(mydata,
 
            panel.groups = function(x, y, group.number, lwd, lty, pch, col, col.line, col.symbol,
            subscripts, type = "b",...) {
-              
+
 
                if (group.number == 1) {  ## otherwise this is called every time
 
@@ -197,7 +197,7 @@ smooth.trend <- function(mydata,
                }
                panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
                             col.line = myColors[group.number],col.symbol = myColors[group.number], ...)
-               
+
                panel.gam(x, y, col = "grey40", col.se = "black", simulate = simulate, n.sim = n,
                          autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
@@ -220,7 +220,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
     ## Uses a GAM (mgcv) to fit smooth
     ## Optionally can plot 95% confidence intervals and run bootstrap simulations
     ## to estimate uncertainties. Simple block bootstrap is also available for correlated data
-   
+
     thedata <- data.frame(x = x, y = y)
     tryCatch({
 
@@ -233,7 +233,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
             xseq <- seq(xrange[1], xrange[2], length = n)
 
             pred <- predict(mod, data.frame(x = xseq), se = se)
-           
+
             if (se) {
                 std <- qnorm(level / 2 + 0.5)
                 panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -
