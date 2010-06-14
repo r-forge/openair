@@ -5,15 +5,16 @@ trend.hour.weekday <-  function(mydata,
                 limits = c(0, 100),
                 line.colour = "darkorange2",
                 fill.colour = "lightgoldenrod",
-				ylab = pollutant,
-				main = "",
-				auto.text = TRUE,...) {
+		ylab = pollutant,
+		xlab = "hour of day", 
+                main = "",
+		auto.text = TRUE,...) {
     ##library(lattice)
    # library(latticeExtra)
     ##library(Hmisc)
 
 
-trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,
+    trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,
                 fill.colour,...) {
 
     #extract variables of interest
@@ -32,8 +33,7 @@ trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,
     #summarize data
     s <- summarize(mydata$conc, llist(year, weekday, hour), smean.cl.normal)
     
-    s$weekday <- ordered(s$weekday, levels = c("Monday", "Tuesday",
-                  "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+    s$weekday <- ordered(s$weekday, levels = make.weekday.names())
 
   xyplot(mydata.conc ~ hour | year + weekday,
       data = s,
@@ -43,7 +43,7 @@ trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,
 	  main = quick.text(main, auto.text),
 	  ylab = quick.text(ylab, auto.text),
       scales = list(x = list(at = seq(0, 24, 6))),
-      xlab = "hour of day",...,
+      xlab = xlab,...,
 
       panel = function(x, y, subscripts,...) {
 
@@ -64,10 +64,10 @@ trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,
               panel.grid(h = -1, v = 0, lwd = 0.5, col = "grey85")
               panel.abline(v = seq(0, 24, 6), col = "grey85")
               panel.xyplot(x, y, lwd = 2,...)
-      }
-)}
+         }
+    )}
 
-plt <- trend.hour.weekday.plot(mydata, pollutant, limits, line.colour,
+    plt <- trend.hour.weekday.plot(mydata, pollutant, limits, line.colour,
                 fill.colour,...)
 
     useOuterStrips(plt, strip = strip.custom(par.strip.text = list(cex = 0.8)),

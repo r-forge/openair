@@ -90,7 +90,7 @@ cut.data <- function(mydata, type = "default") {
 
     if (type == "weekday") {
         mydata$cond <- format(mydata$date, "%A")
-        mydata$cond <- ordered(mydata$cond, levels = weekday.name)
+        mydata$cond <- ordered(mydata$cond, levels = make.weekday.names())
     }
 
     if (type == "wd") {

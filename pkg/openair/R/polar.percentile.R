@@ -102,7 +102,7 @@ polar.percentile <- function(polar,
 
 	if (type == "month") {
 		results.grid$cond <- as.factor(results.grid$cond)
-		levels(results.grid$cond) = month.name
+		levels(results.grid$cond) = make.month.names()
 	}
 
 	#remove points to make a circle

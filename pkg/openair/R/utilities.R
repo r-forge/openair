@@ -2,11 +2,34 @@
                                         #
 ## Author: David Carslaw
 ## useful utility functions
+## with some updates and modification by Karl Ropkins
 ###############################################################################
-weekday.name <- c("Monday", "Tuesday", "Wednesday",
-                  "Thursday", "Friday", "Saturday", "Sunday")
 
-weekday.abb <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+## make month and weekday names and abbs using local conventions
+## This must be run locally 
+
+## make months locally
+make.month.names <- function(){
+    month.names <- format(ISOdate(2000, 1:12, 1), "%B")
+}
+make.month.abbs <- function(){
+    month.abbs <- format(ISOdate(2000, 1:12, 1), "%b")
+}
+
+## make weekdays locally then, order Monday to Sunday for time.variation
+make.weekday.names <- function(){
+    weekday.names <- ISOdate(2000, 1, 1:14)
+    weekday.names <- unique(format(weekday.names, "%A"))[order(unique(as.numeric(format(weekday.names, "%w"))))][c(2:7, 1)]
+}
+make.weekday.abbs <- function(){
+    weekday.abbs <- ISOdate(2000, 1, 1:14)
+    weekday.abbs <- unique(format(weekday.abbs, "%a"))[order(unique(as.numeric(format(weekday.abbs, "%w"))))][c(2:7, 1)]
+}
+
+weekday.names <- make.weekday.names()
+weekday.abbs <- make.weekday.abbs()
+month.names <- make.month.names()
+month.abbs <- make.month.abbs()
 
 ###############################################################################
 

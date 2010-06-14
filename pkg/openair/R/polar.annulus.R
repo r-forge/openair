@@ -321,11 +321,16 @@ polar.annulus <- function(polar,
                       add.tick(ticks, start, end)
                   }
 
-                  if (period == "season") label.axis(0, "January", "December", 13)
+                  if (period == "season") label.axis(0, format(ISOdate(2000, 1, 1), "%B"), format(ISOdate(2000, 12, 1), "%B"), 13)
 
                   if (period == "hour")	label.axis(0, "0", "23", 7)
 
-                  if (period == "weekday") label.axis(0, "Sunday", "Saturday", 8)
+                  if (period == "weekday") {
+                      local.weekdays <- format(ISOdate(2000, 1, 1:14), "%A")[order(format(ISOdate(2000, 1, 1:14), "%w"))]
+                      loc.sunday <- local.weekdays[1]
+                      loc.saturday <- local.weekdays[length(local.weekdays)]
+                      label.axis(0, loc.sunday, loc.saturday, 8)
+                  }
 
                   ## text for directions
                   ltext(-upper -d - 1.5, 0, "W")

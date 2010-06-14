@@ -14,7 +14,9 @@ summarise <- function(mydata,
                       col.hist = "forestgreen",
                       main = "",
                       date.breaks = 7,
-                      auto.text = TRUE,...) {
+                      auto.text = TRUE,
+                      xlab = NULL, ylab =NULL, 
+                      ...) {
 
     library(lattice)
     library(reshape)
@@ -161,11 +163,21 @@ summarise <- function(mydata,
     max.x <- as.numeric(max(mydata$date))
     seq.year <- seq(start.date, end.date, by = period)
 
+    if(is.null(ylab[1])) {
+        ylab[1] <- ""
+    } else {
+        if(is.na(ylab[1])) ylab[1] <- ""
+    }
+    if(is.null(xlab[1])) {
+        xlab[1] <- "date"
+    } else {
+        if(is.na(xlab[1])) xlab[1] <- "date"
+    }
 
     plt1 <- xyplot(value ~ date | variable , data = dummy.dat, type = "n",
                    ylim = c(0, 5.5),
-                   ylab = "",
-                   xlab = date,
+                   ylab = ylab[1],
+                   xlab = xlab[1],
                    xlim = c(start.date - 60, end.date + 60),
 
                    ## override scaling for more sensible date/time breaks
@@ -229,8 +241,22 @@ summarise <- function(mydata,
         row.names(mydata) <- NULL
     }
 
+    if(is.null(xlab[2])) {
+        xlab[2] <- "value"
+    } else {
+        if(is.na(xlab[2])) xlab[2] <- "value"
+    }
+
     if (type == "histogram") {
+
+        if(is.null(ylab[2])) {
+           ylab[2] <- "Percent of Total"
+        } else {
+           if(is.na(ylab[2])) ylab[2] <- "Percent of Total"
+        }
+
         plt2 <- histogram(~ value | variable, data = mydata,
+                          xlab = xlab[2], ylab = ylab[2], 
                           par.strip.text = list(cex = 0.7),
                           breaks = breaks,
                           layout = c(1, length(unique(mydata$variable))),
@@ -243,8 +269,15 @@ summarise <- function(mydata,
                           })
     } else {
 
+        if(is.null(ylab[2])) {
+           ylab[2] <- "Density"
+        } else {
+           if(is.na(ylab[2])) ylab[2] <- "Density"
+        }
+
         plt2 <- densityplot(~ value | variable, data = mydata,
                             par.strip.text = list(cex = 0.7),
+                            xlab = xlab[2], ylab = ylab[2],
                             layout = c(1, length(unique(mydata$variable))),
                             scales = list(relation = "free", y = list(rot = 0), cex = 0.7),
                             strip = FALSE,

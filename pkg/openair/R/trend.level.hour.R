@@ -76,6 +76,6 @@ trend.level.hour <-  function(mydata,
             as.table = TRUE,
             col.regions = col,
             at = col.scale,
-            scales = list(x = list(labels = c("Jan", "Apr", "Jul", "Oct"),
+            scales = list(x = list(labels = make.month.abbs()[c(1, 4, 7, 10)],
                       at = c(1, 4, 7, 10))),...)
 }

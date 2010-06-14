@@ -3,7 +3,8 @@ calc.fno2 <- function(input,
                       plot = TRUE,
                       user.fno2,
                       main = "",
-                      theme = "bw", ...) {
+                      theme = "bw", 
+                      xlab = "year", ...) {
 {
 
     library(ggplot2)
@@ -76,7 +77,7 @@ calc.fno2 <- function(input,
         theplot <- ggplot(results, aes(date, fno2)) +
             geom_point() +
                     ylab(quick.text("f-NO2 (%)")) +
-                        xlab("year") +
+                        xlab(xlab) +
                             opts(title = quick.text(main))
         if (nrow(na.omit(results)) > 5) theplot <- theplot +  stat_smooth(size = 1, span = 0.5)
         print(theplot)

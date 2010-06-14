@@ -197,7 +197,7 @@ MannKendall <- function(mydata,
                                  paste(round(365 * sub.dat[1, "b"], dec.place), " ", "[",
                                        round(365 * sub.dat[1, "upper.b"], dec.place), ", ",
                                        round(365 * sub.dat[1, "lower.b"], dec.place), "]",
-                                       " units/year ", sub.dat[1, "p.stars"], sep = ""),
+                                       " units/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
                                  cex = 0.7, pos = 4, col = "forestgreen")
                   }
                   )

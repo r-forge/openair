@@ -1,5 +1,6 @@
 
-stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,...)  {
+stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,
+    xlab = "year", ...)  {
     #Does seasonal trend decompostion based on loess smoothing (STL)
     #NOTE! Currently this procedure will fill missing values by the mean of the whole
     # time series
@@ -30,9 +31,7 @@ stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,...)  {
 
     ssd <- stl(myts, s.window = s.wind, robust = TRUE, s.degree = 1)
 
-    stlplot <- xyplot(ssd,
-                xlab = "year",...,
-
+    stlplot <- xyplot(ssd, xlab = xlab, ...,
                 panel = function(x, y) {
                 panel.abline(v = start.year:end.year, col = "grey85")
                 panel.abline(h = 0, col = "grey85")

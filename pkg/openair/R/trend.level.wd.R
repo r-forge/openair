@@ -3,6 +3,7 @@
 trend.level.wd <-  function(mydata,
                 pollutant = "nox",
                 limits = c(0, 100),
+                ylab = "wind direction (degrees)",
                 statistic = "mean",
                 cols = "default",
 				main = "",
@@ -69,12 +70,12 @@ trend.level.wd <-  function(mydata,
 
     levelplot(conc ~ month * wd | year,
             data = means,
-			main = quick.text(main, auto.text),
-            ylab = expression("wind direction (" *degree * ")"),
+	    main = quick.text(main, auto.text),
+            ylab = quick.text(ylab, auto.text),
             as.table = TRUE,
             col.regions = col,
             at = col.scale,
-            scales = list(x = list(labels = c("Jan", "Apr", "Jul", "Oct"),
+            scales = list(x = list(labels = make.month.abbs()[c(1, 4, 7, 10)],
                       at = c(1, 4, 7, 10))),...)
 }
 

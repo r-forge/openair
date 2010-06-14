@@ -3,6 +3,7 @@ time.variation <- function(mydata,
                            local.time = FALSE,
                            normalise = FALSE,
                            ylab = pollutant,
+                           xlab = NULL,
                            name.pol = pollutant,
                            type = "default",
                            ci = TRUE,
@@ -15,6 +16,11 @@ time.variation <- function(mydata,
 
     library(Hmisc)
     library(lattice)
+
+    ##update weekday and month locally
+    weekday.name <- make.weekday.names()
+    weekday.abb <- make.weekday.abbs()
+    month.name <- substr(make.month.names(), 1, 1) ## first letter of month name
 
     ## extract variables of interest
     if (type == "wd") vars <- c("date", pollutant, "wd")
@@ -124,6 +130,12 @@ time.variation <- function(mydata,
     ids <- which(is.na(data.day.hour$Upper)) ## missing Upper ci, set to mean
     data.day.hour$Upper[ids] <-  data.day.hour$value
 
+    if(is.null(xlab[1])) {
+        xlab[1] <- "hour"
+    } else {
+        if(is.na(xlab[1])) xlab[1] <- "hour"
+    }
+
     day.hour <- xyplot(value ~ hour | weekday,  data = data.day.hour, groups = variable,
                        as.table = TRUE,
                        main = main,
@@ -131,6 +143,7 @@ time.variation <- function(mydata,
                        xlim = c(0, 23),
                        ylim = rng(data.day.hour),
                        ylab = quick.text(ylab, auto.text),
+                       xlab = xlab[1],
                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                        key = list(rectangles = list(col = myColors[1:npol], border = NA),
                        text = list(lab = mylab),  space = "bottom", columns = key.columns),
@@ -156,10 +169,17 @@ time.variation <- function(mydata,
     data.hour <- calc.wd(mydata, vars = "hour", pollutant)
     if (normalise) data.hour <-  ddply(data.hour, .(variable), divide.by.mean)
 
+    if(is.null(xlab[2])) {
+        xlab[2] <- "hour"
+    } else {
+        if(is.na(xlab[2])) xlab[2] <- "hour"
+    }
+
     hour <- xyplot(value ~ hour,  data = data.hour, groups = variable,
                    as.table = TRUE,
                    main = main,
                    ylab = quick.text(ylab, auto.text),
+                   xlab = xlab[2],
                    xlim = c(0, 23),
                    ylim = rng(data.hour),
                    key = key,
@@ -187,10 +207,19 @@ time.variation <- function(mydata,
 
     data.weekday$weekday <- as.numeric(as.factor(data.weekday$weekday))
 
+    #note: 4 not 3
+    if(is.null(xlab[4])) {
+        xlab[4] <- "weekday"
+    } else {
+        if(is.na(xlab[4])) xlab[4] <- "weekday"
+    }
+
+
     day <- xyplot(value ~ weekday,  data = data.weekday, groups = variable,
                   par.settings = simpleTheme(col = myColors, pch = 16),
                   scales = list(x = list(at = 1:7, labels = weekday.abb)),
                   ylab = quick.text(ylab, auto.text),
+                  xlab = xlab[4],
                   ylim = rng(data.weekday),
                   key = key,
                   main = main,
@@ -214,10 +243,16 @@ time.variation <- function(mydata,
     data.month <- calc.wd(mydata, vars = "month", pollutant)
     if (normalise) data.month <-  ddply(data.month, .(variable), divide.by.mean)
 
-    month.name <- substr(month.abb, 1, 1) ## first letter of month name
+    #note: 3 not 4
+    if(is.null(xlab[3])) {
+        xlab[3] <- "month"
+    } else {
+        if(is.na(xlab[3])) xlab[3] <- "month"
+    }
 
     month <- xyplot(value ~ month,  data = data.month, groups = variable,
                     ylab = quick.text(ylab, auto.text),
+                    xlab = xlab[3],
                     ylim = rng(data.month),
                     xlim = c(0.5, 12.5),
                     key = key,

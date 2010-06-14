@@ -8,6 +8,7 @@ linear.relation <- function(mydata,
                             rsq.thresh = 0,
                             ylim = c(0, 20),
                             ylab = paste("slope from ", y, " = m.", x, " + c", sep = ""),
+                            xlab = NULL,
                             auto.text = TRUE,
                             main = "",
                             span = 0.3,...) {
@@ -54,6 +55,7 @@ linear.relation <- function(mydata,
 ################################################################################################
     if (period == "hour") {
 
+        if(is.null(xlab)) xlab <- "hour"
         models <- dlply(mydata, .(cond, hour = as.numeric(format(date, "%H"))), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
         names(results) <- c("cond", "hour", "intercept", "slope", "rsquare", "seslope", "N")
@@ -68,7 +70,7 @@ linear.relation <- function(mydata,
         plt <- xyplot(eq, data = results,
                       as.table = TRUE,
                       ylim = ylim,
-                      xlab = "hour",
+                      xlab = xlab,
                       main = quick.text(main, auto.text),
                       ylab = quick.text(ylab, auto.text),
                       scales = list(x = list(at = c(0, 6, 12, 18, 23))),...,
@@ -85,6 +87,7 @@ linear.relation <- function(mydata,
 
     if (period == "monthly" | period == "weekly") {
 
+        if(is.null(xlab)) xlab <- "year"
         if (period == "monthly") {
             models <- dlply(mydata, .(cond, year = as.numeric(format(date, "%Y")),
                                       month = as.numeric(format(date, "%m"))), model)
@@ -118,7 +121,7 @@ linear.relation <- function(mydata,
         if (missing(ylim)) ylim <- rng(results)
 
         plt <- xyplot(slope ~ date, data = results,
-                      xlab = "year",
+                      xlab = xlab,
                       ylim = ylim,
                       main = quick.text(main, auto.text),
                       ylab = quick.text(ylab, auto.text),...,
@@ -135,6 +138,7 @@ linear.relation <- function(mydata,
 
     if (period == "weekday") {
 
+        if(is.null(xlab)) xlab <- "weekday"
         models <- dlply(mydata, .(cond, weekday = format(date, "%a")), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
         names(results) <- c("cond", "weekday", "intercept", "slope", "rsquare", "seslope", "N")
@@ -142,12 +146,12 @@ linear.relation <- function(mydata,
         results$slope <- results$slope * adj
         results$seslope <- results$seslope * adj
 
-        results$weekday <- ordered(results$weekday, levels = weekday.abb)
+        results$weekday <- ordered(results$weekday, levels = make.weekday.abbs())
         if (missing(ylim)) ylim <- rng(results)
 
         plt <- xyplot(slope ~ weekday | cond, data = results,
                       as.table = TRUE,
-                      xlab = "weekday",
+                      xlab = xlab,
                       main = quick.text(main, auto.text),
                       ylim = ylim,
                       ylab = quick.text(ylab, auto.text),...,
@@ -164,6 +168,7 @@ linear.relation <- function(mydata,
 
     if (period == "day.hour") {
 
+        if(is.null(xlab)) xlab <- "hour"
         models <- dlply(mydata, .(cond, weekday = format(date, "%A"),
                                   hour = as.numeric(format(date, "%H"))), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
@@ -172,7 +177,7 @@ linear.relation <- function(mydata,
         results$slope <- results$slope * adj
         results$seslope <- results$seslope * adj
         results <- subset(results, rsquare >= rsq.thresh & N >= n)
-        results$weekday <- ordered(results$weekday, levels = weekday.name)
+        results$weekday <- ordered(results$weekday, levels = make.weekday.names())
 
         eq <- formula(slope ~ hour | weekday)
         if (condition) eq <- formula(slope ~ hour | weekday * cond)
@@ -181,7 +186,7 @@ linear.relation <- function(mydata,
         plt <- xyplot(eq, data = results,
                       as.table = TRUE,
                       layout = c(7, length(unique(results$cond))),
-                      xlab = "hour",
+                      xlab = xlab,
                       main = quick.text(main, auto.text),
                       ylim = ylim,...,
                       ylab = quick.text(ylab, auto.text),
