@@ -36,7 +36,7 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
     if(is.na(key.position)){
         stop(
            "key.position argument not recognised\n  please use one or abbreviation of:\n\t", 
-           paste(temp, sep="", collaspe=" ")
+           paste(temp, sep="", collapse=" ")
         )
     } 
     key.position <- temp[key.position]
