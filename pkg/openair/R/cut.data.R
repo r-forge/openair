@@ -57,7 +57,7 @@ cut.data <- function(mydata, type = "default") {
     if (type == "hour") mydata$cond <- format(mydata$date, "%H")
 
     if (type == "month") {mydata$cond <- format(mydata$date, "%B")
-                          mydata$cond <- ordered(mydata$cond, levels = month.name)
+                          mydata$cond <- ordered(mydata$cond, levels = make.month.names())
                           period <- "annual"} #does not make sense otherwise
 
     if (type == "monthyear") {
