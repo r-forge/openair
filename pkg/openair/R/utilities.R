@@ -230,6 +230,8 @@ one more label than date")
 select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year = 2008,
                            month = 1, hour = 1, day = "weekday") {
 
+    weekday.names <- make.weekday.names()
+
     if (!missing(start) & !missing(end)) {
         start <- as.POSIXct(strptime(start, format = "%d/%m/%Y"), "GMT")
         end <- as.POSIXct(strptime(end, format = "%d/%m/%Y"), "GMT") + (23 * 3600)
@@ -258,8 +260,8 @@ select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year 
 
     if (!missing(day)) {
         days <- day
-        if (day == "weekday") days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
-        if (day == "weekend") days <- c("Saturday", "Sunday")
+        if (day == "weekday") days <- weekday.names[1:5]
+        if (day == "weekend") days <- weekday.names[6:7]
         mydata <- subset(mydata, substr(tolower(format(date, "%A")), 1, 3) %in%
                          substr(tolower(days), 1, 3))
     }
