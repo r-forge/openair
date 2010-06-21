@@ -1,5 +1,6 @@
 ## development of a calendar function
 ## David Carslaw November 2009
+## modifications for internation Karl Ropkins 2010
 
 ## calendar.plot shows air quality or other data in a conventional calendar format.
 ## This makes it easy to gain a feel about variations in concentrations and other parameters
@@ -20,6 +21,10 @@ calendar.plot <- function(mydata,
 
     library(lattice)
     library(plyr)
+
+    ##international keyboard
+    ##first letter and ordered Sun to Sat
+    weekday.abb <- substr(make.weekday.abbs(), 1, 1)[c(7, 1:6)]    
 
     ## extract variables of interest
     if (annotate == "date") vars <- c("date", pollutant)
@@ -146,7 +151,7 @@ calendar.plot <- function(mydata,
               col.regions = col,
               as.table = TRUE,
               scales = list(y = list(draw = FALSE),
-              x = list(at = 1:7, labels = c("S", "M", "T", "W", "T", "F", "S"), tck = 0),
+              x = list(at = 1:7, labels = weekday.abb, tck = 0),
               alternating = 1, relation = "free"),
               xlab = "",
               aspect = 6/7,
