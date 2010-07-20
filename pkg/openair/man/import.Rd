@@ -58,7 +58,11 @@ example, "-" in "01-01-2009". }
 \item{date.order}{ The order of date
 information, using d for days, j for Julian date, m for months and y for years. 
 So, "dmy" or "mdy" for common UK or US logger date stamp formats. Allows any
-logical combination ("y", "ymd", etc). }
+logical combination ("y", "ymd", etc). Can also handle more complex date 
+structures by calling POSIX* directly. For example, "posix %d-%b-%Y" would 
+apply the POSIX* format structure "%d-%b-%Y" and allow the import of date enteries 
+like "01-JAN-2010". See associated help, ?format.POSIXct, for full list of format 
+options. (Note: direct POSIX calls supercede other date settings.)}
 
 \item{time.name}{ Header name of column (or columns) holding time 
 information. Combined with date information as
@@ -71,7 +75,11 @@ information. For example, ":" in "12:00:00". }
 \item{time.order}{ The
 order of time information, using h for hours, m for minutes and s for
 seconds. The argument allows any logical combination ("hm", "hms",
-etc). }
+etc). Like date.order, can also handle more complex date 
+structures by calling POSIX* directly. For example, "posix %I:%M %p" would 
+apply the POSIX* format structure "%I:%M %p" and allow the import of time enteries 
+like "00:01 PM". See associated help, ?format.POSIXct, for full list of format 
+options. (Note: direct POSIX calls supercede other time settings.)}
 
 \item{time.format}{ The time format the imported data was logged in. 
 Allows most common formats, e.g.: "GMT" (default), "UTC", etc. 
