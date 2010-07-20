@@ -76,24 +76,34 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
         }
     }
     names(file.data) <- make.names(file.names, unique = TRUE)
-    date.order <- gsub("d", paste("%d", date.break, sep = ""), 
-        date.order, ignore.case = TRUE)
-    date.order <- gsub("j", paste("%j", date.break, sep = ""), 
-        date.order, ignore.case = TRUE)
-    date.order <- gsub("m", paste("%m", date.break, sep = ""), 
-        date.order, ignore.case = TRUE)
-    date.order <- gsub("y", paste("%Y", date.break, sep = ""), 
-        date.order, ignore.case = TRUE)
-    date.order <- substr(date.order, 1, (nchar(date.order) - 
-        1))
-    time.order <- gsub("h", paste("%H", time.break, sep = ""), 
-        time.order, ignore.case = TRUE)
-    time.order <- gsub("m", paste("%M", time.break, sep = ""), 
-        time.order, ignore.case = TRUE)
-    time.order <- gsub("s", paste("%S", time.break, sep = ""), 
-        time.order, ignore.case = TRUE)
-    time.order <- substr(time.order, 1, (nchar(time.order) - 
-        1))
+    if(tolower(substr(date.order,1,5))=="posix") {  
+        date.order <- gsub("posix", "", date.order, ignore.case = TRUE)
+        date.order <- gsub("(^ +)|( +$)", "", date.order)
+    } else {
+        date.order <- gsub("d", paste("%d", date.break, sep = ""), 
+            date.order, ignore.case = TRUE)
+        date.order <- gsub("j", paste("%j", date.break, sep = ""), 
+            date.order, ignore.case = TRUE)
+        date.order <- gsub("m", paste("%m", date.break, sep = ""), 
+            date.order, ignore.case = TRUE)
+        date.order <- gsub("y", paste("%Y", date.break, sep = ""), 
+            date.order, ignore.case = TRUE)
+        date.order <- substr(date.order, 1, (nchar(date.order) - 
+            1))
+    }
+    if(tolower(substr(time.order,1,5))=="posix") {  
+        time.order <- gsub("posix", "", time.order, ignore.case = TRUE)
+        time.order <- gsub("(^ +)|( +$)", "", time.order)
+    } else {
+        time.order <- gsub("h", paste("%H", time.break, sep = ""), 
+            time.order, ignore.case = TRUE)
+        time.order <- gsub("m", paste("%M", time.break, sep = ""), 
+            time.order, ignore.case = TRUE)
+        time.order <- gsub("s", paste("%S", time.break, sep = ""), 
+            time.order, ignore.case = TRUE)
+        time.order <- substr(time.order, 1, (nchar(time.order) - 
+            1))
+    }
     if (length(date.name) > 0) {
         if (length(date.name) == 1) {
             a <- as.character(file.data[, date.name])
