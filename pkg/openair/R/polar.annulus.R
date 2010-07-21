@@ -240,6 +240,7 @@ polar.annulus <- function(polar,
     if (type == "default") strip = FALSE ## remove strip
 
     levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
+              as.table = TRUE,
               aspect = 1,
               xlab = "",
               ylab = "",

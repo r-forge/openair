@@ -203,7 +203,7 @@ MannKendall <- function(mydata,
                   )
 
     res <- data.frame(date = split.data$date, mean = split.data$conc,
-                      cond = split.data$cond, slope = 365 * split.data$b,
+                      cond = split.data$cond, slope = 365 * split.data$b, intercept = split.data$a,
                       lower = 365 * split.data$upper.b,
                       upper = 365 * split.data$lower.b, p = split.data$p,
                       p.stars = split.data$p.stars)

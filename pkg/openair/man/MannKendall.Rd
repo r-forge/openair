@@ -129,6 +129,16 @@ data using block bootstrap simulations (Kunsch, 1989). The principal
 reason for doing so is to gain a better estimate of trend uncertainty.
 }
 
+\value{Function will return the monthly data and trend statistics, if
+  read into a variable. For example,
+
+  res <- MannKendall(mydata, pollutant = "nox")
+
+  res[[1]] contains the monthly data and res[[2]] contains the trend
+  statistics. Note that in the case of the intercept, it is assumed the
+  y-axis crosses the x-axis on 1/1/1970.
+}
+
 \references{
 
 Helsel, D., Hirsch, R., 2002. Statistical methods in water resources. US
