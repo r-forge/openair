@@ -239,10 +239,12 @@ scatter.plot <- function(mydata,
                                  if (!continuous) panel.xyplot(x, y, col.symbol =
                                                                myColors[group.number],
                                                                as.table = TRUE,...)
-                                 if (smooth) panel.gam(x, y, col = "grey40", col.se = "black",
+                                 if (smooth) panel.gam(x, y, col = myColors[group.number],
+                                                       col.se = myColors[group.number],
                                                        lty = 1, lwd = 1, se = ci, ...)
-                                 if (linear) panel.linear(x, y, col = "grey40", lwd = 1, lty = 5,
-                                                          x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
+                                 if (linear) panel.linear(x, y, col = myColors[group.number], lwd = 1,
+                                                          lty = 5, x.nam = x.nam, y.nam = y.nam,
+                                                          se = ci,  ...)
                              })
     }
 

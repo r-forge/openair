@@ -26,22 +26,29 @@ smooth.trend <- function(mydata,
     library(lattice)
     library(zoo)
 
+     ## might change this later?
+    if (length(pollutant) > 1 & type != "default") {
+        warning("Can not set type for multiple pollutants, using 'default'")
+        type <- "default"
+    }
+
     vars <- c("date", pollutant)
 
     mydata <- check.prep(mydata, vars, type)
 
     if (!missing(percentile)) statistic <- "percentile"
 
-    ## sometimes data have long trailing NAs, so start and end at first and last data
-    min.idx <- min(which(!is.na(mydata[, pollutant])))
-    max.idx <- max(which(!is.na(mydata[, pollutant])))
-    mydata <- mydata[min.idx:max.idx, ]
+    if (length(pollutant) > 1 & length(percentile) > 1) {
+        warning(paste("You cannot choose multiple percentiles and pollutants, using percentile =", percentile[1]))
+        percentile <- percentile[1]
+    }
 
+   
     ## for overall data and graph plotting
-    start.year <- as.numeric(format(mydata$date[1], "%Y"))
-    end.year <- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-    start.month <- as.numeric(format(mydata$date[1], "%m"))
-    end.month <- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
+    start.year <- as.numeric(format(min(mydata$date), "%Y"))
+    end.year <- as.numeric(format(max(mydata$date), "%Y"))
+    start.month <- as.numeric(format(min(mydata$date), "%m"))
+    end.month <- as.numeric(format(max(mydata$date), "%m"))
 
     ## cut data depending on type
     mydata <- cut.data(mydata, type)
@@ -129,18 +136,36 @@ smooth.trend <- function(mydata,
         }
 
         results$group <- "NA"
-        if (statistic == "percentile") { ## need to add "group" and percentile name
+
+        
+        if (statistic == "percentile" & length(pollutant) == 1) { ## need to add "group" and percentile name
             per.name <- paste(percentile, "th", " percentile", sep = "")
             results$group <- per.name
             results$group <- ordered(results$group)
 
         }
+
+        if (length(pollutant) > 1) { ## need to add "group" and pollutant name
+                                                  
+            results$group <- cond
+            results$cond <- "all data"
+
+        }
+
+        
         results
     }
 
-    calc.res <- function (x) ddply(mydata, .(variable), process.cond, percentile = x)
-    split.data <- lapply(percentile, calc.res)
-    split.data <- do.call(rbind, split.data)
+    if (length(percentile) > 1) {
+        calc.res <- function (x) ddply(mydata, .(variable), process.cond, percentile = x)
+        split.data <- lapply(percentile, calc.res)
+        split.data <- do.call(rbind, split.data)
+    } else {
+        split.data <-  split(mydata, mydata$variable)
+        split.data <-  lapply(split.data, process.cond, percentile)
+        split.data <- do.call(rbind, split.data)
+    }
+    
 
     ## define the levels for plotting
 
@@ -153,17 +178,24 @@ smooth.trend <- function(mydata,
         FALSE, FALSE)
 
     ## colours according to number of percentiles
-    npol <- length(percentile) ## number of pollutants
+    npol <- max(length(percentile), length(pollutant)) ## number of pollutants
 
     ## set up colours
     myColors <- open.colours(cols, npol)
 
     ## percentile names for key
-    key.lab <- levels(split.data$group)
+    if (length(percentile) > 1) key.lab <- levels(split.data$group)
+
+    ## for > 1 pollutant
+    
+    if (length(pollutant) > 1) key.lab <- sapply(seq_along(pollutant), function(x) quick.text(pollutant[x], auto.text))
 
     if (npol > 1) {
+        key.columns <- npol
         key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd, pch = pch, type = "b",
                     cex = cex), text = list(lab = key.lab),  space = "bottom", columns = key.columns)
+        if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ") 
+        
     } else {
         key <- NULL ## either there is a key or there is not
     }
@@ -182,7 +214,7 @@ smooth.trend <- function(mydata,
            ylab = quick.text(ylab, auto.text),
            main = quick.text(main, auto.text),
            scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
-                                                         dateBreaks(mydata$date)$format)),
+                         dateBreaks(mydata$date)$format)),
            panel = panel.superpose,
            ...,
 
@@ -198,7 +230,8 @@ smooth.trend <- function(mydata,
                panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
                             col.line = myColors[group.number],col.symbol = myColors[group.number], ...)
 
-               panel.gam(x, y, col = "grey40", col.se = "black", simulate = simulate, n.sim = n,
+               panel.gam(x, y, col =  myColors[group.number], col.se =  myColors[group.number],
+                         simulate = simulate, n.sim = n,
                          autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
            })

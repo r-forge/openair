@@ -260,7 +260,7 @@ with option type = 'site'")
                }
 
                panel.xyplot(x, y, type = "l", lty = lty, lwd = lwd, col.line = myColors[group.number],...)
-               if (smooth) panel.gam(x, y, col = "grey40", col.se = "black",
+               if (smooth) panel.gam(x, y, col = myColors[group.number] , col.se =  myColors[group.number],
                                      lty = 1, lwd = 1, se = ci, ...)
 
            }
