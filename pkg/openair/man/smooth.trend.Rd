@@ -23,7 +23,7 @@ pch = 1,
 cex = 1,
 key.columns = length(percentile),
 main = "",
-ci = FALSE,
+ci = TRUE,
 alpha = 0.2,
 date.breaks = 7,
 auto.text = TRUE,...)
@@ -175,6 +175,9 @@ smooth.trend(mydata, pollutant = "nox")
 
 # trend plot by each of 8 wind sectors
 smooth.trend(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")
+
+# several pollutants, no plotting symbol
+smooth.trend(mydata, pollutant = c("no2", "o3", "pm10", "pm25"), pch = NA)
 
 # percentiles
 smooth.trend(mydata, pollutant = "o3", statistic = "percentile",

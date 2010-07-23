@@ -17,7 +17,7 @@ smooth.trend <- function(mydata,
                          cex = 1,
                          key.columns = length(percentile),
                          main = "",
-                         ci = FALSE,
+                         ci = TRUE,
                          alpha = 0.2,
                          date.breaks = 7,
                          auto.text = TRUE,...)  {
@@ -25,12 +25,6 @@ smooth.trend <- function(mydata,
     ##library(mgcv)
     library(lattice)
     library(zoo)
-
-     ## might change this later?
-    if (length(pollutant) > 1 & type != "default") {
-        warning("Can not set type for multiple pollutants, using 'default'")
-        type <- "default"
-    }
 
     vars <- c("date", pollutant)
 
@@ -50,6 +44,10 @@ smooth.trend <- function(mydata,
     start.month <- as.numeric(format(min(mydata$date), "%m"))
     end.month <- as.numeric(format(max(mydata$date), "%m"))
 
+    ## date formatting for plot
+    date.at <- dateBreaks(mydata$date, date.breaks)$major
+    date.format <- dateBreaks(mydata$date)$format
+
     ## cut data depending on type
     mydata <- cut.data(mydata, type)
 
@@ -61,18 +59,15 @@ smooth.trend <- function(mydata,
     vars <- vars[vars != type]
     mydata <- mydata[, vars]
     mydata <- rename(mydata, c(cond = "site")) ## change to name "site"
-
-    if (type == "default") {
+     
         mydata <- melt(mydata, id.var = c("date", "site"))
-    } else {
-        ## should always be in this order
-        names(mydata)[2:3] <- c("value", "variable")
+        names(mydata)[2:3] <- c("variable", "group")
         mylab <- levels(factor(mydata$variable))
-    }
+        mydata <- na.omit(mydata)
+        mydata <- split(mydata, mydata$group)
 
-    mylab <- levels(factor(mydata$variable))
-
-    mydata <- na.omit(mydata)
+    ## don't need a list for percentiles
+    if (length(percentile) > 1) mydata <- mydata[[1]]
 
     process.cond <- function(mydata, percentile = percentile) {
 
@@ -89,7 +84,7 @@ smooth.trend <- function(mydata,
         end.month <- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
 
         cond <- mydata$variable[1]
-
+        group <- mydata$group[1]
         mydata <- time.average(mydata, period = "month", statistic = statistic, percentile = percentile)
 
         if (type == "season") { ## special case
@@ -136,7 +131,6 @@ smooth.trend <- function(mydata,
         }
 
         results$group <- "NA"
-
         
         if (statistic == "percentile" & length(pollutant) == 1) { ## need to add "group" and percentile name
             per.name <- paste(percentile, "th", " percentile", sep = "")
@@ -146,12 +140,10 @@ smooth.trend <- function(mydata,
         }
 
         if (length(pollutant) > 1) { ## need to add "group" and pollutant name
-                                                  
-            results$group <- cond
-            results$cond <- "all data"
+                      
+            results$group <- group
 
         }
-
         
         results
     }
@@ -160,13 +152,14 @@ smooth.trend <- function(mydata,
         calc.res <- function (x) ddply(mydata, .(variable), process.cond, percentile = x)
         split.data <- lapply(percentile, calc.res)
         split.data <- do.call(rbind, split.data)
+        
     } else {
-        split.data <-  split(mydata, mydata$variable)
-        split.data <-  lapply(split.data, process.cond, percentile)
-        split.data <- do.call(rbind, split.data)
+        
+     split.data <- ldply(mydata,  function (x) ddply(x, .(variable),
+                                                     process.cond, percentile = percentile))
+   
     }
     
-
     ## define the levels for plotting
 
     if (type == "wd") layout = c(3, 3)
@@ -188,12 +181,14 @@ smooth.trend <- function(mydata,
 
     ## for > 1 pollutant
     
-    if (length(pollutant) > 1) key.lab <- sapply(seq_along(pollutant), function(x) quick.text(pollutant[x], auto.text))
+    if (length(pollutant) > 1) key.lab <- sapply(seq_along(pollutant), function(x)
+                                                 quick.text(pollutant[x], auto.text))
 
     if (npol > 1) {
         key.columns <- npol
-        key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd, pch = pch, type = "b",
-                    cex = cex), text = list(lab = key.lab),  space = "bottom", columns = key.columns)
+        key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd,
+                    pch = pch, type = "b", cex = cex),
+                    text = list(lab = key.lab),  space = "bottom", columns = key.columns)
         if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ") 
         
     } else {
@@ -213,8 +208,7 @@ smooth.trend <- function(mydata,
            xlab = quick.text(xlab, auto.text),
            ylab = quick.text(ylab, auto.text),
            main = quick.text(main, auto.text),
-           scales = list(x = list(at = dateBreaks(mydata$date, date.breaks)$major, format =
-                         dateBreaks(mydata$date)$format)),
+           scales = list(x = list(at = date.at, format = date.format)),
            panel = panel.superpose,
            ...,
 
