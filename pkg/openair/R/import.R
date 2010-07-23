@@ -136,8 +136,7 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
         a[grep(bad.time, b, ignore.case = TRUE)] <- 
             as.POSIXct(
                 as.POSIXlt(strptime(as.character(b[grep(bad.time, b, ignore.case = TRUE)]), 
-                format = date.order, tz = time.format))) 
-                + 86400
+                format = date.order, tz = time.format))) + 86400
         if (is.null(misc.info)) {
             misc.info <- 1
             file.misc <- "import operation: bad.24 applied (reset 24:00:00 to 00:00:00 next day)"
