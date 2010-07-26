@@ -1,7 +1,9 @@
 import.ADMS.bgd <- function(...) { import.adms.bgd(...) }
 
 import.adms.bgd <- function(file=file.choose()
-    , drop.case=TRUE, drop.input.dates=TRUE, keep.units=TRUE, test.file.structure=TRUE
+    , drop.case=TRUE, drop.input.dates=TRUE
+    , keep.units=TRUE, test.file.structure=TRUE
+    , simplify.names=FALSE
     , ...
 ){
     bgd <- readLines(file, n = -1)
@@ -25,6 +27,13 @@ import.adms.bgd <- function(file=file.choose()
             call. = FALSE)
     }
     variables <- bgd[(loc.start + 2) : (loc.start + 1 + no.var)]
+
+    if(simplify.names) {variables <- simplify.names.adms(variables)}
+
+    #drop messy name handling
+    variables <- gsub("[.][.]", ".", variables)
+    variables <- gsub("^[.]", "", variables)
+
     if(drop.case) { variables <- tolower(variables) }
 
     units.start <- which(substr(bgd, 1, 6) == "UNITS:")

@@ -4,6 +4,7 @@ import.adms.mop <- function(file=file.choose()
     , drop.case=TRUE, drop.input.dates=TRUE
     , test.file.structure=TRUE
     , drop.delim=TRUE, add.prefixes = TRUE 
+    , simplify.names=TRUE
     , ...)
 {
 
@@ -100,6 +101,14 @@ if(is.logical(add.prefixes)==TRUE){
     }
 }
 names(ans) <- make.names(check.names, unique=TRUE)
+
+if(simplify.names){
+    names(ans) <- simplify.names.adms(names(ans))
+}
+
+#drop messy name handling
+names(ans) <- gsub("[.][.]", ".", names(ans))
+names(ans) <- gsub("^[.]", "", names(ans))
 
 date <- paste(ans$TYEAR, ans$TDAY, ans$THOUR, sep = "-")
 date <- as.POSIXct(strptime(date, format = "%Y-%j-%H"), "GMT")

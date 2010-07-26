@@ -1,7 +1,9 @@
 import.ADMS.met <- function(...) { import.adms.met(...) }
 
-import.adms.met <- function (file = file.choose(), drop.case = TRUE, drop.input.dates = TRUE, 
-    test.file.structure = TRUE, simplify.names = TRUE, ...) 
+import.adms.met <- function (file = file.choose(), 
+          drop.case = TRUE, drop.input.dates = TRUE, 
+          test.file.structure = TRUE, 
+          simplify.names = TRUE, ...) 
 {
     met <- readLines(file, n = -1)
     met <- sub('[[:space:]]+$', '', met) #strip out tail spaces
@@ -73,22 +75,11 @@ import.adms.met <- function (file = file.choose(), drop.case = TRUE, drop.input.
         met <- met[, !names(met) %in% 
             c("YEAR", "TDAY", "THOUR", "DAY", "HOUR", "MONTH", "DAY.OF.MONTH")]
     }
+
     if (simplify.names) {
-        fun.temp <- function(x, y, z){
-             if(y %in% names(x)){
-                  names(x)[which(names(x) == y)] <- z
-             }
-             x
-        }
-        met <- fun.temp(met, "T0C", "temp") 
-        met <- fun.temp(met, "TEMPERATURE..C.", "temp") 
-        met <- fun.temp(met, "TEMPERATURE", "temp") 
-        met <- fun.temp(met, "U", "ws")
-        met <- fun.temp(met, "WIND.SPEED", "ws")
-        met <- fun.temp(met, "PHI", "wd")
-        met <- fun.temp(met, "WIND.DIRECTION..DEGREES.", "wd")
-        met <- fun.temp(met, "WIND.DIRN", "wd")
+        names(met) <- simplify.names.adms(names(met))
     }
+
 
     #drop messy name handling
     names(met) <- gsub("[.][.]", ".", names(met))
