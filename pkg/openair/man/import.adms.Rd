@@ -8,6 +8,7 @@
 \alias{import.ADMS.met}
 \alias{import.adms.mop}
 \alias{import.ADMS.mop}
+\alias{simplify.names.adms}
 
 \title{ ADMS data import function(s) for openair }
 \description{
@@ -25,7 +26,7 @@ mydata <- import.ADMS(...)
 
 mydata <- import.adms.bgd(file = file.choose(), 
 		drop.case = TRUE, drop.input.dates = TRUE, keep.units = TRUE, 
-		simplify.names = TRUE, test.file.structure = TRUE, ...)
+		simplify.names = FALSE, test.file.structure = TRUE, ...)
 
 mydata <- import.ADMS.bgd(...)
 
@@ -41,6 +42,8 @@ mydata <- import.adms.mop(file = file.choose(),
 		drop.delim = TRUE, add.prefixes = TRUE, ...)
 
 mydata <- import.ADMS.mop(...)
+
+names  <- simplify.names.adms(names = NULL) 
  
 }
 
@@ -72,30 +75,28 @@ mydata <- import.ADMS.mop(...)
   retains units as character vector in data frame comment if defined in \code{file}. 
   Alternative, \code{FALSE}, discards units. 
 
-  (NOTE: currently, \code{.bgd} files only.) }
+  (NOTE: currently, only \code{.bgd} export units.) }
 
   \item{test.file.structure}{ Option to test file structure before trying to import. Default, 
   \code{TRUE}, tests for expected file structure and halts import operation if not found. 
   Alternative, \code{FALSE}, forces import regardless of structure. } 
 
   \item{simplify.names}{ Option to simplify data names in accordance with common \code{openair} 
-  practices. Default, \code{TRUE}. Alternative, \code{FALSE}, returns data with names as 
+  practices. Default, \code{TRUE} for all except \code{.bgd}. Alternative, \code{FALSE}, returns data with names as 
   interpreted by standard R. 
 
-  (NOTE 1: currently, \code{.met} files only.)
+  (NOTE 1: currently, no simplifications for \code{.bgd}.)
 
   (NOTE 2: Some ADMS file data names include some symbols and structures that R does not allow as 
   part of a name, so some renaming is automatic regardless of \code{simplify.names} setting. 
   For example, brackets or symbols are removed from names or repaced with ".", and names in the 
-  form "1/x" are returned as "recip.x".) }  
+  form "1/x" may be returned as "X1.x" or "recip.x".) }  
 
-  \item{drop.delim}{ Option to remove delim columns from the data frame. ADMS .mop files include 
+  \item{drop.delim}{ \code{.mop} Only. Option to remove delim columns from the data frame. ADMS .mop files include 
   two columns, "INPUT_DATA:" and "PROCESSED_DATA:", to separate model input and output types. 
-  Default, \code{TRUE}, removes these. Alternative, \code{FALSE}, retains them as part of import. 
+  Default, \code{TRUE}, removes these. Alternative, \code{FALSE}, retains them as part of import.}
 
-  (NOTE: currently, \code{.mop} files only.)}
-
-  \item{add.prefixes}{ Option to add prefixes to data names. ADMS .mop files include a number of
+  \item{add.prefixes}{ \code{.mop} Only. Option to add prefixes to data names. ADMS .mop files include a number of
   input and process data types with shared names. Prefixes can be automatically added to these so 
   individual data can be readily identified in the R/openair environment. Default, \code{TRUE}, 
   adds "process." as a prefix to processed data. Other options include: \code{FALSE} which uses no 
@@ -104,16 +105,17 @@ mydata <- import.ADMS.mop(...)
   vectors are sent, the first and second are treated as the input and processed data prefixes, 
   respectively. For example, the argument (\code{add.prefixes="out"}) would add the "out" prefix to 
   processed data names, while the argument (\code{add.prefixes=c("in","out")}) would add "in" and 
-  "out" prefixes to input and output data names, respectively. 
-
-  (NOTE: currently, \code{.mop} files only.)}
+  "out" prefixes to input and output data names, respectively.} 
 
   \item{...}{Additional arguments. For \code{import.adms} and \code{import.adms...} daughters, these are passed on to and handled 
   by \code{read.csv}. For \code{import.ADMS} and \code{import.ADMS...} daughters, these are passed onto the associated .adms. function, 
   and handled by that function or, in turn, passed on the associated import function or \code{read.csv}. 
 
   (Note: ...ADMS... functions are wrappers for equivalent ...adms... functions to 
-  allow use of upper and lower ADMS in function calls.)}       
+  allow use of upper and lower ADMS in function calls.)}
+
+  \item{names}{ \code{simplify.names.amds} only. Either \code{NULL} to summarise simplify.names operations or a 
+  vector of data series names to be simplified using those operations and returned. }        
 
 } 
 
@@ -123,15 +125,31 @@ default configuration, e.g. \code{mydata <- import.adms()}. However, where file 
 are encountered or more direct control is required, specific functions can be called using the 
 \code{file.type} argument and fine tuned using arguments, or used directly. }
 
-\value{ The function returns a data
+\value{ The main function \code{import.adms()} (or relevant sub-function) returns a data
 frame for use in openair. By comparison to the original file, the
-resulting data frame is modified as follows: Time and date information
+resulting data frame is modified as follows: 
+
+Time and date information
 will combined in a single column "date", formatted as a conventional
-timeseries (\code{as.POSIX*}). If name simplification was requested
-(\code{simplify.names = TRUE}), common chemical names may be simplified, and 
+timeseries (\code{as.POSIX*}). If \code{drop.input.dates} is enabled data series 
+combined to generated the new "date" data series will also be removed.  
+
+If 
+\code{simplify.names} is enabled common chemical names may be simplified, and 
 some other parameters may be reset to openair standards (e.g. "ws", "wd" and 
-"temp"). Data units information may also be retained as part of the data 
-frame comment. }
+"temp") according to operations defined in \code{simplify.names.adms}. A summary 
+of simplfication operations can be obtained by called the function without 
+declaring \code{names}, e.g. \code{simplify.names.adms()} or 
+\code{simplify.ops <- simplify.names.adms()} to retain summary as a data frame. 
+
+If \code{drop.case} is enabled all upper case characters in names will be converted 
+to lower case.
+
+If \code{keep.units} is enabled data units information may also be retained as part of the data 
+frame comment if available. 
+
+With \code{.mop} files, input and processed data series names may also been modified 
+on the basis of \code{add.prefixes}.}
 
 \note{Times are assumed to be in GMT.}
 
@@ -150,6 +168,14 @@ Other dedicated import functions available for other file types, including
 #example 1
 ##########
 #To be confirmed
+
+
+#current simplify.names operations
+simplify.names.adms()
+
+#what r and simplfy.names do to adms data series name PHI 
+simplify.ops <- simplify.names.adms()
+simplify.ops[simplify.ops$adms.input=="PHI",]
 
 }
 \keyword{methods}
