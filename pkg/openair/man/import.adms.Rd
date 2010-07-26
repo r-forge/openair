@@ -173,7 +173,7 @@ Other dedicated import functions available for other file types, including
 #current simplify.names operations
 simplify.names.adms()
 
-#what r and simplfy.names do to adms data series name PHI 
+#what r and simplify.names do to adms data series name PHI 
 simplify.ops <- simplify.names.adms()
 simplify.ops[simplify.ops$adms.input=="PHI",]
 
