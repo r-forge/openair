@@ -31,6 +31,12 @@ weekday.abbs <- make.weekday.abbs()
 month.names <- make.month.names()
 month.abbs <- make.month.abbs()
 
+
+startYear <- function(dat) min(as.numeric(format(dat, "%Y")))
+endYear <- function(dat) max(as.numeric(format(dat, "%Y")))
+startMonth <- function(dat) min(as.numeric(format(dat, "%m")))
+endMonth <- function(dat) max(as.numeric(format(dat, "%m")))    
+
 ###############################################################################
 
 ## function to find averaging period of data, returns "xx sec"

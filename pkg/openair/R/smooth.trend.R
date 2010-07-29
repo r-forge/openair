@@ -40,10 +40,10 @@ smooth.trend <- function(mydata,
 
    
     ## for overall data and graph plotting
-    start.year <- as.numeric(format(min(mydata$date), "%Y"))
-    end.year <- as.numeric(format(max(mydata$date), "%Y"))
-    start.month <- as.numeric(format(min(mydata$date), "%m"))
-    end.month <- as.numeric(format(max(mydata$date), "%m"))
+    start.year <- startYear(mydata$date)
+    end.year <-  endYear(mydata$date)
+    start.month <- startMonth(mydata$date)
+    end.month <-  endMonth(mydata$date)
 
     ## date formatting for plot
     date.at <- dateBreaks(mydata$date, date.breaks)$major
@@ -79,10 +79,10 @@ smooth.trend <- function(mydata,
         mydata <- mydata[min.idx:max.idx, ]
 
         ## these subsets may have different dates to overall
-        start.year <- as.numeric(format(mydata$date[1], "%Y"))
-        end.year <- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-        start.month <- as.numeric(format(mydata$date[1], "%m"))
-        end.month <- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
+        start.year <- startYear(mydata$date)
+        end.year <-  endYear(mydata$date)
+        start.month <- startMonth(mydata$date)
+        end.month <-  endMonth(mydata$date)
 
         cond <- mydata$variable[1]
         group <- mydata$group[1]

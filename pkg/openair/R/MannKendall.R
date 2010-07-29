@@ -48,10 +48,10 @@ MannKendall <- function(mydata,
     mydata <- mydata[min.idx:max.idx, ]
 
     ## for overall data and graph plotting
-    start.year <- as.numeric(format(mydata$date[1], "%Y"))
-    end.year <- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-    start.month <- as.numeric(format(mydata$date[1], "%m"))
-    end.month <- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
+    start.year <- startYear(mydata$date)
+    end.year <-  endYear(mydata$date)
+    start.month <- startMonth(mydata$date)
+    end.month <-  endMonth(mydata$date)
 
     process.cond <- function(mydata) {
 
@@ -62,10 +62,10 @@ MannKendall <- function(mydata,
         mydata <- mydata[min.idx:max.idx, ]
 
         ## these subsets may have different dates to overall
-        start.year <- as.numeric(format(mydata$date[1], "%Y"))
-        end.year <- as.numeric(format(mydata$date[nrow(mydata)], "%Y"))
-        start.month <- as.numeric(format(mydata$date[1], "%m"))
-        end.month <- as.numeric(format(mydata$date[nrow(mydata)], "%m"))
+        start.year <- startYear(mydata$date)
+        end.year <-  endYear(mydata$date)
+        start.month <- startMonth(mydata$date)
+        end.month <-  endMonth(mydata$date)
 
         cond <- as.character(unique(na.omit(mydata$cond)))
 
@@ -192,8 +192,7 @@ MannKendall <- function(mydata,
     percent.change <- subset(percent.change, select = c(variable, slope.percent,
                                              lower.percent, upper.percent))
 
-    percent.change <- subset(percent.change, select = c(variable, slope.percent,
-                                             lower.percent, upper.percent))
+    
     split.data <- merge(split.data, percent.change, by.x = "cond", by.y = "variable")
 
     res2 <- merge(res2, percent.change, by = "variable")
