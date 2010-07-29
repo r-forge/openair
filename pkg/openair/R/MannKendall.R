@@ -16,6 +16,9 @@ MannKendall <- function(mydata,
                         deseason = FALSE,
                         type = "default",
                         period = "monthly",
+                        statistic = "mean",
+                        percentile = 95,
+                        data.thresh = 0,
                         simulate = FALSE,
                         alpha = 0.05,
                         dec.place = 2,
@@ -24,14 +27,12 @@ MannKendall <- function(mydata,
                         main = "",
                         auto.text = TRUE,
                         autocor = FALSE,
+                        slope.percent = FALSE,
                         date.breaks = 7,...)  {
 
     ## extract variables of interest
-    if (type == "wd") vars <- c("date", pollutant, "wd")
-    if (type == "ws") vars <- c("date", pollutant, "ws")
-    if (type == "site") vars <- c("date", pollutant, "site")
-    if (type != "wd" & type != "ws" & type != "site") vars <- c("date", pollutant)
 
+    vars <- c("date", pollutant)
     ## if autocor is TRUE, then need simulations
     if (autocor) simulate <- TRUE
 
@@ -70,28 +71,21 @@ MannKendall <- function(mydata,
 
         if (period == "monthly") {
 
-            ## use this to make sure all dates are present, even when data are missing
-            ## assume mid-point of month for better plotting (less unambiguous)
-            all.dates <- data.frame(date = seq(as.Date(ISOdate(start.year, start.month, 15)),
-                                    as.Date(ISOdate(end.year, end.month, 15)), by = "months"))
+            mydata <- time.average(mydata, period = "month", statistic = statistic,
+                                   percentile = percentile,
+                                   data.thresh = data.thresh)
+            mydata$date <- as.Date(mydata$date)
+            
+            deseas <- mydata[, pollutant]
 
-            means <- tapply(mydata[, pollutant], format(mydata$date, "%Y-%m"),
-                            mean, na.rm = TRUE)
-
-            ## actual dates in data
-            dates <- as.Date(paste(names(means), "-15", sep = ""))
-            mydata <- data.frame(dates = dates, means = as.vector(means))
-
-            mydata <- merge(mydata, all.dates, by.x = "dates", by.y = "date", all.y = TRUE)
-            deseas <- mydata$means
             ## can't deseason less than 2 years of data
             if (nrow(mydata) < 24) deseason <- FALSE
 
             if (deseason) {
                 ## interpolate missing data using zoo
-                mydata$means <- na.approx(mydata$means)
+                mydata[, pollutant] <- na.approx(mydata[, pollutant])
 
-                myts <- ts(mydata$means, start = c(start.year, start.month),
+                myts <- ts(mydata[, pollutant], start = c(start.year, start.month),
                            end = c(end.year, end.month), frequency = 12)
                 ## key thing is to allow the seanonal cycle to vary, hence
                 ## s.window should not be "periodic"; set quite high to avoid
@@ -103,29 +97,29 @@ MannKendall <- function(mydata,
 
                 deseas <- as.vector(deseas)
             }
-             all.results <- data.frame(date = mydata$dates, conc = deseas, cond = cond)
+
+            all.results <- data.frame(date = mydata$date, conc = deseas, cond = cond)
+
             if (type == "month" | type == "season")
 
-           # all.results <- data.frame(date = mydata$dates, conc = deseas, cond = cond)
+                
+                ## need to do some aggregating for season
+                if (type == "season") {
+                    ## winter stradles 2 years, need to deal with this
+                    all.results <- subset(all.results, select = -cond) ## remove for aggregation
+                    all.results$month <- as.numeric(format(all.results$date, "%m"))
+                    all.results$year <- as.numeric(format(all.results$date, "%Y"))
+                    all.results$year[all.results$month == 12] <-
+                        all.results$year[all.results$month == 12] + 1
+                    ## remove missing for proper aggregation
+                    all.results <- na.omit(all.results)
 
-            ## need to do some aggregating for season
-            if (type == "season") {
-                ## winter stradles 2 years, need to deal with this
-                all.results <- subset(all.results, select = -cond) ## remove for aggregation
-                all.results$month <- as.numeric(format(all.results$date, "%m"))
-                all.results$year <- as.numeric(format(all.results$date, "%Y"))
-                all.results$year[all.results$month == 12] <-
-                    all.results$year[all.results$month == 12] + 1
-                ## remove missing for proper aggregation
-                all.results <- na.omit(all.results)
-
-                results <- aggregate(all.results, list(all.results$year), mean, na.rm = TRUE)
-                class(results$date) <- "Date"
-                results$cond <- cond
-                all.results <- results
-            }
-          #  results$cond <- cond
-          #  all.results <- results
+                    results <- aggregate(all.results, list(all.results$year), mean, na.rm = TRUE)
+                    class(results$date) <- "Date"
+                    results$cond <- cond
+                    all.results <- results
+                }
+            
             results <- na.omit(all.results)
 
 
@@ -145,6 +139,7 @@ MannKendall <- function(mydata,
         ## now calculate trend, uncertainties etc ###############################################
 
         MKresults <- MKstats(results$date, results$conc, alpha, simulate, autocor)
+        
         ## make sure missing data are put back in for plotting
         results <- suppressWarnings(merge(all.results, MKresults, by = "date", all = TRUE))
         results
@@ -168,6 +163,42 @@ MannKendall <- function(mydata,
     if (type == "month" | type == "season") split.data <- na.omit(split.data)
     ## there are "missing" data
 
+#### calculate slopes etc ###############################################################################
+
+    split.data <- transform(split.data, slope = 365 * b, intercept = a,
+                            intercept.lower = lower.a, intercept.upper = upper.a,
+                            lower = 365 * upper.b, upper = 365 * lower.b)
+
+    ## aggregated results
+    res2 <- aggregate(subset(split.data, select = c(-date, - cond, - p.stars)),
+                      list(variable = split.data$cond, p.stars = split.data$p.stars), mean)
+
+    ## calculate percentage changes in slope and uncertainties
+    ## need start and end dates (in days) to work out concentrations at those points
+    ## percentage change defind as 100.(C.end/C.start -1) / (Date.end = Date.start)
+
+    start <- aggregate(split.data, list(variable = split.data$cond), function (x) head(x, 1))
+    end <- aggregate(split.data, list(variable = split.data$cond), function (x) tail(x, 1))
+    percent.change <- merge(start, end, by = "variable", suffixes = c(".start", ".end"))
+
+    percent.change <- transform(percent.change, slope.percent = 100 * 365 *
+                                ((slope.start * date.end / 365 + intercept.start) /
+                                 (slope.start * date.start / 365 + intercept.start) - 1) /
+                                (date.end - date.start))
+
+    percent.change <- transform(percent.change, lower.percent = slope.percent / slope.start * lower.start,
+                                upper.percent = slope.percent / slope.start * upper.start)
+
+    percent.change <- subset(percent.change, select = c(variable, slope.percent,
+                                             lower.percent, upper.percent))
+
+    percent.change <- subset(percent.change, select = c(variable, slope.percent,
+                                             lower.percent, upper.percent))
+    split.data <- merge(split.data, percent.change, by.x = "cond", by.y = "variable")
+
+    res2 <- merge(res2, percent.change, by = "variable")
+########################################################################################################
+    
     plt <- xyplot(conc ~ date | cond, data = split.data,
                   ylab = quick.text(ylab, auto.text),
                   main = quick.text(main, auto.text),
@@ -176,8 +207,8 @@ MannKendall <- function(mydata,
                   layout = layout,
                   skip = skip,
                   strip = strip,
-                   scales = list(x = list(at = dateBreaks(split.data$date, date.breaks)$major, format =
-                                                         dateBreaks(split.data$date)$format)),...,
+                  scales = list(x = list(at = dateBreaks(split.data$date, date.breaks)$major, format =
+                                dateBreaks(split.data$date)$format)),...,
 
                   panel = function(x, y, subscripts,...){
                       ## year shading
@@ -187,45 +218,51 @@ MannKendall <- function(mydata,
 
                       sub.dat <- na.omit(split.data[subscripts, ])
 
-                      panel.abline(a = sub.dat[1, "a"], b = sub.dat[1, "b"], col = "red", lwd = 2)
-                      panel.abline(a = sub.dat[1, "lower.a"], b = sub.dat[1, "lower.b"], lty = 5,
+                      panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
+                                   col = "red", lwd = 2)
+                      panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "upper"] / 365, lty = 5,
                                    col = "red")
-                      panel.abline(a = sub.dat[1, "upper.a"], b = sub.dat[1, "upper.b"], lty = 5,
+                      panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "lower"] / 365, lty = 5,
                                    col = "red")
-                      ## note 365 to get trend in /year rather than /day
-                      panel.text(split.data$date[1], max(split.data$conc, na.rm = TRUE),
-                                 paste(round(365 * sub.dat[1, "b"], dec.place), " ", "[",
-                                       round(365 * sub.dat[1, "upper.b"], dec.place), ", ",
-                                       round(365 * sub.dat[1, "lower.b"], dec.place), "]",
-                                       " units/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
+
+                      ## for text on plot - % trend or not?
+                      slope <- "slope"
+                      lower <- "lower"
+                      upper <- "upper"
+                      units <- "units"
+                      
+                      if (slope.percent) {
+                          slope <- "slope.percent"
+                          lower <- "lower.percent"
+                          upper <- "upper.percent"
+                          units <- "%"
+                      }
+                      
+                      panel.text(min(split.data$date), max(split.data$conc, na.rm = TRUE),
+                                 paste(round(sub.dat[1, slope], dec.place), " ", "[",
+                                       round(sub.dat[1, lower], dec.place), ", ",
+                                       round(sub.dat[1, upper], dec.place), "] ",
+                                       units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
                                  cex = 0.7, pos = 4, col = "forestgreen")
+                      
                   }
                   )
-
-    res <- data.frame(date = split.data$date, mean = split.data$conc,
-                      cond = split.data$cond, slope = 365 * split.data$b, intercept = split.data$a,
-                      lower = 365 * split.data$upper.b,
-                      upper = 365 * split.data$lower.b, p = split.data$p,
-                      p.stars = split.data$p.stars)
-
-    ## aggregated results
-    res2 <- aggregate(subset(res, select = c(-date, - cond, - p.stars)),
-                      list(variable = res$cond, p.stars = res$p.stars), mean)
-
+    
     print(plt)
-    invisible(list(res, res2))
+    invisible(list(split.data, res2))
 }
 
 
 
 panel.shade <- function(split.data, start.year, end.year, ylim) {
+    ## provides annual shaded 'bands' on plots to help show years
     
     x1 <- as.POSIXct(seq(ISOdate(start.year, 1, 1),
-                      ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
+                         ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
     x2 <- as.POSIXct(seq(ISOdate(start.year + 1, 1, 1),
-                      ISOdate(end.year + 2, 1, 1), by = "2 years"), "GMT")
+                         ISOdate(end.year + 2, 1, 1), by = "2 years"), "GMT")
     if (class(split.data$date)[1]  == "Date") {x1 <- as.Date(x1)
-                                            x2 <- as.Date(x2)
+                                               x2 <- as.Date(x2)
                                            }
 
     rng <- range(split.data$conc, na.rm = TRUE) ## range of data
@@ -235,8 +272,8 @@ panel.shade <- function(split.data, start.year, end.year, ylim) {
     ## if user selects specific limits
 
     if (!missing(ylim)) {
-         y1 <- ylim[1] - 0.1 * abs(ylim[2] - ylim[1])
-         y2 <- ylim[2] + 0.1 * abs(ylim[2] - ylim[1])
+        y1 <- ylim[1] - 0.1 * abs(ylim[2] - ylim[1])
+        y2 <- ylim[2] + 0.1 * abs(ylim[2] - ylim[1])
     }
 
     sapply(seq_along(x1), function(x) lpolygon(c(x1[x], x1[x], x2[x], x2[x]),

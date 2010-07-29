@@ -13,13 +13,18 @@ pollutant = "nox",
 deseason = FALSE,
 type = "default",
 period = "monthly",
+statistic = "mean",
+percentile = 95,
+data.thresh = 0,
 simulate = FALSE,
 alpha = 0.05,
 dec.place = 2,
 ylab = pollutant,
+xlab = "year",
 main = "",
 auto.text = TRUE,
 autocor = FALSE,
+slope.percent = FALSE,
 date.breaks = 7, ...)
 }
 
@@ -58,6 +63,24 @@ the flexibility here.}
 whether monthly mean or annual mean trends are plotted. Note that for
 "annual", six or more years are required.}
 
+ \item{statistic}{Statistic used for calculating monthly
+   values. Default is \code{"mean"}, but can also be
+   \code{"percentile"}. See \code{time.average} for more details.}
+
+ \item{percentile}{Percentile value(s) to use if \code{statistic =
+ "percentile"} is chosen. Can be a vector of numbers
+ e.g. \code{percentile = c(5, 50, 95)} will plot the 5th, 50th and 95th
+ percentile values together on the same plot.}
+
+\item{data.thresh}{The data capture threshold to use (\%) when
+  aggregating the data using \code{avg.time}. A value of zero means that
+  all available data will be used in a particular period regardless if
+  of the number of values available. Conversely, a value of 100 will
+  mean that all data will need to be present for the average to be
+  calculated, else it is recorded as \code{NA}. Not used if
+  \code{avg.time = "default"}.}
+
+
   \item{simulate}{Should simulations be carried out to determine the
 Mann-Kendall tau and p-value. The default is \code{FALSE}. If
 \code{TRUE}, bootstrap simulations are undertaken, which also account
@@ -85,6 +108,15 @@ value of the trend, choose alpha = 0.01 etc.}
 uncertainty estimates? The default is \code{FALSE}. Generally,
 accounting for autocorrelation increases the uncertainty of the trend
 estimate - sometimes by a large amount.}
+
+\item{slope.percent}{Should the slope and the slope uncertainties be
+  expressed as a percentage? The default is \code{FALSE} and the slope
+  is expressed as an average units/year change e.g. ppb. Percentage
+  changes can often be confusing and should be clearly defined. Here the
+  percentage change is expressed as 100 * (C.end/C.start - 1) / (Year.end
+  - Year.start). Where C.start is the start concentration at Year.start
+  and C.end is the end concentration at Year.end. Fractions of years are
+  considered as necessary.}
 
  \item{date.breaks}{Number of major x-axis intervals to use. The
     function will try and choose a sensible number of dates/times as

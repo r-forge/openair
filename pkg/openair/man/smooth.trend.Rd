@@ -12,6 +12,7 @@ deseason = FALSE,
 type = "default",
 statistic = "mean",
 percentile = 95,
+data.thresh = 0,
 simulate = FALSE,
 n = 200,
 autocor = FALSE,
@@ -67,6 +68,14 @@ auto.text = TRUE,...)
  "percentile"} is chosen. Can be a vector of numbers
  e.g. \code{percentile = c(5, 50, 95)} will plot the 5th, 50th and 95th
  percentile values together on the same plot.}
+
+\item{data.thresh}{The data capture threshold to use (\%) when
+  aggregating the data using \code{avg.time}. A value of zero means that
+  all available data will be used in a particular period regardless if
+  of the number of values available. Conversely, a value of 100 will
+  mean that all data will need to be present for the average to be
+  calculated, else it is recorded as \code{NA}. Not used if
+  \code{avg.time = "default"}.}
 
 
   \item{simulate}{Should simulations be carried out to determine the

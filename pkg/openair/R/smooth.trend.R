@@ -5,6 +5,7 @@ smooth.trend <- function(mydata,
                          type = "default",
                          statistic = "mean",
                          percentile = 95,
+                         data.thresh = 0,
                          simulate = FALSE,
                          n = 200, #bootstrap simulations
                          autocor = FALSE,
@@ -85,7 +86,8 @@ smooth.trend <- function(mydata,
 
         cond <- mydata$variable[1]
         group <- mydata$group[1]
-        mydata <- time.average(mydata, period = "month", statistic = statistic, percentile = percentile)
+        mydata <- time.average(mydata, period = "month", statistic = statistic, percentile = percentile,
+                               data.thresh = data.thresh)
 
         if (type == "season") { ## special case
 
