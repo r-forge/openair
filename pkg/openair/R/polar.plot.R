@@ -71,6 +71,7 @@ polar.plot <- function(polar,
             Mgam <- gam(binned ^ n ~ s(u, v, k = k))
             pred <- predict.gam(Mgam, input.data)
             pred <- pred ^ (1 / n)
+            pred <- as.vector(pred)
             results <- data.frame(u = input.data$u, v = input.data$v,
                                   z = pred, cond = polar$cond[1])
 
@@ -79,6 +80,7 @@ polar.plot <- function(polar,
             ## uncertainties calculated, weighted by number of points in each bin
             Mgam <- gam(binned ^ n ~ s(u, v, k = k), weights = binned.len)
             pred <- predict.gam(Mgam, input.data, se = TRUE)
+            pred <- pred ^ (1 / n)
             uncer <- 2 * pred[[2]] ## for approx 95% CI
 
             ## do not weight for central prediction

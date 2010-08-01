@@ -12,37 +12,37 @@ time series, for wind speed.
 }
 \usage{
 wind.rose(polar,
-	ws.int = 2,
-	breaks = 4, 
-	angle = 30,
-	type = "default",
-	cols = "default",
-	main = "",
-	grid.line = 5,
-	width = 1,
-	auto.text = TRUE,
-	units = "(m/s)",
-	key.name = "",
-	key.position = "bottom"
-	key = NULL,
-	paddle = TRUE,
-	dig.lab = 5,
-        pollutant = NULL,
-	output = "graph",
-	...)
+ws.int = 2,
+breaks = 4, 
+angle = 30,
+type = "default",
+cols = "default",
+main = "",
+grid.line = 5,
+width = 1,
+auto.text = TRUE,
+units = "(m/s)",
+key.name = "",
+key.position = "bottom"
+key = NULL,
+paddle = TRUE,
+dig.lab = 5,
+       pollutant = NULL,
+output = "graph",
+...)
 
 ans <- wind.rose(...)
 
 pollution.rose(polar, 
-	pollutant = "nox",
-	key.name = pollutant,
-	units = "",
-	breaks = 6,
-	paddle = FALSE,
-	key.position = "right",
-	...)
+pollutant = "nox",
+key.name = pollutant,
+units = "",
+breaks = 6,
+paddle = FALSE,
+key.position = "right",
+...)
 
-ans <- pullution.rose(...)
+ans <- pollution.rose(...)
 
 
 }
