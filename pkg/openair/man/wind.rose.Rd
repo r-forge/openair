@@ -27,7 +27,7 @@ key.position = "bottom"
 key = NULL,
 paddle = TRUE,
 dig.lab = 5,
-       pollutant = NULL,
+pollutant = NULL,
 output = "graph",
 ...)
 
@@ -197,7 +197,7 @@ wind.rose(mydata, type = "month")
 wind.rose(mydata, angle = 10, width = 0.3, grid.line = 1)
 
 # pollution rose of nox
-polution.rose(mydata, pollutant = "nox")
+pollution.rose(mydata, pollutant = "nox")
 
 }
 

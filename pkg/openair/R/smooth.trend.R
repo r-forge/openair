@@ -38,11 +38,7 @@ smooth.trend <- function(mydata,
         percentile <- percentile[1]
     }
 
-    ## sometimes data have long trailing NAs, so start and end at first and last data
-    min.idx <- min(which(!is.na(mydata[, pollutant])))
-    max.idx <- max(which(!is.na(mydata[, pollutant])))
-    mydata <- mydata[min.idx:max.idx, ]
-
+   
    
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
