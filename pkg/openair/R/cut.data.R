@@ -109,7 +109,10 @@ cut.data <- function(mydata, type = "default") {
                        levels(mydata$cond) <- ws.levels
                    }
 
-    if (type == "site") mydata$cond <- mydata$site
+    if (type == "site") {
+        mydata$cond <- mydata$site
+        mydata$cond <- factor(mydata$cond) ## will get rid of any unused factor levels
+    }
 
     if (type == "gmtbst" | type == "bstgmt") {
         ## how to extract BST/GMT
