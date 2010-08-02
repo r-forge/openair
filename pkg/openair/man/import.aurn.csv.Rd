@@ -101,7 +101,7 @@ argument modification.
 frame for use in openair. By comparison to the original file, the
 resulting data frame is modified as follows: Time and date information
 will combined in a single column "date", formatted as a conventional
-timeseries (\code{\link{as.POSIX*}}). Time adjustments may also be made, subject to
+timeseries (\code{\link{as.POSIXct}}). Time adjustments may also be made, subject to
 "bad.24" and "correct.time" argument settings.  Using default settings, the
 argument \code{correct.time = - 3600} resets the time stamp to the start of the
 measurement period. If name simplification was requested

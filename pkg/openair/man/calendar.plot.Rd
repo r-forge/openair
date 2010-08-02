@@ -76,7 +76,7 @@ direction vector on each day. This is very useful for getting a feel for
 the meteorological conditions that affect pollutant concentrations. Note
 that if hourly or higher time resolution are supplied, then
 \code{calendar.plot} will calculate daily averages using
-\code{\link{daily.mean}}, which ensures that wind directions are
+\code{\link{time.average}}, which ensures that wind directions are
 vector-averaged.
 
 If wind speed is also available, then setting the option \code{annotate

@@ -25,7 +25,7 @@ calc.percentile(mydata, pollutant = "o3", period = "month", percentile = 50,
   \code{percentile = 50} for median values, \code{percentile = c(5, 50,
   95} for multiple percentile values.}
 
-  \item{data.thres}{Data threshold to apply when aggregating data. See
+  \item{data.thresh}{Data threshold to apply when aggregating data. See
   \code{time.average} for details.}
 
  \item{start}{Start date to use - see \code{time.average} for details.}

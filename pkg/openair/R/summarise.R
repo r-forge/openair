@@ -15,7 +15,8 @@ summarise <- function(mydata,
                       main = "",
                       date.breaks = 7,
                       auto.text = TRUE,
-                      xlab = NULL, ylab =NULL, 
+                      xlab = NULL,
+                      ylab = NULL, 
                       ...) {
 
     library(lattice)

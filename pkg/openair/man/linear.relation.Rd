@@ -2,23 +2,29 @@
 \alias{linear.relation}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Linear relations between pollutants}
-\description{
-This function considers linear relationships between two pollutants. The relationships are calculated on different times bases using a linear model. The slope and 95\% confidence interval in slope relationships by time unit are plotted in many ways. The function is particularly useful when considering whether relationships are consistent with emissions inventories.
-}
-\usage{
-linear.relation(mydata,
-		x = "nox",
-		y = "no2",
-		period = "monthly",
-		condition = FALSE,
-		n = 20,
-		rsq.thresh = 0,
-		ylim = c(0, 20),
-		ylab = paste("slope from ", y, " = m.", x, " + c", sep = ""),
-		auto.text = TRUE,
+
+\description{ This function
+considers linear relationships between two pollutants. The relationships
+are calculated on different times bases using a linear model. The slope
+and 95\% confidence interval in slope relationships by time unit are
+plotted in many ways. The function is particularly useful when
+considering whether relationships are consistent with emissions
+inventories.  }
+
+\usage{ linear.relation(mydata, 
+x = "nox",
+y = "no2",
+period = "monthly",
+condition = FALSE,
+n = 20,
+rsq.thresh = 0,
+ylim = c(0, 20),
+ylab = paste("slope from ", y, " = m.", x, " + c", sep = ""),
+xlab = NULL,
+auto.text = TRUE,
 main = "",
-span = 0.3,...)
-}
+span = 0.3,...)  }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
 \item{mydata}{A data frame minimally containing \code{date} and two
@@ -60,6 +66,8 @@ pollutants.}
   \item{ylim}{y-axis limits, specified by the user.}
 
   \item{ylab}{y-axis title, specified by the user.}
+
+  \item{xlab}{x-axis title, specified by the user.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
   titles and axis labels will automatically try and format pollutant

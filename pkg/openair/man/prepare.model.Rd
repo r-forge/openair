@@ -43,7 +43,7 @@ pollutant = "nox")
 ## it is run as shown below:
 
 ## mydata <- prepare.model(mydata, measured = "meas", modelled = "mod",
-   pollutant  = "o3")
+##   pollutant  = "o3")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

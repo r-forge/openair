@@ -12,6 +12,7 @@ pollutant = "nox",
 local.time = FALSE,
 normalise = FALSE,
 ylab = pollutant,
+xlab = NULL,
 name.pol = pollutant,
 type = "default",
 ci = TRUE,
@@ -53,6 +54,8 @@ alpha = 0.4,...)
 
   \item{ylab}{Name of y-axis variable. By default will use the name of
     \code{pollutant}.}
+
+   \item{xlab}{x-axis label.}
 
   \item{name.pol}{Names to be given to the pollutant(s). This is useful
     if you want to give a fuller description of the variables, maybe

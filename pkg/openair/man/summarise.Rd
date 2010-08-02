@@ -11,20 +11,22 @@
 
 \usage{
 summarise(mydata,
- na.len = 24,
+na.len = 24,
 clip = TRUE,
 percentile = 0.99,
 type = "histogram",
 pollutant = "nox",
 period = "year",
 breaks = 20,
-col.trend = "lightgoldenrod2",
+col.trend = "darkgoldenrod2",
 col.data = "lightblue",
 col.mis = rgb(0.65, 0.04, 0.07),
 col.hist = "forestgreen",
 main = "",
 date.breaks = 7,
 auto.text = TRUE,
+xlab = NULL,
+ylab = NULL,
 ...)
 }
 
@@ -90,6 +92,10 @@ auto.text = TRUE,
   \code{TRUE} titles and axis labels will automatically try and format
   pollutant names and units properly e.g.  by subscripting the
   \sQuote{2} in NO2.}
+
+\item{xlab}{x-axis label.}
+
+\item{ylab}{y-axis label.}
 
 \item{\ldots}{Other graphical parameters.}
 }

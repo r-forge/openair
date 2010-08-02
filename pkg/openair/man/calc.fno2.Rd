@@ -15,6 +15,7 @@ plot = TRUE,
 user.fno2,
 main = "",
 theme = "bw",
+xlab = "year",
 ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -42,7 +43,9 @@ theme = "bw",
   \item{main}{Title of plot if required.}
 
   \item{theme}{Colour theme to use - see ggplot2 for details. Can be
-  \code{"bw"} (default) or \code{"grey"}.}
+    \code{"bw"} (default) or \code{"grey"}.}
+
+  \item{xlab}{x-axis label.}
 
   \item{\dots}{Other graphical parameters.}
 }
