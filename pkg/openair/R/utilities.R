@@ -32,10 +32,10 @@ month.names <- make.month.names()
 month.abbs <- make.month.abbs()
 
 
-startYear <- function(dat) min(as.numeric(format(dat, "%Y")))
-endYear <- function(dat) max(as.numeric(format(dat, "%Y")))
-startMonth <- function(dat) min(as.numeric(format(dat, "%m")))
-endMonth <- function(dat) max(as.numeric(format(dat, "%m")))    
+startYear <- function(dat) as.numeric(format(min(sort(dat)), "%Y"))
+endYear <- function(dat) as.numeric(format(max(sort(dat)), "%Y"))
+startMonth <- function(dat) as.numeric(format(min(sort(dat)), "%m"))
+endMonth <- function(dat) as.numeric(format(max(sort(dat)), "%m"))
 
 ###############################################################################
 
