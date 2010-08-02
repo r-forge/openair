@@ -38,6 +38,11 @@ smooth.trend <- function(mydata,
         percentile <- percentile[1]
     }
 
+    ## sometimes data have long trailing NAs, so start and end at first and last data
+    min.idx <- min(which(!is.na(mydata[, pollutant])))
+    max.idx <- max(which(!is.na(mydata[, pollutant])))
+    mydata <- mydata[min.idx:max.idx, ]
+
    
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
@@ -64,7 +69,6 @@ smooth.trend <- function(mydata,
         mydata <- melt(mydata, id.var = c("date", "site"))
         names(mydata)[2:3] <- c("variable", "group")
         mylab <- levels(factor(mydata$variable))
-        mydata <- na.omit(mydata)
         mydata <- split(mydata, mydata$group)
 
     ## don't need a list for percentiles
@@ -123,7 +127,7 @@ smooth.trend <- function(mydata,
 
             deseas <- ssd$time.series[, "trend"] + ssd$time.series[, "remainder"]
             deseas <- as.vector(deseas)
-
+           
             results <- data.frame(date = mydata$date, conc = as.vector(deseas), cond = cond)
 
         } else {
