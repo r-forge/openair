@@ -19,9 +19,6 @@ calendar.plot <- function(mydata,
                           auto.text = TRUE,
                           ...) {
 
-    library(lattice)
-    library(plyr)
-
     ##international keyboard
     ##first letter and ordered Sun to Sat
     weekday.abb <- substr(make.weekday.abbs(), 1, 1)[c(7, 1:6)]    

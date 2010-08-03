@@ -12,9 +12,7 @@ linear.relation <- function(mydata,
                             auto.text = TRUE,
                             main = "",
                             span = 0.3,...) {
-    require(lattice)
-    require(plyr)
-    
+  
     adj <- 1 ## factors for ratios (oxidant is a percentage)
 
     ## prepare data

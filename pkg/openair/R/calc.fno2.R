@@ -7,8 +7,6 @@ calc.fno2 <- function(input,
 {
 
   
-    require(lattice)
-    require(zoo)
     
     ## function to prepare data ######################################################
     prepare <- function(input) {

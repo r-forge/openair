@@ -14,9 +14,7 @@ time.variation <- function(mydata,
                            auto.text = TRUE,
                            alpha = 0.4, ...)   {
 
-    require(Hmisc)
-    require(lattice)
-    require(plyr)
+    
 
     ##update weekday and month locally
     weekday.name <- make.weekday.names()

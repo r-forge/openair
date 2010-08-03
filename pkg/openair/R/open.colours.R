@@ -1,5 +1,5 @@
 open.colours <- function(scheme = "default", n = 100) {
-require(RColorBrewer)
+
 #heat
 heat <- colorRampPalette(brewer.pal(9, "YlOrRd"), interpolate = "spline")
 

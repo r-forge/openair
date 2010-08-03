@@ -7,9 +7,6 @@
 ## Rand Wilcox
 ###############################################################################
 
-##library(lattice)
-##library(zoo)
-##library(boot)
 
 MannKendall <- function(mydata,
                         pollutant = "nox",
@@ -30,8 +27,6 @@ MannKendall <- function(mydata,
                         slope.percent = FALSE,
                         date.breaks = 7,...)  {
 
-    ## extract variables of interest
-    require(lattice)
     
     vars <- c("date", pollutant)
     ## if autocor is TRUE, then need simulations

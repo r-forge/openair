@@ -9,8 +9,7 @@ trend.level.wd <-  function(mydata,
 				main = "",
 				auto.text = TRUE,...) {
 
-    ##library(lattice)
-    ##library(Hmisc)
+  
 
     #extract variables of interest
     vars <- c("date", "wd", pollutant)

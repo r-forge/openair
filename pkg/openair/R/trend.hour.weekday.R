@@ -9,9 +9,7 @@ trend.hour.weekday <-  function(mydata,
 		xlab = "hour of day", 
                 main = "",
 		auto.text = TRUE,...) {
-    ##library(lattice)
-   # library(latticeExtra)
-    ##library(Hmisc)
+  
 
 
     trend.hour.weekday.plot <- function(mydata, pollutant, limits, line.colour,

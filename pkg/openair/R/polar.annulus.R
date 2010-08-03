@@ -16,9 +16,7 @@ polar.annulus <- function(polar,
                           main = "",
                           auto.text = TRUE,...) {
 
-    ## needs access to these packages
-    require(mgcv)    #for smoothing surfaces and removing noise
-    require(lattice) #basic plotting
+   
 
     ## extract variables of interest
     vars <- c("wd", "date", pollutant)

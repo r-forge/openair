@@ -23,12 +23,7 @@ smooth.trend <- function(mydata,
                          date.breaks = 7,
                          auto.text = TRUE,...)  {
 
-    ##library(mgcv)
-    require(lattice)
-    require(zoo)
-    require(plyr)
-    
-
+   
     vars <- c("date", pollutant)
 
     mydata <- check.prep(mydata, vars, type)

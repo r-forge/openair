@@ -2,7 +2,7 @@
 
 
 import.kcl <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE, units = "mass") {
-    library(tcltk)
+  
     site <- toupper(site)
 
     ## rows with these site codes

@@ -19,9 +19,7 @@ summarise <- function(mydata,
                       ylab = NULL, 
                       ...) {
 
-    require(lattice)
-    require(reshape)
-    require(Hmisc)
+    
 
     ## if date in format dd/mm/yyyy hh:mm (basic check)
     if (length(grep("/", as.character(mydata$date[1]))) > 0) {

@@ -34,9 +34,7 @@ time.plot <- function(mydata,
 
     ## Author: David Carslaw 11 Sep. 09
     ## CHANGES:
-    require(lattice)
-    require(plyr)
-    require(reshape)
+   
 
 ### EXPERIMENTAL LOG SCALING###############################################
     if(log) nlog <- 10 else nlog <- FALSE

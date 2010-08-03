@@ -10,9 +10,7 @@ polar.freq <- function(polar,
                        border.col = "transparent",
                        main = "",
                        auto.text = TRUE,...) {
-    require(lattice)
-    require(plyr)
-
+  
 
     ## extract necessary data
     if (pollutant == "") {

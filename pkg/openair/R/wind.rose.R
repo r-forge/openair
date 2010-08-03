@@ -21,8 +21,7 @@ wind.rose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "
                        breaks = 4, paddle = TRUE, key.name = "", key.position = "bottom", 
                        key = NULL, dig.lab = 5, pollutant = NULL, output = "graph", ...) 
 {
-require(lattice)
-require(plyr)
+
 
     if(360 / angle != round(360 / angle)){
         warning("angle will produce some spoke overlap; suggest ",

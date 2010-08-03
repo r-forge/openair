@@ -16,9 +16,7 @@ polar.plot <- function(polar,
                        k = 100,
                        main = "",
                        auto.text = TRUE, ...) {
-    require(plyr)
-    require(mgcv)
-    require(lattice)
+   
 
     if (uncertainty) type <- "default" ## can't have conditioning here
 

@@ -10,7 +10,7 @@
 
 time.average <- function(mydata, period = "day", data.thresh = 0,
                          statistic = "mean", percentile = 95, start.date = NA) {
-    require(plyr)
+   
 
     percentile <- percentile / 100
     if (percentile < 0 | percentile > 100) stop("Percentile range outside 0-100")
