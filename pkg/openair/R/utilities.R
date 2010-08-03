@@ -369,7 +369,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
                        type, col.line, col.symbol, fill, pch, cex, font, fontface,
                        fontfamily)
 {
-    library(mgcv)
+    require(mgcv)
     ## panel function to add a smooth line to a plot
     ## Uses a GAM (mgcv) to fit smooth
     ## Optionally can plot 95% confidence intervals and run bootstrap simulations

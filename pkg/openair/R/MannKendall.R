@@ -31,7 +31,8 @@ MannKendall <- function(mydata,
                         date.breaks = 7,...)  {
 
     ## extract variables of interest
-
+    require(lattice)
+    
     vars <- c("date", pollutant)
     ## if autocor is TRUE, then need simulations
     if (autocor) simulate <- TRUE

@@ -10,8 +10,8 @@ polar.freq <- function(polar,
                        border.col = "transparent",
                        main = "",
                        auto.text = TRUE,...) {
-    ##library(lattice)
-    ##library(plyr)
+    require(lattice)
+    require(plyr)
 
 
     ## extract necessary data

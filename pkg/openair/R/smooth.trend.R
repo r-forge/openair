@@ -24,8 +24,10 @@ smooth.trend <- function(mydata,
                          auto.text = TRUE,...)  {
 
     ##library(mgcv)
-    library(lattice)
-    library(zoo)
+    require(lattice)
+    require(zoo)
+    require(plyr)
+    
 
     vars <- c("date", pollutant)
 

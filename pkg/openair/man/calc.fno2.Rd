@@ -14,7 +14,6 @@ tau = 60,
 plot = TRUE,
 user.fno2,
 main = "",
-theme = "bw",
 xlab = "year",
 ...)
 }
@@ -42,8 +41,6 @@ xlab = "year",
 
   \item{main}{Title of plot if required.}
 
-  \item{theme}{Colour theme to use - see ggplot2 for details. Can be
-    \code{"bw"} (default) or \code{"grey"}.}
 
   \item{xlab}{x-axis label.}
 
@@ -122,7 +119,12 @@ Environment 38(8): 1233-1234.
   background concentrations. When there is little difference between
   roadside and background concentrations it is difficult for the method
   to distinguish between the NO2 from direct emissions and that formed
-  through the reaction with NO and One.
+  through the reaction with NO and O3. Similarly, during summertime
+  conditions when concentrations are generally lower, it can be
+  difficult to estimate the level of primary NO2. A safer approach would
+  be to calculate f-NO2 during "winter" condtions. See
+  \code{\link{select.by.date}} for information on selecting specific
+  time periods.
 
 Sometimes it can be useful to filter by wind direction (and maybe wind
 speed) to ensure that the conditions where the contribution from the

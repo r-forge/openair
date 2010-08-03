@@ -6,11 +6,11 @@
 
 \description{ This is a UK Natural Environment Research Council (NERC)
 funded knowledge exchange project that aims to make available innovative
-analysis tools for air pollution data.  The tools have generally been
-developed to analyse data of at least hourly resolution both for air
-pollution monitoring and dispersion modelling. The availability of
-meteorological data at the same time resolution greatly enhances the
-capabilities of these tools.
+analysis tools for air pollution data; with additional support from
+Defra.  The tools have generally been developed to analyse data of at
+least hourly resolution both for air pollution monitoring and dispersion
+modelling. The availability of meteorological data at the same time
+resolution greatly enhances the capabilities of these tools.
 
 The project itself is currently funded until October 2011, by which time
 the intention is to make \code{openair} available on CRAN. Up until that
@@ -46,9 +46,10 @@ packages required come with the R base system. This can be done by
 pasting the text below into R.
 
 install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "Hmisc",
-"ggplot2", "proto"))
+"proto"))
 
-If there are problems with the automatic download of these packages, see \url{www.openair-project.org} for more details.
+If there are problems with the automatic download of these packages, see
+\url{www.openair-project.org} for more details.
 
 To check to see if \code{openair} has been correctly installed, try some
 of the examples below. In case of any problems, contact David Carslaw
@@ -66,7 +67,7 @@ Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 Most reference details are given under the specific functions.
 
 Carslaw, D.C. and K. Ropkins (2010). Open-source tools for analysing air
-pollution data. Institute for Transport Studies, University of Leeds.  }
+pollution data. King's College London and the University of Leeds.  }
 \keyword{methods}
 
 \seealso{See \url{www.openair-project.org} for up to date information on

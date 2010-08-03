@@ -55,14 +55,13 @@ ans <- pollution.rose(...)
   better. Note, this argument is superceded in \code{pollution.rose}. See 
   \code{breaks} below.}
 
-  \item{breaks}{The number of break points produced for wind speed in 
-  \code{wind.rose} or pollutant in \code{pollution.rose}. For 
-  \code{wind.rose} and the \code{ws.int} default of 2 m/s, the default, 4, 
-  generates the break points 2, 4, 6, 8 m/s. For \code{pollution.rose}, the 
-  default, 6, attempts to breaks the supplied data at approximately 6 
-  sensible break points. The argument handles other single numerics 
-  similarly or vectorised numerics as fixed break points. For example, the 
-  argument \code{breaks = c(1, 10, 100)} breaks the data into segments 
+  \item{breaks}{The number of break points produced for wind speed in
+  \code{wind.rose} or pollutant in \code{pollution.rose}. For
+  \code{wind.rose} and the \code{ws.int} default of 2 m/s, the default,
+  4, generates the break points 2, 4, 6, 8 m/s. For
+  \code{pollution.rose}, the default, 6, attempts to breaks the supplied
+  data at approximately 6 sensible break points. For example, the
+  argument \code{breaks = c(1, 10, 100)} breaks the data into segments
   <1, 1-10, 10-100, >100.}
 
   \item{angle}{Default angle of "spokes" is 30. Other potentially useful

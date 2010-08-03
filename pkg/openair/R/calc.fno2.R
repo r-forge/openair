@@ -3,13 +3,13 @@ calc.fno2 <- function(input,
                       plot = TRUE,
                       user.fno2,
                       main = "",
-                      theme = "bw", 
                       xlab = "year", ...) {
 {
 
-    library(ggplot2)
-    library(lattice)
-    library(zoo)
+  
+    require(lattice)
+    require(zoo)
+    
     ## function to prepare data ######################################################
     prepare <- function(input) {
 
@@ -74,35 +74,24 @@ calc.fno2 <- function(input,
     ## plot results ##################################################################
     plot.fno2 <- function(results,...) {
 
-        theplot <- ggplot(results, aes(date, fno2)) +
-            geom_point() +
-                    ylab(quick.text("f-NO2 (%)")) +
-                        xlab(xlab) +
-                            opts(title = quick.text(main))
-        if (nrow(na.omit(results)) > 5) theplot <- theplot +  stat_smooth(size = 1, span = 0.5)
+        theplot <- scatter.plot(results, x = "date", y = "fno2", ylab = "f-NO2 (%)") 
         print(theplot)
     }
 
 ###plots orginal monthly NO2 and predicted with  ###############################
     plot.no2 <- function(input, res,...) {
         input <- subset(input, select = c(date, no2))
+        input <- time.average(input, "month")
         input$variable <- "measured"
 
-        res <- subset(res, select = c(date, no2))
+        res <- subset(res, select = c(date, no2))        
+        res <- time.average(res, "month")
         res$variable <- "predicted"
 
         results <- rbind(input, res)
 
-        results <- ddply(results, .(variable, year = format(date,"%Y"), month =
-                                    format(date,"%m")), numcolwise(mean), na.rm = TRUE)
+        scatter.plot(results, x = "date", y = "no2", type = "variable", group = TRUE)
 
-        results$date <- ISOdate(results$year, results$month, 15)
-
-        ggplot(results, aes(date, no2)) + geom_line(aes(colour = variable)) +
-            stat_smooth(aes(fill = variable, colour = variable), size = 1, span = 0.5) +
-                ylab(quick.text("no2 (ppb)")) +
-                    xlab("year") +
-                        opts(title = quick.text(main))
     }
 
     ## start of code#################################################################
@@ -118,9 +107,7 @@ calc.fno2 <- function(input,
     input.all <- prepare(input)  ## process input data
     input.all <- subset(input.all, nox.v > 0)  ## process only +ve increments
 
-    if (theme == "grey")  theme_set(theme_grey()) else theme_set(theme_bw())
-
-    if(missing(user.fno2)) {
+     if(missing(user.fno2)) {
 
         fun.opt <- function(x)  {
             optimize(calc.error, c(0, 0.5), x$nox, x$no2,

@@ -32,7 +32,9 @@ scatter.plot <- function(mydata,
     ## basic function to plot single/multiple time series in flexible waysproduce scatter plot
     ## Author: David Carslaw 27 Jan. 10
     ## method = scatter/hexbin/kernel
-
+    require(lattice)
+    require(plyr)
+    
     x.nam <- x ## names of pollutants for linear model equation
     y.nam <- y
 
