@@ -6,13 +6,14 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-trend.level.wd(mydata, pollutant = "nox", limits = c(0, 100), statistic = "mean", cols = "default", main = "", auto.text = TRUE, ...)
+trend.level.wd(mydata, pollutant = "nox", limits = c(0, 100), ylab = "wind direction (degrees)", statistic = "mean", cols = "default", main = "", auto.text = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mydata}{ ~~Describe \code{mydata} here~~ }
   \item{pollutant}{ ~~Describe \code{pollutant} here~~ }
   \item{limits}{ ~~Describe \code{limits} here~~ }
+  \item{ylab}{ ~~Describe \code{limits} here~~ }
   \item{statistic}{ ~~Describe \code{statistic} here~~ }
   \item{cols}{ ~~Describe \code{cols} here~~ }
   \item{main}{ ~~Describe \code{main} here~~ }

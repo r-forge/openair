@@ -28,7 +28,7 @@ main = "",
 ylab = y,
 xlab = x,
 pch = 1,
-lwd = 1
+lwd = 1,
 key = TRUE,
 key.title = type,
 key.columns = 1,
@@ -37,7 +37,8 @@ log.x = FALSE,
 log.y = FALSE,
 nbin = 256,
 continuous = FALSE,
-auto.text = TRUE, ...)
+auto.text = TRUE,
+...)
 }
 
 %- maybe also 'usage' for other objects documented here.

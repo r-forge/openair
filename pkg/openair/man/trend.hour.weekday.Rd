@@ -6,7 +6,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-trend.hour.weekday(mydata, pollutant = "nox", limits = c(0, 100), line.colour = "darkorange2", fill.colour = "lightgoldenrod", ylab = pollutant, main = "", auto.text = TRUE, ...)
+trend.hour.weekday(mydata, pollutant = "nox", limits = c(0, 100), line.colour = "darkorange2", fill.colour = "lightgoldenrod", ylab = pollutant, xlab = "hour of day", main = "", auto.text = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,6 +16,7 @@ trend.hour.weekday(mydata, pollutant = "nox", limits = c(0, 100), line.colour = 
   \item{line.colour}{ ~~Describe \code{line.colour} here~~ }
   \item{fill.colour}{ ~~Describe \code{fill.colour} here~~ }
   \item{ylab}{ ~~Describe \code{ylab} here~~ }
+  \item{xlab}{ ~~Describe \code{ylab} here~~ }
   \item{main}{ ~~Describe \code{main} here~~ }
   \item{auto.text}{ ~~Describe \code{auto.text} here~~ }
   \item{\dots}{ ~~Describe \code{\dots} here~~ }

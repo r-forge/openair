@@ -10,22 +10,23 @@ different intervals. The pollution rose applies the same plot
 structure but substitutes other measurements, most commonly a pollutant 
 time series, for wind speed.
 }
+
 \usage{
 wind.rose(polar,
 ws.int = 2,
-breaks = 4, 
 angle = 30,
 type = "default",
 cols = "default",
 main = "",
 grid.line = 5,
 width = 1,
-auto.text = TRUE,
 units = "(m/s)",
-key.name = "",
-key.position = "bottom"
-key = NULL,
+auto.text = TRUE,
+breaks = 4,
 paddle = TRUE,
+key.name = "",
+key.position = "bottom",
+key = NULL,
 dig.lab = 5,
 pollutant = NULL,
 output = "graph",
@@ -44,8 +45,8 @@ key.position = "right",
 
 ans <- pollution.rose(...)
 
-
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{polar}{A data frame containing fields \code{ws} and \code{wd}}
@@ -126,7 +127,7 @@ ans <- pollution.rose(...)
   \code{graph}, returns the rose plot itself. Alternative, 
   \code{data}, plots the rose but returns the plot data frame.}
 
-  \item{\dots}{For \code{pollution.rose} other parameters that are 
+  \item{...}{For \code{pollution.rose} other parameters that are 
   passed on to \code{wind.rose}. For \code{wind.rose} other parameters 
   that are passed on to \code{draw.openkey} and 
   \code{lattice:xyplot}. }

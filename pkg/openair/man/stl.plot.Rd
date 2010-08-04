@@ -1,22 +1,23 @@
 \name{stl.plot}
 \alias{stl.plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+\title{ stl.plot }
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  plot for `stl' function
 }
 \usage{
-stl.plot(mydata, pollutant = "nox", s.wind = 17, ...)
+stl.plot(mydata, pollutant = "nox", s.wind = 17, xlab = "year", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{mydata}{ ~~Describe \code{mydata} here~~ }
+  \item{mydata}{ openair data frame~~ }
   \item{pollutant}{ ~~Describe \code{pollutant} here~~ }
   \item{s.wind}{ ~~Describe \code{s.wind} here~~ }
+  \item{xlab}{ ~~Describe \code{s.wind} here~~ }
   \item{\dots}{ ~~Describe \code{\dots} here~~ }
 }
 \details{
-  ~~ If necessary, more details than the description above ~~
+  Function in development
 }
 \value{
   ~Describe the value returned

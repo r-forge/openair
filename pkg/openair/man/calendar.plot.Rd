@@ -19,7 +19,8 @@ cols = "heat",
 limits = c(0, 100),
 main = quick.text((paste(pollutant, "in", year))),
 auto.text = TRUE,
-...)  }
+...)  
+}
 %- maybe also 'usage' for other objects documented here.
 
 \arguments{ \item{mydata}{A data frame minimally containing \code{date}
@@ -39,8 +40,8 @@ auto.text = TRUE,
   shows vector-averaged wind direction, or "ws" - shows
   vector-averaged wind direction scaled by wind speed. }
 
-\item{statistic}{Note currently implemented - only mean is currently
-calculated.}
+  \item{statistic}{Note currently implemented - only mean is currently
+  calculated.}
 
   \item{cols}{Colours to be used for plotting. Options include
     "default", "increment", "heat", "jet" and user defined. For user
@@ -90,10 +91,7 @@ If wind speed is also available, then setting the option \code{annotate
 % \item{comp2 }{Description of 'comp2'}
 % ...
 %}
-\references{
 
-
-}
 
 \author{David Carslaw }
 %\note{ ~~further notes~~
