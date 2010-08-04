@@ -64,7 +64,7 @@ dateBreaks <-
     init.i <- which.min(abs(nsteps - n))
     ## calculate actual number of ticks in the given interval
     calcSteps <- function(s) {
-        startTime <- trunc(min(zz), units = s$start)
+        startTime <- dateTrunc(min(zz), units = s$start)
         at <- seq(startTime, max(zz), by = s$spec)
         at <- at[(min(zz) <= at) & (at <= max(zz))]
         at
@@ -115,7 +115,7 @@ dateBreaks <-
 }
 
 ## utility function, extending the base function of same name
-trunc.POSIXt <-
+dateTrunc <-
     function(x, units = c("secs", "mins", "hours", "days",
                 "weeks", "months", "years", "decades", "centuries"),
              start.on.monday = TRUE)
@@ -149,4 +149,50 @@ trunc.POSIXt <-
                    x$year <- (x$year %/% 100) * 100
                })
     x
+}
+
+dateCeil <- function (x, units = c("secs", "mins", "hours", "days", "months", 
+    "years"), ...) 
+{
+    units <- match.arg(units)
+    x <- as.POSIXlt(x)
+    isdst <- x$isdst
+    if (length(x$sec) > 0 && x != dateTrunc(x, units = units)) {
+        switch(units, secs = {
+            x$sec <- ceiling(x$sec)
+        }, mins = {
+            x$sec <- 0
+            x$min <- x$min + 1
+        }, hours = {
+            x$sec <- 0
+            x$min <- 0
+            x$hour <- x$hour + 1
+        }, days = {
+            x$sec <- 0
+            x$min <- 0
+            x$hour <- 0
+            x$mday <- x$mday + 1
+            isdst <- x$isdst <- -1
+        }, months = {
+            x$sec <- 0
+            x$min <- 0
+            x$hour <- 0
+            x$mday <- 1
+            x$mon <- x$mon + 1
+            isdst <- x$isdst <- -1
+        }, years = {
+            x$sec <- 0
+            x$min <- 0
+            x$hour <- 0
+            x$mday <- 1
+            x$mon <- 0
+            x$year <- x$year + 1
+            isdst <- x$isdst <- -1
+        })
+        x <- as.POSIXlt(as.POSIXct(x))
+        if (isdst == -1) {
+            x$isdst <- -1
+        }
+    }
+    return(x)
 }

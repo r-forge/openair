@@ -45,8 +45,7 @@ installed, and this requires a connection to the internet. Other
 packages required come with the R base system. This can be done by
 pasting the text below into R.
 
-install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "Hmisc",
-"proto"))
+install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "proto"))
 
 If there are problems with the automatic download of these packages, see
 \url{www.openair-project.org} for more details.

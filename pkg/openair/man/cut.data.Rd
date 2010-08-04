@@ -8,13 +8,13 @@
   this function directly.  Widely used by many \code{openair} functions
   usually through the option \code{type}.}
 
-\usage{mydata<- cut.data(mydata, type = "default")}
+\usage{mydata<- cut.data(x, type = "default")}
 
 
 %- maybe also 'usage' for other objects documented here.
 
 \arguments{
-\item{mydata}{A data frame containing a field \code{date}. }
+\item{x}{A data frame containing a field \code{date}. }
 
 \item{type}{A string giving the way in which the data frame should be
   split. Pre-defined values are: "default", "year", "hour", "month",

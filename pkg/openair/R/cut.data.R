@@ -1,4 +1,4 @@
-cut.data <- function(mydata, type = "default") {
+cut.data <- function(x, type = "default") {
 
     ## function to cut data depending on choice of variable
     ## pre-defined types and user-defined types
@@ -11,27 +11,27 @@ cut.data <- function(mydata, type = "default") {
     if (type %in% conds == FALSE) { ## generic, user-defined
         ## split by four quantiles unless it is a factor, in which case keep as is
 
-        if (is.factor(mydata[, type]) | is.character(mydata[, type])) {
+        if (is.factor(x[, type]) | is.character(x[, type])) {
 
-            mydata$cond <- as.character(mydata[, type])
+            x$cond <- as.character(x[, type])
 
 
         } else {
 
-            mydata$cond <- cut(mydata[, type], unique(quantile(mydata[, type],
+            x$cond <- cut(x[, type], unique(quantile(x[, type],
                                                                probs = seq(0, 1, length = 5),
                                                                na.rm = TRUE)), include.lowest = TRUE,
                                labels = FALSE)
 
-            temp.levels <- levels(cut(mydata[, type], unique(quantile(mydata[, type],
+            temp.levels <- levels(cut(x[, type], unique(quantile(x[, type],
                                                                       probs = seq(0, 1, length = 5),
                                                                       na.rm = TRUE)),
                                       include.lowest = TRUE))
 
-            mydata$cond <- as.factor(mydata$cond)
+            x$cond <- as.factor(x$cond)
             temp.levels <- gsub("[(]|[)]|[[]|[]]", "", temp.levels)
             temp.levels <- gsub("[,]", " to ", temp.levels)
-            levels(mydata$cond) = temp.levels
+            levels(x$cond) = temp.levels
         }
 
     }
@@ -39,101 +39,101 @@ cut.data <- function(mydata, type = "default") {
     if (type == "default") {
         ## shows dates (if available)
         ## not always available e.g. scatter.plot
-        if ("date" %in% names(mydata)) {
+        if ("date" %in% names(x)) {
 
-            mydata$cond <- paste(format(min(mydata$date), "%d %B %Y"), " to ",
-                                 format(max(mydata$date), "%d %B %Y"), sep = "")
+            x$cond <- paste(format(min(x$date), "%d %B %Y"), " to ",
+                                 format(max(x$date), "%d %B %Y"), sep = "")
             ## order the data by date
-            mydata <- mydata[order(mydata$date), ]
+            x <- x[order(x$date), ]
 
         } else {
-            mydata$cond <- "all data"
+            x$cond <- "all data"
         }
 
     }
 
-    if (type == "year") mydata$cond <- format(mydata$date, "%Y")
+    if (type == "year") x$cond <- format(x$date, "%Y")
 
-    if (type == "hour") mydata$cond <- format(mydata$date, "%H")
+    if (type == "hour") x$cond <- format(x$date, "%H")
 
-    if (type == "month") {mydata$cond <- format(mydata$date, "%B")
-                          mydata$cond <- ordered(mydata$cond, levels = make.month.names())
+    if (type == "month") {x$cond <- format(x$date, "%B")
+                          x$cond <- ordered(x$cond, levels = make.month.names())
                           period <- "annual"} #does not make sense otherwise
 
     if (type == "monthyear") {
-        mydata$cond <- format(mydata$date, "%B %Y")
-        mydata$cond <- ordered(mydata$cond, levels = unique(mydata$cond))
+        x$cond <- format(x$date, "%B %Y")
+        x$cond <- ordered(x$cond, levels = unique(x$cond))
     }
 
     if (type == "season") {
-        mydata$cond <- "winter" ## define all as winter first, then assign others
-        ids <- which(as.numeric(format(mydata$date, "%m")) %in% 3:5)
-        mydata$cond[ids] <- "spring"
-        ids <- which(as.numeric(format(mydata$date, "%m")) %in% 6:8)
-        mydata$cond[ids] <- "summer"
-        ids <- which(as.numeric(format(mydata$date, "%m")) %in% 9:11)
-        mydata$cond[ids] <- "autumn"
-        mydata$cond <- ordered(mydata$cond, levels =c("spring", "summer", "autumn", "winter"))
+        x$cond <- "winter" ## define all as winter first, then assign others
+        ids <- which(as.numeric(format(x$date, "%m")) %in% 3:5)
+        x$cond[ids] <- "spring"
+        ids <- which(as.numeric(format(x$date, "%m")) %in% 6:8)
+        x$cond[ids] <- "summer"
+        ids <- which(as.numeric(format(x$date, "%m")) %in% 9:11)
+        x$cond[ids] <- "autumn"
+        x$cond <- ordered(x$cond, levels =c("spring", "summer", "autumn", "winter"))
         period <- "annual"
     } #does not make sense otherwise
 
     if (type == "weekend") {
         ## split by weekend/weekday
-        weekday <- select.by.date(mydata, day = "weekday")
+        weekday <- select.by.date(x, day = "weekday")
         weekday$cond <- "weekday"
-        weekend <- select.by.date(mydata, day = "weekend")
+        weekend <- select.by.date(x, day = "weekend")
         weekend$cond <- "weekend"
 
-        mydata <- rbind(weekday, weekend)
+        x <- rbind(weekday, weekend)
 
     }
 
     if (type == "weekday") {
-        mydata$cond <- format(mydata$date, "%A")
-        mydata$cond <- ordered(mydata$cond, levels = make.weekday.names())
+        x$cond <- format(x$date, "%A")
+        x$cond <- ordered(x$cond, levels = make.weekday.names())
     }
 
     if (type == "wd") {
 
-        mydata$cond <- cut(mydata$wd, breaks = seq(22.5, 382.5, 45),
+        x$cond <- cut(x$wd, breaks = seq(22.5, 382.5, 45),
                            labels =c("NE", "E", "SE", "S", "SW", "W", "NW", "N"))
-        mydata$cond[is.na(mydata$cond)] <- "N" # for wd < 22.5
-        mydata$cond <- ordered(mydata$cond, levels = c("NW", "N", "NE",
+        x$cond[is.na(x$cond)] <- "N" # for wd < 22.5
+        x$cond <- ordered(x$cond, levels = c("NW", "N", "NE",
                                             "W", "E", "SW", "S", "SE"))}
 
-    if (type == "ws") {mydata$cond <- cut(mydata$ws, breaks = quantile(mydata$ws,
+    if (type == "ws") {x$cond <- cut(x$ws, breaks = quantile(x$ws,
                                                      probs = 0:8/8, na.rm = TRUE))
-                       ws.levels = levels(mydata$cond)
+                       ws.levels = levels(x$cond)
                        ws.levels <- gsub("[,]", " to ", ws.levels)
                        ws.levels <- gsub("[(]|[)]|[[]|[]]", "", ws.levels)
-                       levels(mydata$cond) <- ws.levels
+                       levels(x$cond) <- ws.levels
                    }
 
     if (type == "site") {
-        mydata$cond <- mydata$site
-        mydata$cond <- factor(mydata$cond) ## will get rid of any unused factor levels
+        x$cond <- x$site
+        x$cond <- factor(x$cond) ## will get rid of any unused factor levels
     }
 
     if (type == "gmtbst" | type == "bstgmt") {
         ## how to extract BST/GMT
         ## first format date in local time
-        mydata$date <- format(mydata$date, usetz = TRUE, tz = "Europe/London")
+        x$date <- format(x$date, usetz = TRUE, tz = "Europe/London")
         ## extract ids where BST/GMT
-        id.BST <- grep("BST", mydata$date)
-        id.GMT <- grep("GMT", mydata$date)
+        id.BST <- grep("BST", x$date)
+        id.GMT <- grep("GMT", x$date)
 
-        bst <- mydata[id.BST, ]
+        bst <- x[id.BST, ]
         bst$cond <- "BST hours"
 
-        gmt <- mydata[id.GMT, ]
+        gmt <- x[id.GMT, ]
         gmt$cond <- "GMT hours"
         
-        mydata <- rbind.fill(bst, gmt)
-        mydata$date <- as.POSIXct(mydata$date, "GMT")
-        mydata <- mydata[order(mydata$date), ]
+        x <- rbind.fill(bst, gmt)
+        x$date <- as.POSIXct(x$date, "GMT")
+        x <- x[order(x$date), ]
 
     }
 
-    mydata
+    x
 
 }

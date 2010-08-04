@@ -6,7 +6,7 @@ summarise <- function(mydata,
                       percentile = 0.99,
                       type = "histogram",
                       pollutant = "nox",
-                      period = "year",
+                      period = "years",
                       breaks = 20,
                       col.trend = "darkgoldenrod2",
                       col.data = "lightblue",
@@ -91,8 +91,8 @@ summarise <- function(mydata,
     ## round the dates depending on period
     min.year <- as.numeric(min(format(mydata$date, "%Y")))
     max.year <- as.numeric(max(format(mydata$date, "%Y")))
-    start.date <- as.POSIXct(trunc(min(mydata$date), period))
-    end.date <- as.POSIXct(ceil(max(mydata$date), period) - 3600)
+    start.date <- as.POSIXct(dateTrunc(min(mydata$date), period))
+    end.date <- as.POSIXct(dateCeil(max(mydata$date), period) - 3600)
 
     ## find time interval of data and pad any missing times
     interval <- find.time.interval(mydata$date)

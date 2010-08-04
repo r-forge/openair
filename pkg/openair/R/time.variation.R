@@ -66,8 +66,8 @@ time.variation <- function(mydata,
 
 
     divide.by.mean <- function(x) {
-        Mean <- mean(x$value, na.rm = TRUE)
-        x$value <- x$value / Mean
+        Mean <- mean(x$Mean, na.rm = TRUE)
+        x$Mean <- x$Mean / Mean
         x$Lower <- x$Lower / Mean
         x$Upper <- x$Upper / Mean
         x
@@ -78,7 +78,7 @@ time.variation <- function(mydata,
     ## calculate temporal components
     mydata <- within(mydata, {
         weekday <- format(date, "%A")
-        weekday <- ordered(weekday, levels = weekday.name)
+        weekday <- ordered(weekday, levels = weekday.names)
         hour <- as.numeric(format(date, "%H"))
         month <- as.numeric(format(date, "%m"))}
                      )
@@ -122,12 +122,13 @@ time.variation <- function(mydata,
 
     ## day and hour ############################################################################
     data.day.hour <- calc.wd(mydata, vars = "day.hour", pollutant)
+    
     if (normalise) data.day.hour <-  ddply(data.day.hour, .(variable), divide.by.mean)
 
     ids <- which(is.na(data.day.hour$Lower)) ## missing Lower ci, set to mean
-    data.day.hour$Lower[ids] <-  data.day.hour$value
+    data.day.hour$Lower[ids] <-  data.day.hour$Mean
     ids <- which(is.na(data.day.hour$Upper)) ## missing Upper ci, set to mean
-    data.day.hour$Upper[ids] <-  data.day.hour$value
+    data.day.hour$Upper[ids] <-  data.day.hour$Mean
 
     if(is.null(xlab[1])) {
         xlab[1] <- "hour"
@@ -135,7 +136,7 @@ time.variation <- function(mydata,
         if(is.na(xlab[1])) xlab[1] <- "hour"
     }
 
-    day.hour <- xyplot(value ~ hour | weekday,  data = data.day.hour, groups = variable,
+    day.hour <- xyplot(Mean ~ hour | weekday,  data = data.day.hour, groups = variable,
                        as.table = TRUE,
                        main = main,
                        layout = c(7, 1),
@@ -174,7 +175,7 @@ time.variation <- function(mydata,
         if(is.na(xlab[2])) xlab[2] <- "hour"
     }
 
-    hour <- xyplot(value ~ hour,  data = data.hour, groups = variable,
+    hour <- xyplot(Mean ~ hour,  data = data.hour, groups = variable,
                    as.table = TRUE,
                    main = main,
                    ylab = quick.text(ylab, auto.text),
@@ -214,7 +215,7 @@ time.variation <- function(mydata,
     }
 
 
-    day <- xyplot(value ~ weekday,  data = data.weekday, groups = variable,
+    day <- xyplot(Mean ~ weekday,  data = data.weekday, groups = variable,
                   par.settings = simpleTheme(col = myColors, pch = 16),
                   scales = list(x = list(at = 1:7, labels = weekday.abb)),
                   ylab = quick.text(ylab, auto.text),
@@ -249,7 +250,7 @@ time.variation <- function(mydata,
         if(is.na(xlab[3])) xlab[3] <- "month"
     }
 
-    month <- xyplot(value ~ month,  data = data.month, groups = variable,
+    month <- xyplot(Mean ~ month,  data = data.month, groups = variable,
                     ylab = quick.text(ylab, auto.text),
                     xlab = xlab[3],
                     ylim = rng(data.month),
@@ -289,26 +290,32 @@ time.variation <- function(mydata,
 calc.wd <- function(mydata, vars = "day.hour", pollutant){
 
     summary.values <- function(mydata, vars, FUN) {
-        if (vars == "hour")  {mydata <- with(mydata, summarize(value, llist(variable, hour),
+        if (vars == "hour")  {mydata <- with(mydata, aggregate(value, list(variable = variable, hour = hour),
             FUN))}
-        if (vars == "day.hour")  {mydata <- with(mydata, summarize(value, llist(variable, weekday,
-            hour), FUN))}
-        if (vars == "weekday")  {mydata <- with(mydata, summarize(value, llist(variable, weekday),
+        if (vars == "day.hour")  {mydata <- with(mydata, aggregate(value, list(variable = variable,
+            weekday = weekday, hour = hour), FUN))}
+        if (vars == "weekday")  {mydata <- with(mydata, aggregate(value, list(variable = variable,
+            weekday = weekday), FUN))}
+        if (vars == "month")  {mydata <- with(mydata, aggregate(value, list(variable = variable, month = month),
             FUN))}
-        if (vars == "month")  {mydata <- with(mydata, summarize(value, llist(variable, month),
-            FUN))}
+     
         mydata
+        
     }
 
     ## function to calculate statistics dealing with wd properly
     if (any(pollutant %in% "wd" == FALSE)) {
         data1 <-  subset(mydata, variable != "wd")
-        data1 <-  summary.values(data1, vars, smean.cl.normal)
+        data1 <-  summary.values(data1, vars, errorInMean)
+        data1 <- data.frame(subset(data1, select = -x), data1$x)
+       
+              
     }
 
     if ("wd" %in% pollutant) {
         data2 <-  subset(mydata, variable == "wd")
-        data2 <-  summary.values(data2, vars, wd.smean.normal)
+        data2 <-  summary.values(data2, vars, errorInMean)
+        data2 <- data.frame(subset(data2, select = -x), data2$x)
     }
 
     if (length(pollutant) > 1 & "wd" %in% pollutant) data2 <- rbind.fill(data1, data2)
@@ -338,7 +345,7 @@ wd.smean.normal <- function(wd) {
     ids <- which(wd.diff > 180)
     wd.diff[ids] <- abs(wd.diff[ids] - 360)
 
-    conf.int <- smean.cl.normal(wd.diff)
+    conf.int <- errorInMean(wd.diff)
     Lower <- conf.int[2]
     names(Lower) <- NULL
 
