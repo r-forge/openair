@@ -29,7 +29,10 @@ trend.hour.weekday <-  function(mydata,
     mydata <- cbind(mydata, year, weekday, hour)
 
     #summarize data
-    s <- summarize(mydata$conc, llist(year, weekday, hour), smean.cl.normal)
+  #  s <- summarize(mydata$conc, llist(year, weekday, hour), smean.cl.normal)
+
+    s <- with(s, aggregate(s, list(year = year, weekday = weekday, hour = hour),
+            errorInMean))
     
     s$weekday <- ordered(s$weekday, levels = make.weekday.names())
 
@@ -38,10 +41,10 @@ trend.hour.weekday <-  function(mydata,
       col = line.colour,
       type = "l",
       as.table = TRUE,
-	  main = quick.text(main, auto.text),
-	  ylab = quick.text(ylab, auto.text),
+	  main = quickText(main, auto.text),
+	  ylab = quickText(ylab, auto.text),
       scales = list(x = list(at = seq(0, 24, 6))),
-      xlab = xlab,...,
+      xlab = xlab,#...,
 
       panel = function(x, y, subscripts,...) {
 

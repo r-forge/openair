@@ -15,7 +15,7 @@ trend.level.wd <-  function(mydata,
     vars <- c("date", "wd", pollutant)
 
 	# check data
-	mydata <- check.prep(mydata, vars, "default")
+	mydata <- checkPrep(mydata, vars, "default")
     mydata <- mydata[, vars]
 
 
@@ -25,10 +25,10 @@ trend.level.wd <-  function(mydata,
     #average by year/month/wd
     if (statistic == "mean") {
           #average by year/month/wd
-          means <- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
+          means <- aggregate(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
              cut2(mydata$wd, seq(0, 360, 10))), mean, na.rm = TRUE)
     } else {
-          means <- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
+          means <- aggregate(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
              cut2(mydata$wd, seq(0, 360, 10))), newmax)
     }
 
@@ -65,12 +65,12 @@ trend.level.wd <-  function(mydata,
     nlev2 = length(breaks)
     col.scale = breaks
 
-	col <- open.colours(cols, (nlev2 - 1))
+	col <- openColours(cols, (nlev2 - 1))
 
     levelplot(conc ~ month * wd | year,
             data = means,
-	    main = quick.text(main, auto.text),
-            ylab = quick.text(ylab, auto.text),
+	    main = quickText(main, auto.text),
+            ylab = quickText(ylab, auto.text),
             as.table = TRUE,
             col.regions = col,
             at = col.scale,

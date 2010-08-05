@@ -12,7 +12,7 @@ trend.level.hour <-  function(mydata,
     vars <- c("date", pollutant)
 
 	# check data
-	mydata <- check.prep(mydata, vars, "default")
+	mydata <- checkPrep(mydata, vars, "default")
 
     mydata <- mydata[, vars]
 
@@ -27,10 +27,10 @@ trend.level.hour <-  function(mydata,
 
     if (statistic == "mean") {
           #average by year/month/wd
-          means <- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
+          means <- aggregate(mydata[, pollutant], list(format(mydata$date, "%Y-%m"),
              format(mydata$date, "%H")), mean, na.rm = TRUE)
     } else {
-          means <- summarize(mydata[, pollutant], llist(format(mydata$date, "%Y-%m"),
+          means <- aggregate(mydata[, pollutant], list(format(mydata$date, "%Y-%m"),
              format(mydata$date, "%H")), newmax)
     }
 
@@ -66,11 +66,11 @@ trend.level.hour <-  function(mydata,
     nlev2 = length(breaks)
     col.scale = breaks
 
-	col <- open.colours(cols, (nlev2 - 1))
+	col <- openColours(cols, (nlev2 - 1))
 
     levelplot(conc ~ month * hour | year,
             data = means,
-			main = quick.text(main, auto.text),
+			main = quickText(main, auto.text),
             as.table = TRUE,
             col.regions = col,
             at = col.scale,
