@@ -190,7 +190,7 @@ splitByDate <- function(mydata, dates = "1/1/2003", labels = c("before", "after"
         }
     }
 
-    mydata <- check.prep(mydata, names(mydata), "default")
+    mydata <- checkPrep(mydata, names(mydata), "default")
     ## check there are sufficent labels for number of dates
     if (length(dates) != length(labels) - 1) {
         stop("There is a mis-match between dates and labels. There should be
