@@ -86,7 +86,7 @@ summarise <- function(mydata,
 
     ## proper names of labelling
     pol.name <- sapply(names(subset(mydata, select = -date)),
-                       function(x) quick.text(x, auto.text))
+                       function(x) quickText(x, auto.text))
 
     ## round the dates depending on period
     min.year <- as.numeric(min(format(mydata$date, "%Y")))
@@ -291,6 +291,6 @@ summarise <- function(mydata,
     print(plt2, position = c(0.7, 0, 1, 0.975))
 
     ## use grid to add an overall title
-    grid.text(quick.text(main, TRUE), 0.5, 0.975, gp = gpar(fontsize = 14))
+    grid.text(quickText(main, TRUE), 0.5, 0.975, gp = gpar(fontsize = 14))
 }
 
