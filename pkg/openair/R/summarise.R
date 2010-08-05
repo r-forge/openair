@@ -100,7 +100,7 @@ summarise <- function(mydata,
     mydata <- merge(mydata, all.dates, all = TRUE)
 
     ## means for trend line
-    monthly.mean <- time.average(mydata, "day")
+    monthly.mean <- timeAverage(mydata, "day")
     monthly.mean <- melt(monthly.mean, id.var = "date")
     monthly.mean <- split(monthly.mean, monthly.mean$variable)
 
