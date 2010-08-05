@@ -65,10 +65,10 @@ draw.openkey <- function (key, draw = FALSE, vp = NULL)
     
     if (key$space == "right") {
         if (key$key.name != ""){
-            key.name <- quick.text(key$key.name, key$auto.text)
-            units <- quick.text(key$units, key$auto.text) 
+            key.name <- quickText(key$key.name, key$auto.text)
+            units <- quickText(key$units, key$auto.text) 
         } else { 
-            key.name <- quick.text(key$units, key$auto.text)
+            key.name <- quickText(key$units, key$auto.text)
             units <- " "
         }
         labelsGrob <- textGrob(label = labels, x = rep(0, length(at)), 
@@ -121,10 +121,10 @@ draw.openkey <- function (key, draw = FALSE, vp = NULL)
 
     else if (key$space == "left") {
        if (key$key.name != ""){
-            key.name <- quick.text(key$key.name, key$auto.text)
-            units <- quick.text(key$units, key$auto.text) 
+            key.name <- quickText(key$key.name, key$auto.text)
+            units <- quickText(key$units, key$auto.text) 
         } else { 
-            key.name <- quick.text(key$units, key$auto.text)
+            key.name <- quickText(key$units, key$auto.text)
             units <- " "
         }
         labelsGrob <- textGrob(label = labels, x = rep(1, length(at)), 
@@ -179,13 +179,13 @@ draw.openkey <- function (key, draw = FALSE, vp = NULL)
         if (key$key.name != ""){
             if (key$units != ""){
                 key.name <- paste(key$key.name, key$units, sep="  ")
-                key.name <- quick.text(key.name, key$auto.text)
+                key.name <- quickText(key.name, key$auto.text)
             } else {
-                key.name <- quick.text(key$key.name, key$auto.text)
+                key.name <- quickText(key$key.name, key$auto.text)
             }
         } else {
             if (key$units != ""){
-                key.name <- quick.text(key$units, key$auto.text)
+                key.name <- quickText(key$units, key$auto.text)
             } else {
                 key.name <- " "
                 temp <- 0.1
@@ -227,13 +227,13 @@ draw.openkey <- function (key, draw = FALSE, vp = NULL)
         if (key$key.name != ""){
             if (key$units != ""){
                 key.name <- paste(key$key.name, key$units, sep="  ")
-                key.name <- quick.text(key.name, key$auto.text)
+                key.name <- quickText(key.name, key$auto.text)
             } else {
-                key.name <- quick.text(key$key.name, key$auto.text)
+                key.name <- quickText(key$key.name, key$auto.text)
             }
         } else {
             if (key$units != ""){
-                key.name <- quick.text(key$units, key$auto.text)
+                key.name <- quickText(key$units, key$auto.text)
             } else {
                 key.name <- " "
                 temp <- 0.1
