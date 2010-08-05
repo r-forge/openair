@@ -41,7 +41,7 @@ req.pcks <- all.pcks[!all.pcks %in% c("proto")]
 message(paste("\nThis is openair version ", packageDescription("openair", field = "Version")), sep = "")
 
 if(open.test==0){
-  message("\topenair and dependents correctly installed")
+  message("\topenair and dependents correctly installed \nNOTE!! - many function names have changed \nto improve consistency e.g. polar.plot is now polarPlot. \nType help(openair) for details.")
 } else {
   message("\topenair only managed a partial install, \n\tso it may not work correctly.")
   r1 <- paste("\t", open.test, " problem", sep="")
@@ -64,11 +64,11 @@ if(open.test==0){
 openair.news <- function(){
   message("\nrecent updates to openair include:")
   message("\nopenair namespace introduced")
-  message("\nNEW function calendar.plot introduced")
-  message("\ttype '?calendar.plot' for details")
-  message("\nEXTRA functionality added to polar.plot")
+  message("\nNEW function calendarPlot introduced")
+  message("\ttype '?calendarPlot' for details")
+  message("\nEXTRA functionality added to polarPlot")
   message("\tplot surface uncertainity estimation")
-  message("\ttype '?polar.plot' for details")
+  message("\ttype '?polarPlot' for details")
   message("\n")
 }  
 
