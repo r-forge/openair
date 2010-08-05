@@ -33,10 +33,10 @@ MannKendall <- function(mydata,
     if (autocor) simulate <- TRUE
 
     ## data checks
-    mydata <- check.prep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type)
 
-    ## cut data depending on type
-    mydata <- cut.data(mydata, type)
+    ## cutData depending on type
+    mydata <- cutData(mydata, type)
 
     ## sometimes data have long trailing NAs, so start and end at first and last data
     min.idx <- min(which(!is.na(mydata[, pollutant])))
@@ -67,7 +67,7 @@ MannKendall <- function(mydata,
 
         if (period == "monthly") {
 
-            mydata <- time.average(mydata, period = "month", statistic = statistic,
+            mydata <- timeAverage(mydata, period = "month", statistic = statistic,
                                    percentile = percentile,
                                    data.thresh = data.thresh)
             mydata$date <- as.Date(mydata$date)
@@ -195,9 +195,9 @@ MannKendall <- function(mydata,
 ########################################################################################################
     
     plt <- xyplot(conc ~ date | cond, data = split.data,
-                  ylab = quick.text(ylab, auto.text),
-                  main = quick.text(main, auto.text),
-                  xlab = quick.text(xlab, auto.text),
+                  ylab = quickText(ylab, auto.text),
+                  main = quickText(main, auto.text),
+                  xlab = quickText(xlab, auto.text),
                   as.table = TRUE,
                   layout = layout,
                   skip = skip,
