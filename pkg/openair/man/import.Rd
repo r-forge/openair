@@ -134,7 +134,7 @@ Other similar file structures can be readily imported by modifying the function
 arguments. 
 
 More complex data importing and formatting can be achieved
-using an import wrapper.  For example, the \code{import.aurn.csv()} is an import
+using an import wrapper.  For example, the \code{importAURNCsv} is an import
 wrapper that uses \code{import()} with modified arguments to import data 
 previously downloaded from the UK AURN database. This enforces unique handling of "is.site" and
 employs two additional arguments, "data.order" and "simplify.names" and 
@@ -163,7 +163,7 @@ data frame (data, names, date, misc.info, etc.).
 
 
 \seealso{Dedicated import functions available for selected file types, e.g. :
-\code{\link{import.aurn}}, \code{\link{import.aurn.csv}}, \code{\link{import.LAQN}}, 
+\code{\link{importAURN}}, \code{\link{importAURNCsv}}, \code{\link{importKCL}}, 
 \code{\link{import.ADMS.met}}, etc. }
 
 \examples{

@@ -147,7 +147,7 @@ or steady. For data that are strongly seasonal, perhaps from a
 background site, or a pollutant such as ozone, it will be important to
 deseasonalise the data (using the option \code{deseason =
 TRUE}.Similarly, for data that increase, then decrease, or show sharp
-changes it may be better to use \code{\link{smooth.trend}}.
+changes it may be better to use \code{\link{smoothTrend}}.
 
 Mann-Kendall code from Rand Wilxox
 \url{http://www-rcf.usc.edu/~rwilcox/} has been modified to take account
@@ -196,9 +196,9 @@ see \url{http://www.defra.gov.uk/ENVIRONMENT/airquality/panels/aqeg/}.
 \section{Warning }{If \code{deseason = TRUE}, missing data will be
 linearly interpolated.}
 
-\seealso{See \code{\link{smooth.trend}} for a flexible approach to
+\seealso{See \code{\link{smoothTrend}} for a flexible approach to
 estimating trends using nonparametric regression. The
-\code{smooth.trend} function is suitable for cases where trends are not
+\code{smoothTrend} function is suitable for cases where trends are not
 monotonic and is probably better for exploring the shape of trends.}
 \examples{
 

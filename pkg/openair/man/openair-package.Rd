@@ -80,8 +80,8 @@ data(mydata)
 summarise(mydata)
 
 # traditional wind rose
-wind.rose(mydata)
+windRose(mydata)
 
 # basic plot
-polar.plot(mydata, pollutant = "nox")
+polarPlot(mydata, pollutant = "nox")
 }

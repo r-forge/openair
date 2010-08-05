@@ -1,5 +1,5 @@
-\name{importAURN.csv}
-\alias{importAURN.csv}
+\name{importAURNCsv}
+\alias{importAURNCsv}
 \title{ AURN csv file data import for openair }
 \description{
   Function for importing common 1 hour average (hourly) 
@@ -9,7 +9,7 @@ Archive data files previously downloaded in
 The function uses \code{read.table} (in \code{utils}) and \code{rbind} (in \code{reshape}).
 }
 \usage{
-mydata <- importAURN.csv(file = file.choose(),
+mydata <- importAURNCsv(file = file.choose(),
 		header.at = 5, data.at = 7,
 		na.strings = c("No data", "", "NA"),
 		date.name = "Date", date.break = "-",
@@ -124,7 +124,7 @@ the data frame comment.  }
 
 \seealso{Generic import function \code{\link{import}}, or direct (on-line) data import 
 function \code{\link{importAURN}}. Other dedicated import functions available for other file types, e.g.:
-\code{\link{import.LAQN}}, \code{\link{import.ADMS.met}}, etc. }
+\code{\link{importKCL}}, \code{\link{import.ADMS.met}}, etc. }
 
 \examples{
 

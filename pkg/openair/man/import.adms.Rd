@@ -160,7 +160,7 @@ test version only.}
 
 \seealso{Generic import function \code{\link{import}}, for possible alternative import methods. 
 Other dedicated import functions available for other file types, including
-\code{\link{import.LAQN}}, \code{\link{import.aurn}}, etc. }
+\code{\link{importKCL}}, \code{\link{importAURN}}, etc. }
 
 \examples{
 

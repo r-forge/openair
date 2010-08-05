@@ -59,7 +59,7 @@ draw.openkey(key,
   Deepayan Sarkar. }
 
 \seealso{Functions using \code{draw.openkey} currently include 
-  \code{\link{wind.rose}}, \code{\link{pollution.rose}}. }
+  \code{\link{windRose}}, \code{\link{pollutionRose}}. }
 
 
 \examples{
