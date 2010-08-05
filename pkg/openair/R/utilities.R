@@ -102,7 +102,7 @@ date.pad <- function(mydata, type = "default") {
 #############################################################################################
 
 
-rolling.mean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
+rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
                          data.capture = 75){
     ## function to calculate rolling means
     ## as fast as rollapply (zoo) but can handle wide "windows" e.g. annual means
@@ -163,7 +163,7 @@ convert.date <- function(mydata, format = "%d/%m/%Y %H:%M") {
 ## for processing model output. Given a data frame with two variables (and date + maybe others)
 ## this function will reshape the data suitable for use in many openair functions
 
-prepare.model <- function(mydata, measured = "obs", modelled = "mod", pollutant = "nox") {
+prepareModel <- function(mydata, measured = "obs", modelled = "mod", pollutant = "nox") {
     ##library(reshape)
     if (missing(mydata)) stop("No data frame was supplied!")
 
@@ -180,7 +180,7 @@ prepare.model <- function(mydata, measured = "obs", modelled = "mod", pollutant 
 ## splits data frame into date chunks. Allows users to supply simple dates and labels
 ## useful for type = "site", interventions
 
-split.by.date <- function(mydata, dates = "1/1/2003", labels = c("before", "after")) {
+splitByDate <- function(mydata, dates = "1/1/2003", labels = c("before", "after")) {
     ## if date in format dd/mm/yyyy hh:mm (basic check)
     if (missing(mydata)) stop("No data frame was supplied!")
 
@@ -233,7 +233,7 @@ one more label than date")
 #############################################################################################
 
 ## function to make it easy to use d/m/y format for subsetting by date
-select.by.date <- function(mydata, start = "1/1/2008", end = "31/12/2008", year = 2008,
+selectByDate <- function(mydata, start = "1/1/2008", end = "31/12/2008", year = 2008,
                            month = 1, hour = 1, day = "weekday") {
 
     weekday.names <- make.weekday.names()
