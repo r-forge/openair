@@ -124,7 +124,7 @@ the data frame comment.  }
 
 \seealso{Generic import function \code{\link{import}}, or direct (on-line) data import 
 function \code{\link{importAURN}}. Other dedicated import functions available for other file types, e.g.:
-\code{\link{importKCL}}, \code{\link{import.ADMS.met}}, etc. }
+\code{\link{importKCL}}, \code{\link{importADMS}}, etc. }
 
 \examples{
 

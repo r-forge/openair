@@ -164,7 +164,7 @@ data frame (data, names, date, misc.info, etc.).
 
 \seealso{Dedicated import functions available for selected file types, e.g. :
 \code{\link{importAURN}}, \code{\link{importAURNCsv}}, \code{\link{importKCL}}, 
-\code{\link{import.ADMS.met}}, etc. }
+\code{\link{import.ADMS}}, etc. }
 
 \examples{
 

@@ -553,7 +553,7 @@ information.
   test version. NOTE - Information is required on the site codes for
   easy use.}
 
-\seealso{\code{\link{importAURN}}, \code{\link{import.adms}}}
+\seealso{\code{\link{importAURN}}, \code{\link{importADMS}}}
 
 \examples{
 
