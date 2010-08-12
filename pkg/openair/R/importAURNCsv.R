@@ -1,4 +1,4 @@
-importAURN.csv <- function (file = file.choose(), header.at = 5, data.at = 7, na.strings = c("No data", 
+importAURNCsv <- function (file = file.choose(), header.at = 5, data.at = 7, na.strings = c("No data", 
     "", "NA"), date.name = "Date", date.break = "-", time.name = "time", 
     misc.info = c(1, 2, 3, 4), is.site = 4, bad.24 = TRUE, correct.time = -3600, 
     output = "final", data.order = c("value", "status", "unit"), 
