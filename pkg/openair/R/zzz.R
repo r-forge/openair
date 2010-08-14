@@ -13,7 +13,7 @@ ins.pcks <- .packages(all.available = TRUE)
 open.test <- 0
 
 #packages loaded as library
-req.pcks <- c("proto", "grid", "plyr", "reshape", "splines", "survival", "lattice", "RColorBrewer", "tcltk")
+req.pcks <- c("proto", "grid", "plyr", "reshape", "splines", "survival", "lattice", "RColorBrewer")
     for (pck in req.pcks) {
         if(pck %in% ins.pcks) {
             suppressWarnings(require(pck, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
@@ -26,7 +26,7 @@ req.pcks <- c("proto", "grid", "plyr", "reshape", "splines", "survival", "lattic
     }    
 
 #rest loaded as namespaces in openair
-req.pcks <- all.pcks[!all.pcks %in% c("proto", "tcltk")]
+req.pcks <- all.pcks[!all.pcks %in% "proto"]
    for (pck in req.pcks) {
        if(pck %in% ins.pcks & any(packageHasNamespace(pck, .libPaths()))) {
            suppressWarnings(namespaceImport("openair", pck))
