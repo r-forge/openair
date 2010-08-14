@@ -1,45 +1,46 @@
 \name{trend.hour.weekday}
 \alias{trend.hour.weekday}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+
+\title{ trend.hour.weekday }
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  openair function for plotting diurnal profiles
 }
 \usage{
-trend.hour.weekday(mydata, pollutant = "nox", limits = c(0, 100), line.colour = "darkorange2", fill.colour = "lightgoldenrod", ylab = pollutant, xlab = "hour of day", main = "", auto.text = TRUE, ...)
+trend.hour.weekday(mydata, 
+		pollutant = "nox", 
+		limits = c(0, 100), 
+		line.colour = "darkorange2", 
+		fill.colour = "lightgoldenrod", 
+		ylab = pollutant, xlab = "hour of day", 
+		main = "", 
+		auto.text = TRUE, 
+		...)
 }
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{mydata}{ ~~Describe \code{mydata} here~~ }
-  \item{pollutant}{ ~~Describe \code{pollutant} here~~ }
-  \item{limits}{ ~~Describe \code{limits} here~~ }
-  \item{line.colour}{ ~~Describe \code{line.colour} here~~ }
-  \item{fill.colour}{ ~~Describe \code{fill.colour} here~~ }
-  \item{ylab}{ ~~Describe \code{ylab} here~~ }
-  \item{xlab}{ ~~Describe \code{ylab} here~~ }
-  \item{main}{ ~~Describe \code{main} here~~ }
-  \item{auto.text}{ ~~Describe \code{auto.text} here~~ }
-  \item{\dots}{ ~~Describe \code{\dots} here~~ }
-}
-\details{
-  ~~ If necessary, more details than the description above ~~
-}
-\value{
-  ~Describe the value returned
-  If it is a LIST, use
-  \item{comp1 }{Description of 'comp1'}
-  \item{comp2 }{Description of 'comp2'}
-  ...
-}
-\references{ ~put references to the literature/web site here ~ }
-\author{ ~~who you are~~ }
-%\note{ ~~further notes~~
 
-% ~Make other sections like Warning with \section{Warning }{....} ~
-%}
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
-%\examples{}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+\arguments{
+  \item{mydata}{ \code{openair} data set to used to produce trend.hour.weekday plot. }
+  \item{pollutant}{ data-series in \code{mydata} to use to plot diurnal profiles. }
+  \item{limits}{ If set, the range limits for displaying diurnal profiles over. }
+  \item{line.colour}{ Colour of the diurnal profile line. }
+  \item{fill.colour}{ Colour of the associated uncertainty region. }
+  \item{ylab}{ The y-axis label. }
+  \item{xlab}{ The x-axis label. }
+  \item{main}{ If set, the plot title. }
+  \item{auto.text}{ If set, passes \code{ylab}, \code{xlab} and \code{main} to plot 
+  via \code{quickText}, which automatically formats openair terms. }
+  \item{\dots}{ Extra options. }
+}
+
+\details{
+  This function produces a plot similar to \code{timeVariation(mydata, poll="nox", 
+  type = "year")}.
+}
+
+\author{ David Carslaw }
+
+\examples{
+#to be confirmed
+}
+
 \keyword{methods}
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
