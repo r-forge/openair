@@ -82,7 +82,7 @@ trendLevel(mydata,
   returns just the plot. Using, e.g., \code{my.plot <- trendLevel(mydata, output = "graph")} 
   provides an object that can then be used to add extra labelling and annotation. }
 
-  \item{...}{ Addition options, passed to \code{level.plot} for evaluation. }
+  \item{...}{ Addition options, passed to \code{levelplot} in \code{lattice} for evaluation. }
 }
 
 \value{
