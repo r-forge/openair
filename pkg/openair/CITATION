@@ -1,18 +1,18 @@
 citHeader("To cite package 'openair' in publications use:")
 
-desc <- packageDescription("openair")
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", desc$Date)
-vers <- paste("R package version", desc$Version)
-
 citEntry(entry="Manual",
          title = "openair: Open-source tools for the analysis of air pollution data",
          author = personList(as.person("David Carslaw"),
                              as.person("Karl Ropkins")),
-         year = year,
-         note = vers,
+         year = packageDescription("openair", fields = c("Date"))[1],
+         note = packageDescription("openair", fields = c("Version"))[1],
 
          textVersion =
          paste("David Carslaw and Karl Ropkins (",
                year,
                "). openair: Open-source tools for the analysis of air pollution data. ",
                vers, ".", sep=""))
+
+citFooter("Please cite both 'openair' and R ",
+"when using 'openair' for data analysis.",
+"For R citation, see ", sQuote("citation()"))
