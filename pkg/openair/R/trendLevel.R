@@ -2,7 +2,8 @@ trendLevelHour <- function(mydata, ...) {
    trendLevel(mydata, ...)
 }
 
-trendLevelWd <- function(mydata, 
+trendLevelWd <- function(mydata,
+   pollutant = "nox", 
    y = "wd", ylab = "wind direction (degrees)", ...) {
    trendLevel(mydata, y = y, ylab = ylab, ...)
 }
