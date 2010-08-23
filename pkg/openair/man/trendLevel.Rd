@@ -69,6 +69,11 @@ trendLevel(mydata,
   \item{main}{ The plot title. The option is passed via quickText to handle formatting if 
   enabled (\code{auto.text = TRUE}).}
 
+  \item{strip}{ Fine control of \code{typelab} and associated plot strip. The option is passed to
+  \code{levelplot} in \code{lattice} for evaluation. Default (\code{NULL}) allows 
+  \code{trendLevel} full control of strip. If enabled, \code{strip} options override 
+  \code{typelab}.} 
+
   \item{auto.text}{ Automatic routine text formatting. \code{auto.text = TRUE} allows labels 
   (\code{xlab}, \code{ylab}, \code{main}, etc.) to be passed to the plot via \code{quickText}. 
   \code{auto.text = FALSE} turns this option off and passes labels directly to the plot. }

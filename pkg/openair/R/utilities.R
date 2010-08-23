@@ -495,7 +495,7 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
               slope <- coef(mod)[2]
               intercept <- coef(mod)[1]
 
-              panel.text(x, y, quick.text(paste(y.nam, "=", format(slope, digits = 2), "[", x.nam, "]", "+",
+              panel.text(x, y, quickText(paste(y.nam, "=", format(slope, digits = 2), "[", x.nam, "]", "+",
                                                 format(intercept, digits = 2),
                                                 " R2=",  format(r.sq, digits = 2),
                                                 sep = "")), cex = 0.7, pos = 4)

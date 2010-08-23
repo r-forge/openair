@@ -1,5 +1,5 @@
 
-stl.plot <- function(mydata, pollutant = "nox", s.wind = 17,
+stlPlot <- function(mydata, pollutant = "nox", s.wind = 17,
     xlab = "year", ...)  {
     #Does seasonal trend decompostion based on loess smoothing (STL)
     #NOTE! Currently this procedure will fill missing values by the mean of the whole
