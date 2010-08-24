@@ -37,7 +37,6 @@ export(
        scatterPlot,
        summarise,
        timePlot,
-       trend.hour.weekday,
        trendLevel, trendLevelHour, trendLevelWd,
 
        ##specialist plot/functions:
@@ -48,13 +47,11 @@ export(
        linearRelation,
        MannKendall,
        smoothTrend,
-       stlPlot,
        timeVariation,
 
        #polar plots:
        polarAnnulus,
        polarFreq,
-       polarPercentile,
        polarPlot,
               
        ##wind roses:
