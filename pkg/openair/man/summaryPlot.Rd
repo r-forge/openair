@@ -10,7 +10,7 @@
   pollutant across many sites.}
 
 \usage{
-summarise(mydata,
+summaryPlot(mydata,
 na.len = 24,
 clip = TRUE,
 percentile = 0.99,
