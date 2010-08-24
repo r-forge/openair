@@ -77,7 +77,7 @@ pollution data. King's College London and the University of Leeds.  }
 data(mydata)
 
 # summarise the data in a compact way
-summarise(mydata)
+summaryPlot(mydata)
 
 # traditional wind rose
 windRose(mydata)
