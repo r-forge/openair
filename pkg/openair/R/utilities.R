@@ -49,7 +49,9 @@ find.time.interval <- function(dates) {
 
     ## could have several sites, dates may be unordered
     ## find the most common time gap in all the data
-    id <- which.max(table(diff(as.numeric(sort(unique(dates))))))
+    dates <- unique(dates)  ## make sure they are unique
+ 
+    id <- which.max(table(diff(as.numeric(dates[order(dates)]))))
     seconds <- as.numeric(names(id))
 
     if (class(dates)[1] == "POSIXt") seconds <- paste(seconds, "sec")
