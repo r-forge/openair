@@ -2,12 +2,18 @@
 ## (http://n4.nabble.com/proposal-for-new-axis-Date-axis-POSIXct-td976219.html#a1462140)
 ## Used in openair functions that plot date/times
 
-dateBreaks <-
-    function(x, n = 7, min.n = round(n / 2), do.format = TRUE)
+## Copyright (C) Felix Andrews <felix@nfrac.org>
+
+dateBreaks <- function(x, n = 5, min.n = n %/% 2, ...)
 {
     isDate <- inherits(x, "Date")
-   
-    zz <- range(as.POSIXct(x))
+    x <- as.POSIXct(x)
+    if (isDate) # the timezone *does* matter
+	attr(x, "tzone") <- "GMT"
+    zz <- range(x, na.rm = TRUE)
+    if (diff(as.numeric(zz)) == 0)# one value only
+	zz <- zz + c(0,60)
+
     ## specify the set of pretty timesteps
     MIN <- 60
     HOUR <- MIN * 60
@@ -34,8 +40,8 @@ dateBreaks <-
              "1 DSTday" = list(1*DAY, format = "%b %d"),
              "2 DSTdays" = list(2*DAY),
              "1 week" = list(7*DAY, start = "weeks"),
-             "2 weeks" = list(14*DAY),
-             "1 month" = list(1*MONTH, format = "%Y %b"),
+             "halfmonth" = list(MONTH/2, start = "months"),
+             "1 month" = list(1*MONTH, format = "%b"),
              "3 months" = list(3*MONTH, start = "years"),
              "6 months" = list(6*MONTH, format = "%Y-%m"),
              "1 year" = list(1*YEAR, format = "%Y"),
@@ -64,56 +70,59 @@ dateBreaks <-
     init.i <- which.min(abs(nsteps - n))
     ## calculate actual number of ticks in the given interval
     calcSteps <- function(s) {
-        startTime <- dateTrunc(min(zz), units = s$start)
-        at <- seq(startTime, max(zz), by = s$spec)
+        startTime <- dateTrunc(min(zz), units = s$start) ## FIXME: should be trunc() eventually
+        if (identical(s$spec, "halfmonth")) {
+            at <- seq(startTime, max(zz), by = "months")
+            at2 <- as.POSIXlt(at)
+            at2$mday <- 15L
+            at <- structure(sort(c(as.POSIXct(at), as.POSIXct(at2))), 
+                            tzone = attr(at, "tzone"))
+        } else {
+            at <- seq(startTime, max(zz), by = s$spec)
+        }
         at <- at[(min(zz) <= at) & (at <= max(zz))]
         at
     }
     init.at <- calcSteps(steps[[init.i]])
-    init.n <- length(init.at)
+    init.n <- length(init.at) - 1L
     ## bump it up if below acceptable threshold
     while (init.n < min.n) {
-        init.i <- init.i - 1
+        init.i <- init.i - 1L
         if (init.i == 0) stop("range too small for min.n")
         init.at <- calcSteps(steps[[init.i]])
-        init.n <- length(init.at)
+        init.n <- length(init.at) - 1L
     }
     makeOutput <- function(at, s) {
-  #      if (do.format) {
-           if (isDate) at <- as.Date(at)
-           theFormat <- s$format[1]
-         
-    #    } else {
-            if (isDate) {theOutput <- as.Date(at)
-                     } else {
-                         
-                         theOutput <- as.POSIXct(at)
-                     }
-           list(major = theOutput, format = theFormat)
-     #   }
+        flabels <- format(at, s$format)
+        ans <-
+            if (isDate) as.Date(round(at, units = "days"))
+            else as.POSIXct(at)
+        attr(ans, "labels") <- flabels
+      
+        list(major = ans, format = s$format)
+      #  ans
     }
     if (init.n == n) ## perfect
         return(makeOutput(init.at, steps[[init.i]]))
     if (init.n > n) {
         ## too many ticks
-        new.i <- init.i + 1
+        new.i <- init.i + 1L
         new.i <- min(new.i, length(steps))
     } else {
         ## too few ticks
-        new.i <- init.i - 1
-        new.i <- max(new.i, 1)
+        new.i <- init.i - 1L
+        new.i <- max(new.i, 1L)
     }
     new.at <- calcSteps(steps[[new.i]])
-    new.n <- length(new.at)
+    new.n <- length(new.at) - 1L
     ## work out whether new.at or init.at is better
     if (new.n < min.n)
         new.n <- -Inf
     if (abs(new.n - n) < abs(init.n - n))
-        return(makeOutput(new.at, steps[[new.i]]))
+	makeOutput(new.at, steps[[new.i]])
     else
-        return(makeOutput(init.at, steps[[init.i]]))
+	makeOutput(init.at, steps[[init.i]])
 }
-
 ## utility function, extending the base function of same name
 dateTrunc <-
     function(x, units = c("secs", "mins", "hours", "days",
