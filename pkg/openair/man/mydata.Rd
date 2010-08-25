@@ -10,36 +10,48 @@ Example data for openair
 
 \description{
 The mydata dataset is provided as an example dataset as part of the openair 
-  package. The dataset contains 1 hour average measurements of air pollutant 
+  package. The dataset contains hourly measurements of air pollutant 
   concentrations, wind speed and wind direction collected at the Marylebone 
-  (London) air quality monitoring supersite between 1998 and 2005. 
+  (London) air quality monitoring supersite between 1st January 1998 and 23rd June 2005. 
 }
 
 \usage{data(mydata)}
 
 \format{
-  A data frame with 65533 observations on the following 10 variables.
+  Data frame with 65533 observations (rows) on the following 10 variables:
   \describe{
-    \item{\code{date}}{Measurement date/time stamp as a POSIX object.}
-    \item{\code{ws}}{Wind speed as as a numeric vector.}
-    \item{\code{wd}}{Wind direction as a numeric vector.}
-    \item{\code{nox}}{Oxides of nitrogen concentration as a numeric vector.}
-    \item{\code{no2}}{Nitrogen dioxide concentration as a numeric vector.}
-    \item{\code{o3}}{Ozone concentration as a numeric vector.}
-    \item{\code{pm10}}{Particulate PM10 fraction measurement as a numeric vector.}
-    \item{\code{so2}}{Sulfur dioxide concentration as a numeric vector.}
-    \item{\code{co}}{Carbon monoxide concentration as a numeric vector.}
-    \item{\code{pm25}}{Particulate PM2.5 fraction measurement as a numeric vector.}
+    \item{\code{date}}{Observation date/time stamp in 
+     year-month-day hour:minute:second format (POSIXct). }
+    \item{\code{ws}}{Wind speed, in m/s, as numeric vector.}
+    \item{\code{wd}}{Wind direction, in degrees from North, as a numeric vector.}
+    \item{\code{nox}}{Oxides of nitrogen concentration, in ppb, as a numeric vector.}
+    \item{\code{no2}}{Nitrogen dioxide concentration, in ppb, as a numeric vector.}
+    \item{\code{o3}}{Ozone concentration, in ppb, as a numeric vector.}
+    \item{\code{pm10}}{Particulate PM10 fraction measurement, in ug/m3 (raw TEOM), 
+    as a numeric vector.}
+    \item{\code{so2}}{Sulfur dioxide concentration, in ppb, as a numeric vector.}
+    \item{\code{co}}{Carbon monoxide concentration, in ppm, as a numeric vector.}
+    \item{\code{pm25}}{Particulate PM2.5 fraction measurement, in ug/m3, as a numeric vector.}
   }
 }
 
 \details{
-\code{mydata} is supplied with the openair package as an example data set. The same data is 
-also provide in \code{'.csv'} format via the openair project web site.
+  \code{mydata} is supplied with the \code{openair} package as an example dataset for use with 
+  documented examples.  
+}
+
+\note{
+  \code{openair} functions generally require data frames with a field "date" that can be 
+  in either \code{POSIXct} or \code{Date} format but should be GMT time zone. This can be hourly 
+  data or higher resolution data.
 }
 
 \source{
-\code{mydata} was compiled from data archived in the LAQA.
+  \code{mydata} was compiled from data archived in the London Air Quality Archive. 
+  See \link{http://www.londonair.org.uk} for site details.
+
+  The same data is also provide in \code{'.csv'} format via the openair project web site 
+  \link{http://www.openair-project.org}.
 }
 
 %\references{
