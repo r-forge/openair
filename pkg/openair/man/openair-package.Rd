@@ -48,7 +48,7 @@ pasting the text below into R.
 install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "proto"))
 
 If there are problems with the automatic download of these packages, see
-\url{www.openair-project.org} for more details.
+\url{http://www.openair-project.org} for more details.
 
 To check to see if \code{openair} has been correctly installed, try some
 of the examples below. In case of any problems, contact David Carslaw
@@ -69,7 +69,7 @@ Carslaw, D.C. and K. Ropkins (2010). Open-source tools for analysing air
 pollution data. King's College London and the University of Leeds.  }
 \keyword{methods}
 
-\seealso{See \url{www.openair-project.org} for up to date information on
+\seealso{See \url{http://www.openair-project.org} for up to date information on
   the project.  }
 
 \examples{

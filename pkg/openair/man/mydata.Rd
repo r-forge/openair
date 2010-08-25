@@ -48,10 +48,10 @@ The mydata dataset is provided as an example dataset as part of the openair
 
 \source{
   \code{mydata} was compiled from data archived in the London Air Quality Archive. 
-  See \link{http://www.londonair.org.uk} for site details.
+  See \url{http://www.londonair.org.uk} for site details.
 
   The same data is also provide in \code{'.csv'} format via the openair project web site 
-  \link{http://www.openair-project.org}.
+  \url{http://www.openair-project.org}.
 }
 
 %\references{
