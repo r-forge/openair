@@ -2,7 +2,6 @@
 \alias{windRose}
 \alias{pollutionRose}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Traditional windRose plot and pollutionRose variation}
 \description{
 The traditional windRose plot that plots wind speed  and wind direction by
@@ -13,35 +12,22 @@ time series, for wind speed.
 
 \usage{
 windRose(polar,
-ws.int = 2,
-angle = 30,
-type = "default",
-cols = "default",
-main = "",
-grid.line = 5,
-width = 1,
-units = "(m/s)",
-auto.text = TRUE,
-breaks = 4,
-paddle = TRUE,
-key.name = "",
-key.position = "bottom",
-key = NULL,
-dig.lab = 5,
-pollutant = NULL,
-output = "graph",
-...)
+    ws.int = 2, angle = 30, type = "default", 
+    cols = "default", main = "", grid.line = 5,
+    width = 1, auto.text = TRUE, breaks = 4, paddle = TRUE,
+    key.header = NULL, key.footer = "(m/s)",
+    key.position = "bottom", key = NULL, dig.lab = 5,
+    pollutant = NULL, output = "graph",
+    ...)
 
 ans <- windRose(...)
 
 pollutionRose(polar, 
-pollutant = "nox",
-key.name = pollutant,
-units = "",
-breaks = 6,
-paddle = FALSE,
-key.position = "right",
-...)
+    pollutant = "nox",
+    key.footer = pollutant,
+    breaks = 6, paddle = FALSE,
+    key.position = "right",
+    ...)
 
 ans <- pollutionRose(...)
 
@@ -98,22 +84,19 @@ ans <- pollutionRose(...)
   pollutant names and units properly e.g.  by subscripting the `2' in
   NO2.}
 
-  \item{units}{Controls the units shown on the scale e.g. \code{units =
-  "knots"}. Note: This argument is passed to \code{draw.openkey} 
-  via \code{quickText}, applying the \code{auto.text} argument, 
-  to handle formatting.}
-
-  \item{key.name}{Controls the name shown on the scale, e.g. 
-  \code{key.name = "ws"}. Note: This argument is passed to 
-  \code{draw.openkey} via \code{quickText}, applying the 
+  \item{key.header, key.footer}{Adds additional text/labels above and/or 
+  below the scale key, respectively. For example, passing 
+  \code{windRose(mydata, key.header = "ws")} adds the addition text as 
+  a scale header. Note: This argument is passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
   \code{auto.text} argument, to handle formatting.}
 
-  \item{key.position}{Location where the scale key is to plotted, 
+  \item{key.position}{Location where the scale key is to plotted. 
   Allowed arguments currently include \code{"top"}, \code{"right"}, 
   \code{"bottom"} and \code{"left"}.}
 
-  \item{key}{Fine control of the scale key via \code{draw.openkey}. Note: 
-  This argument is in development and currently not enabled.}
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
 
   \item{dig.lab}{The number of signficant figures at which scientific 
   number formatting is used in break point and key labelling. Default 
@@ -129,7 +112,7 @@ ans <- pollutionRose(...)
 
   \item{...}{For \code{pollutionRose} other parameters that are 
   passed on to \code{windRose}. For \code{windRose} other parameters 
-  that are passed on to \code{draw.openkey} and 
+  that are passed on to \code{drawOpenKey} and 
   \code{lattice:xyplot}. }
 
 }
@@ -171,12 +154,10 @@ Ropkins)}
   wind speed = 0 or wind direction = 0 will be calm.
 
   Note that \code{windRose} and \code{pollutionRose} both use 
-  \code{draw.openkey} to produce scale keys. This function is currently 
-  in development and specifics of its operation may be subject to
-  revision.} 
+  \link{drawOpenKey} to produce scale keys.} 
  
 %}
-\seealso{See \code{\link{draw.openkey}} for fine control of the scale key. 
+\seealso{See \code{\link{drawOpenKey}} for fine control of the scale key. 
  
 See \code{\link{polarFreq}} for a more flexible version that
 considers other statistics and pollutant concentrations.}
@@ -189,9 +170,6 @@ windRose(mydata)
 
 # one windRose for each year
 windRose(mydata,type = "year")
-
-# plot windRoses by month of the year
-windRose(mydata, type = "month")
 
 # windRose in 10 degree intervals with gridlines and width adjusted
 windRose(mydata, angle = 10, width = 0.3, grid.line = 1)

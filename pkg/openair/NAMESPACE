@@ -19,7 +19,7 @@ export(
 
        ##general utils:
        cutData,
-       draw.openkey,
+       drawOpenKey,
        openColours,
        prepareModel,
        quickText,
