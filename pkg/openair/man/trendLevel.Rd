@@ -18,18 +18,15 @@
 
 \usage{
 trendLevel(mydata,
-        pollutant = "nox",
-        x = "month", y = "hour", type = "year",
-        xlab = x, ylab = y, 
-        typelab = paste(type, ": ", sep=""),
-        limits = c(0, 100),
-        cols = "default",
-        main = "", strip = NULL,
-        auto.text = TRUE,
-        statistic = c("mean", "max"),
-        stat.args = NULL, stat.safe.mode = TRUE,
-        output = c("data", "graph"),
-        ...)		
+    pollutant = "nox", x = "month", y = "hour", 
+    type = "year", xlab = x, ylab = y, 
+    typelab = paste(type, ": ", sep=""),
+    limits = c(0, 100), cols = "default", main = "", 
+    strip = NULL, auto.text = TRUE, key.header = "use.stat.name",
+    key.footer = pollutant, key.position = "right", key = NULL,
+    statistic = c("mean", "max"), stat.args = NULL, 
+    stat.safe.mode = TRUE, output = c("data", "graph"),
+    ...)		
 }
 
 
@@ -78,6 +75,20 @@ trendLevel(mydata,
   (\code{xlab}, \code{ylab}, \code{main}, etc.) to be passed to the plot via \code{quickText}. 
   \code{auto.text = FALSE} turns this option off and passes labels directly to the plot. }
 
+  \item{key.header, key.footer}{Adds additional text/labels above and/or 
+  below the scale key, respectively. For example, passing 
+  \code{trendLevel(mydata, key.header = "", key.footer = c("mean","nox"))} adds 
+  the addition text as a scale footer. Note: This argument is passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
+  \code{auto.text} argument, to handle formatting.}
+
+  \item{key.position}{Location where the scale key is to plotted. 
+  Allowed arguments currently include \code{"top"}, \code{"right"}, 
+  \code{"bottom"} and \code{"left"}.}
+
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
+
   \item{statistic}{ The statistic method to be use to summarise locally binned \code{pollutant} 
   measurements with. Two options are currently encoded: \code{"mean"} (default) and \code{"max"}. 
   (Note: Functions can also be sent directly via \code{statistic}. However, this option is still 
@@ -114,7 +125,7 @@ trendLevel(mydata,
   a list of named parameters as \code{stat.args}. 
   For example, the encoded option \code{statistic = "mean"} 
   is equivalent to \code{statistic = mean, stat.args = list(na.rm = TRUE)}. Many R 
-  functions and user`s own creations could be applied in a similar fashion, subject to the 
+  functions and user`s own code could be applied in a similar fashion, subject to the 
   following restrictions: the first argument send to the function must be the dataseries to 
   be analysed; the name `x' cannot be used for any of the extra options supplied in 
   \code{stat.args}; and the function should return the required answer as a numeric or NA. Note: 
@@ -123,8 +134,6 @@ trendLevel(mydata,
   If the function terminates with an error when it is sent an empty 
   data series, the \code{stat.safe.mode = TRUE} can be used as this only evaluates populated 
   data series. Note: The option returns an NA without warning for empty data series. 
-
-  (Note: This option is still be development and should be used with care.)
       
 }
 
@@ -136,7 +145,6 @@ trendLevel(mydata,
 trendLevel(mydata, pollutant = "nox")
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 
 \keyword{methods}

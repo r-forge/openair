@@ -19,6 +19,10 @@ trendLevel <- function(mydata,
     main = "",
     strip = NULL, 
     auto.text = TRUE,
+    key.header = "use.stat.name",
+    key.footer = pollutant,
+    key.position = "right",
+    key = NULL,
     statistic = c("mean", "max"),
     stat.args = NULL,
     stat.safe.mode = TRUE,
@@ -28,7 +32,7 @@ trendLevel <- function(mydata,
 {
 
    #Generic levelplot function for summarising large data sets
-   #kr v.02
+   #kr v.03
    #based on previous trend.level.hour and trend.level.wd functions by dcc
 
    #examples
@@ -77,6 +81,18 @@ trendLevel <- function(mydata,
    ####################
    #setup
    ####################
+
+   #check position
+   ##strictly unnecessary because also checked in drawOpenKey 
+   ##however quicker is spotted here
+   temp <- c("right", "left", "top", "bottom")
+   key.position <- pmatch(key.position, temp)
+   if (is.na(key.position)) {
+       stop(" In trendLevel(...):", "\n\tkey.position argument not recognised", 
+           "\n\tplease use one or abbreviation of:\n\t", paste(temp, 
+               sep = "", collapse = " "), call. = FALSE)
+   }
+   key.position <- temp[key.position]
 
    ##check.valid function
    check.valid <- function(a, x, y){
@@ -161,6 +177,7 @@ trendLevel <- function(mydata,
          #functions
          ##robustly handle functions that return more than 1 value
          stat.name <- substitute(statistic)
+         if(length(stat.name)!=1) stat.name <- "level" 
          if(stat.safe.mode){
             stat.fun <- function(x, ...) {
                if(all(is.na(x))) { NA } else { statistic(x, ...)[1] }
@@ -176,7 +193,10 @@ trendLevel <- function(mydata,
          paste(eval(formals(trendLevel)$statistic), collapse="', '"),"']", sep="")
       , call.=FALSE)
    }
-
+   if(!is.null(key.header)) if(is.character(key.header))
+      key.header <- gsub("use.stat.name", stat.name, key.header)
+   if(!is.null(key.footer)) if(is.character(key.footer))
+      key.footer <- gsub("use.stat.name", stat.name, key.footer)
 
    ##################
    #checkPrep
@@ -353,6 +373,25 @@ trendLevel <- function(mydata,
    }
 
    #################
+   #scale key setup
+   #################
+   legend <- list(col = col, at = col.scale, space = key.position, 
+        auto.text = auto.text, footer = key.footer, header = key.header, 
+        height = 1, width = 1.5, fit = "all")
+   if (!is.null(key)) 
+        if (is.list(key)) 
+            legend[names(key)] <- key
+        else warning("In trendLevel(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+            call. = FALSE)
+   legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+        draw = FALSE)))
+   names(legend)[1] <- key.position
+   if (!is.null(key$space)) 
+        if (is.character(key$space)) 
+            names(legend)[1] <- key$space
+
+
+   #################
    #plot levelplot
    #################
    plt <- levelplot(value ~ x * y | type, data = newdata, main = quickText(main, 
@@ -362,7 +401,7 @@ trendLevel <- function(mydata,
                     scales = list(
                        x = list(labels = x.f$labels[x.f$labels.at], at = x.f$labels.at),
                        y = list(labels = y.f$labels[y.f$labels.at], at = y.f$labels.at))
-                    , ...
+                    , colorkey = FALSE, legend=legend, ...
    )
 
    if(output=="data") {

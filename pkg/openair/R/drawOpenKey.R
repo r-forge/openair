@@ -23,16 +23,17 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
 #acknowledged
 ########################################
 
-######################
-#error messaging to tidy
-
-
-
+    ################
+    #quick end if key obviously not right
+    ################
     if (!is.list(key))
         stop("In drawOpenKey(...) key must be a list", 
             call. = FALSE) 
 
-    #special case for windRose colour key
+    ################
+    #special case
+    #windRose colour key
+    ################
     if(is.null(key$at)){
         if(is.null(key$labels)){
             stop("In drawOpenKey(...) neither 'at' nor 'labels' in key",
@@ -56,6 +57,10 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         }
     }
 
+    ################
+    #process key 
+    #modification of sk
+    ################
     process.key <- function(col = regions$col, alpha = regions$alpha, 
         at, tick.number = 7, width = 2, height = 1, space = "right",
         plot.style = c("ticks", "border"), 
@@ -65,11 +70,30 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
             width = width, height = height, space = space,
             plot.style = plot.style, 
             ...)
-    }
+    }    
     axis.line <- trellis.par.get("axis.line")
     axis.text <- trellis.par.get("axis.text")
     key <- do.call("process.key", key)
 
+    ###############
+    #test space 
+    #otherwise drops without creating key.gf
+    #COULD default to one?
+    ###############
+    temp <- c("right", "left", "top", "bottom")
+    key$space <- pmatch(key$space, temp)
+    if (is.na(key$space)) {
+        stop(" In drawOpenKey(...):", "\n\tkey.position argument not recognised", 
+            "\n\tplease use one or abbreviation of:\n\t", paste(temp, 
+                sep = "", collapse = " "), call. = FALSE)
+    }
+    key$space <- temp[key$space]
+
+    ###############
+    #original sk key handling
+    #with
+    #modified error messaging
+    ###############
     check.overlap <- TRUE
     key$at <- sort(key$at)
     numcol <- length(key$at) - 1
@@ -86,7 +110,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
     fontface <- axis.text$fontface
     rot <- 0
     if (is.null(key$lab)) {
-        at <- lpretty(atrange, key$tick.number)
+        at <- pretty(atrange, key$tick.number)
         at <- at[at >= atrange[1] & at <= atrange[2]]
         labels <- format(at, trim = TRUE)
     } else if ((is.character(key$lab) | is.expression(key$lab) | is.numeric(key$lab))  
@@ -97,7 +121,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
     } else if (is.list(key$lab)) {
         at <- if (!is.null(key$lab$at)) 
             key$lab$at
-        else lpretty(atrange, key$tick.number)
+        else pretty(atrange, key$tick.number)
         at <- at[at >= atrange[1] & at <= atrange[2]]
         labels <- if (!is.null(key$lab$lab)) {
             check.overlap <- FALSE
@@ -123,6 +147,9 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
     labscat <- at
     rot <- 0
 
+    #############
+    #header set up
+    #############
     if(is.null(key$hea)) 
         key$hea <- list(header="")
     if(is.character(key$hea) | is.numeric(key$hea) | is.expression(key$hea) ) 
@@ -139,6 +166,9 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
             call. = FALSE)    
     }
 
+    ############
+    #footer setup
+    ############
     if(is.null(key$foo)) 
         key$foo <- list(footer="")
     if(is.character(key$foo) | is.numeric(key$foo) | is.expression(key$foo) ) 
@@ -155,7 +185,10 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
             call. = FALSE)    
     }
 
-    #overwrite for high level versions
+    #################
+    #higher level handling
+    #auto.text, slot, tweak, 
+    #################
     if(!is.null(key$auto.text)) {
         if(is.logical(key$auto.text)){
             h.auto.text <- key$auto.text
@@ -175,35 +208,39 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         }
     }
 
-    #set up for text boxes
+    ###############
+    #size text boxes, balance and gap
+    #for
+    #top and bottom only
+    ###############
     h.text <- if(length(h.text) < 3)  c(rep("", 3-length(h.text)), h.text) else
         h.text[1:3] 
     h.slots <- ifelse(as.character(h.text) != "", h.slot, 0)
     f.text <- c(f.text, rep("", 3))[1:3]
     f.slots <- ifelse(as.character(f.text) != "", f.slot, 0)
-
-    #balance sides
     if(sum(h.slots) > sum(f.slots) & "balance" %in% f.tweaks) 
         f.slots[3] <- f.slots[3] + sum(h.slots) - sum(f.slots)
     if(sum(f.slots) > sum(h.slots) & "balance" %in% h.tweaks) 
         h.slots[1] <- h.slots[1] + sum(f.slots) - sum(h.slots)
-
-    #gaps
     g.slots <- c(if("gap" %in% h.tweaks & sum(c(h.slots,f.slots))>0) h.slot else 0,
                    if("gap" %in% f.tweaks & sum(c(h.slots,f.slots))>0) f.slot else 0)
-  
+
+    #############  
     #scale fit
-    ##default all
+    #scale, soft and all
+    #default all
+    #############
     s.slot <- 1 - sum(c(h.slots,f.slots,g.slots))
     s.offsets <- c(0, 0)
     if(!is.null(key$fit)) {
         if(is.character(key$fit)){
            if(key$fit=="soft")
                s.slot <- 1 - (sum(c(h.slots,f.slots,g.slots))/2)
-           if(key$fit=="scale")
+           if(key$fit=="scale"){
                s.slot <- 1
                s.offsets <- c(sum(c(h.slots,g.slots[1])),
-                              sum(c(f.slots,g.slots[2]))) 
+                              sum(c(f.slots,g.slots[2])))
+            } 
         } else {
             stop("In drawOpenKey(...) unexpected fit structure in key",
                 "\n\tplease check 'fit' structure",
@@ -212,13 +249,29 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         }
     }
 
-    recht <- rep(1, length(key$at) - 1)
-    if("paddle" %in% key$plot.style){
-        recwd <- seq(0.2, 1, length.out = length(recht))
-    } else {
-        recwd <- rep(1, length(key$at) - 1)
-    }
+    ############
+    #paddle style
+    #recwd rescaling
+    #recht needs checking for redundancy
+    #############
+    ##recht <- rep(1, length(key$at) - 1)
+    recwd <- if("paddle" %in% key$plot.style) 
+        recwd <- seq(0.2, 1, length.out = length(key$at) - 1) else 
+            recwd <- rep(1, length(key$at) - 1)
+   
+#    if("paddle" %in% key$plot.style){
+#        recwd <- seq(0.2, 1, length.out = length(recht))
+#    } else {
+#        recwd <- rep(1, length(key$at) - 1)
+#    }
 
+
+    #####################
+    #right scale
+    #size checks text see sac struff
+    #positions
+    #adds ticks and borders if requested    
+    #####################
     if (key$space == "right") {
         h.text <- if(is.character(h.text))
              lapply(h.text, function(x) quickText(x, h.auto.text)) else
@@ -275,7 +328,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
                 font))), row = 6, col = 3)
         key.gf <- placeGrob(key.gf, rectGrob(x = rep(0.5, length(reccentre)), 
             y = reccentre, default.units = "native", vp = viewport(yscale = atrange), 
-            height = recht, width = recwd, gp = gpar(fill = key$col, col = "transparent", 
+            height = recdim, width = recwd, gp = gpar(fill = key$col, col = "transparent", 
                 alpha = key$alpha)), row = 6, col = 1)
         if("border" %in% key$plot.style)
             key.gf <- placeGrob(frame = key.gf, rectGrob(gp = gpar(col = axis.line$col, 
@@ -289,8 +342,13 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
                     lwd = axis.line$lwd)), row = 6, col = 2)
     }
 
-    else if (key$space == "left") {
- 
+    #####################
+    #left scale
+    #size checks text see sac struff
+    #positions
+    #adds ticks and borders if requested    
+    #####################
+    else if (key$space == "left") { 
         h.text <- if(is.character(h.text))
              lapply(h.text, function(x) quickText(x, h.auto.text)) else
              list(h.text[1], h.text[2], h.text[3])
@@ -348,7 +406,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
                 , row = 6, col = 1)
         key.gf <- placeGrob(key.gf, rectGrob(x = rep(0.5, length(reccentre)), 
             y = reccentre, default.units = "native", vp = viewport(yscale = atrange), 
-            height = recht, width = recwd, gp = gpar(fill = key$col, col = "transparent", 
+            height = recdim, width = recwd, gp = gpar(fill = key$col, col = "transparent", 
                 alpha = key$alpha)), row = 6, col = 3)
         if("border" %in% key$plot.style)
             key.gf <- placeGrob(frame = key.gf, rectGrob(gp = gpar(col = axis.line$col, 
@@ -362,6 +420,11 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
                     lwd = axis.line$lwd)), row = 6, col = 2)
     }
 
+    #####################
+    #top scale
+    #positions
+    #adds ticks and borders if requested    
+    #####################
     else if (key$space == "top") {
        f.text <- f.text[as.character(f.text) != ""]
        f.text <- if(is.character(f.text)) quickText(paste(f.text, collapse="  "), f.auto.text) else
@@ -412,7 +475,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         key.gf <- frameGrob(layout = key.layout, vp = vp)
         key.gf <- placeGrob(key.gf, rectGrob(y = rep(0.5, length(reccentre)), 
             x = reccentre, default.units = "native", vp = viewport(xscale = atrange), 
-            width = recht, height = recwd, gp = gpar(fill = key$col, col = "transparent", 
+            width = recdim, height = recwd, gp = gpar(fill = key$col, col = "transparent", 
                 alpha = key$alpha)), row = 5, col = 2)
         if("border" %in% key$plot.style)
             key.gf <- placeGrob(frame = key.gf, rectGrob(gp = gpar(col = axis.line$col, 
@@ -429,6 +492,11 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         key.gf <- placeGrob(key.gf, keyGrob2, row = 1, col = 2)
     }
 
+    #####################
+    #bottom scale
+    #positions
+    #adds ticks and borders if requested    
+    #####################
     else if (key$space == "bottom") {
        f.text <- f.text[as.character(f.text) != ""]
        f.text <- if(is.character(f.text)) quickText(paste(f.text, collapse="  "), f.auto.text) else
@@ -479,7 +547,7 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         key.gf <- frameGrob(layout = key.layout, vp = vp)
         key.gf <- placeGrob(key.gf, rectGrob(y = rep(0.5, length(reccentre)), 
             x = reccentre, default.units = "native", vp = viewport(xscale = atrange), 
-            width = recht, height = recwd, gp = gpar(fill = key$col, col = "transparent", 
+            width = recdim, height = recwd, gp = gpar(fill = key$col, col = "transparent", 
                 alpha = key$alpha)), row = 1, col = 2)
        if("ticks" %in% key$plot.style)
             key.gf <- placeGrob(frame = key.gf, segmentsGrob(y0 = rep(1, 
@@ -495,6 +563,10 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
         key.gf <- placeGrob(key.gf, keyGrob, row = 4, col = 2)
         key.gf <- placeGrob(key.gf, keyGrob2, row = 5, col = 2)
     }
+
+    ##############
+    #outputs    
+    ##############
     if (draw) 
         grid.draw(key.gf)
     key.gf
