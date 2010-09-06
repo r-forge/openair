@@ -83,9 +83,9 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
     temp <- c("right", "left", "top", "bottom")
     key$space <- pmatch(key$space, temp)
     if (is.na(key$space)) {
-        stop(" In drawOpenKey(...):", "\n\tkey.position argument not recognised", 
-            "\n\tplease use one or abbreviation of:\n\t", paste(temp, 
-                sep = "", collapse = " "), call. = FALSE)
+        stop(" In drawOpenKey(...):", "\n\tspace argument in key not recognised", 
+            "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+                sep = "", collapse = "\", \""), "\"", call. = FALSE)
     }
     key$space <- temp[key$space]
 
@@ -252,20 +252,11 @@ drawOpenKey <- function (key, draw = FALSE, vp = NULL) {
     ############
     #paddle style
     #recwd rescaling
-    #recht needs checking for redundancy
     #############
-    ##recht <- rep(1, length(key$at) - 1)
     recwd <- if("paddle" %in% key$plot.style) 
         recwd <- seq(0.2, 1, length.out = length(key$at) - 1) else 
             recwd <- rep(1, length(key$at) - 1)
    
-#    if("paddle" %in% key$plot.style){
-#        recwd <- seq(0.2, 1, length.out = length(recht))
-#    } else {
-#        recwd <- rep(1, length(key$at) - 1)
-#    }
-
-
     #####################
     #right scale
     #size checks text see sac struff

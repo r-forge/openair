@@ -15,8 +15,39 @@ polarPlot <- function(polar,
                        force.positive = TRUE,
                        k = 100,
                        main = "",
+                       key.header = "",
+                       key.footer = pollutant,
+                       key.position = "right",
+                       key = NULL,
                        auto.text = TRUE, ...) {
    
+    #check position
+    ##strictly unnecessary because also checked in drawOpenKey 
+    ##however quicker is spotted here
+    temp <- c("right", "left", "top", "bottom")
+    if(!is.null(key$space)) {
+        if(is.character(key$space)) {
+            key$space <- pmatch(key$space[1], temp)
+            if(is.na(key$space))
+                stop(" In polarPlot(...):", "\n\tspace argument in key not recognised", 
+                    "\n\tplease use one or abbreviation of:\n\t\"", 
+                    paste(temp, sep = "", collapse = "\", \""), "\"", 
+                    call. = FALSE)
+            else {
+                key$space <- temp[key$space]
+                key.position <- key$space
+            }
+        } else stop(" In polarPlot(...):", "\n\tspace argument in key not recognised", 
+                 "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
+                 call. = FALSE)         
+    } else {
+        key.position <- pmatch(key.position[1], temp)
+        if (is.na(key.position))
+           stop(" In polarPlot(...):", "\n\tkey.position argument not recognised", 
+               "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+                sep = "", collapse = "\", \""), "\"", call. = FALSE)
+        key.position <- temp[key.position]
+    }
 
     if (uncertainty) type <- "default" ## can't have conditioning here
 
@@ -150,6 +181,21 @@ polarPlot <- function(polar,
 
     if (uncertainty) layout <- c(3, 1)
 
+    #################
+    #scale key setup
+    #################
+    legend <- list(col = col, at = col.scale, space = key.position, 
+         auto.text = auto.text, footer = key.footer, header = key.header, 
+         height = 1, width = 1.5, fit = "all")
+    if (!is.null(key)) 
+         if (is.list(key)) 
+             legend[names(key)] <- key
+         else warning("In polarPlot(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+             call. = FALSE)
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+         draw = FALSE)))
+    names(legend)[1] <- key.position
+
     levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
               as.table = TRUE,
               layout = layout,
@@ -164,6 +210,7 @@ polarPlot <- function(polar,
               scales = list(draw = FALSE),
               xlim = c(-upper * 1.15, upper * 1.15),
               ylim = c(-upper * 1.15, upper * 1.15),
+              colorkey = FALSE, legend = legend, 
               ...,
 
               panel = function(x, y, z,subscripts,...) {
@@ -194,4 +241,5 @@ polarPlot <- function(polar,
                   ltext(upper * 1.07, 0, "E", cex = 0.7)
               })
 }
+
 

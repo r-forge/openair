@@ -11,17 +11,21 @@ concentration of pollutants using a range of commonly used statistics.
 
 \usage{
 polarFreq(polar,
-pollutant = "",
-statistic = "frequency",
-ws.int = 1,
-breaks = seq(0, 5000, 500),
-cols = "default",
-trans = TRUE,
-type = "default",
-min.bin = 1,
-border.col = "transparent",
-main = "",
-auto.text = TRUE, ...)
+    pollutant = "",
+    statistic = "frequency",
+    ws.int = 1,
+    breaks = seq(0, 5000, 500),
+    cols = "default",
+    trans = TRUE,
+    type = "default",
+    min.bin = 1,
+    border.col = "transparent",
+    main = "",
+    key.header = statistic,
+    key.footer = pollutant,
+    key.position = "right",
+    key = NULL,
+    auto.text = TRUE, ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -96,6 +100,19 @@ speed/direction bin. The default is transparent. Another useful choice
 sometimes is "white".}
 
   \item{main}{Title of plot.}
+
+  \item{key.header, key.footer}{Adds additional text/labels to the scale key. For example, passing 
+  \code{polarFreq(mydata, key.header = "header", key.footer = c("footer1","footer2"))} adds 
+  addition text above and below the scale key. These arguments are passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
+  \code{auto.text} argument, to handle formatting. }
+
+  \item{key.position}{Location where the scale key is to plotted. 
+  Allowed arguments currently include \code{"top"}, \code{"right"}, 
+  \code{"bottom"} and \code{"left"}.}
+
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format

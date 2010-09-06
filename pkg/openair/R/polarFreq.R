@@ -9,8 +9,40 @@ polarFreq <- function(polar,
                        min.bin = 1,
                        border.col = "transparent",
                        main = "",
+                       key.header = statistic,
+                       key.footer = pollutant,
+                       key.position = "right",
+                       key = NULL,
                        auto.text = TRUE,...) {
   
+    
+   #check position
+   ##strictly unnecessary because also checked in drawOpenKey 
+   ##however quicker is spotted here
+   temp <- c("right", "left", "top", "bottom")
+   if(!is.null(key$space)) {
+       if(is.character(key$space)) {
+           key$space <- pmatch(key$space[1], temp)
+           if(is.na(key$space))
+               stop(" In polarFreq(...):", "\n\tspace argument in key not recognised", 
+                   "\n\tplease use one or abbreviation of:\n\t\"", 
+                   paste(temp, sep = "", collapse = "\", \""), "\"", 
+                   call. = FALSE)
+           else {
+               key$space <- temp[key$space]
+               key.position <- key$space
+           }
+       } else stop(" In polarFreq(...):", "\n\tspace argument in key not recognised", 
+                "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
+                call. = FALSE)         
+   } else {
+       key.position <- pmatch(key.position[1], temp)
+       if (is.na(key.position))
+          stop(" In polarFreq(...):", "\n\tkey.position argument not recognised", 
+              "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+               sep = "", collapse = "\", \""), "\"", call. = FALSE)
+       key.position <- temp[key.position]
+   }
 
     ## extract necessary data
     if (pollutant == "") {
@@ -143,6 +175,23 @@ polarFreq <- function(polar,
     results.grid$weights[results.grid$weights == "NaN"] <- 0
     results.grid$weights[which(is.na(results.grid$weights))] <- 0
 
+    #################
+    #scale key setup
+    #################
+    legend <- list(col = col[1:length(breaks) - 1], at = breaks, 
+         labels = list(at = br^(1/coef), labels = br),
+         space = key.position, 
+         auto.text = auto.text, footer = key.footer, header = key.header, 
+         height = 1, width = 1.5, fit = "all")
+    if (!is.null(key)) 
+         if (is.list(key)) 
+             legend[names(key)] <- key
+         else warning("In polarFreq(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+             call. = FALSE)
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+         draw = FALSE)))
+    names(legend)[1] <- key.position
+
     xyplot(ws ~ wd | cond,
            xlim = c(-max.ws - 4.0, max.ws + 4.0),
            ylim = c(-max.ws - 4.0, max.ws + 4.0),
@@ -180,12 +229,6 @@ polarFreq <- function(polar,
                      seq(0, 25, 5), cex = 0.7, font = 1)
 
            },
-
-           legend = list(right = list(fun = draw.colorkey,
-                         args = list(key = list(col = col[1:length(breaks) - 1], at = breaks,
-                                     labels = list(at = br^(1/coef), labels = br)),
-                         draw = FALSE)))
+           legend = legend 
            )
 }
-
-

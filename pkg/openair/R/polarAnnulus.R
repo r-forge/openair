@@ -12,11 +12,41 @@ polarAnnulus <- function(polar,
                           date.pad = FALSE,
                           force.positive = TRUE,
                           k = 15,
-                          key = TRUE,
                           main = "",
+                          key.header = "",
+                          key.footer = pollutant,
+                          key.position = "right",
+                          key = NULL,
                           auto.text = TRUE,...) {
 
    
+    #check position
+    ##strictly unnecessary because also checked in drawOpenKey 
+    ##however quicker is spotted here
+    temp <- c("right", "left", "top", "bottom")
+    if(!is.null(key$space)) {
+        if(is.character(key$space)) {
+            key$space <- pmatch(key$space[1], temp)
+            if(is.na(key$space))
+                stop(" In polarAnnulus(...):", "\n\tspace argument in key not recognised", 
+                    "\n\tplease use one or abbreviation of:\n\t\"", 
+                    paste(temp, sep = "", collapse = "\", \""), "\"", 
+                    call. = FALSE)
+            else {
+                key$space <- temp[key$space]
+                key.position <- key$space
+            }
+        } else stop(" In polarAnnulus(...):", "\n\tspace argument in key not recognised", 
+                 "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
+                 call. = FALSE)         
+    } else {
+        key.position <- pmatch(key.position[1], temp)
+        if (is.na(key.position))
+           stop(" In polarAnnulus(...):", "\n\tkey.position argument not recognised", 
+               "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+                sep = "", collapse = "\", \""), "\"", call. = FALSE)
+        key.position <- temp[key.position]
+    }
 
     ## extract variables of interest
     vars <- c("wd", "date", pollutant)
@@ -237,13 +267,29 @@ polarAnnulus <- function(polar,
     strip <- TRUE
     if (type == "default") strip = FALSE ## remove strip
 
+    #################
+    #scale key setup
+    #################
+    legend <- list(col = col, at = col.scale, space = key.position, 
+         auto.text = auto.text, footer = key.footer, header = key.header, 
+         height = 1, width = 1.5, fit = "all")
+    if (!is.null(key)) 
+         if (is.list(key)) 
+             legend[names(key)] <- key
+         else warning("In polarAnnulus(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+             call. = FALSE)
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+         draw = FALSE)))
+    names(legend)[1] <- key.position
+
     levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
               as.table = TRUE,
               aspect = 1,
               xlab = "",
               ylab = "",
               main = quickText(main, auto.text),
-              colorkey = key, at = col.scale, col.regions = col,
+              colorkey = FALSE, legend = legend,
+              at = col.scale, col.regions = col,
               scales = list(draw = FALSE),
               strip = strip,
 
@@ -340,4 +386,5 @@ polarAnnulus <- function(polar,
               })
 
 }
+
 

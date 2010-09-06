@@ -11,12 +11,17 @@
   carried out using \code{mgcv}.  }
 
 \usage{
-polarPlot(polar, pollutant = "nox", type = "default",
-resolution = "normal", limits = c(0, 100), exclude.missing = TRUE,
-uncertainty = FALSE, cols = "default", min.bin = 1,
-upper = 10, ws.int = 5, angle.scale = 45,
-units = "(m/s)", force.positive = TRUE, k = 100,
- main = "", auto.text = TRUE, ...)  }
+polarPlot(polar, 
+    pollutant = "nox", type = "default",
+    resolution = "normal", limits = c(0, 100), 
+    exclude.missing = TRUE, uncertainty = FALSE, 
+    cols = "default", min.bin = 1, upper = 10, 
+    ws.int = 5, angle.scale = 45, units = "(m/s)", 
+    force.positive = TRUE, k = 100, main = "", 
+    key.header = "", key.footer = pollutant, 
+    key.position = "right", key = NULL, 
+    auto.text = TRUE, ...)  
+}
 %- maybe also 'usage' for other objects documented here.
 
 \arguments{
@@ -127,6 +132,20 @@ units = "(m/s)", force.positive = TRUE, k = 100,
     seems to be suitable and will resolve more features in the plot.}
 
   \item{main}{The plot title; default is no title.}
+
+ \item{key.header, key.footer}{Adds additional text/labels to the scale key. For example, passing 
+  \code{polarPlot(mydata, key.header = "header", key.footer = c("footer1","footer2"))} adds 
+  addition text above and below the scale key. These arguments are passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
+  \code{auto.text} argument, to handle formatting. }
+
+  \item{key.position}{Location where the scale key is to plotted. 
+  Allowed arguments currently include \code{"top"}, \code{"right"}, 
+  \code{"bottom"} and \code{"left"}.}
+
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
+
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
     \code{TRUE} titles and axis labels will automatically try and format

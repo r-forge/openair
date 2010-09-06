@@ -7,21 +7,14 @@
 }
 \usage{
 polarAnnulus(polar,
-pollutant = "nox",
-resolution = "fine",
-local.time = FALSE,
-period = "hour",
-type = "default",
-limits = c(0, 100),
-cols = "default",
-width = "normal",
-exclude.missing = TRUE,
-date.pad = FALSE,
-force.positive = TRUE,
-k = 15,
-key = TRUE,
-main = "",
-auto.text = TRUE, ...)
+    pollutant = "nox", resolution = "fine",
+    local.time = FALSE, period = "hour", type = "default",
+    limits = c(0, 100), cols = "default", width = "normal",
+    exclude.missing = TRUE, date.pad = FALSE, 
+    force.positive = TRUE, k = 15, main = "", 
+    key.header = "", key.footer = pollutant, 
+    key.position = "right", key = NULL, 
+    auto.text = TRUE, ...)
 }
 
 
@@ -122,9 +115,20 @@ auto.text = TRUE, ...)
   affected more by outliers. Choosing a lower value of \code{k} (say 10)
   may help produce a better plot.}
 
-\item{key}{Should a key be drawn?}
-
 \item{main}{Title of plot.}
+
+ \item{key.header, key.footer}{Adds additional text/labels to the scale key. For example, passing 
+  \code{polarAnnulus(mydata, key.header = "header", key.footer = c("footer1","footer2"))} adds 
+  addition text above and below the scale key. These arguments are passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
+  \code{auto.text} argument, to handle formatting. }
+
+  \item{key.position}{Location where the scale key is to plotted. 
+  Allowed arguments currently include \code{"top"}, \code{"right"}, 
+  \code{"bottom"} and \code{"left"}.}
+
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
 
 \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format

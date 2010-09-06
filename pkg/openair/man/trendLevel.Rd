@@ -20,7 +20,7 @@
 trendLevel(mydata,
     pollutant = "nox", x = "month", y = "hour", 
     type = "year", xlab = x, ylab = y, 
-    typelab = paste(type, ": ", sep=""),
+    typelab = NULL,
     limits = c(0, 100), cols = "default", main = "", 
     strip = NULL, auto.text = TRUE, key.header = "use.stat.name",
     key.footer = pollutant, key.position = "right", key = NULL,
@@ -48,15 +48,9 @@ trendLevel(mydata,
 
   \item{type}{ The dataseries to use for additional conditioning. As \code{x} above. }
 
-  \item{xlab}{ The x-axis label. The option is passed via quickText to handle formatting if 
-  enabled (\code{auto.text = TRUE}). }
-
-  \item{ylab}{ The y-axis label. The option is passed via quickText to handle formatting if 
-  enabled (\code{auto.text = TRUE}). }
-
-  \item{typelab}{ The type conditioning label. The option is passed via quickText to handle formatting if 
-  enabled (\code{auto.text = TRUE}). }
-
+  \item{xlab, ylab, typelab}{ The x-axis, y-axis and type conditioning labels. All labels are passed 
+  via quickText to handle formatting if enabled (\code{auto.text = TRUE}). By default \code{trendLevel} 
+  uses x and y names as xlab and ylab, respectively, but does attach a label to type cases.}
 
   \item{limits}{ The colour scale range to be uesd when generating the trendLevel plot. }
 
@@ -78,9 +72,12 @@ trendLevel(mydata,
   \item{key.header, key.footer}{Adds additional text/labels above and/or 
   below the scale key, respectively. For example, passing 
   \code{trendLevel(mydata, key.header = "", key.footer = c("mean","nox"))} adds 
-  the addition text as a scale footer. Note: This argument is passed to 
+  the addition text as a scale footer. These arguments are passed to 
   \code{drawOpenKey} via \code{quickText}, applying the 
-  \code{auto.text} argument, to handle formatting.}
+  \code{auto.text} argument, to handle formatting. The default \code{key.header}, 
+  \code{"get.stat.name"}, is a reserved term that can be used to add 
+  statistic function names automatically. This defaults to \code{"level"} when applied to 
+  unnamed functions. }
 
   \item{key.position}{Location where the scale key is to plotted. 
   Allowed arguments currently include \code{"top"}, \code{"right"}, 
@@ -97,11 +94,11 @@ trendLevel(mydata,
   \item{stat.args}{ Any additional args to used with \code{statistic} if this is a function. The 
   extra args should be supplied as a list of named parameters. (see Details below.) }
 
-  \item{stat.safe.mode}{ An addition protection that can be applied when using functions with 
-  \code{statistic}.  This option returns \code{NA} instead of running \code{statistic}  
-  on binned subsamples that are empty. A number of common functions terminate with an error 
-  meassage when applied to an empty dataset. So, this options provides a mechanism to work 
-  with such functions. In such cases, e.g. for a function that counted missing entries, it might 
+  \item{stat.safe.mode}{ An addition protection applied when using functions direclty with 
+  \code{statistic} that most users can ignore. This option returns \code{NA} instead of running 
+  \code{statistic} on binned subsamples that are empty. Many common functions terminate 
+  with an error meassage when applied to an empty dataset. So, this options provides a mechanism to work 
+  with such functions. A very few cases, e.g. for a function that counted missing entries, it might 
   need to be set to \code{FALSE} (see Details below.) }
 
   \item{output}{ Output mode. The default, \code{output = "data"}, generates the trendLevel 
@@ -143,6 +140,10 @@ trendLevel(mydata,
 
 #basic use
 trendLevel(mydata, pollutant = "nox")
+
+#applying 'own' statistic
+my.mean <- function(x) mean(x, na.rm= TRUE)
+trendLevel(mydata, pollutant = "nox", statistic = my.mean)
 
 }
 

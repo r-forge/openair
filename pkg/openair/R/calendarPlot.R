@@ -1,6 +1,7 @@
 ## development of a calendar function
 ## David Carslaw November 2009
 ## modifications for internation Karl Ropkins 2010
+## drawOpenKey add-in Karl Ropkins 2010
 
 ## calendarPlot shows air quality or other data in a conventional calendar format.
 ## This makes it easy to gain a feel about variations in concentrations and other parameters
@@ -16,8 +17,38 @@ calendarPlot <- function(mydata,
                           cols = "heat",
                           limits = c(0, 100),
                           main = quickText((paste(pollutant, "in", year))),
+                          key.header = "", key.footer = "",
+                          key.position = "right", key = NULL, 
                           auto.text = TRUE,
                           ...) {
+
+    #check position
+    ##strictly unnecessary because also checked in drawOpenKey 
+    ##however quicker is spotted here
+    temp <- c("right", "left", "top", "bottom")
+    if(!is.null(key$space)) {
+        if(is.character(key$space)) {
+            key$space <- pmatch(key$space[1], temp)
+            if(is.na(key$space))
+                stop(" In calendarPlot(...):", "\n\tspace argument in key not recognised", 
+                    "\n\tplease use one or abbreviation of:\n\t\"", 
+                    paste(temp, sep = "", collapse = "\", \""), "\"", 
+                    call. = FALSE)
+            else {
+                key$space <- temp[key$space]
+                key.position <- key$space
+            }
+        } else stop(" In calendarPlot(...):", "\n\tspace argument in key not recognised", 
+                 "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
+                 call. = FALSE)         
+    } else {
+        key.position <- pmatch(key.position[1], temp)
+        if (is.na(key.position))
+           stop(" In calendarPlot(...):", "\n\tkey.position argument not recognised", 
+               "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+                sep = "", collapse = "\", \""), "\"", call. = FALSE)
+        key.position <- temp[key.position]
+    }
 
     ##international keyboard
     ##first letter and ordered Sun to Sat
@@ -141,6 +172,21 @@ calendarPlot <- function(mydata,
     col <- openColours(cols, (nlev2 - 1))
     col.scale <- breaks
 
+    #################
+    #scale key setup
+    #################
+    legend <- list(col = col, at = col.scale, space = key.position, 
+         auto.text = auto.text, footer = key.footer, header = key.header, 
+         height = 1, width = 1.5, fit = "all")
+    if (!is.null(key)) 
+         if (is.list(key)) 
+             legend[names(key)] <- key
+         else warning("In calendarPlot(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+             call. = FALSE)
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+         draw = FALSE)))
+    names(legend)[1] <- key.position
+
     print(levelplot(conc.mat ~ x * y | month, data = mydata,
               par.settings = cal.theme,
               main = main,
@@ -154,6 +200,7 @@ calendarPlot <- function(mydata,
               aspect = 6/7,
               ylab = "",
               between = list(x = 1),
+              colorkey = FALSE, legend = legend,
               panel = function(x, y, subscripts,...) {
                   panel.levelplot(x, y,subscripts,...)
                   panel.abline(v=c(0.5: 7.5), col = "grey90")

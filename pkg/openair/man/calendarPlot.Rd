@@ -10,16 +10,13 @@
 
 \usage{
 calendarPlot(mydata,
-pollutant = "nox",
-year = 2003,
-type = "default",
-annotate = "date",
-statistic = "mean",
-cols = "heat",
-limits = c(0, 100),
-main = quickText((paste(pollutant, "in", year))),
-auto.text = TRUE,
-...)  
+    pollutant = "nox", year = 2003, type = "default", 
+    annotate = "date", statistic = "mean", 
+    cols = "heat", limits = c(0, 100),
+    main = quickText((paste(pollutant, "in", year))),
+    key.header = "", key.footer = "", 
+    key.position = "right", key = NULL,
+    auto.text = TRUE, ...)  
 }
 %- maybe also 'usage' for other objects documented here.
 
@@ -40,7 +37,7 @@ auto.text = TRUE,
   shows vector-averaged wind direction, or "ws" - shows
   vector-averaged wind direction scaled by wind speed. }
 
-  \item{statistic}{Note currently implemented - only mean is currently
+  \item{statistic}{Not currently implemented - only mean is currently
   calculated.}
 
   \item{cols}{Colours to be used for plotting. Options include
@@ -58,6 +55,19 @@ auto.text = TRUE,
    will be ignored if outside the limits range.}
 
   \item{main}{The plot title; default is pollutant and year.}
+
+ \item{key.header, key.footer}{Adds additional text/labels to the scale key. For example, passing 
+  \code{calendarPlot(mydata, key.header = "header", key.footer = c("footer1","footer2"))} adds 
+  addition text above and below the scale key. These arguments are passed to 
+  \code{drawOpenKey} via \code{quickText}, applying the 
+  \code{auto.text} argument, to handle formatting. }
+
+  \item{key.position}{Location where the scale key is to plotted. 
+  Allowed arguments currently include \code{"top"}, \code{"right"}, 
+  \code{"bottom"} and \code{"left"}.}
+
+  \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
+  \link{drawOpenKey} for further details.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
     \code{TRUE} titles and axis labels will automatically try and format

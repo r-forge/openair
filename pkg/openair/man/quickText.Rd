@@ -15,7 +15,7 @@ quickText(text, auto.text = TRUE)
 
 \arguments{
 
-  \item{text}{ A character vector (or similar expression). }
+  \item{text}{ A character vector. }
 
   \item{auto.text}{ A logical option. The default, \code{TRUE}, applies \code{quickText} to 
   \code{text} and returns the result. The alternative, \code{FALSE}, returns \code{text} 
@@ -29,11 +29,10 @@ quickText(text, auto.text = TRUE)
   \code{quickText} is routine formatting lookup table. It screens the supplied character vector 
   \code{text} and automatically applies formatting to any recognised character sub-series. The 
   function is used in a number of \code{openair} functions and can also be used directly by users 
-  to format text components of their own graphs (see below).  
-
+  to format text components of their own graphs (see below).
 }
 \value{
-  The function returns an expression for graphical evaluation.
+  The function returns an expression for graphical evaluation.   
 }
 
 \author{

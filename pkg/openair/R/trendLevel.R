@@ -13,7 +13,7 @@ trendLevel <- function(mydata,
     x = "month", y = "hour",
     type = "year",
     xlab = x, ylab = y,
-    typelab = paste(type, ": ", sep=""), 
+    typelab = NULL, 
     limits = c(0, 100),  
     cols = "default", 
     main = "",
@@ -86,13 +86,29 @@ trendLevel <- function(mydata,
    ##strictly unnecessary because also checked in drawOpenKey 
    ##however quicker is spotted here
    temp <- c("right", "left", "top", "bottom")
-   key.position <- pmatch(key.position, temp)
-   if (is.na(key.position)) {
-       stop(" In trendLevel(...):", "\n\tkey.position argument not recognised", 
-           "\n\tplease use one or abbreviation of:\n\t", paste(temp, 
-               sep = "", collapse = " "), call. = FALSE)
+   if(!is.null(key$space)) {
+       if(is.character(key$space)) {
+           key$space <- pmatch(key$space[1], temp)
+           if(is.na(key$space))
+               stop(" In trendLevel(...):", "\n\tspace argument in key not recognised", 
+                   "\n\tplease use one or abbreviation of:\n\t\"", 
+                   paste(temp, sep = "", collapse = "\", \""), "\"", 
+                   call. = FALSE)
+           else {
+               key$space <- temp[key$space]
+               key.position <- key$space
+           }
+       } else stop(" In trendLevel(...):", "\n\tspace argument in key not recognised", 
+                "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
+                call. = FALSE)         
+   } else {
+       key.position <- pmatch(key.position[1], temp)
+       if (is.na(key.position))
+          stop(" In trendLevel(...):", "\n\tkey.position argument not recognised", 
+              "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
+               sep = "", collapse = "\", \""), "\"", call. = FALSE)
+       key.position <- temp[key.position]
    }
-   key.position <- temp[key.position]
 
    ##check.valid function
    check.valid <- function(a, x, y){
@@ -365,12 +381,15 @@ trendLevel <- function(mydata,
 
    #################
    #handles user strip modifications
+   #alignment of quicktext and conditioning label
    #also systematic for factors and shingles
    #################
    if(is.null(strip)){
        strip <- function(..., var.name, strip.levels, strip.names, sep) 
-                       strip.default(..., var.name = quickText(typelab, auto.text), strip.levels = c(TRUE, TRUE), strip.names=c(TRUE,TRUE), sep="")
+                       strip.default(..., var.name = quickText(paste(typelab, type.f$b[which.packet()], sep =" "), auto.text), 
+                       strip.levels = c(FALSE, FALSE), strip.names=c(TRUE,TRUE), sep="")
    }
+
 
    #################
    #scale key setup
@@ -386,10 +405,6 @@ trendLevel <- function(mydata,
    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
         draw = FALSE)))
    names(legend)[1] <- key.position
-   if (!is.null(key$space)) 
-        if (is.character(key$space)) 
-            names(legend)[1] <- key$space
-
 
    #################
    #plot levelplot
@@ -424,3 +439,4 @@ trendLevel <- function(mydata,
       plot(plt)
    }
 }
+
