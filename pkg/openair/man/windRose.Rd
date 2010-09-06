@@ -96,7 +96,7 @@ ans <- pollutionRose(...)
   \code{"bottom"} and \code{"left"}.}
 
   \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
-  \link{drawOpenKey} for further details.}
+  \code{drawOpenKey} for further details.}
 
   \item{dig.lab}{The number of signficant figures at which scientific 
   number formatting is used in break point and key labelling. Default 

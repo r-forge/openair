@@ -70,8 +70,8 @@ trendLevel(mydata,
   \code{auto.text = FALSE} turns this option off and passes labels directly to the plot. }
 
   \item{key.header, key.footer}{Adds additional text/labels above and/or 
-  below the scale key, respectively. For example, passing 
-  \code{trendLevel(mydata, key.header = "", key.footer = c("mean","nox"))} adds 
+  below the scale key, respectively. For example, passing the options
+  \code{key.header = "", key.footer = c("mean","nox")} adds 
   the addition text as a scale footer. These arguments are passed to 
   \code{drawOpenKey} via \code{quickText}, applying the 
   \code{auto.text} argument, to handle formatting. The default \code{key.header}, 
@@ -84,7 +84,7 @@ trendLevel(mydata,
   \code{"bottom"} and \code{"left"}.}
 
   \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
-  \link{drawOpenKey} for further details.}
+  \code{drawOpenKey} for further details.}
 
   \item{statistic}{ The statistic method to be use to summarise locally binned \code{pollutant} 
   measurements with. Two options are currently encoded: \code{"mean"} (default) and \code{"max"}. 

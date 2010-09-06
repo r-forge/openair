@@ -32,33 +32,7 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
         angle <- 3
     }
 
-    #check position
-    ##strictly unnecessary because also checked in drawOpenKey 
-    ##however quicker is spotted here
-    temp <- c("right", "left", "top", "bottom")
-    if(!is.null(key$space)) {
-       if(is.character(key$space)) {
-           key$space <- pmatch(key$space[1], temp)
-           if(is.na(key$space))
-               stop(" In windRose(...):", "\n\tspace argument in key not recognised", 
-                   "\n\tplease use one or abbreviation of:\n\t\"", 
-                   paste(temp, sep = "", collapse = "\", \""), "\"", 
-                   call. = FALSE)
-           else {
-               key$space <- temp[key$space]
-               key.position <- key$space
-           }
-       } else stop(" In windRose(...):", "\n\tspace argument in key not recognised", 
-                "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
-                call. = FALSE)         
-    } else {
-       key.position <- pmatch(key.position[1], temp)
-       if (is.na(key.position))
-          stop(" In windRose(...):", "\n\tkey.position argument not recognised", 
-              "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
-               sep = "", collapse = "\", \""), "\"", call. = FALSE)
-       key.position <- temp[key.position]
-    }
+   
 
     vars <- c("ws", "wd", "date")
     if (!is.null(pollutant)) {

@@ -82,33 +82,6 @@ trendLevel <- function(mydata,
    #setup
    ####################
 
-   #check position
-   ##strictly unnecessary because also checked in drawOpenKey 
-   ##however quicker is spotted here
-   temp <- c("right", "left", "top", "bottom")
-   if(!is.null(key$space)) {
-       if(is.character(key$space)) {
-           key$space <- pmatch(key$space[1], temp)
-           if(is.na(key$space))
-               stop(" In trendLevel(...):", "\n\tspace argument in key not recognised", 
-                   "\n\tplease use one or abbreviation of:\n\t\"", 
-                   paste(temp, sep = "", collapse = "\", \""), "\"", 
-                   call. = FALSE)
-           else {
-               key$space <- temp[key$space]
-               key.position <- key$space
-           }
-       } else stop(" In trendLevel(...):", "\n\tspace argument in key not recognised", 
-                "\n\tplease use one or abbreviation of:\n\t", paste(temp, sep = "", collapse = " "), 
-                call. = FALSE)         
-   } else {
-       key.position <- pmatch(key.position[1], temp)
-       if (is.na(key.position))
-          stop(" In trendLevel(...):", "\n\tkey.position argument not recognised", 
-              "\n\tplease use one or abbreviation of:\n\t\"", paste(temp, 
-               sep = "", collapse = "\", \""), "\"", call. = FALSE)
-       key.position <- temp[key.position]
-   }
 
    ##check.valid function
    check.valid <- function(a, x, y){

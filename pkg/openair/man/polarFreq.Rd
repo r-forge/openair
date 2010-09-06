@@ -101,18 +101,19 @@ sometimes is "white".}
 
   \item{main}{Title of plot.}
 
-  \item{key.header, key.footer}{Adds additional text/labels to the scale key. For example, passing 
-  \code{polarFreq(mydata, key.header = "header", key.footer = c("footer1","footer2"))} adds 
-  addition text above and below the scale key. These arguments are passed to 
-  \code{drawOpenKey} via \code{quickText}, applying the 
-  \code{auto.text} argument, to handle formatting. }
+  \item{key.header, key.footer}{Adds additional text/labels to the scale
+  key. For example, passing options \code{key.header =
+  "header", key.footer = "footer"} adds addition text
+  above and below the scale key. These arguments are passed to
+  \code{drawOpenKey} via \code{quickText}, applying the \code{auto.text}
+  argument, to handle formatting. }
 
   \item{key.position}{Location where the scale key is to plotted. 
   Allowed arguments currently include \code{"top"}, \code{"right"}, 
   \code{"bottom"} and \code{"left"}.}
 
   \item{key}{Fine control of the scale key via \code{drawOpenKey}. See 
-  \link{drawOpenKey} for further details.}
+  \code{drawOpenKey} for further details.}
 
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format
