@@ -12,8 +12,7 @@ least hourly resolution both for air pollution monitoring and dispersion
 modelling. The availability of meteorological data at the same time
 resolution greatly enhances the capabilities of these tools.
 
-The project itself is currently funded until October 2011, by which time
-the intention is to make \code{openair} available on CRAN. Up until that
+The project itself is currently funded until October 2011. Up until that
 time the development will carried out on R-Forge
 (\url{http://r-forge.r-project.org/projects/openair/}).}
 
@@ -21,13 +20,13 @@ time the development will carried out on R-Forge
   \tabular{ll}{
     Package: \tab openair\cr
     Type: \tab Package\cr
-    Version: \tab 0.2\cr
-    Date: \tab 2010-01-11\cr
+    Version: \tab 0.3-7\cr
+    Date: \tab 2010-09-07\cr
     License: \tab GPL\cr
     LazyLoad: \tab yes\cr }
 
 \code{openair} contains collection of functions to analyse air pollution
-data. Typically it is expected that data are hourly means, although some
+data. Typically it is expected that data are hourly means, although most
 functions consider other time periods. The principal aim to make
 available analysis techniques that most users of air quality data and
 model output would not normally have access to. The functions consist of
@@ -52,7 +51,7 @@ If there are problems with the automatic download of these packages, see
 
 To check to see if \code{openair} has been correctly installed, try some
 of the examples below. In case of any problems, contact David Carslaw
-\url{mailto: d.c.carslaw@its.leeds.ac.uk} or Karl Ropkins \url{mailto:
+\url{mailto: david.carslaw@kcl.ac.uk} or Karl Ropkins \url{mailto:
 k.ropkins@its.leeds.ac.uk} directly.
 
 }
