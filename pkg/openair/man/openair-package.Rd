@@ -76,11 +76,11 @@ pollution data. King's College London and the University of Leeds.  }
 data(mydata)
 
 # summarise the data in a compact way
-summaryPlot(mydata)
+\dontrun{summaryPlot(mydata)}
 
 # traditional wind rose
 windRose(mydata)
 
 # basic plot
-polarPlot(mydata, pollutant = "nox")
+\dontrun{polarPlot(mydata, pollutant = "nox")}
 }

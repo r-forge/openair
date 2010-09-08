@@ -233,24 +233,24 @@ FALSE)
 # different levels of a third (numeric) variable
 # plot daily averages and choose a filled plot symbol (pch = 16)
 # select only 2004
-dat2004 <- selectByDate(mydata, year = 2004)
+\dontrun{dat2004 <- selectByDate(mydata, year = 2004)
 scatterPlot(dat2004, x = "nox", y = "no2", type = "co", continuous =
- TRUE, avg.time = "day", pch = 16)
+ TRUE, avg.time = "day", pch = 16)}
 
 # show linear fit, by year
-scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
-FALSE, linear = TRUE)
+\dontrun{scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
+FALSE, linear = TRUE)}
 
 # do the same, but for daily means...
-scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
-FALSE, linear = TRUE, avg.time = "day")
+\dontrun{scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
+FALSE, linear = TRUE, avg.time = "day")}
 
 # log scales
-scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
-FALSE, linear = TRUE, avg.time = "day", log.x = TRUE, log.y = TRUE)
+\dontrun{scatterPlot(mydata, x = "nox", y = "no2", type = "year", smooth =
+FALSE, linear = TRUE, avg.time = "day", log.x = TRUE, log.y = TRUE)}
 
 # also works with the x-axis in date format (alternative to timePlot)
-scatterPlot(mydata, x = "date", y = "no2", avg.time = "month", key = FALSE)
+\dontrun{scatterPlot(mydata, x = "date", y = "no2", avg.time = "month", key = FALSE)}
 
 # use hexagonal binning
 \dontrun{

@@ -257,7 +257,7 @@ polarPlot(mydata, pollutant = "nox", min.bin = 3)
 \dontrun{polarPlot(mydata, pollutant = "pm10", type = "weekday")}
 
 # show the 95\% confidence intervals in the surface fitting
-polarPlot(mydata, pollutant = "so2", uncertainty = TRUE)
+\dontrun{polarPlot(mydata, pollutant = "so2", uncertainty = TRUE)}
 
 }
 
