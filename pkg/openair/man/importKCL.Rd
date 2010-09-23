@@ -29,10 +29,11 @@ example.}
 \item{met}{Should meteorological data be added to the import data? The
   default is \code{FALSE}. If \code{TRUE} wind speed (m/s), wind
   direction (degrees) and
-  temperature (deg. C) are added from the Heathrow site. This is
-  currently for testing and we intend to use representative London data
-  from sites where there are no commercial issues related to data
-  usage.}
+  temperature (deg. C) are available from a composite time series based
+  on co-located meteorological measurements around London. These data
+  are meant to represent 'typical' conditions in London, but users may
+  prefer to use their own data. Access to reliable and free
+  meteorological data is problematic.}
 \item{units}{By default the returned data frame expresses the units in
   mass terms (ug/m3 for NOx, NO2, O3, SO2; mg/m3 for CO). Use
   \code{units = "volume"} to use ppb etc. PM10_raw TEOM data are multiplied
