@@ -363,7 +363,7 @@ ans <- read.csv(file, header=FALSE, skip=1
 ) 
 ans[] <- lapply(ans, function(x) { replace(x, x == -999, NA) })
 
-##check for mismatchs
+##check for extra empty column
 if(length(ans[,ncol(ans)][!is.na(ans[,ncol(ans)])])==0) {
     ans <- ans[,1:(ncol(ans)-1)]
 }
@@ -372,6 +372,8 @@ if(ncol(ans)!=length(check.names)){
         , call. = FALSE
     )
 }
+
+if(simplify.names) check.names <- simplifyNamesADMS(check.names)
 
 ##restructure names and data according to arguments and put together
 if(is.logical(add.prefixes)==TRUE){
@@ -391,11 +393,22 @@ if(is.logical(add.prefixes)==TRUE){
         }
     }
 }
+
 names(ans) <- make.names(check.names, unique=TRUE)
 
-if(simplify.names){
-    names(ans) <- simplifyNamesADMS(names(ans))
+##reset wd 0 to 360
+##get current PHI terminology
+temp <- if(simplify.names) simplifyNamesADMS("PHI") else "PHI" 
+temp <- if(length(add.prefixes)>1) paste(add.prefixes[1], temp, sep=".") else temp
+if(temp %in% names(ans)) {
+    ans[, temp][ans[, temp]==0] <- 360
+    warning("Zero wind directions encountered, resetting to 360"
+        , call. = FALSE)
 }
+
+#if(simplify.names){
+#    names(ans) <- simplifyNamesADMS(names(ans))
+#}
 
 #drop messy name handling
 names(ans) <- gsub("[.][.]", ".", names(ans))

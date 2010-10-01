@@ -5,7 +5,6 @@
 \alias{importADMSMet}
 \alias{importADMSMop}
 \alias{importADMSPst}
-\alias{simplifyNamesADMS}
 
 \title{ ADMS data import function(s) for openair }
 \description{
@@ -21,6 +20,7 @@ mydata <- importADMS(file = file.choose(),
                 keep.units = TRUE, simplify.names = TRUE, 
                 test.file.structure = TRUE, 
                 drop.delim = TRUE, add.prefixes = TRUE,
+                names = NULL,
                 ...)
  }
 
@@ -78,7 +78,10 @@ mydata <- importADMS(file = file.choose(),
   "out" prefixes to input and output data names, respectively. (Note: Option ignored when importing 
   \code{.bgd}, \code{.met} or \code{.pst} files.)}     
 
-  \item{...}{Additional arguments, passed to \code{read.csv} as part of import operation.}
+  \item{names}{ Option applied by \code{simplifyNamesADMS} when \code{simplify.names} is enabled. 
+  All names are simplified for the default setting, \code{NULL}.}
+
+  \item{...}{ Additional arguments, passed to \code{read.csv} as part of import operation.}
 
 } 
 
@@ -103,7 +106,7 @@ If \code{simplify.names} is enabled common chemical names may be simplified, and
 some other parameters may be reset to openair standards (e.g. "ws", "wd" and 
 "temp") according to operations defined in \code{simplifyNamesADMS}. A summary 
 of simplfication operations can be obtained using, e.g., the call 
-\code{importADMS(simplify.names).} 
+\code{importADMS(simplify.names)}. 
 
 If \code{drop.case} is enabled all upper case characters in names will be converted 
 to lower case.
@@ -114,7 +117,8 @@ frame comment if available.
 With \code{.mop} files, input and processed data series names may also been modified 
 on the basis of \code{drop.delim} and \code{add.prefixes} settings}
 
-\note{Times are assumed to be in GMT.}
+\note{Times are assumed to be in GMT. Zero wind directions reset to 360 as part 
+of \code{.mop} file import.}
 
 \section{Warning }{\code{importADMS} is currently released as a test version only.}
 

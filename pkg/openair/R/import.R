@@ -103,7 +103,7 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
             date.order, ignore.case = TRUE)
         date.order <- gsub("m", paste("%m", date.break, sep = ""), 
             date.order, ignore.case = TRUE)
-        date.order <- gsub("y", paste("%Y", date.break, sep = ""), 
+        date.order <- gsub("y", paste("%y", date.break, sep = ""), 
             date.order, ignore.case = TRUE)
         date.order <- substr(date.order, 1, (nchar(date.order) - 
             1))
@@ -148,12 +148,13 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
         sep = " "), time.format)
 
     #yy/yyyy tester
-    temp <- as.POSIXct(b, format = paste(
-                gsub("Y", "y", date.order), time.order, 
-                sep = " "), time.format)
-    if(!all(is.na(temp))){
-             date.order <- gsub("Y", "y", date.order)
-             a <- temp
+    #if invalid try year
+    #NOTE: Can't test for Y first 
+    #(Y%=01 is year 0001!, etc 
+    if(all(is.na(a))){
+        date.order <- gsub("y", "Y", date.order)
+        a <- as.POSIXct(b, format = paste(date.order, time.order, 
+            sep = " "), time.format)
     }
 
     if (bad.24 == TRUE) {
