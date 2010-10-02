@@ -524,7 +524,7 @@ if(drop.input.dates==TRUE){
 #recover units from names
 units <- rep(NA, ncol(ans))
 units[grep("^.[.]m", names(ans))] <- "m"
-units[grep("[.]ug.m³[.]", names(ans))] <- "ug/m3"
+units[grep("[.]ug.m3[.]", names(ans))] <- "ug/m3"
 units[grep("[.]ug/m3[.]", names(ans))] <- "ug/m3"
 units[grep("[.]ppb[.]", names(ans))] <- "ppb"
 units[grep("[.]ppm[.]", names(ans))] <- "ppm"
@@ -654,14 +654,14 @@ simplifyNamesADMS <- function(names=NULL){
    #Conc|ppm|[NAME]|All sources|-| 1hr
       names <- fun.temp(names, "Conc|ppm|[NAME]|[SOURCES]|-| 1hr", "[NAME].[SOURCES]")      
    #Conc|ug/m³|[NAME]|All sources|-| 1hr
-      names <- fun.temp(names, "Conc|ug/m³|[NAME]|[SOURCES]|-| 1hr", "[NAME].[SOURCES]")
+      names <- fun.temp(names, "Conc|ug/m3|[NAME]|[SOURCES]|-| 1hr", "[NAME].[SOURCES]")
    #Conc|ug/m3|[NAME]|All sources|-| 1hr
       names <- fun.temp(names, "Conc|ug/m3|[NAME]|[SOURCES]|-| 1hr", "[NAME].[SOURCES]")
     
    #general for above 
       names <- fun.temp.2(names, "Conc|ppb|", "", TRUE)
       names <- fun.temp.2(names, "Conc|ppm|", "", TRUE)
-      names <- fun.temp.2(names, "Conc|ug/m³|", "", TRUE)
+      names <- fun.temp.2(names, "Conc|ug/m3|", "", TRUE)
       names <- fun.temp.2(names, "Conc|ug/m3|", "", TRUE)
       names <- fun.temp.2(names, "[.][.][.][.]1hr", "", FALSE)
 
