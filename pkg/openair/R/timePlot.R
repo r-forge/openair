@@ -148,9 +148,6 @@ with option type = 'site'")
         mydata <-  ddply(mydata, .(variable), divide.by.mean)
     }
 
-    ## ylabs for more than one pollutant
-    if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ")
-
     mylab <- sapply(seq_along(pollutant), function(x) quickText(pollutant[x], auto.text))
 
     if (type == "site") {
@@ -163,6 +160,9 @@ with option type = 'site'")
     if (!missing(name.pol)) {mylab <- sapply(seq_along(name.pol), function(x)
                                              quickText(name.pol[x], auto.text))
                          }
+    
+    ## ylabs for more than one pollutant
+    if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ")
 
     ## set up colours
     myColors <- openColours(cols, npol)
@@ -183,14 +183,12 @@ with option type = 'site'")
     if (!group) { ## sepate panels per pollutant
         strip <- FALSE
         myform <- formula("value ~ date | variable")
-        ## proper names of labelling
-        pol.name <- sapply(levels(mydata$variable),  function(x) quickText(x, auto.text))
-
+      
         if (npol == 1) {
             strip.left <- FALSE
         } else {
             strip.left <- strip.custom(par.strip.text = list(cex = 0.9), horizontal = FALSE,
-                                       factor.levels = pol.name)
+                                       factor.levels = mylab)
         }
 
         scales <- list(x = list(at = dates, format = formats), y = list(relation = "free",
