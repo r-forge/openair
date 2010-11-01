@@ -1,8 +1,8 @@
 import <- function (file = file.choose(), file.type = "csv", header.at = 1, 
     data.at = 2, eof.report = NULL, na.strings = c("", "NA"), 
     quote = "\"", date.name = "date", date.break = "/", date.order = "dmy", 
-    time.name = "date", time.break = ":", time.order = "hm", 
-    time.format = "GMT", is.ws = NULL, is.wd = NULL, is.site = NULL, 
+    time.name = "date", time.break = ":", time.order = "hm",  
+    time.format = "GMT", cipher = NULL, is.ws = NULL, is.wd = NULL, is.site = NULL, 
     misc.info = NULL, bad.24 = FALSE, correct.time = NULL, previous = FALSE,
     output = "final") 
 {
@@ -10,7 +10,7 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
     ################################
     #multi-format data importer
     ################################
-    #kr version 0.lost.count
+    #kr version 0.2.1
     #21/10/2010
     ###############################
     #
@@ -19,13 +19,14 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
     #recent changes
     ##############################
     #brought forward file and name import
-    ##no longer impossible
+    ##no longer impossible to defer to last min!!!
+    #add new date.time handler cipher
+    ##see date.time.cipher at end
     #
 
     ##################
     #to do 
     ##################
-    #remark properly
     #
 
     ##################
@@ -38,6 +39,10 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
 #access to older importer via previous
 #wraps around main function
 #import.2 is previous 'hidden' version
+##################
+#when move to previous
+#remove access to previous
+#else messy!
 ##################
 if(previous)
     import.2(file = file, file.type = file.type, header.at = header.at, 
@@ -220,34 +225,48 @@ if(previous)
     #####################
     #date/time setup
     #####################
-    if(tolower(substr(date.order,1,5))=="posix") {  
-        date.order <- gsub("posix", "", date.order, ignore.case = TRUE)
-        date.order <- gsub("(^ +)|( +$)", "", date.order)
+    #old and new handlers
+
+    if(is.null(cipher)==FALSE && is.character(cipher)){
+        #new handler 
+        #overrides old
+        #uses cipher and date.break, time.break if pasting things together
+        date.order <- date.time.cipher(cipher[1])        
     } else {
-        date.order <- gsub("d", paste("%d", date.break, sep = ""), 
-            date.order, ignore.case = TRUE)
-        date.order <- gsub("j", paste("%j", date.break, sep = ""), 
-            date.order, ignore.case = TRUE)
-        date.order <- gsub("m", paste("%m", date.break, sep = ""), 
-            date.order, ignore.case = TRUE)
-        date.order <- gsub("y", paste("%y", date.break, sep = ""), 
-            date.order, ignore.case = TRUE)
-        date.order <- substr(date.order, 1, (nchar(date.order) - 
-            1))
+        #old handler
+        #uses date.break, date.order, time.break, time.order
+        if(tolower(substr(date.order,1,5))=="posix") {  
+            date.order <- gsub("posix", "", date.order, ignore.case = TRUE)
+            date.order <- gsub("(^ +)|( +$)", "", date.order)
+        } else {
+            date.order <- gsub("d", paste("%d", date.break, sep = ""), 
+                date.order, ignore.case = TRUE)
+            date.order <- gsub("j", paste("%j", date.break, sep = ""), 
+                date.order, ignore.case = TRUE)
+            date.order <- gsub("m", paste("%m", date.break, sep = ""), 
+                date.order, ignore.case = TRUE)
+            date.order <- gsub("y", paste("%Y", date.break, sep = ""), 
+                date.order, ignore.case = TRUE)
+            date.order <- substr(date.order, 1, (nchar(date.order) - 
+                1))
+        }
+        if(tolower(substr(time.order,1,5))=="posix") {  
+            time.order <- gsub("posix", "", time.order, ignore.case = TRUE)
+            time.order <- gsub("(^ +)|( +$)", "", time.order)
+        } else {
+            time.order <- gsub("h", paste("%H", time.break, sep = ""), 
+                time.order, ignore.case = TRUE)
+            time.order <- gsub("m", paste("%M", time.break, sep = ""), 
+                time.order, ignore.case = TRUE)
+            time.order <- gsub("s", paste("%S", time.break, sep = ""), 
+                time.order, ignore.case = TRUE)
+            time.order <- substr(time.order, 1, (nchar(time.order) - 
+                1))
+        }
+        date.order <- paste(date.order, time.order, sep = " ")
     }
-    if(tolower(substr(time.order,1,5))=="posix") {  
-        time.order <- gsub("posix", "", time.order, ignore.case = TRUE)
-        time.order <- gsub("(^ +)|( +$)", "", time.order)
-    } else {
-        time.order <- gsub("h", paste("%H", time.break, sep = ""), 
-            time.order, ignore.case = TRUE)
-        time.order <- gsub("m", paste("%M", time.break, sep = ""), 
-            time.order, ignore.case = TRUE)
-        time.order <- gsub("s", paste("%S", time.break, sep = ""), 
-            time.order, ignore.case = TRUE)
-        time.order <- substr(time.order, 1, (nchar(time.order) - 
-            1))
-    }
+
+
 
     if (length(date.name) > 0) {
         if (length(date.name) == 1) {
@@ -274,18 +293,21 @@ if(previous)
     }
 
     b <- apply(cbind(a, b), 1, paste, collapse = " ")
-    a <- as.POSIXct(b, format = paste(date.order, time.order, 
-        sep = " "), time.format)
+    a <- as.POSIXct(b, format = date.order, time.format)
 
-    #yy/yyyy tester
-    #if invalid try year
-    #NOTE: Can't test for Y first 
-    #(Y%=01 is year 0001!, etc 
-    if(all(is.na(a))){
-        date.order <- gsub("y", "Y", date.order)
-        a <- as.POSIXct(b, format = paste(date.order, time.order, 
-            sep = " "), time.format)
-    }
+    ######################
+    #removed yy/yyyy tester
+    #due to 2.11/2.12 handling 
+    ######################
+    ###yy/yyyy tester
+    ###if invalid try year
+    ###NOTE: Can't test for Y first 
+    ###(Y%=01 is year 0001!, etc 
+    ##if(all(is.na(a))){
+    ##    date.order <- gsub("y", "Y", date.order)
+    ##    a <- as.POSIXct(b, format = paste(date.order, time.order, 
+    ##        sep = " "), time.format)
+    ##}
 
     if (bad.24 == TRUE) {
         bad.time <- gsub("%H", "24", time.order, ignore.case = TRUE)
@@ -360,6 +382,74 @@ if(previous)
 ##################
 }
 
+}
+
+
+date.time.cipher <- function(cipher){
+
+###########################
+#cipher handler for date.time format
+###########################
+#v 0.0.1
+#kr 31 10 2010
+#
+
+###########################
+#notes
+###########################
+#alternative format control for import
+#
+
+###########################
+#to do
+###########################
+#month
+
+
+#local day of week
+cipher <- gsub(make.weekday.abbs()[6], "%a", cipher)
+cipher <- gsub(make.weekday.names()[6], "%A", cipher)
+
+#day of year
+cipher <- gsub("32", "%j", cipher)
+
+#day of month
+cipher <- gsub("01", "%d", cipher)
+
+#month of year
+cipher <- gsub("02", "%m", cipher)
+cipher <- gsub(make.month.abbs()[2], "%b", cipher)
+cipher <- gsub(make.month.names()[2], "%B", cipher)
+
+#year
+cipher <- gsub("2003", "%Y", cipher)
+cipher <- gsub("03", "%y", cipher)
+
+#hour
+cipher <- gsub("04", "%I", cipher)
+cipher <- gsub("16", "%H", cipher)
+
+#am/pm
+cipher <- gsub("PM", "%p", cipher)
+
+#mins
+cipher <- gsub("05", "%M", cipher)
+
+#secs
+cipher <- gsub("06.", "%OS", cipher)
+cipher <- gsub("06", "%S", cipher)
+
+#note:
+#time zone, output only 
+#so, handled in main structure at moment
+
+#at end tidy
+#strip out unknown numerics
+cipher <- gsub("[0-9]", "", cipher)
+cipher <- gsub("posix", "", cipher, ignore.case = TRUE)
+cipher <- gsub("(^ +)|( +$)", "", cipher)
+
+cipher
 }
 
 

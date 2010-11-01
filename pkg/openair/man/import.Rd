@@ -12,7 +12,7 @@ mydata <- import(file = file.choose(), file.type="csv",
                  eof.report = NULL, na.strings = c("", "NA"), quote="\"", 
                  date.name = "date", date.break = "/", date.order = "dmy", 
                  time.name = "date", time.break = ":", time.order = "hm", 
-                 time.format ="GMT", 
+                 time.format ="GMT", cipher = NULL,
                  is.ws = NULL, is.wd = NULL, is.site = NULL,
                  misc.info = NULL, 
                  bad.24 = FALSE, 
@@ -90,6 +90,17 @@ options. (Note: direct POSIX calls supercede other time settings.)}
 \item{time.format}{ The time format the imported data was logged in. 
 Allows most common formats, e.g.: "GMT" (default), "UTC", etc. 
 See \code{as.POSIX*} functions for further information. }
+
+\item{cipher}{ Alternative date and time handling method, currently in 
+development. If supplied the key date/time Saturday 1st February 2003 16:05:06 (or 
+nearest case) in the format used within the supplied file, \code{cipher} attempts 
+to decode this and format supplied date/time information using the associated method. 
+\code{cipher} is more flexible than \code{date.order} and \code{time.order}, allowing 
+the import of both numeric and non-numeric month descriptors (02, Feb, February), YY and 
+YYYY year formats (03, 2003), days of week (Sat, Saturday), and 12 and 24 hour time stamps 
+(04:05 PM, 16:05). Like \code{date.order} and \code{time.order}, \code{cipher} can also 
+handle more complex formats by calling POSIX* directly. Note: This option is currently 
+in development and should be used with care. } 
 
 \item{is.ws}{ Wind speed information identifier. Default
 NULL turns this option off. When set to valid header name or data column number,
