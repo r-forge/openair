@@ -20,7 +20,7 @@ timeAverage <- function(mydata, period = "day", data.thresh = 0,
     if (statistic == "max") form <- "suppressWarnings(max(x, na.rm = TRUE))"
     if (statistic == "min") form <- "suppressWarnings(min(x, na.rm = TRUE))"
     if (statistic == "median") form <- "median(x, na.rm = TRUE)"
-    if (statistic == "median") form <- "median(x, na.rm = TRUE)"
+    if (statistic == "sum") form <- "sum(x, na.rm = TRUE)"
     if (statistic == "sd") form <- "sd(x, na.rm = TRUE)"
     if (statistic == "frequency") form <- "length(na.omit(x))"
     if (statistic == "percentile") form <- "quantile(x, probs = percentile, na.rm = TRUE)"
