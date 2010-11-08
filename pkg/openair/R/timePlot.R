@@ -1,29 +1,30 @@
 timePlot <- function(mydata,
-                      pollutant = "nox",
-                      group = FALSE,
-                      stack = FALSE,
-                      normalise = FALSE,
-                      avg.time = "default",
-                      data.thresh = 0,
-                      statistic = "mean",
-                      percentile = 95,
-                      date.pad = FALSE,
-                      type = "default",
-                      layout = c(1, 1),
-                      cols = "brewer1",
-                      main = "",
-                      ylab = pollutant,
-                      lty = 1:length(pollutant),
-                      lwd = 1,
-                      key = TRUE,
-                      strip = TRUE,
-                      log = FALSE,
-                      smooth = FALSE,
-                      ci = TRUE,
-                      key.columns = 1,
-                      name.pol = pollutant,
-                      date.breaks = 7,
-                      auto.text = TRUE, ...)   {
+                     pollutant = "nox",
+                     group = FALSE,
+                     stack = FALSE,
+                     normalise = FALSE,
+                     avg.time = "default",
+                     data.thresh = 0,
+                     statistic = "mean",
+                     percentile = 95,
+                     date.pad = FALSE,
+                     type = "default",
+                     layout = c(1, 1),
+                     cols = "brewer1",
+                     main = "",
+                     ylab = pollutant,
+                     lty = 1:length(pollutant),
+                     lwd = 1,
+                     pch = NA,
+                     key = TRUE,
+                     strip = TRUE,
+                     log = FALSE,
+                     smooth = FALSE,
+                     ci = TRUE,
+                     key.columns = 1,
+                     name.pol = pollutant,
+                     date.breaks = 7,
+                     auto.text = TRUE, ...)   {
 
 
     ## basic function to plot single/multiple time series in flexible ways
@@ -34,7 +35,7 @@ timePlot <- function(mydata,
 
     ## Author: David Carslaw 11 Sep. 09
     ## CHANGES:
-   
+    
 
 ### EXPERIMENTAL LOG SCALING###############################################
     if(log) nlog <- 10 else nlog <- FALSE
@@ -100,15 +101,15 @@ with option type = 'site'")
         if (length(percentile) > 1) {
 
             mydata <- calcPercentile(mydata, pollutant = pollutant, period = avg.time,
-                                      data.thresh = data.thresh, percentile = percentile)
+                                     data.thresh = data.thresh, percentile = percentile)
             pollutant <-  paste("percentile.", percentile,  sep = "")
             vars <- names(mydata) ## new variables to use
             if (missing(group)) group <- TRUE
 
         } else {
             mydata <- timeAverage(mydata, period = avg.time,
-                                   data.thresh = data.thresh, statistic = statistic,
-                                   percentile = percentile)
+                                  data.thresh = data.thresh, statistic = statistic,
+                                  percentile = percentile)
         }
     }
 
@@ -183,7 +184,7 @@ with option type = 'site'")
     if (!group) { ## sepate panels per pollutant
         strip <- FALSE
         myform <- formula("value ~ date | variable")
-      
+        
         if (npol == 1) {
             strip.left <- FALSE
         } else {
@@ -218,8 +219,15 @@ with option type = 'site'")
 
 
     if (key) {
+        ## type of key depends on whether points are plotted or not
+        if (any(!is.na(pch))) {   
         key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                    points = list(pch = pch, col = myColors[1:npol]),
                     text = list(lab = mylab),  space = "bottom", columns = key.columns)
+    } else {
+         key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                    text = list(lab = mylab),  space = "bottom", columns = key.columns)
+    }
     } else {
         key <- NULL ## either there is a key or there is not
     }
@@ -237,6 +245,7 @@ with option type = 'site'")
            layout = layout,
            lty = lty,
            lwd = lwd,
+           pch = pch,
            xlim = xlim,
            main = quickText(main),
            ylab = quickText(ylab, auto.text),
@@ -246,7 +255,8 @@ with option type = 'site'")
            strip.left = strip.left,
            yscale.components = yscale.components.log10,
            panel =  panel.superpose,...,
-           panel.groups = function(x, y, col.line, col, col.se, type, group.number, lty, lwd, subscripts,...) {
+           panel.groups = function(x, y, col.line, col.symbol, col, col.se, type, group.number, lty,
+           lwd, pch, subscripts,...) {
 
                if (group.number == 1) {
                    panel.grid(-1, 0)
@@ -259,6 +269,10 @@ with option type = 'site'")
                }
 
                panel.xyplot(x, y, type = "l", lty = lty, lwd = lwd, col.line = myColors[group.number],...)
+               ## deal with points separately - useful if missing data where line does not join consequtive points
+               if (any(!is.na(pch))) {                   
+                   lpoints(x, y, type = "p", pch = pch, col.symbol = myColors[group.number],...)
+               }
                if (smooth) panel.gam(x, y, col = myColors[group.number] , col.se =  myColors[group.number],
                                      lty = 1, lwd = 1, se = ci, ...)
 

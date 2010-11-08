@@ -24,6 +24,7 @@ main = "",
 ylab = pollutant,
 lty = 1:length(pollutant),
 lwd = 1,
+pch = NA,
 key = TRUE,
 strip = TRUE,
 log = FALSE,
@@ -126,6 +127,12 @@ auto.text = TRUE, ...)
     example, if \code{pollutant = c("nox", "no2", "o3")}, and a wider line
     was wanted for ozone, then \code{lwd} can be expressed as \code{lwd =
       c(1, 1, 2)}.}
+
+  \item{pch}{The type of symbol to be plotted. The default is not to
+  plot a symbol. It can be useful to do so in cases where there are not
+  consecutive points in time and a line cannot be drawn between two
+  points. Symbols can be plotted as a vector of types e.g. for unfilled
+  and filled symbols use \code{pch = c(1, 16)}.}
 
   \item{key}{Should a key be drawn? The default is \code{TRUE}.}
 
