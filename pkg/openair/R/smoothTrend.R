@@ -4,7 +4,7 @@ smoothTrend <- function(mydata,
                          deseason = FALSE,
                          type = "default",
                          statistic = "mean",
-                         percentile = 95,
+                         percentile = NA,
                          data.thresh = 0,
                          simulate = FALSE,
                          n = 200, #bootstrap simulations

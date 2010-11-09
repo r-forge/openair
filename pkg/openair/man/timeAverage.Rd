@@ -13,7 +13,7 @@ timeAverage(mydata,
 period = "day",
 data.thresh = 0,
 statistic = "mean",
-percentile = 95,
+percentile = NA,
 start.date = NA)
 }
 

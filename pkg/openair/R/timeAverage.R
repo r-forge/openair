@@ -9,11 +9,13 @@
 ## NOTE - will only return numeric data apart from site name
 
 timeAverage <- function(mydata, period = "day", data.thresh = 0,
-                         statistic = "mean", percentile = 95, start.date = NA) {
+                         statistic = "mean", percentile = NA, start.date = NA) {
    
 
-    percentile <- percentile / 100
-    if (percentile < 0 | percentile > 100) stop("Percentile range outside 0-100")
+    if (!is.na(percentile)) {
+        percentile <- percentile / 100
+        if (percentile < 0 | percentile > 100) stop("Percentile range outside 0-100")
+    }
     if (data.thresh < 0 | data.thresh > 100) stop("Data capture range outside 0-100")
 
     if (statistic == "mean") form <- "mean(x, na.rm = TRUE)"
