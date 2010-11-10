@@ -244,8 +244,15 @@ MannKendall <- function(mydata,
                   }
                   )
     
-    print(plt)
-    invisible(list(split.data, res2))
+    #################
+    #output
+    #################
+    plot(plt)
+    newdata <- list(main.data = split.data, res2 = res2, subsets = c("main.data", "res2"))
+    output <- list(plot = plt, data = newdata, call = match.call())
+    class(output) <- "openair"
+    invisible(output)  
+
 }
 
 

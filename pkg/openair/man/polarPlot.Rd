@@ -155,6 +155,27 @@ polarPlot(polar,
 
   \item{\dots}{Other graphical parameters.}  }
 
+\value{
+  As well as generating the plot itself, \code{polarPlot} 
+  also returns an object of class ``openair''. The object includes three main 
+  components: \code{call}, the command used to generate the plot; \code{data}, 
+  the data frame of summarised information used to make the 
+  plot; and \code{plot}, the plot itself. If retained, e.g. using 
+  \code{output <- polarPlot(mydata, "nox")}, this output can be used to recover the data, reproduce 
+  or rework the original plot or undertake further analysis.  
+
+  An openair output can be manipulated using a number of generic operations, including 
+  \code{print}, \code{plot} and \code{summarise}. See \code{\link{openair.generics}} 
+  for further details.
+  
+  \code{polarPlot} surface data can also be extracted directly using the \code{$data} operator, e.g. 
+  \code{object$data} for \code{output <- polarPlot(mydata, "nox")}. This returns a data frame with 
+  four set columns: \code{cond}, conditioning based on \code{type}; \code{u} and \code{v}, the 
+  translational vectors based on \code{ws} and \code{wd}; and the local \code{pollutant} estimate.     
+  
+}
+
+
 \details{ The bivariate polarPlot is a useful diagnostic tool for
   quickly gaining an idea of potential sources. Wind speed is one of the
   most useful variables to use to separate source types (see

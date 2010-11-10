@@ -186,6 +186,22 @@ here.}
   \item{\dots}{Other graphical parameters.}
 }
 
+\value{
+  As well as generating the plot itself, \code{timePlot} also returns an object of class 
+  ``openair''. The object includes three main components: \code{call}, the command used to 
+  generate the plot; \code{data}, the data frame of summarised information used to make the 
+  plot; and \code{plot}, the plot itself. If retained, e.g. using 
+  \code{output <- timePlot(mydata, "nox")}, this output can be used to recover the data, reproduce 
+  or rework the original plot or undertake further analysis.  
+
+  An openair output can be manipulated using a number of generic operations, including 
+  \code{print}, \code{plot} and \code{summarise}. See \code{\link{openair.generics}} 
+  for further details.   
+  
+}
+
+
+
 \details{
   The \code{timePlot} is the basic time series plotting function in
   \code{openair}. Its purpose is to make it quick and easy to plot time

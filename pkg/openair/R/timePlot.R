@@ -241,7 +241,7 @@ timePlot <- function(mydata,
     skip <- FALSE
     if (type == "wd") skip <-  c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
 
-    xyplot(myform,  data = mydata, groups = variable,
+    plt <- xyplot(myform,  data = mydata, groups = variable,
            as.table = TRUE,
            layout = layout,
            skip = skip,
@@ -280,6 +280,16 @@ timePlot <- function(mydata,
 
            }
            )
+
+    #################
+    #output
+    #################
+    plot(plt)
+    newdata <- mydata
+    output <- list(plot = plt, data = newdata, call = match.call())
+    class(output) <- "openair"
+    invisible(output)  
+
 }
 
 

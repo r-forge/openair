@@ -331,6 +331,17 @@ scatterPlot <- function(mydata,
     if (method == "scatter") print(pltscatter)
     if (method == "hexbin") print(plthexbin)
     if (method == "density") print(pltkernel)
+
+    #################
+    #output
+    #################
+    plt <- trellis.last.object()
+    newdata <- mydata
+    output <- list(plot = plt, data = newdata, call = match.call())
+    class(output) <- "openair"
+    invisible(output)      
+
+
 }
 
 

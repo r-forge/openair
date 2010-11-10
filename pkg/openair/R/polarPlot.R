@@ -171,7 +171,7 @@ polarPlot <- function(polar,
          draw = FALSE)))
     names(legend)[1] <- if(is.null(key$space)) key.position else key$space
 
-    levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
+    plt <- levelplot(z ~ u * v | cond, results.grid, axes = FALSE,
               as.table = TRUE,
               layout = layout,
               strip = strip,
@@ -215,6 +215,18 @@ polarPlot <- function(polar,
                   ltext(0, upper * 1.07, "N", cex = 0.7)
                   ltext(upper * 1.07, 0, "E", cex = 0.7)
               })
+
+    #################
+    #output
+    #################
+    plot(plt)
+    newdata <- results.grid
+    names(newdata)[3] <- pollutant 
+    newdata <- newdata[c("cond", "u", "v", pollutant)]
+    output <- list(plot = plt, data = newdata, call = match.call())
+    class(output) <- "openair"
+    invisible(output)  
+
 }
 
 
