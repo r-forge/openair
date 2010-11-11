@@ -13,6 +13,7 @@ scatterPlot <- function(mydata,
                          smooth = TRUE,
                          linear = FALSE,
                          ci = TRUE,
+                        mod.line = FALSE,
                          cols = "hue",
                          main = "",
                          ylab = y,
@@ -246,6 +247,11 @@ scatterPlot <- function(mydata,
                                  if (linear) panel.linear(x, y, col = "black",myColors[group.number], lwd = 1,
                                                           lty = 5, x.nam = x.nam, y.nam = y.nam,
                                                           se = ci,  ...)
+                                 if (mod.line) {
+                                     panel.abline(a = c(0, 0.5), lty = 5)
+                                     panel.abline(a = c(0, 2), lty = 5)
+                                     panel.abline(a = c(0, 1), lty = 1)
+                                 }
                              })
     }
 
@@ -264,6 +270,11 @@ scatterPlot <- function(mydata,
                                 panel = function(x,...) {
                                     panel.grid(-1, -1)
                                     panel.hexbinplot(x,...)
+                                    if (mod.line) {
+                                     panel.abline(a = c(0, 0.5), lty = 5)
+                                     panel.abline(a = c(0, 2), lty = 5)
+                                     panel.abline(a = c(0, 1), lty = 1)
+                                 }
                                 })
     }
 
@@ -326,6 +337,11 @@ scatterPlot <- function(mydata,
                                                    pretty = TRUE,
                                                    col.regions = col,
                                                    labels = FALSE)
+                                   if (mod.line) {
+                                     panel.abline(a = c(0, 0.5), lty = 5)
+                                     panel.abline(a = c(0, 2), lty = 5)
+                                     panel.abline(a = c(0, 1), lty = 1)
+                                 }
                                })
     }
     if (method == "scatter") print(pltscatter)

@@ -128,7 +128,7 @@ timePlot <- function(mydata,
     if (type != "default") {
         
         group <- TRUE ## need to group pollutants if conditioning
-        layout <- NULL
+        if (missing(layout)) layout <- NULL else layout <- layout
     }   
     
     ## number of pollutants (or sites for type = "site")
