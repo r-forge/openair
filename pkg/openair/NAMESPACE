@@ -51,6 +51,9 @@ export(
        polarAnnulus,
        polarFreq,
        polarPlot,
+
+       #kernel density
+       kernelExceed,
               
        ##wind roses:
        windRose, pollutionRose
