@@ -100,6 +100,10 @@ scatterPlot <- function(mydata,
     ## remove missing data
     mydata <- na.omit(mydata)
 
+    ## if x is a factor/character, then rotate axis labels for clearer labels
+    x.rot <- 0
+    if ("factor" %in% class(mydata[, x]) | "character"  %in% class(mydata[, x])) x.rot <- 90
+
     ## continuous colors
     if (continuous & method == "scatter") {
         ## check to see if type is numeric/integer
@@ -154,7 +158,7 @@ scatterPlot <- function(mydata,
     ## basic function for lattice call + defaults
     myform <- formula(paste(y, "~", x))
 
-    scales <- list(x = list(log = nlog.x), y = list(log = nlog.y))
+    scales <- list(x = list(log = nlog.x, rot = x.rot), y = list(log = nlog.y))
 
     if (x == "date") { ## get proper date scaling
         date.breaks <- 7
@@ -180,7 +184,7 @@ scatterPlot <- function(mydata,
         myform <- formula(paste(y, "~", x, "| site"))
         ## proper names of labelling
         strip <- strip.custom(par.strip.text = list(cex = 0.8), factor.levels = pol.name)
-        scales <- list(y = list(rot = 0, log = nlog.y), x = list(log = nlog.x))
+        scales <- list(y = list(rot = 0, log = nlog.y), x = list(log = nlog.x, rot = x.rot))
     }
 
     if (key & type != "default") {
