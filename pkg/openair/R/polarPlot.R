@@ -29,6 +29,16 @@ polarPlot <- function(polar,
     vars <- c("ws", "wd", "date", pollutant)
 
     polar <- checkPrep(polar, vars, type)
+
+    ## if more than one pollutant, need to stack the data and set type = "variable"
+    ## this case is most relevent for model-measurement compasrions where data are in columns
+    if (length(pollutant) > 1) {
+        polar <- melt(polar, measure.vars = pollutant)
+        ## now set pollutant to "value"
+        pollutant <- "value"
+        type <- "variable"       
+    }
+    
     polar <- na.omit(polar)
     ## cutData depending on type
     polar <- cutData(polar, type)
