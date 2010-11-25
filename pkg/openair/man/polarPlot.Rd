@@ -13,9 +13,9 @@
 \usage{
 polarPlot(polar, 
     pollutant = "nox", type = "default",
-    resolution = "normal", limits = c(0, 100), 
+    resolution = "normal", limits = NA, 
     exclude.missing = TRUE, uncertainty = FALSE, 
-    cols = "default", min.bin = 1, upper = 10, 
+    cols = "default", min.bin = 1, upper = NA, 
     ws.int = 5, angle.scale = 45, units = "(m/s)", 
     force.positive = TRUE, k = 100, normalise = FALSE,
 main = "", key.header = "", key.footer = pollutant, 

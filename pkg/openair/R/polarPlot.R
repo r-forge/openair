@@ -3,12 +3,12 @@ polarPlot <- function(polar,
                       pollutant = "nox",
                       type = "default",
                       resolution = "normal",
-                      limits = c(0, 100),
+                      limits = NA,
                       exclude.missing = TRUE,
                       uncertainty = FALSE,
                       cols = "default",
                       min.bin = 1,
-                      upper = 10,
+                      upper = NA,
                       ws.int = 5,
                       angle.scale = 45,
                       units = "(m/s)",
@@ -145,8 +145,11 @@ polarPlot <- function(polar,
 
     ## remove wind speeds > upper to make a circle
     results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
+    
+    ## proper names of labelling
+    pol.name <- sapply(unique(results.grid$cond), function(x) quickText(x, auto.text))
+    strip <- strip.custom(factor.levels = pol.name)
 
-    strip <- TRUE
     skip <- FALSE
     if (type == "default") strip <- FALSE ## remove strip
     if (uncertainty) strip <- TRUE
@@ -200,6 +203,7 @@ polarPlot <- function(polar,
                      at = col.scale,
                      xlab = "",
                      ylab = "",
+                     par.strip.text = list(cex = 0.8),
                      main = quickText(main, auto.text),
                      scales = list(draw = FALSE),
                      xlim = c(-upper * 1.15, upper * 1.15),
