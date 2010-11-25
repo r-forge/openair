@@ -17,8 +17,8 @@ polarPlot(polar,
     exclude.missing = TRUE, uncertainty = FALSE, 
     cols = "default", min.bin = 1, upper = 10, 
     ws.int = 5, angle.scale = 45, units = "(m/s)", 
-    force.positive = TRUE, k = 100, main = "", 
-    key.header = "", key.footer = pollutant, 
+    force.positive = TRUE, k = 100, normalise = FALSE,
+main = "", key.header = "", key.footer = pollutant, 
     key.position = "right", key = NULL, 
     auto.text = TRUE, ...)  
 }
@@ -137,6 +137,13 @@ polarPlot(polar,
   \item{k}{This is the smoothing parameter that is set if auto.smooth is
     set to \code{FALSE}. Typically, value of around 100 (the default)
     seems to be suitable and will resolve more features in the plot.}
+
+  \item{normalise}{If \code{TRUE} concentrations are normalised by
+  dividing by their mean value. This is done \emph{after} fitting the
+  smooth surface. This option is particularly useful if one is
+  interested in the patterns of concentrations for several pollutants on
+  different scales e.g. NOx and CO. Often useful if more than one
+  \code{pollutant} is chosen. }
 
   \item{main}{The plot title; default is no title.}
 
