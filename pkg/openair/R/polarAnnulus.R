@@ -12,6 +12,7 @@ polarAnnulus <- function(polar,
                           date.pad = FALSE,
                           force.positive = TRUE,
                           k = 15,
+                         normalise = FALSE,
                           main = "",
                           key.header = "",
                           key.footer = pollutant,
@@ -26,6 +27,15 @@ polarAnnulus <- function(polar,
 
     ## check data
     polar <- checkPrep(polar, vars, type)
+
+    ## if more than one pollutant, need to stack the data and set type = "variable"
+    ## this case is most relevent for model-measurement compasrions where data are in columns
+    if (length(pollutant) > 1) {
+        polar <- melt(polar, measure.vars = pollutant)
+        ## now set pollutant to "value"
+        pollutant <- "value"
+        type <- "variable"       
+    }
 
     if (period == "trend" && missing(k)) k <- 20 ## less smoothing for the trend component
 
@@ -225,6 +235,18 @@ polarAnnulus <- function(polar,
     results.grid <- lapply(results.grid, function(x) prepare.grid(x))
     results.grid <- do.call(rbind, results.grid)
 
+    ## normalise by divining by mean conditioning value if needed
+    if (normalise){
+        results.grid <- ddply(results.grid, .(cond), transform, z = z / mean(z, na.rm = TRUE))
+        if (missing(key.footer)) key.footer <- "normalised \nlevel"
+    }
+
+    ## proper names of labelling
+    pol.name <- sapply(unique(results.grid$cond), function(x) quickText(x, auto.text))
+    strip <- strip.custom(factor.levels = pol.name)
+
+    if (type == "default") strip <- FALSE ## remove strip
+    
     ## auto-scaling
     nlev = 200  #preferred number of intervals
     ## handle missing breaks arguments
@@ -236,11 +258,10 @@ polarAnnulus <- function(polar,
     col <- openColours(cols, (nlev2 - 1))
     col.scale = breaks
 
-    strip <- TRUE
-    if (type == "default") strip = FALSE ## remove strip
+   
 
     #################
-    #scale key setup
+    ## scale key setup
     #################
     legend <- list(col = col, at = col.scale, space = key.position, 
          auto.text = auto.text, footer = key.footer, header = key.header, 
