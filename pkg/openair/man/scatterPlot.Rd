@@ -125,8 +125,9 @@ auto.text = TRUE,
  plot to help inform model evaluation. The 1:1 line is solid and the
  1:0.5 and 1:2 lines are dashed. Together these lines help show how
  close a group of points are to a 1:1 relationship and also show the
- points that are within a factor of two (FAC2). In time, more
- comprehensive model evaluation statistics will be considered.}
+ points that are within a factor of two (FAC2). Also, for \code{method =
+ "scatter"} (the default) the scales are made to be isometric. In time,
+ more comprehensive model evaluation statistics will be considered.}
 
   \item{cols}{Colours to be used for plotting. Options include "default",
     "increment", "heat", "spectral", "hue", "brewer1"  and user

@@ -209,6 +209,8 @@ scatterPlot <- function(mydata,
 
     if (method == "scatter") {
 
+        ## use isometric scaling if plotting model lines
+        if (mod.line) aspect <- "iso" else aspect <- "fill"
 
         pltscatter <- xyplot(myform,  data = mydata, groups = site,
                              as.table = TRUE,
@@ -217,6 +219,7 @@ scatterPlot <- function(mydata,
                              ylab = quickText(ylab, auto.text),
                              xlab = quickText(xlab, auto.text),
                              scales = scales,
+                             aspect = aspect,
                              key = key,
                              strip = strip,
                              layout = layout,
@@ -228,7 +231,10 @@ scatterPlot <- function(mydata,
                              panel.groups = function(x, y, col.symbol, col, col.line, lwd, lty, type,
                              group.number,
                              subscripts,...) {
-                                 if (group.number == 1 & x.nam != "date") panel.grid(-1, -1)
+                                 if (group.number == 1 & x.nam != "date") {
+                                     panel.grid(-1, -1)
+                                     
+                                 }
                                  if (group.number == 1 & x.nam == "date") {
                                      panel.abline(v = dates, col = "grey90")
                                       panel.grid(-1, 0)
