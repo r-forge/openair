@@ -102,7 +102,10 @@ scatterPlot <- function(mydata,
 
     ## if x is a factor/character, then rotate axis labels for clearer labels
     x.rot <- 0
-    if ("factor" %in% class(mydata[, x]) | "character"  %in% class(mydata[, x])) x.rot <- 90
+    if ("factor" %in% class(mydata[, x]) | "character"  %in% class(mydata[, x])) {
+        x.rot <- 90
+        mydata[, x] <- factor(mydata[, x])
+    }
 
     ## continuous colors
     if (continuous & method == "scatter") {

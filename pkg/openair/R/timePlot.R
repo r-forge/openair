@@ -13,6 +13,7 @@ timePlot <- function(mydata,
                      cols = "brewer1",
                      main = "",
                      ylab = pollutant,
+                     plot.type = "l",
                      lty = 1:length(pollutant),
                      lwd = 1,
                      pch = NA,
@@ -270,7 +271,7 @@ timePlot <- function(mydata,
                    panel.grid(-1, 0)
                }
 
-               panel.xyplot(x, y, type = "l", lty = lty, lwd = lwd, col.line = myColors[group.number],...)
+               panel.xyplot(x, y, type = plot.type, lty = lty, lwd = lwd, col.line = myColors[group.number],...)
                ## deal with points separately - useful if missing data where line does not join consequtive points
                if (any(!is.na(pch))) {                   
                    lpoints(x, y, type = "p", pch = pch, col.symbol = myColors[group.number],...)
