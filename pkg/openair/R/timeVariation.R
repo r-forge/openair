@@ -146,7 +146,8 @@ timeVariation <- function(mydata,
                        xlab = xlab[1],
                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                        key = list(rectangles = list(col = myColors[1:npol], border = NA),
-                       text = list(lab = mylab),  space = "bottom", columns = key.columns),
+                       text = list(lab = mylab),  space = "bottom", columns = key.columns, title = "",
+                       lines.title = 1),
                        strip = strip.custom(par.strip.text = list(cex = 0.9)),
                        par.settings = simpleTheme(col = myColors),
 
@@ -275,7 +276,7 @@ timeVariation <- function(mydata,
                     })
     ## #######################################################################################
 
-    print(day.hour, position = c(0, 0.5, 1, 1), more = TRUE)
+    print(day.hour, position = c(0, 0.50, 1, 1), more = TRUE)
     print(hour, position = c(0, 0, 0.33, 0.55), more = TRUE)
     print(month, position = c(0.33, 0, 0.66, 0.55), more = TRUE)
     print(day, position = c(0.66, 0, 1, 0.55))
