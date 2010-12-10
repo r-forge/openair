@@ -145,9 +145,7 @@ timeVariation <- function(mydata,
                        ylab = quickText(ylab, auto.text),
                        xlab = xlab[1],
                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
-                       key = list(rectangles = list(col = myColors[1:npol], border = NA),
-                       text = list(lab = mylab),  space = "bottom", columns = key.columns, title = "",
-                       lines.title = 1),
+                       key = key,
                        strip = strip.custom(par.strip.text = list(cex = 0.9)),
                        par.settings = simpleTheme(col = myColors),
 
@@ -276,16 +274,38 @@ timeVariation <- function(mydata,
                     })
     ## #######################################################################################
 
-    print(day.hour, position = c(0, 0.50, 1, 1), more = TRUE)
-    print(hour, position = c(0, 0, 0.33, 0.55), more = TRUE)
-    print(month, position = c(0.33, 0, 0.66, 0.55), more = TRUE)
-    print(day, position = c(0.66, 0, 1, 0.55))
+    subsets = c("day.hour", "hour", "day", "month")
 
-    ## use grid to add an overall title
-    grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
+    main.plot <- function(...){ 
+                     print(update(day.hour, key = list(
+                             rectangles = list(col = myColors[1:npol], border = NA),
+                             text = list(lab = mylab), space = "bottom", columns = key.columns,
+                                 title = "", lines.title = 1)
+                         ),
+                         position = c(0, 0.5, 1, 1), more = TRUE)
+                     print(hour, position = c(0, 0, 0.33, 0.55), more = TRUE)
+                     print(month, position = c(0.33, 0, 0.66, 0.55), more = TRUE)
+                     print(day, position = c(0.66, 0, 1, 0.55))
+                     ## use grid to add an overall title
+                     grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
+    }
+    ind.plot = function(x){
+                   update(x, key = list(
+                       rectangles = list(col = myColors[1:npol], border = NA),
+                       text = list(lab = mylab), space = "top", columns = key.columns)
+                   )
+               }
 
-    invisible(list(data.day.hour, data.hour, data.weekday, data.month, day.hour,
-                   hour, day, month))
+    main.plot()
+    output <- (list(plot = list(day.hour, hour, day, month, subsets = subsets),
+                   data = list(data.day.hour, data.hour, data.weekday, data.month, subsets = subsets),
+                   call = match.call(),
+                   main.plot = main.plot, ind.plot = ind.plot
+               ))
+    names(output$data)[1:4] <- subsets
+    names(output$plot)[1:4] <- subsets
+    class(output) <- "openair"
+    invisible(output)
 }
 
 calc.wd <- function(mydata, vars = "day.hour", pollutant){

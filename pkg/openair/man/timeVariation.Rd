@@ -136,8 +136,29 @@ defined (see manual for more details).}
   variations etc. vary over time. See the full documentation for details
   of use.
 
-  Results are returned as a list - both the numerical and individual
-  plots. See examples below for details.
+}
+
+\value{ As well as generating the plot itself, \code{timeVariation} also
+  returns an object of class ``openair''. The object includes three main
+  components: \code{call}, the command used to generate the plot;
+  \code{data}, the data used to make the four components of 
+  the plot (or subplots); and \code{plot}, the associated subplots. 
+  If retained, e.g. using \code{output <- timeVariation(mydata, "nox")}, 
+  this output can be used to recover the data, reproduce or rework the 
+  original plot or undertake further analysis.
+
+  An openair output can be manipulated using a number of generic
+  operations, including \code{print}, \code{plot} and
+  \code{summarise}. See \code{\link{openair.generics}} for further
+  details.
+  
+  The four components of timeVariation are: \code{day.hour}, 
+  \code{hour}, \code{day} and \code{month}. Associated data.frames can 
+  be extracted directly using the \code{$data} operator, e.g. as 
+  \code{output$data$day.hour}, \code{output$data$hour}, 
+  \code{output$data$day} and \code{output$data$month}, respectively for 
+  \code{output <- timeVariation(mydata, "nox")}
+  
 }
 
 %\references{ ~put references to the literature/web site here ~ }
@@ -170,20 +191,19 @@ timeVariation(mydata, pollutant = "nox", type = "gmtbst")
 
 \dontrun{timeVariation(mydata, pollutant = "ws", type = "gmtbst")}
 
-## sub plots can be extracted, in which case set key = TRUE
-## plots are retruned in a list e.g. to get the diurnal plot of NO2:
-results <- timeVariation(mydata, pollutant = "no2", key = TRUE)
-results[[6]] ## plots diurnal plot on its own
+## sub plots can be extracted from the openair object
+results <- timeVariation(mydata, pollutant = "no2")
+plot(results, subset="day.hour") #top weekday and plot
 
-## results[[5]] is the weekday and hour plot
-## results[[7]] is the weekday plot
-## results[[8]] is the monthly plot
+## plot(results, subset="hour") is the diurnal plot
+## plot(results, subset="day") is the weekday plot
+## plot(results, subset="month") is the monthly plot
 
 ## numerical results (mean, lower/upper uncertainties)
-## results[[1]] are the weekday and hour results
-## results[[2]] are the diurnal results
-## results[[3]] are the weekday results
-## results[[4]] are the monthly results
+## results$data$day.hour are the weekday and hour results
+## results$data$hour are the diurnal results
+## results$data$day are the weekday results
+## results$data$month are the monthly results
 
 }
 \keyword{methods}

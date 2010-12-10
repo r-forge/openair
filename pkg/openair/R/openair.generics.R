@@ -163,9 +163,16 @@ plot.openair <- function(x, subset = "all", silent=TRUE, ...){
    } 
 
    temp <- temp[1]
+   #own plot style
+   test <- x[[paste(temp,"plot", sep=".")]]
+   if(!is.null(test))
+       return(test(x$plot[[temp]]))
+   #ind plot handling
    test <- x$ind.plot
-   if(is.null(test)) return(x$plot[[temp]]) else 
+   if(!is.null(test))  
        return(x$ind.plot(x$plot[[temp]]))
+   #staight plot
+   return(x$plot[[temp]])
 }
 
 print.openair <- function(x, silent = FALSE, plot = TRUE, ...){
@@ -217,7 +224,8 @@ names.openair <- function(x, ...){
     vis.elements <- c("data", "plot", "call")
     #make names non-recursive
     class(x) <- "not-openair"
-    names(x)[names(x) %in% vis.elements]
+
+    names(x)[names(x) %in% vis.elements] 
 
 }
 
