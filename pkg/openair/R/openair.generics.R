@@ -10,6 +10,84 @@ openair <- function(x){
     x
 }
 
+#results
+results <- function(object,...)
+                  UseMethod("results")
+
+results.default <- function(object,...){
+
+    ####################
+    #results.default
+    ####################
+    #to handle all other cases without error
+    #
+
+    object
+}
+
+results.openair <- function(object,
+                       subset = "all", silent=FALSE, 
+                       ...){
+
+   #################
+   #results.openair
+   #################
+   #kr 13/12/2010 v 0.0.1
+
+   #################
+   #to do
+   #################
+
+   if(!is.openair(object)) return(invisible(NULL))
+
+   if(!silent){
+       message("\nopenair object created by: \n\t", deparse(object$call), "\n")
+   }
+
+   test <- object$data$subsets
+
+   if(is.null(test)){
+      if(!is.null(subset) && subset != "all"){
+          warning("In results(...): subset option ignored,",
+                  "\n\t[subset requested from openair object without data subsets]", 
+                  call. = FALSE)
+      }
+      return(object$data)
+   }
+
+   
+   if(is.null(subset) || subset=="all") {
+        if(!silent){
+            message("contains", length(test), " data frame(s):")
+            message("returning as list")
+            message("\t$", paste(test, collapse=", $", sep=", $"), "\n")
+        }
+        return(object$data[names(object$data) != "subsets"])
+   }
+
+   temp <- subset[subset %in% test]
+   if(length(temp) < 1)
+       stop("In results(...): requested subset(s) not found",
+           "\n\t[suggest NULL, all or one or more of available subsets]", 
+           "\n\t[available subset(s): ", paste(test, collapse = ", ", sep = ", "),"]", 
+           call. = FALSE)
+   if(!silent & length(temp) < length(subset))
+       warning("In results(...): some requested subset(s) not found, so ignored",
+                    "\n\t[ignored subset(s): ", paste(subset[subset != temp], collapse = ", ", sep = ", "),"]", 
+                    "\n\t[available subset(s): ", paste(test, collapse = ", ", sep = ", "),"]", 
+                    call. = FALSE)
+   if(length(temp)==1)
+       return(object$data[[temp]]) else {
+           if(!silent){
+               message("returning as list of ", length(temp), " data frame(s):")
+               message("\t$", paste(temp, collapse=", $", sep=", $"), "\n")
+           }
+           return(object$data[names(object$data) %in% temp])
+       }
+
+}
+
+
 is.openair <- function(x, full.test=TRUE, ...){
 
    #####################

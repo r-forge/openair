@@ -5,6 +5,9 @@
 \alias{print.openair}
 \alias{plot.openair}
 \alias{summary.openair}
+\alias{results.openair}
+\alias{results}
+
 
 \title{ Generic functions for handling openair outputs }
 
@@ -24,6 +27,8 @@
 
 \method{print}{openair}(x, silent = FALSE, plot = TRUE, ...)
 
+\method{results}{openair}(object, subset = "all", silent = FALSE, ...)
+
 }
 
 \arguments{
@@ -38,8 +43,7 @@
   For plot elements, e.g graphics produced by \code{plot} or 
   \code{print}, only the first valid case in \code{subset} is extracted. } 
 
-  \item{silent}{ Logical (TRUE/FALSE). Print output descriptions to console, default 
-  \code{TRUE}. }
+  \item{silent}{ Logical (TRUE/FALSE). Do not print output descriptions to console. }
 
   \item{plot}{ Logical (TRUE/FALSE). For \code{print}, plot 
   graphical components of \code{x} using \code{plot} (or more strictly \code{plot.openair}, 
@@ -60,10 +64,22 @@
   plot. As with \code{plot}, if \code{x} has multiple components, \code{subset} can be used to 
   access individual subsets of data and associated plots.
 
-  \code{summary(object)} summarises data in \code{object}. If \code{object} contains more than data frame, each 
-  data frame is summarised individually and results returned as a list of summaries. Alternatively, 
-  the option \code{subset} can be used to extract one or more data frame to be summarised.
-  
+  \code{results(object)} extracts the data used to generate the original \code{object} 
+  plot. If \code{object} contains more than data frame, these are returned as a list 
+  of data frames. Alternatively, in such cases the option \code{subset} can be used 
+  to extract one or more data frame from the supplied object.
+
+  NOTE: \code{results} is not strictly a generic function. The term and mode of operation 
+  is not widely used elsewhere in R. It is, however, convenient to consider it 
+  alongside the \code{openair.generics} because it operates on openair objects and because 
+  it has been implemented as method in a similar fashion to the generic terms. The 
+  default form of \code{results} (that used if \code{object} is not of ``openair'' 
+  class) currently returns \code{object} without modification.
+
+  \code{summary(object)} summarises data in \code{object}. If \code{object} contains 
+  more than data frame, each data frame is summarised individually and results returned 
+  as a list of summaries. As above the option \code{subset} can be used to extract one 
+  or more data frame to be summarised.
 }
 
 \author{ Karl Ropkins }
@@ -79,8 +95,8 @@ ans <- trendLevel(mydata, pollutant = "nox")
 print(ans)
 
 #recover data
-results <- ans$data
-head(results)
+myresults <- results(ans)
+head(myresults)
 
 } 
 
