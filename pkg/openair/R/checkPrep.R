@@ -20,7 +20,11 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
     }
 
     ## add type to names if not in pre-defined list
-    if (type %in% conds == FALSE) Names <- c(Names, type)
+ ##   if (type %in% conds == FALSE) Names <- c(Names, type)
+    if (any(type %in% conds == FALSE)) {
+        ids <- which(type %in% conds == FALSE)
+        Names <- c(Names, type[ids])
+    }
 
     ## just select data needed
     mydata <- mydata[, Names]
