@@ -37,11 +37,19 @@ polarPlot <- function(polar,
 
     ## if more than one pollutant, need to stack the data and set type = "variable"
     ## this case is most relevent for model-measurement compasrions where data are in columns
+    ## Can also do more than one pollutant and a single type that is not "default", in which
+    ## case pollutant becomes a conditioning variable
     if (length(pollutant) > 1) {
+        
+        if (length(type) > 1) {
+            warning(paste("Only type = '", type[1], "' will be used", sep = ""))
+            type <- type[1]
+        }
+        ## use pollutants as conditioning variables
         polar <- melt(polar, measure.vars = pollutant)
         ## now set pollutant to "value"
         pollutant <- "value"
-        type <- "variable"       
+        type <- c(type, "variable")
     }
 
     ## ##########################################################################################################
@@ -49,7 +57,7 @@ polarPlot <- function(polar,
     polar <- na.omit(polar)
     ## cutData depending on type
     polar <- cutData2(polar, type)
-   
+    
 
     ## if upper ws not set, set it to the max to display all information
     max.ws <- ceiling(max(polar$ws, na.rm = TRUE))
@@ -157,7 +165,7 @@ polarPlot <- function(polar,
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
-       
+        
         strip.left <- FALSE
         
     } else { ## two conditioning variables        
@@ -207,7 +215,7 @@ polarPlot <- function(polar,
                      call. = FALSE)
     legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, draw = FALSE)))
     names(legend)[1] <- if(is.null(key$space)) key.position else key$space
-    ########################################################################################################
+########################################################################################################
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))
