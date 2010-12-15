@@ -90,6 +90,9 @@ scatterPlot <- function(mydata,
         vars <- c(x, y)
     }
 
+    ## can only handle one type
+    if (length(type) > 1) stop("Can only use one 'type'.")
+
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
 
@@ -131,25 +134,15 @@ scatterPlot <- function(mydata,
                             draw = FALSE)))
     } else {
 
-        mydata <- cutData(mydata, type)
+        mydata <- cutData2(mydata, type)
         legend <- NULL
 
     }
-
-    ## The aim to to get colums "date", "site" then turn to column data using melt
-    ## Finally end up with "date", "value", "variable"
-
-    ## don't need type, now a condition
-    vars <-  c(vars, "cond")
-    vars <- vars[vars != type]
-    mydata <- mydata[, vars]
-    mydata <- rename(mydata, c(cond = "site")) ## change to name "site"
-
     
     theStrip <- strip
 
     ## number of pollutants (or sites for type = "site")
-    npol <- length(unique(mydata$site)) ## number of pollutants
+    npol <- length(unique(mydata[, type])) ## number of pollutants
     if (missing(pch)) pch <- seq(npol)
 
     ## layout - stack vertically
@@ -173,7 +166,7 @@ scatterPlot <- function(mydata,
          y = list(log = nlog.y))
     }
 
-    pol.name <- sapply( unique(levels(factor(mydata$site))), function(x) quickText(x, auto.text))
+    pol.name <- sapply( unique(levels(factor(mydata[ , type]))), function(x) quickText(x, auto.text))
 
     ## if logs are chosen, ensure data >0 for line fitting etc
     if (log.x)  mydata <- mydata[mydata[ , x] > 0, ]
@@ -184,7 +177,8 @@ scatterPlot <- function(mydata,
     if (!group) { ## sepate panels per pollutant
 
         ## now need conditioning formula
-        myform <- formula(paste(y, "~", x, "| site"))
+         
+        myform <- formula(paste(y, "~", x, "|", type))
         ## proper names of labelling
         strip <- strip.custom(par.strip.text = list(cex = 0.8), factor.levels = pol.name)
         scales <- list(y = list(rot = 0, log = nlog.y), x = list(log = nlog.x, rot = x.rot))
@@ -215,7 +209,7 @@ scatterPlot <- function(mydata,
         ## use isometric scaling if plotting model lines
         if (mod.line) aspect <- "iso" else aspect <- "fill"
 
-        pltscatter <- xyplot(myform,  data = mydata, groups = site,
+        pltscatter <- xyplot(myform,  data = mydata, groups = get(type),
                              as.table = TRUE,
                              pch = pch,
                              main = quickText(main),

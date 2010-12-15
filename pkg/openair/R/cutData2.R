@@ -13,10 +13,8 @@ cutData2 <- function(x, type = "default", hemisphere = "northern", n.levels = 4)
 
             if (is.factor(x[, type]) | is.character(x[, type])) {
 
-                if (is.character(x[, type])) x[, type] <- as.character(x[, type])
-
-                if (is.factor(x[, type])) x[, type] <- x[, type]
-                
+                 ## drop unused levels while we are at it             
+                x[, type] <- factor(x[, type])
 
             } else {
 
