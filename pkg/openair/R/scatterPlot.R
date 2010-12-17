@@ -87,12 +87,14 @@ scatterPlot <- function(mydata,
 
    
     ## average the data if necessary (default does nothing)
+    ## note - need to average before cutting data up etc
     if (avg.time != "default") mydata <- timeAverage(mydata, period = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
     
     ## the following makes sure all variables are present, which depends on 'group' and 'type'
     if (continuous & missing(group)) stop("Need to specify a 'group' when using continuous = TRUE")
-    
+
+    ## these are pre-defined type that need a field "date"
     dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthyear",
                    "gmtbst", "bstgmt")
 ################################################################################################
@@ -105,15 +107,18 @@ scatterPlot <- function(mydata,
         vars <- c(x, y)
     }
 
+    ## if group is present, need to add that list of variables
     if (!missing(group)){
+       
         if (group %in%  dateTypes| !missing(avg.time)) {
-            vars <- unique(c(vars, "date"))
+            vars <- unique(c(vars, "date", group))
         } else {
             vars <- unique(c(vars, group))
         }
     }   
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
+
     
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
@@ -130,7 +135,7 @@ scatterPlot <- function(mydata,
 
     
     
-    ## continuous colors
+    ## continuous colors ###################################################################################################
     if (!missing(group) & continuous & method == "scatter") {
         
         if (group %in% dateTypes) stop("Colour coding requires 'group' to be continuous numeric variable'")
@@ -138,7 +143,7 @@ scatterPlot <- function(mydata,
         ## check to see if type is numeric/integer       
         if (class(mydata[, group]) %in% c("integer", "numeric") == FALSE) stop(paste("Continuous colour coding requires ", group , " to be numeric", sep = ""))
 
-        ## define spectrum of colours
+        ## don't need a key with this
         key <- NULL
 
         ## colour scale transform
@@ -185,12 +190,11 @@ scatterPlot <- function(mydata,
     }
 
     ## if no group to plot, then add a dummy one to make xyplot work
-    if (is.null(group)) {mydata$MyGroupVar <- "MyGroupVar"; group <-  "MyGroupVar"}
+    if (is.null(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
    
     ## number of groups
-    npol <- length(unique(mydata[, group]))
+    npol <- length(levels(mydata[ ,group]))
     
-  
     if (missing(pch)) pch <- seq(npol)
     
     ## set up colours
@@ -259,9 +263,10 @@ scatterPlot <- function(mydata,
     ## not sure how to evaluate "group" in xyplot, so change to a fixed name
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
-
+    
     if (method == "scatter") {
         plt <- xyplot(myform,  data = mydata, groups = MyGroupVar,
+                      type = c("p", "g"),
                       as.table = TRUE,
                       pch = pch,
                       main = quickText(main),
@@ -282,20 +287,12 @@ scatterPlot <- function(mydata,
                       group.number,
                       subscripts,...)
                   {
-                      if (group.number == 1 & x.nam != "date") {
-                          panel.grid(-1, -1)                         
-                      }
-                      
+                   
                       if (group.number == 1 & x.nam == "date") {
                           panel.abline(v = dates, col = "grey90")
                           panel.grid(-1, 0)
                       }
-                      
-                      if (x.nam == "date") {
-                          panel.abline(v = dates, col = "grey90")
-                          panel.grid(-1, 0)
-                      }
-                      
+                                                          
                       if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                    as.table = TRUE, ...)
                       if (!continuous) panel.xyplot(x, y, col.symbol = myColors[group.number],
