@@ -41,20 +41,20 @@ cutData <- function(x, type = "default") {
         ## not always available e.g. scatterPlot
         if ("date" %in% names(x)) {
 
-            x$cond <- paste(format(min(x$date), "%d %B %Y"), " to ",
-                                 format(max(x$date), "%d %B %Y"), sep = "")
+            x$cond <- factor(paste(format(min(x$date), "%d %B %Y"), " to ",
+                                 format(max(x$date), "%d %B %Y"), sep = ""))
             ## order the data by date
             x <- x[order(x$date), ]
 
         } else {
-            x$cond <- "all data"
+            x$cond <- factor("all data")
         }
 
     }
 
-    if (type == "year") x$cond <- format(x$date, "%Y")
+    if (type == "year") x$cond <- factor(format(x$date, "%Y"))
 
-    if (type == "hour") x$cond <- format(x$date, "%H")
+    if (type == "hour") x$cond <- factor(format(x$date, "%H"))
 
     if (type == "month") {x$cond <- format(x$date, "%B")
                           x$cond <- ordered(x$cond, levels = make.month.names())
@@ -85,6 +85,7 @@ cutData <- function(x, type = "default") {
         weekend$cond <- "weekend"
 
         x <- rbind(weekday, weekend)
+        x$cond <- ordered(x$cond, levels = c("weekday", "weekend"))
 
     }
 
@@ -126,9 +127,10 @@ cutData <- function(x, type = "default") {
         bst$cond <- "BST hours"
 
         gmt <- x[id.GMT, ]
-        gmt$cond <- "GMT hours"
+        gmt$cond <- "GMT hours"        
         
         x <- rbind.fill(bst, gmt)
+        x$cond <- factor(x$cond)
         x$date <- as.POSIXct(x$date, "GMT")
         x <- x[order(x$date), ]
 

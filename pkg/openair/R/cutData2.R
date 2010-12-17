@@ -38,20 +38,20 @@ cutData2 <- function(x, type = "default", hemisphere = "northern", n.levels = 4)
             ## not always available e.g. scatterPlot
             if ("date" %in% names(x)) {
 
-                x[ , type] <- paste(format(min(x$date), "%d %B %Y"), " to ",
-                                    format(max(x$date), "%d %B %Y"), sep = "")
+                x[ , type] <- factor(paste(format(min(x$date), "%d %B %Y"), " to ",
+                                    format(max(x$date), "%d %B %Y"), sep = ""))
                 ## order the data by date
                 x <- x[order(x$date), ]
 
             } else {
-                x[ , type] <- "all data"
+                x[ , type] <- factor("all data")
             }
 
         }
 
-        if (type == "year") x[ , type] <- format(x$date, "%Y")
+        if (type == "year") x[ , type] <- factor(format(x$date, "%Y"))
 
-        if (type == "hour") x[ , type] <- format(x$date, "%H")
+        if (type == "hour") x[ , type] <- factor(format(x$date, "%H"))
 
         if (type == "month") {x[ , type] <- format(x$date, "%B")
                               x[ , type] <- ordered(x[ , type], levels = make.month.names())
@@ -96,6 +96,7 @@ cutData2 <- function(x, type = "default", hemisphere = "northern", n.levels = 4)
             weekend[ , type] <- "weekend"
 
             x <- rbind(weekday, weekend)
+            x[ , type] <- ordered(x[ , type], levels = c("weekday", "weekend")) 
 
         }
 
@@ -133,6 +134,7 @@ cutData2 <- function(x, type = "default", hemisphere = "northern", n.levels = 4)
             gmt[ , type] <- "GMT hours"
             
             x <- rbind.fill(bst, gmt)
+            x[ , type] <- factor(x[ , type])
             x$date <- as.POSIXct(x$date, "GMT")
             x <- x[order(x$date), ]
 
