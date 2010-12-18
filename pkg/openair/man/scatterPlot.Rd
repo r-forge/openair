@@ -49,9 +49,13 @@ auto.text = TRUE,
 \arguments{
 \item{mydata}{A data frame containing at least two numeric variables to plot.}
 
-  \item{x}{Name of the x-variable to plot.}
+  \item{x}{Name of the x-variable to plot. Note that x can be a date
+  field or a factor. For example, \code{x} can be one of the
+  \code{openair} built in types such as \code{"year"} or
+  \code{"season"}. If \code{x} is a factor a box and whisker plot is
+  produced.}
 
-  \item{y}{Name of the y-variable to plot.}
+  \item{y}{Name of the numeric y-variable to plot.}
 
   \item{method}{Methods include \code{"scatter"} (conventional scatter
   plot), \code{"hexbin"} (hexagonal binning using the \code{hexbin}
@@ -307,7 +311,12 @@ library(hexbin)
 scatterPlot(mydata, x = "nox", y = "no2", method = "hexbin")
 
 # scatterPlot by year
-scatterPlot(mydata, x = "nox", y = "no2", type = "year", method = "hexbin")
+scatterPlot(mydata, x = "nox", y = "no2", type = "year", method =
+"hexbin")
+
+## example box and whisker plot
+scatterPlot(mydata, x = "weekday", y = "nox", type = "season")
+
 }
 
 

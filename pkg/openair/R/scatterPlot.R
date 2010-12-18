@@ -1,4 +1,3 @@
-
 scatterPlot <- function(mydata,
                         x = "nox",
                         y = "no2",
@@ -85,7 +84,7 @@ scatterPlot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 
-   
+    
     ## average the data if necessary (default does nothing)
     ## note - need to average before cutting data up etc
     if (avg.time != "default") mydata <- timeAverage(mydata, period = avg.time,
@@ -109,7 +108,7 @@ scatterPlot <- function(mydata,
 
     ## if group is present, need to add that list of variables
     if (!missing(group)){
-       
+        
         if (group %in%  dateTypes| !missing(avg.time)) {
             vars <- unique(c(vars, "date", group))
         } else {
@@ -119,6 +118,12 @@ scatterPlot <- function(mydata,
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
+    ## sometimes x can be a factor like "year"
+    boxPlot <- FALSE
+    if (x %in% dateTypes) mydata <- cutData2(mydata, x)
+    ## if there are more than one x values per factor, plot a box and whisker plot instead
+   
+    if (any(table(mydata[x]) > 1 & is.factor(mydata[ , x]))) boxPlot <- TRUE 
     
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
@@ -156,14 +161,14 @@ scatterPlot <- function(mydata,
         
         if (missing(cols)) cols <- "default" ## better default colours for this
         thecol <- openColours(cols, 100)[cut(mydata[, group], 100, label = FALSE)]
-                
+        
         breaks <- unique(c(0, pretty(mydata[ ,group], 100)))
         br <- pretty((mydata[ , group] ^ thePower), n = 10)  ## breaks for scale 
 
         min.col <- min(mydata[, group], na.rm = TRUE)
         max.col <- max(mydata[, group], na.rm = TRUE)
 
-         if (missing(main)) main <- paste(x, "vs.", y, "by levels of", group)
+        if (missing(main)) main <- paste(x, "vs.", y, "by levels of", group)
 
         ## don't need to group by all levels - want one smooth etc
         group <- "NewGroupVar"
@@ -180,7 +185,7 @@ scatterPlot <- function(mydata,
 
         mydata <- cutData2(mydata, type)
         if (missing(group)) {
-           
+            
             if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <- factor("group") ## don't overwrite a
         } else {  ## means that group is there
             mydata <- cutData2(mydata, group)                    
@@ -191,7 +196,7 @@ scatterPlot <- function(mydata,
 
     ## if no group to plot, then add a dummy one to make xyplot work
     if (is.null(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
-   
+    
     ## number of groups
     npol <- length(levels(mydata[ ,group]))
     
@@ -238,7 +243,7 @@ scatterPlot <- function(mydata,
 
     if (!continuous) { ## non-continuous key
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
-       
+        
         if (key & npol > 1) {
             key <- list(points = list(col = myColors[1:npol]), pch = pch,
                         text = list(lab = pol.name),  space = "bottom", columns = key.columns,
@@ -249,7 +254,7 @@ scatterPlot <- function(mydata,
             key <- NULL
         }                
     }
-   
+    
     ## special wd layout
     skip <- FALSE
     if (length(type) == 1 & type[1] == "wd" ) {
@@ -259,7 +264,7 @@ scatterPlot <- function(mydata,
 
     ## no strip needed for single panel
     if (length(type) == 1 & type[1]  == "default") strip <- FALSE
-   
+    
     ## not sure how to evaluate "group" in xyplot, so change to a fixed name
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
@@ -287,25 +292,33 @@ scatterPlot <- function(mydata,
                       group.number,
                       subscripts,...)
                   {
-                   
+                      
                       if (group.number == 1 & x.nam == "date") {
                           panel.abline(v = dates, col = "grey90")
                           panel.grid(-1, 0)
                       }
-                                                          
-                      if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
-                                                   as.table = TRUE, ...)
-                      if (!continuous) panel.xyplot(x, y, col.symbol = myColors[group.number],
-                                                    as.table = TRUE,...)
                       
-                      if (linear & npol == 1) panel.linear(x, y, col = "black",myColors[group.number],
-                                   lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
-                      if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
-                                            lty = 1, lwd = 1, se = ci, ...)
-                      if (mod.line) {
-                          panel.abline(a = c(0, 0.5), lty = 5)
-                          panel.abline(a = c(0, 2), lty = 5)
-                          panel.abline(a = c(0, 1), lty = 1)
+
+                      if (boxPlot){
+
+                          panel.bwplot(x, y, horizontal = FALSE, pch = "|", notch = TRUE)
+                          
+                      } else {
+
+                          if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
+                                                       as.table = TRUE, ...)
+                          if (!continuous) panel.xyplot(x, y, col.symbol = myColors[group.number],
+                                                        as.table = TRUE,...)
+                          
+                          if (linear & npol == 1) panel.linear(x, y, col = "black",myColors[group.number],
+                                       lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
+                          if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
+                                                lty = 1, lwd = 1, se = ci, ...)
+                          if (mod.line) {
+                              panel.abline(a = c(0, 0.5), lty = 5)
+                              panel.abline(a = c(0, 2), lty = 5)
+                              panel.abline(a = c(0, 1), lty = 1)
+                          }
                       }
                   })
     }
