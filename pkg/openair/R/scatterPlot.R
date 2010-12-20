@@ -110,7 +110,7 @@ scatterPlot <- function(mydata,
     if (!missing(group)){
         
         if (group %in%  dateTypes| !missing(avg.time)) {
-            vars <- unique(c(vars, "date", group))
+            vars <- unique(c(vars, "date"))
         } else {
             vars <- unique(c(vars, group))
         }
@@ -118,13 +118,17 @@ scatterPlot <- function(mydata,
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
+
+    
     ## sometimes x can be a factor like "year"
     boxPlot <- FALSE
-    if (x %in% dateTypes) mydata <- cutData2(mydata, x)
-    ## if there are more than one x values per factor, plot a box and whisker plot instead
-   
-    if (any(table(mydata[x]) > 1 & is.factor(mydata[ , x]))) boxPlot <- TRUE 
-    
+
+    ## make a new factor column UNLESS it has already been converted from numeric
+    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData2(mydata, x)
+
+    ## if there are more than one x values per factor, plot a box and whisker plot instead   
+    if (any(table(mydata[x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE 
+
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
     
@@ -138,7 +142,7 @@ scatterPlot <- function(mydata,
         mydata[, x] <- factor(mydata[, x])
     }
 
-    
+   
     
     ## continuous colors ###################################################################################################
     if (!missing(group) & continuous & method == "scatter") {
@@ -182,7 +186,7 @@ scatterPlot <- function(mydata,
                             draw = FALSE)))
         
     } else {
-
+ 
         mydata <- cutData2(mydata, type)
         if (missing(group)) {
             
@@ -268,7 +272,7 @@ scatterPlot <- function(mydata,
     ## not sure how to evaluate "group" in xyplot, so change to a fixed name
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
-    
+   
     if (method == "scatter") {
         plt <- xyplot(myform,  data = mydata, groups = MyGroupVar,
                       type = c("p", "g"),
