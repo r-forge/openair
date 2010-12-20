@@ -32,6 +32,8 @@ MannKendall <- function(mydata,
     ## if autocor is TRUE, then need simulations
     if (autocor) simulate <- TRUE
 
+    if (!period %in% c("year", "month")) stop ("Period can only be 'month' or 'year'.")
+
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
 
@@ -149,17 +151,22 @@ MannKendall <- function(mydata,
 
     ## calculate percentage changes in slope and uncertainties
     ## need start and end dates (in days) to work out concentrations at those points
-    ## percentage change defind as 100.(C.end/C.start -1) / (Date.end - Date.start)
+    ## percentage change defind as 100.(C.end/C.start -1) / duration
+    ## Note duration for % changes for period = "month" = endDate - startDate + 1 month
+    ## and for annual data it will be endDate - startDate + 1 year
 
     start <- ddply(split.data, type, function (x) head(x, 1))
     end <- ddply(split.data, type, function (x) tail(x, 1))
     percent.change <- merge(start, end, by = type, suffixes = c(".start", ".end"))
 
+    ## add extra period (everything is in days)
+    if (period == "month") durationPad <- 30 else durationPad <- 365
+   
     percent.change <- transform(percent.change, slope.percent = 100 * 365 *
                                 ((slope.start * as.numeric(date.end) / 365 + intercept.start) /
                                  (slope.start * as.numeric(date.start) / 365 + intercept.start) - 1) /
-                                (as.numeric(date.end) - as.numeric(date.start)))
-
+                                (as.numeric(date.end) - as.numeric(date.start) + durationPad))
+   
     percent.change <- transform(percent.change, lower.percent = slope.percent / slope.start * lower.start,
                                 upper.percent = slope.percent / slope.start * upper.start)
 
@@ -173,7 +180,7 @@ MannKendall <- function(mydata,
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
-   
+  
     plt <- xyplot(myform, data = split.data,
                   ylab = quickText(ylab, auto.text),
                   main = quickText(main, auto.text),

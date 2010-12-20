@@ -113,9 +113,10 @@ estimate - sometimes by a large amount.}
   expressed as a percentage? The default is \code{FALSE} and the slope
   is expressed as an average units/year change e.g. ppb. Percentage
   changes can often be confusing and should be clearly defined. Here the
-  percentage change is expressed as 100 * (C.end/C.start - 1) / (Year.end
-  - Year.start). Where C.start is the start concentration at Year.start
-  and C.end is the end concentration at Year.end. Fractions of years are
+  percentage change is expressed as 100 * (C.end/C.start - 1) /
+  Nyears). Where C.start is the concentration at the start date and
+  C.end is the concentration at the end date. Nyears is the duration in
+  years between the start date and the end date. Fractions of years are
   considered as necessary.}
 
  \item{date.breaks}{Number of major x-axis intervals to use. The
