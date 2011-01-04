@@ -152,20 +152,16 @@ MannKendall <- function(mydata,
     ## calculate percentage changes in slope and uncertainties
     ## need start and end dates (in days) to work out concentrations at those points
     ## percentage change defind as 100.(C.end/C.start -1) / duration
-    ## Note duration for % changes for period = "month" = endDate - startDate + 1 month
-    ## and for annual data it will be endDate - startDate + 1 year
+    
 
     start <- ddply(split.data, type, function (x) head(x, 1))
     end <- ddply(split.data, type, function (x) tail(x, 1))
     percent.change <- merge(start, end, by = type, suffixes = c(".start", ".end"))
-
-    ## add extra period (everything is in days)
-    if (period == "month") durationPad <- 30 else durationPad <- 365
    
     percent.change <- transform(percent.change, slope.percent = 100 * 365 *
                                 ((slope.start * as.numeric(date.end) / 365 + intercept.start) /
                                  (slope.start * as.numeric(date.start) / 365 + intercept.start) - 1) /
-                                (as.numeric(date.end) - as.numeric(date.start) + durationPad))
+                                (as.numeric(date.end) - as.numeric(date.start)))
    
     percent.change <- transform(percent.change, lower.percent = slope.percent / slope.start * lower.start,
                                 upper.percent = slope.percent / slope.start * upper.start)
