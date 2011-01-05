@@ -239,7 +239,7 @@ polarAnnulus <- function(polar,
     }
 
     ## proper names of labelling ##############################################################################
-    pol.name <- sapply(unique(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
+    pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
@@ -248,7 +248,7 @@ polarAnnulus <- function(polar,
         
     } else { ## two conditioning variables        
         
-        pol.name <- sapply(unique(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
+        pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
     ## ########################################################################################################

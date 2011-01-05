@@ -114,7 +114,7 @@ MannKendall <- function(mydata,
     split.data <- ddply(mydata, type,  process.cond)
 
     ## proper names of labelling ##############################################################################
-    pol.name <- sapply(unique(split.data[ , type[1]]), function(x) quickText(x, auto.text))
+    pol.name <- sapply(levels(split.data[ , type[1]]), function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
@@ -123,7 +123,7 @@ MannKendall <- function(mydata,
         
     } else { ## two conditioning variables        
         
-        pol.name <- sapply(unique(split.data[ , type[2]]), function(x) quickText(x, auto.text))
+        pol.name <- sapply(levels(split.data[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
     ## ########################################################################################################

@@ -114,7 +114,7 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
     results.grid <- ddply(polar, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################
-    pol.name <- sapply(unique(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
+    pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
@@ -123,7 +123,7 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
         
     } else { ## two conditioning variables        
         
-        pol.name <- sapply(unique(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
+        pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
     ## ########################################################################################################
