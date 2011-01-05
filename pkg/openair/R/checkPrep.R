@@ -40,16 +40,24 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
     ## make sure all infinite values are set to NA
     mydata[] <- lapply(mydata, function(x){replace(x, x == Inf | x == -Inf, NA)})
 
+    if ("ws" %in% Names) {
+        
+        ## check for negative wind speeds
+        if (any(sign(mydata$ws[!is.na(mydata$ws)]) == -1)) {
+
+            warning("Wind speed <0; removing negative data")
+            mydata$ws[mydata$ws < 0] <- NA
+        }
+    }
+
     ## round wd to make processing obvious
     ## data already rounded to nearest 10 degress will not be affected
     ## data not rounded will be rounded to nearest 10 degrees
     ## assumes 10 is average of 5-15 etc
 
     if ("wd" %in% Names) {
-        ## force to be numeric
-        ## mydata$wd <- as.numeric(mydata$wd)
-
-                                        # #check for wd <0 or > 360
+        
+        ## check for wd <0 or > 360
         if (any(sign(mydata$wd[!is.na(mydata$wd)]) == -1 | mydata$wd[!is.na(mydata$wd)] > 360)) {
 
             warning("Wind direction < 0 or > 360; removing these data")
@@ -71,22 +79,11 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
         } else { ## only used for windRose/pollutionRose
 
             mydata$wd[mydata$ws == 0] <- -999 ## set wd to flag where there are calms
-            mydata$ws[mydata$ws == 0] <- -999 ## set ws to flag calm
-            mydata$wd[mydata$wd == 0] <- 360 
+            mydata$wd[mydata$wd == 0] <- 360
             
         }
     }
-
-    if ("ws" %in% Names) {
-        ## force to be numeric
-        ## mydata$ws <- as.numeric(mydata$ws)
-        ## check for negative wind speeds
-        if (any(sign(mydata$ws[!is.na(mydata$ws)]) == -1)) {
-
-            warning("Wind speed <0; removing negative data")
-            mydata$ws[mydata$ws < 0] <- NA
-        }
-    }
+    
 
     ## make sure date is ordered in time if present
     if ("date" %in% Names) {

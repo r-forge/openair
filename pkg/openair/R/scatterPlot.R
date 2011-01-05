@@ -127,7 +127,7 @@ scatterPlot <- function(mydata,
     if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData2(mydata, x)
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead   
-    if (any(table(mydata[x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE 
+    if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE 
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
