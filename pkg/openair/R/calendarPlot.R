@@ -114,7 +114,7 @@ calendarPlot <- function(mydata,
     }
 
     ## calculate daily means
-    if (class(mydata$date)[1] == "POSIXt") {
+    if ("POSIXt" %in% class(mydata$date)) {
         mydata <- timeAverage(mydata, "day")
         mydata$date <- as.Date(mydata$date)
     }
