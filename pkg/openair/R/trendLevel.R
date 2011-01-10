@@ -221,8 +221,8 @@ trendLevel <- function(mydata,
     #so need: 
     value <- mydata[,pollutant]
     #different n.levels for axis and type
-    newdata <- cutData2(mydata, c(x,y), n.levels=10) 
-    newdata <- cutData2(newdata, type, n.levels=4) 
+    newdata <- cutData(mydata, c(x,y), n.levels=10) 
+    newdata <- cutData(newdata, type, n.levels=4) 
     newdata <- newdata[c(x,y,type)]
 
     ############################

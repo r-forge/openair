@@ -56,7 +56,7 @@ polarPlot <- function(polar,
     
     polar <- na.omit(polar)
     ## cutData depending on type
-    polar <- cutData2(polar, type)
+    polar <- cutData(polar, type)
     
 
     ## if upper ws not set, set it to the max to display all information

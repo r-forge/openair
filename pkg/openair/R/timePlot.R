@@ -95,15 +95,7 @@ timePlot <- function(mydata,
     if (date.pad) mydata <- date.pad(mydata, type)
 
     mydata <- cutData(mydata, type)
-
-    ## The aim to to get colums "date", "site" then turn to column data using melt
-    ## Finally end up with "date", "value", "variable"
-
-    ## don't need type, now a condition
-    vars <-  c(vars, "cond")
-    vars <- vars[vars != type]
-    mydata <- mydata[, vars]
-    mydata <- rename(mydata, c(cond = "site")) ## change to name "site"
+ 
 
     ## average the data if necessary (default does nothing)
     if (avg.time != "default") {
@@ -111,21 +103,24 @@ timePlot <- function(mydata,
         
         if (length(percentile) > 1) {
 
-            mydata <- ddply(mydata, .(site), calcPercentile, pollutant = pollutant, period = avg.time,
+             mydata <- ddply(mydata, type, calcPercentile, pollutant = pollutant, period = avg.time,
                             data.thresh = data.thresh, percentile = percentile)
+             
             pollutant <-  paste("percentile.", percentile,  sep = "")
-            vars <- names(mydata) ## new variables to use
+       #     vars <- names(mydata) ## new variables to use
             if (missing(group)) group <- TRUE        
 
         } else {
-            
-            mydata <- timeAverage(mydata, period = avg.time, data.thresh = data.thresh,
-                                  statistic = statistic, percentile = percentile)
+          
+             mydata <- ddply(mydata, type, timeAverage, period = avg.time, statistic = statistic,
+                        percentile = percentile, data.thresh = data.thresh)    
         }
         
     }
-    
-    mydata <- melt(mydata, id.var = c("date", "site"))
+   
+    mydata <- melt(mydata, id.var = c("date", type))
+
+  
     if (type != "default") {
         
         group <- TRUE ## need to group pollutants if conditioning
@@ -164,7 +159,8 @@ timePlot <- function(mydata,
     myColors <- openColours(cols, npol)
 
     ## basic function for lattice call + defaults
-    myform <- formula("value ~ date | site")
+     myform <- formula(paste("value ~ date |", type))
+   
     strip <- TRUE
     strip.left <- FALSE
     dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale

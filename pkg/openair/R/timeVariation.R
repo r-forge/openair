@@ -50,8 +50,8 @@ timeVariation <- function(mydata,
     
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
-    if (!missing(group))  mydata <- cutData2(mydata, group) 
-    mydata <- cutData2(mydata, type)
+    if (!missing(group))  mydata <- cutData(mydata, group) 
+    mydata <- cutData(mydata, type)
 
     mydata <- na.omit(mydata)
 
@@ -377,28 +377,26 @@ calc.wd <- function(mydata, vars = "day.hour", pollutant, type) {
         
         if (vars == "month") myform <- formula(paste("value ~ variable + month +", type))                   
         
-        mydata <- with(mydata, aggregate(myform, data = mydata, FUN))
+        mydata <- aggregate(myform, data = mydata, FUN)
         mydata        
     }
 
     ## function to calculate statistics dealing with wd properly
-    if (any(pollutant %in% "wd" == FALSE)) {
-        data1 <-  subset(mydata, variable != "wd")
+    if (any(!pollutant %in% "wd")) {
+        data1 <- subset(mydata, variable != "wd")
         data1 <-  summary.values(data1, vars, errorInMean, type)
-        data1 <- data.frame(subset(data1, select = -value), data1$value)
-        
-        
+        data1 <- data.frame(subset(data1, select = -value), data1$value)                
     }
 
     if ("wd" %in% pollutant) {
         data2 <-  subset(mydata, variable == "wd")
-        data2 <-  summary.values(data2, vars, errorInMean, type)
+        data2 <-  summary.values(data2, vars, wd.smean.normal, type)
         data2 <- data.frame(subset(data2, select = -value), data2$value)
     }
 
     if (length(pollutant) > 1 & "wd" %in% pollutant) data2 <- rbind.fill(data1, data2)
 
-    if ("wd" %in% pollutant == FALSE) data2 <- data1
+    if (!"wd" %in% pollutant) data2 <- data1
 
     if (length(pollutant) == 1 & "wd" %in% pollutant) data2 <- data2
 

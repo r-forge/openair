@@ -1,4 +1,4 @@
-cutData2 <- function(x, type = "default", hemisphere = "northern", n.levels = 4) {
+cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) {
 
     ## function to cutData depending on choice of variable
     ## pre-defined types and user-defined types

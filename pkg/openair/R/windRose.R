@@ -110,7 +110,7 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
         }
     }
     
-    polar <- cutData2(polar, type)
+    polar <- cutData(polar, type)
     results.grid <- ddply(polar, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################

@@ -124,7 +124,7 @@ scatterPlot <- function(mydata,
     boxPlot <- FALSE
 
     ## make a new factor column UNLESS it has already been converted from numeric
-    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData2(mydata, x)
+    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData(mydata, x)
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead
     if (type %in% names(mydata)) {
@@ -162,7 +162,7 @@ scatterPlot <- function(mydata,
         ## colour scale transform
         if (trans) thePower <- 2 else thePower <- 1
         
-        mydata <- cutData2(mydata, type)
+        mydata <- cutData(mydata, type)
         
         ## use square root transform for key to help highlight typical dustributions
         mydata[ ,group] <- mydata[ , group] ^ (1 / thePower)
@@ -191,12 +191,12 @@ scatterPlot <- function(mydata,
         
     } else {
         
-        mydata <- cutData2(mydata, type)
+        mydata <- cutData(mydata, type)
         if (missing(group)) {
             
             if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <- factor("group") ## don't overwrite a
         } else {  ## means that group is there
-            mydata <- cutData2(mydata, group)                    
+            mydata <- cutData(mydata, group)                    
         }
         
         legend <- NULL

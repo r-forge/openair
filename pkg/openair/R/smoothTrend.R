@@ -47,7 +47,7 @@ smoothTrend <- function(mydata,
     date.format <- dateBreaks(mydata$date)$format
 
     ## cutData depending on type
-    mydata <- cutData2(mydata, type)
+    mydata <- cutData(mydata, type)
 
     ## reshape data
     ## in the case of mutiple percentiles, these are assinged and treated like multiple pollutants
