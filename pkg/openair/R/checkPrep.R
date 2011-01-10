@@ -20,10 +20,15 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
     }
 
     ## add type to names if not in pre-defined list
-    ##   if (type %in% conds == FALSE) Names <- c(Names, type)
     if (any(type %in% conds == FALSE)) {
         ids <- which(type %in% conds == FALSE)
         Names <- c(Names, type[ids])
+    }
+
+    ## if type already present in data frame
+    if (any(type %in% names(mydata))) {
+        ids <- which(type %in% names(mydata))
+        Names <- unique(c(Names, type[ids]))
     }
 
     ## just select data needed
