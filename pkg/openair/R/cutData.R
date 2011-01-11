@@ -116,10 +116,9 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
         if (type == "wd") {
 
             x[ , type] <- cut(x$wd, breaks = seq(22.5, 382.5, 45),
-                              labels =c("NE", "E", "SE", "S", "SW", "W", "NW", "N"))
+                              labels = c("NE", "E", "SE", "S", "SW", "W", "NW", "N"))
             x[ , type][is.na(x[ , type])] <- "N" # for wd < 22.5
-            x[ , type] <- ordered(x[ , type], levels = c("NW", "N", "NE",
-                                              "W", "E", "SW", "S", "SE"))}
+            x[ , type] <- ordered(x[ , type], levels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))}
 
         
         if (type == "site") {

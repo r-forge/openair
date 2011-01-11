@@ -229,26 +229,14 @@ scatterPlot <- function(mydata,
         y = list(log = nlog.y, relation = y.relation))
     }
 
-    ## proper names of labelling ##############################################################################
-    pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
-    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
-
-    if (strip) strip <- strip.custom(factor.levels = stripName)
-
-    if (length(type) == 1 ) {
-        
-        strip.left <- FALSE
-        
-    } else { ## two conditioning variables        
-        stripName <- sapply(unique(mydata[ , type[2]]), function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels =  stripName)
-    }
-    ## ########################################################################################################
     
     ## if logs are chosen, ensure data >0 for line fitting etc
     if (log.x)  mydata <- mydata[mydata[ , x] > 0, ]
     if (log.y)  mydata <- mydata[mydata[ , y] > 0, ]
 
+    pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
+    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
+    
     if (!continuous) { ## non-continuous key
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
         
@@ -266,9 +254,26 @@ scatterPlot <- function(mydata,
     ## special wd layout
     skip <- FALSE
     if (length(type) == 1 & type[1] == "wd" ) {
+        ## re-order to make sensible layout
+        mydata$wd <- ordered(mydata$wd, levels = c("NW", "N", "NE", "W", "E", "SW", "S", "SE"))
         layout <- c(3, 3)
         skip <- c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
     }
+
+        ## proper names of labelling ##############################################################################
+   
+    if (strip) strip <- strip.custom(factor.levels = stripName)
+
+    if (length(type) == 1 ) {
+        
+        strip.left <- FALSE
+        
+    } else { ## two conditioning variables        
+        stripName <- sapply(unique(mydata[ , type[2]]), function(x) quickText(x, auto.text))
+        strip.left <- strip.custom(factor.levels =  stripName)
+    }
+    ## ########################################################################################################
+
 
     ## no strip needed for single panel
     if (length(type) == 1 & type[1]  == "default") strip <- FALSE
