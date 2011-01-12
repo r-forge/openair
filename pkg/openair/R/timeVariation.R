@@ -19,10 +19,6 @@ timeVariation <- function(mydata,
     dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthyear",
                    "gmtbst", "bstgmt")
 
-    ##update weekday and month locally
-    weekday.name <- make.weekday.names()
-    weekday.abb <- make.weekday.abbs()
-    month.name <- substr(make.month.names(), 1, 1) ## first letter of month name
 
     vars <- c("date", pollutant)
     
@@ -92,7 +88,7 @@ timeVariation <- function(mydata,
     ## calculate temporal components
     mydata <- within(mydata, {
         weekday <- format(date, "%A")
-        weekday <- ordered(weekday, levels = weekday.names)
+        weekday <- ordered(weekday, levels = format(ISOdate(2000, 1, 3:9), "%A"))
         hour <- as.numeric(format(date, "%H"))
         month <- as.numeric(format(date, "%m"))}
                      )
@@ -186,7 +182,7 @@ timeVariation <- function(mydata,
     if (normalise) data.weekday <-  ddply(data.weekday, .(variable), divide.by.mean)
 
     data.weekday$weekday <- substr(data.weekday$weekday, 1, 3)
-    data.weekday$weekday <- ordered(data.weekday$weekday, levels = weekday.abb)
+    data.weekday$weekday <- ordered(data.weekday$weekday, levels = format(ISOdate(2000, 1, 3:9), "%a"))
 
     data.weekday$weekday <- as.numeric(as.factor(data.weekday$weekday))
 
@@ -200,7 +196,7 @@ timeVariation <- function(mydata,
     day <- xyplot(myform,  data = data.weekday, groups = variable,
                   as.table = TRUE,
                   par.settings = simpleTheme(col = myColors, pch = 16),
-                  scales = list(x = list(at = 1:7, labels = weekday.abb)),
+                  scales = list(x = list(at = 1:7, labels = format(ISOdate(2000, 1, 3:9), "%a"))),
                   ylab = quickText(ylab, auto.text),
                   xlab = xlab[4],
                   ylim = rng(data.weekday),
@@ -224,7 +220,7 @@ timeVariation <- function(mydata,
                   })
 
     ## month ############################################################################
-
+                  
     data.month <- calc.wd(mydata, vars = "month", pollutant, type)
     if (normalise) data.month <-  ddply(data.month, .(variable), divide.by.mean)
 
@@ -245,7 +241,8 @@ timeVariation <- function(mydata,
                     strip = strip,
                     par.strip.text = list(cex = 0.8), 
                     par.settings = simpleTheme(col = myColors, pch = 16),
-                    scales = list(x = list(at = 1:12, labels = month.name)),
+                    scales = list(x = list(at = 1:12, labels = substr(format(seq(as.Date("2000-01-01"),
+                                                      as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
                     panel =  panel.superpose,...,
                     panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
                         if (group.number == 1) {

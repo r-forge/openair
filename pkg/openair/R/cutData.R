@@ -62,7 +62,8 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
         if (type == "hour") x[ , type] <- factor(format(x$date, "%H"))
 
         if (type == "month") {x[ , type] <- format(x$date, "%B")
-                              x[ , type] <- ordered(x[ , type], levels = make.month.names())
+                              x[ , type] <- ordered(x[ , type], levels = format(seq(as.Date("2000-01-01"),
+                                                      as.Date("2000-12-31"), "month"), "%B"))
                           } 
 
         if (type == "monthyear") {
@@ -110,7 +111,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
 
         if (type == "weekday") {
             x[ , type] <- format(x$date, "%A")
-            x[ , type] <- ordered(x[ , type], levels = make.weekday.names())
+            x[ , type] <- ordered(x[ , type], levels = format(ISOdate(2000, 1, 3:9), "%A"))
         }
 
         if (type == "wd") {
