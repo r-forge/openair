@@ -181,8 +181,7 @@ timeVariation <- function(mydata,
     data.weekday <- calc.wd(mydata, vars = "weekday", pollutant, type)
     if (normalise) data.weekday <-  ddply(data.weekday, .(variable), divide.by.mean)
 
-    data.weekday$weekday <- substr(data.weekday$weekday, 1, 3)
-    data.weekday$weekday <- ordered(data.weekday$weekday, levels = format(ISOdate(2000, 1, 3:9), "%a"))
+    data.weekday$weekday <- ordered(data.weekday$weekday, levels = format(ISOdate(2000, 1, 3:9), "%A"))
 
     data.weekday$weekday <- as.numeric(as.factor(data.weekday$weekday))
 
