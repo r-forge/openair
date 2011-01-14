@@ -21,6 +21,7 @@ percentile = NA,
 type = "default",
 layout = NULL,
 smooth = TRUE,
+spline = FALSE,
 linear = FALSE,
 ci = TRUE,
 mod.line = FALSE,
@@ -121,6 +122,11 @@ auto.text = TRUE,
 
  \item{smooth}{A smooth line is fitted to the data if \code{TRUE};
    optionally with 95\% confidence intervals shown.}
+
+ \item{spline}{A smooth spline is fitted to the data if
+ \code{TRUE}. This is partiocualry useful when there are fewer data
+ points or when a connection line between a sequence of points is
+ required.}
 
   \item{linear}{A linear model is fitted to the data if \code{TRUE};
  optionally with 95\% confidence intervals shown. The equation of the

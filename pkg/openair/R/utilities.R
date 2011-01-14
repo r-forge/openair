@@ -304,7 +304,7 @@ useOuterStrips <-function (x, strip = strip.default, strip.left = strip.custom(h
 panel.smooth.spline <-
     function(x, y,
              w = NULL, df, spar = NULL, cv = FALSE,
-             lwd = plot.line$lwd, lty = plot.line$lty,col, col.line = plot.line$col,
+             lwd = lwd, lty = plot.line$lty,col, col.line = plot.line$col,
              type, horizontal = FALSE, all.knots = TRUE,... )
 {
     x <- as.numeric(x)

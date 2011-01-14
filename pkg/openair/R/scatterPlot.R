@@ -10,6 +10,7 @@ scatterPlot <- function(mydata,
                         type = "default",
                         layout = NULL,
                         smooth = TRUE,
+                        spline = FALSE,
                         linear = FALSE,
                         ci = TRUE,
                         mod.line = FALSE,
@@ -287,6 +288,7 @@ scatterPlot <- function(mydata,
                       type = c("p", "g"),
                       as.table = TRUE,
                       pch = pch,
+                      lwd = lwd,
                       main = quickText(main),
                       ylab = quickText(ylab, auto.text),
                       xlab = quickText(xlab, auto.text),
@@ -323,10 +325,11 @@ scatterPlot <- function(mydata,
                           if (!continuous) panel.xyplot(x, y, col.symbol = myColors[group.number],
                                                         as.table = TRUE,...)
                           
-                          if (linear & npol == 1) panel.linear(x, y, col = "black",myColors[group.number],
+                          if (linear & npol == 1) panel.linear(x, y, col = "black", myColors[group.number],
                                        lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
                           if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
                                                 lty = 1, lwd = 1, se = ci, ...)
+                          if (spline) panel.smooth.spline(x, y, col = myColors[group.number], lwd = lwd, ...)
                           if (mod.line) {
                               panel.abline(a = c(0, 0.5), lty = 5)
                               panel.abline(a = c(0, 2), lty = 5)
