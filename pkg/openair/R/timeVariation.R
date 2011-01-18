@@ -67,14 +67,17 @@ timeVariation <- function(mydata,
                                             quickText(name.pol[x], auto.text))
     
     if (missing(group)) {
-        mydata <- melt(mydata, measure.vars = pollutant)      
+        mydata <- melt(mydata, measure.vars = pollutant)
+        mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
         
     } else {
         names(mydata)[2:3] <- c("value", "variable")
+        mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
         mylab <-  sapply(levels(mydata[ , "variable"]), function(x) quickText(x, auto.text))
     }   
     
-
+   
+    
     divide.by.mean <- function(x) {
         Mean <- mean(x$Mean, na.rm = TRUE)
         x$Mean <- x$Mean / Mean
