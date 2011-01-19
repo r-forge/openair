@@ -13,7 +13,11 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
         ## if conditioning type already built in, is present in data frame and is a factor
         if (type %in% conds & type %in% names(x)) {
            
-            if (is.factor(x[ , type])) return(x)
+            if (is.factor(x[ , type])) {
+               
+                x[ , type] <- factor(x[ , type])  ## remove unused factor levels
+                return(x)
+            }
         }
 
         if (type %in% conds == FALSE) { ## generic, user-defined
@@ -72,6 +76,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
         }
 
         if (type == "season") {
+            print("NN")
             if (!hemisphere %in% c("northern", "southern")) {stop("hemisphere must be 'northern' or 'southern'")}
             if (hemisphere == "northern") {
                 x[ , type] <- "winter (DJF)" ## define all as winter first, then assign others
