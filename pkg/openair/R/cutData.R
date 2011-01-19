@@ -1,8 +1,14 @@
-cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) {
+cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4, is.axis = FALSE) {
 
     ## function to cutData depending on choice of variable
     ## pre-defined types and user-defined types
     ## If another added, then amend checkPrep
+
+    ## note: is.axis modifies factor levels to give shorter labels for axis
+    ##       generic label shortening handled at end of section
+    ##       format(date, "%?") outputs modified by is.axis are set using temp 
+    ##       declared at at start of associated type section - karl
+
     makeCond <- function(x, type = "default") {
         ## adds a column "cond"
 
@@ -21,11 +27,12 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
         }
 
         if (type %in% conds == FALSE) { ## generic, user-defined
-            ## split by four quantiles unless it is a factor, in which case keep as is
+            ## split by quantiles unless it is a factor, in which case keep as is
+            ## number of quantiles set by n.levels
 
             if (is.factor(x[, type]) | is.character(x[, type])) {
 
-                 ## drop unused levels while we are at it             
+                ## drop unused levels while we are at it             
                 x[, type] <- factor(x[, type])
 
             } else {
@@ -40,7 +47,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
                 x[ , type] <- as.factor(x[ , type])
                 temp.levels <- gsub("[(]|[)]|[[]|[]]", "", temp.levels)
                 temp.levels <- gsub("[,]", " to ", temp.levels)
-                levels(x[ , type]) <- paste(type, temp.levels)
+                levels(x[ , type]) <- if(is.axis) temp.levels else paste(type, temp.levels)
             }
 
         }
@@ -65,10 +72,12 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4) 
 
         if (type == "hour") x[ , type] <- factor(format(x$date, "%H"))
 
-        if (type == "month") {x[ , type] <- format(x$date, "%B")
-                              x[ , type] <- ordered(x[ , type], levels = format(seq(as.Date("2000-01-01"),
-                                                      as.Date("2000-12-31"), "month"), "%B"))
-                          } 
+        if (type == "month") {
+             temp <- if(is.axis) "%b" else "%B"
+             x[ , type] <- format(x$date, temp)
+             x[ , type] <- ordered(x[ , type], levels = format(seq(as.Date("2000-01-01"),
+                                   as.Date("2000-12-31"), "month"), temp))
+        } 
 
         if (type == "monthyear") {
             x[ , type] <- format(x$date, "%B %Y")
