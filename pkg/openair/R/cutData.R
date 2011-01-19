@@ -85,7 +85,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4, 
         }
 
         if (type == "season") {
-            print("NN")
+            
             if (!hemisphere %in% c("northern", "southern")) {stop("hemisphere must be 'northern' or 'southern'")}
             if (hemisphere == "northern") {
                 x[ , type] <- "winter (DJF)" ## define all as winter first, then assign others
