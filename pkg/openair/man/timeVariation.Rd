@@ -153,15 +153,14 @@ defined (see manual for more details).}
 
   An openair output can be manipulated using a number of generic
   operations, including \code{print}, \code{plot} and
-  \code{summarise}. See \code{\link{openair.generics}} for further
+  \code{summary}. See \code{\link{openair.generics}} for further
   details.
   
   The four components of timeVariation are: \code{day.hour}, 
   \code{hour}, \code{day} and \code{month}. Associated data.frames can 
-  be extracted directly using the \code{$data} operator, e.g. as 
-  \code{output$data$day.hour}, \code{output$data$hour}, 
-  \code{output$data$day} and \code{output$data$month}, respectively for 
-  \code{output <- timeVariation(mydata, "nox")}
+  be extracted directly using the \code{subset} option, e.g. as in
+  \code{plot(object, subset = "day.hour")}, \code{summary(output, subset = "hour")}, 
+  etc, for \code{output <- timeVariation(mydata, "nox")}
   
 }
 
@@ -204,18 +203,20 @@ timeVariation(mydata, pollutant = "nox", group = "gmtbst")
 \dontrun{timeVariation(mydata, pollutant = c("nox", "no2"), type = "o3", normalise = TRUE)}
 
 ## sub plots can be extracted from the openair object
-results <- timeVariation(mydata, pollutant = "no2")
-plot(results, subset = "day.hour") # top weekday and plot
+myplot <- timeVariation(mydata, pollutant = "no2")
+plot(myplot, subset = "day.hour") # top weekday and plot
 
-## plot(results, subset="hour") is the diurnal plot
-## plot(results, subset="day") is the weekday plot
-## plot(results, subset="month") is the monthly plot
+## individual plots
+## plot(myplot, subset="day.hour") for the weekday and hours subplot (top)
+## plot(myplot, subset="hour") for the diurnal plot 
+## plot(myplot, subset="day") for the weekday plot
+## plot(myplot, subset="month") for the monthly plot
 
 ## numerical results (mean, lower/upper uncertainties)
-## results$data$day.hour are the weekday and hour results
-## results$data$hour are the diurnal results
-## results$data$day are the weekday results
-## results$data$month are the monthly results
+## results(myplot, subset = "day.hour") # the weekday and hour data set
+## summary(myplot, subset = "hour") #summary of hour data set
+## head(myplot, subset = "day") #head/top of day data set
+## tail(myplot, subset = "month") #tail/top of month data set
 
 }
 \keyword{methods}
