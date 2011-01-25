@@ -129,7 +129,8 @@ scatterPlot <- function(mydata,
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead
     if (any(type %in% names(mydata))) {
-        if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
+        id <- which(type %in% names(mydata))
+        if (any(table(mydata[ , x], mydata[ , id[1]]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
     } else {
         if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
     }
