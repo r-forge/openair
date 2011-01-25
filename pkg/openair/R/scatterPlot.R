@@ -270,7 +270,7 @@ scatterPlot <- function(mydata,
         strip.left <- FALSE
         
     } else { ## two conditioning variables        
-        stripName <- sapply(unique(mydata[ , type[2]]), function(x) quickText(x, auto.text))
+        stripName <- sapply(levels(mydata[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels =  stripName)
     }
     ## ########################################################################################################
