@@ -110,8 +110,8 @@ scatterPlot <- function(mydata,
     ## if group is present, need to add that list of variables
     if (!missing(group)){
         
-        if (group %in%  dateTypes| !missing(avg.time)) {
-            vars <- unique(c(vars, "date"))
+        if (group %in%  dateTypes | !missing(avg.time) | any(type %in% dateTypes)) {          
+            vars <- unique(c(vars, "date", group))
         } else {
             vars <- unique(c(vars, group))
         }
@@ -128,7 +128,7 @@ scatterPlot <- function(mydata,
     if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData(mydata, x)
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead
-    if (type %in% names(mydata)) {
+    if (any(type %in% names(mydata))) {
         if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
     } else {
         if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
@@ -136,7 +136,7 @@ scatterPlot <- function(mydata,
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
-    
+   
     ## remove missing data
     mydata <- na.omit(mydata)
 
