@@ -107,19 +107,22 @@ scatterPlot <- function(mydata,
         vars <- c(x, y)
     }
 
-    ## if group is present, need to add that list of variables
+    ## if group is present, need to add that list of variables unless it is a pre-defined date-based one
     if (!missing(group)){
         
-        if (group %in%  dateTypes | !missing(avg.time) | any(type %in% dateTypes)) {          
-            vars <- unique(c(vars, "date", group))
+        if (group %in%  dateTypes | !missing(avg.time) | any(type %in% dateTypes)) {
+            if (group %in%  dateTypes) {
+                vars <- unique(c(vars, "date")) ## don't need group because it is defined by date
+            } else {
+                vars <- unique(c(vars, "date", group))
+            }
+            
         } else {
             vars <- unique(c(vars, group))
         }
     }   
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
-
-
     
     ## sometimes x can be a factor like "year"
     boxPlot <- FALSE
@@ -129,8 +132,9 @@ scatterPlot <- function(mydata,
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead
     if (any(type %in% names(mydata))) {
-        id <- which(type %in% names(mydata))
-        if (any(table(mydata[ , x], mydata[ , id[1]]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
+        
+        print(table(mydata[ , x], mydata[ , type]))
+        if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
     } else {
         if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
     }
