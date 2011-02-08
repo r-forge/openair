@@ -28,6 +28,8 @@ scatterPlot <- function(mydata,
                         log.y = FALSE,
                         y.relation = "same",
                         x.relation = "same",
+                        ref.x = NULL,
+                        ref.y = NULL,
                         nbin = 256,
                         continuous = FALSE,
                         trans = TRUE,
@@ -125,19 +127,19 @@ scatterPlot <- function(mydata,
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
     
     ## sometimes x can be a factor like "year"
-    boxPlot <- FALSE
+ #   boxPlot <- FALSE
 
     ## make a new factor column UNLESS it has already been converted from numeric
-    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData(mydata, x)
+#    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData(mydata, x)
 
     ## if there are more than one x values per factor, plot a box and whisker plot instead
-    if (any(type %in% names(mydata))) {
+#    if (any(type %in% names(mydata))) {
         
-        print(table(mydata[ , x], mydata[ , type]))
-        if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
-    } else {
-        if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
-    }
+ #       print(table(mydata[ , x], mydata[ , type]))
+ #       if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
+ #   } else {
+ #       if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
+ #   }
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
@@ -319,11 +321,11 @@ scatterPlot <- function(mydata,
                       }
                       
 
-                      if (boxPlot){
+                    #  if (boxPlot){
 
-                          panel.bwplot(x, y, horizontal = FALSE, pch = "|", notch = TRUE)
+                     #     panel.bwplot(x, y, horizontal = FALSE, pch = "|", notch = TRUE)
                           
-                      } else {
+                   #   } else {
 
                           if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                        as.table = TRUE, ...)
@@ -340,7 +342,13 @@ scatterPlot <- function(mydata,
                               panel.abline(a = c(0, 2), lty = 5)
                               panel.abline(a = c(0, 1), lty = 1)
                           }
-                      }
+                   
+                      ## add reference lines
+                          panel.abline(v = ref.x, lty = 5)                
+                          panel.abline(h = ref.y, lty = 5)
+                                    
+                      
+                   #   }
                   })
     }
 
@@ -356,7 +364,7 @@ scatterPlot <- function(mydata,
                           colorkey = TRUE,
                           aspect = 1,
                           colramp = function(n) {openColours("default", n)},
-                          trans = function(x) log(x), inv = function(x) exp(x),
+                          trans = function(x) log(x), inv = function(x) exp(x),...,
                           panel = function(x,...) {
                               panel.grid(-1, -1)
                               panel.hexbinplot(x,...)
@@ -365,6 +373,9 @@ scatterPlot <- function(mydata,
                                   panel.abline(a = c(0, 2), lty = 5)
                                   panel.abline(a = c(0, 1), lty = 1)
                               }
+                              ## add reference lines
+                          panel.abline(v = ref.x, lty = 5)                
+                          panel.abline(h = ref.y, lty = 5)
                           })
     }
 
@@ -432,6 +443,9 @@ scatterPlot <- function(mydata,
                                         panel.abline(a = c(0, 2), lty = 5)
                                         panel.abline(a = c(0, 1), lty = 1)
                                     }
+                                    ## add reference lines
+                          panel.abline(v = ref.x, lty = 5)                
+                          panel.abline(h = ref.y, lty = 5)
                                 })
     }
                                         #   if (method == "scatter") print(plt)
