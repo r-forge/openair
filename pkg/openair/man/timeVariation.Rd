@@ -13,6 +13,7 @@ local.time = FALSE,
 normalise = FALSE,
 ylab = pollutant,
 xlab = c("hour", "hour", "month", "weekday"),
+ylim = NA,
 name.pol = pollutant,
 type = "default",
 group = NULL,
@@ -56,7 +57,9 @@ alpha = 0.4,...)
   \item{ylab}{Name of y-axis variable. By default will use the name of
     \code{pollutant}.}
 
-   \item{xlab}{x-axis label; one for each sub-plot.}
+  \item{xlab}{x-axis label; one for each sub-plot.}
+
+  \item{ylim}{user-specified y-axis limits.}
 
   \item{name.pol}{Names to be given to the pollutant(s). This is useful
     if you want to give a fuller description of the variables, maybe
