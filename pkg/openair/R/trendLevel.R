@@ -15,7 +15,8 @@ trendLevel <- function(mydata,
     xlab = x, ylab = y,
     main = "",
     rotate.axis = c(90, 0),
-    n.levels = c(10, 10, 4), 
+    n.levels = c(10, 10, 4),
+    hemisphere = "northern", 
     limits = c(0, 100),  
     cols = "default", 
     auto.text = TRUE,
@@ -239,9 +240,9 @@ trendLevel <- function(mydata,
     value <- mydata[,pollutant]
     #different n.levels for axis and type
     #is.axis applied for x and y
-    newdata <- cutData(mydata, x, n.levels=n.levels[1], is.axis=TRUE)
-    newdata <- cutData(newdata, y, n.levels=n.levels[2], is.axis=TRUE)
-    newdata <- cutData(newdata, type, n.levels=n.levels[3]) 
+    newdata <- cutData(mydata, x, n.levels=n.levels[1], is.axis=TRUE, hemisphere = hemisphere)
+    newdata <- cutData(newdata, y, n.levels=n.levels[2], is.axis=TRUE, hemisphere = hemisphere)
+    newdata <- cutData(newdata, type, n.levels=n.levels[3], hemisphere = hemisphere) 
     newdata <- newdata[c(x,y,type)]
 
     ############################

@@ -22,6 +22,7 @@ trendLevel(mydata,
     x = "month", y = "hour", type = "year", 
     xlab = x, ylab = y, main = "",
     rotate.axis = c(90, 0), n.levels = c(10, 10, 4),
+    hemisphere = "northern",
     limits = c(0, 100), cols = "default", auto.text = TRUE, 
     key.header = "use.stat.name", key.footer = pollutant, 
     key.position = "right", key = NULL,
@@ -64,6 +65,9 @@ trendLevel(mydata,
   numeric \code{type} data into four levels. (Notes: This option is ignored for date conditioning and factors. 
   If less than three values are supplied, three values are determined by recursion; if more than three values 
   are supplied, only the first three are used.) }
+
+  \item{hemisphere}{The hemisphere the data was collected in. This can be \code{"northern"} or \code{"southern"}, 
+  and is used when splitting data into local seasons. }  
 
   \item{limits}{ The colour scale range to use when generating the \code{trendLevel} plot. }
 
