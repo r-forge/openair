@@ -12,7 +12,7 @@ MannKendall(mydata,
 pollutant = "nox",
 deseason = FALSE,
 type = "default",
-period = "month",
+avg.time = "month",
 statistic = "mean",
 percentile = NA,
 data.thresh = 0,
@@ -63,7 +63,7 @@ not necessarily) a pollutant.}
     when two types are provided the first forms the columns and the
     second the rows.}
   
-  \item{period}{Either "monthly" (the default), or "annual". Determines
+  \item{avg.time}{Either "month" (the default), or "year". Determines
 whether monthly mean or annual mean trends are plotted. Note that for
 "annual", six or more years are required.}
 

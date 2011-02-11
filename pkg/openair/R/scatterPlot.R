@@ -90,7 +90,7 @@ scatterPlot <- function(mydata,
     
     ## average the data if necessary (default does nothing)
     ## note - need to average before cutting data up etc
-    if (avg.time != "default") mydata <- timeAverage(mydata, period = avg.time,
+    if (avg.time != "default") mydata <- timeAverage(mydata, avg.time = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
     
     ## the following makes sure all variables are present, which depends on 'group' and 'type'

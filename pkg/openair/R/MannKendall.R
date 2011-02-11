@@ -12,7 +12,7 @@ MannKendall <- function(mydata,
                         pollutant = "nox",
                         deseason = FALSE,
                         type = "default",
-                        period = "month",
+                        avg.time = "month",
                         statistic = "mean",
                         percentile = NA,
                         data.thresh = 0,
@@ -32,7 +32,7 @@ MannKendall <- function(mydata,
     ## if autocor is TRUE, then need simulations
     if (autocor) simulate <- TRUE
 
-    if (!period %in% c("year", "month")) stop ("Period can only be 'month' or 'year'.")
+    if (!avg.time %in% c("year", "month")) stop ("avg.time can only be 'month' or 'year'.")
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
@@ -47,7 +47,7 @@ MannKendall <- function(mydata,
     end.month <-  endMonth(mydata$date)
 
     ## calculate means
-    mydata <- ddply(mydata, type, timeAverage, period = period, statistic = statistic,
+    mydata <- ddply(mydata, type, timeAverage, avg.time = avg.time, statistic = statistic,
                     percentile = percentile, data.thresh = data.thresh)      
 
     process.cond <- function(mydata) {
@@ -65,7 +65,7 @@ MannKendall <- function(mydata,
         end.month <-  endMonth(mydata$date)
         
 
-        if (period == "month") {
+        if (avg.time == "month") {
             
             mydata$date <- as.Date(mydata$date)
             

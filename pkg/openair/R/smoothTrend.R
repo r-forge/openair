@@ -61,7 +61,7 @@ smoothTrend <- function(mydata,
         mydata <- melt(subset(mydata, select = -variable), measure.vars = paste("percentile.", percentile, sep = ""))
         
     } else {
-        mydata <- ddply(mydata, c(type, "variable"), timeAverage, period = "month", statistic = statistic,
+        mydata <- ddply(mydata, c(type, "variable"), timeAverage, avg.time = "month", statistic = statistic,
                         percentile = percentile, data.thresh = data.thresh)               
     }
     
