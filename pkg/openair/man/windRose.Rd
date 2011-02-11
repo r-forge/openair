@@ -16,7 +16,6 @@ windRose(polar,
     width = 1, auto.text = TRUE, breaks = 4, paddle = TRUE,
     key.header = NULL, key.footer = "(m/s)",
     key.position = "bottom", key = NULL, dig.lab = 5,
-    hemisphere = "northern", n.levels = 4,
     pollutant = NULL, 
     ...)
 
@@ -118,20 +117,13 @@ ans <- pollutionRose(...)
   number formatting is used in break point and key labelling. Default 
   5.}
 
-  \item{hemisphere, n.levels}{Additional \code{type} conditioning options 
-  which are passed to \code{cutData} for evaluation. \code{hemisphere} can 
-  be \code{"northern"} or \code{"southern"}, and is used when splitting data 
-  into local seasons. \code{n.levels} is the number of quantiles to split data 
-  into if it is numeric. }   
-
   \item{pollutant}{Alternative data series to be sampled 
   instead of wind speed. The \code{windRose} default NULL is equivalent 
   to \code{pollutant = "ws"}.}  
 
-  \item{...}{For \code{pollutionRose} other parameters that are 
-  passed on to \code{windRose}. For \code{windRose} other parameters 
-  that are passed on to \code{drawOpenKey} and 
-  \code{lattice:xyplot}. }
+  \item{...}{For \code{pollutionRose} other parameters that are passed
+  on to \code{windRose}. For \code{windRose} other parameters that are
+  passed on to \code{drawOpenKey}, \code{lattice:xyplot} and \code{cutData}. }
 
 }
 

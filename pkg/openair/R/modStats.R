@@ -1,5 +1,5 @@
 
-modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default") {
+modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", ...) {
     ## function to calculate model evaluation statistics
     ## the default is to use the entire data set. 
     ## Requires a field "date" and optional conditioning variables representing measured and modelled values
@@ -16,7 +16,7 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default") {
     ## check the data
     mydata <- checkPrep(mydata, vars, type)
 
-    mydata <- cutData(mydata, type)
+    mydata <- cutData(mydata, type, ...)
 
      ## number of valid readings
     n <- function(x, mod = "mod", obs = "obs") {

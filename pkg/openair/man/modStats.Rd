@@ -8,7 +8,8 @@
   with flexible conditioning
 }
 \usage{
-results <- modStats(mydata,  mod = "mod", obs = "obs", type = "default")
+results <- modStats(mydata,  mod = "mod", obs = "obs", type = "default",
+  ...)
 }
 
 
@@ -39,7 +40,10 @@ results <- modStats(mydata,  mod = "mod", obs = "obs", type = "default")
 
     More than one type can be considered e.g. \code{type = c("season",
     "weekday")} will produce statistics split by season and day of the
-    week.}
+  week.}
+
+\item{...}{Other aruments to be passed to \code{cutData}
+  e.g. \code{hemisphere = "southern"}}
 
 }
 

@@ -140,7 +140,9 @@ estimate - sometimes by a large amount.}
     therefore increase or decrease the number of intervals by adjusting
     the value of \code{date.breaks} up or down. }
 
-  \item{\dots}{Other graphical parameters.}
+  \item{\dots}{Other graphical parameters passed onto
+    \code{lattice:xyplot} and \code{cutData}. For example, in the case
+    of \code{cutData} the option \code{hemisphere = "southern"}.}
 }
 
 \value{

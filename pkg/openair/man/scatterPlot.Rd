@@ -221,7 +221,9 @@ auto.text = TRUE,
     titles and axis labels will automatically try and format pollutant
     names and units properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{\dots}{Other graphical parameters.}
+  \item{\dots}{Other graphical parameters passed onto
+    \code{lattice:xyplot} and \code{cutData}. For example, in the case
+    of \code{cutData} the option \code{hemisphere = "southern"}.}
 }
 
 \value{As well as generating the plot itself, \code{scatterPlot} also

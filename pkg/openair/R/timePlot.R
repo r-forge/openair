@@ -94,7 +94,7 @@ timePlot <- function(mydata,
 
     if (date.pad) mydata <- date.pad(mydata, type)
 
-    mydata <- cutData(mydata, type)
+    mydata <- cutData(mydata, type, ...)
  
 
     ## average the data if necessary (default does nothing)

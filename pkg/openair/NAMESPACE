@@ -25,7 +25,6 @@ export(
        cutData,
        drawOpenKey,
        openColours,
-       prepareModel,
        quickText,
        selectByDate,
        splitByDate,

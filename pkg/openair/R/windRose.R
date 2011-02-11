@@ -19,7 +19,7 @@ pollutionRose <- function(polar,
 windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "default", 
                       main = "", grid.line = 5, width = 1, auto.text = TRUE, breaks = 4, 
                       paddle = TRUE, key.header = NULL, key.footer = "(m/s)", key.position = "bottom", 
-                      key = NULL, dig.lab = 5, hemisphere = "northern", n.levels = 4,
+                      key = NULL, dig.lab = 5, 
                       pollutant = NULL, 
                       ...) 
 {
@@ -111,7 +111,7 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
         }
     }
     
-    polar <- cutData(polar, type, hemisphere = hemisphere, n.levels = n.levels)
+    polar <- cutData(polar, type, ...)
     results.grid <- ddply(polar, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################

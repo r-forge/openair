@@ -199,12 +199,12 @@ scatterPlot <- function(mydata,
         
     } else {
         
-        mydata <- cutData(mydata, type)
+        mydata <- cutData(mydata, type, ...)
         if (missing(group)) {
             
             if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <- factor("group") ## don't overwrite a
         } else {  ## means that group is there
-            mydata <- cutData(mydata, group)                    
+            mydata <- cutData(mydata, group, ...)                    
         }
         
         legend <- NULL

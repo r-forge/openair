@@ -115,7 +115,9 @@ defined (see manual for more details).}
   \item{alpha}{The alpha transparency used for plotting confidence
     intervals. 0 is fully transparent and 1 is opaque. The default is 0.4}
 
-  \item{\dots}{Other graphical parameters.}
+  \item{\dots}{Other graphical parameters passed onto
+    \code{lattice:xyplot} and \code{cutData}. For example, in the case
+    of \code{cutData} the option \code{hemisphere = "southern"}.}
 }
 
 \details{

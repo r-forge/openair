@@ -47,8 +47,8 @@ timeVariation <- function(mydata,
     
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
-    if (!missing(group))  mydata <- cutData(mydata, group) 
-    mydata <- cutData(mydata, type)
+    if (!missing(group))  mydata <- cutData(mydata, group, ...) 
+    mydata <- cutData(mydata, type, ...)
 
     mydata <- na.omit(mydata)
 

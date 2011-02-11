@@ -38,7 +38,7 @@ MannKendall <- function(mydata,
     mydata <- checkPrep(mydata, vars, type)
 
     ## cutData depending on type
-    mydata <- cutData(mydata, type)
+    mydata <- cutData(mydata, type, ...)
 
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
