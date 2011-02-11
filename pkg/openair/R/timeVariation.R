@@ -156,7 +156,7 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ hour | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim <- rng(data.hour) else ylim <- ylim
+    if (missing(ylim)) ylim.hour <- rng(data.hour) else ylim.hour <- ylim
     
     hour <- xyplot(myform,  data = data.hour, groups = variable,
                    as.table = TRUE,
@@ -164,13 +164,13 @@ timeVariation <- function(mydata,
                    ylab = quickText(ylab, auto.text),
                    xlab = xlab[2],
                    xlim = c(0, 23),
-                   ylim = ylim,
+                   ylim = ylim.hour,
                    strip = strip,
                    par.strip.text = list(cex = 0.8),
                    key = key,
                    scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                    par.settings = simpleTheme(col = myColors),
-                   panel =  panel.superpose,#...,
+                   panel =  panel.superpose,...,
                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
                        if (group.number == 1) {
                            panel.grid(-1, 0)
@@ -198,7 +198,7 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ weekday | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim <- rng(data.weekday) else ylim <- ylim 
+    if (missing(ylim)) ylim.weekday <- rng(data.weekday) else ylim.weekday <- ylim 
     
     day <- xyplot(myform,  data = data.weekday, groups = variable,
                   as.table = TRUE,
@@ -206,7 +206,7 @@ timeVariation <- function(mydata,
                   scales = list(x = list(at = 1:7, labels = format(ISOdate(2000, 1, 3:9), "%a"))),
                   ylab = quickText(ylab, auto.text),
                   xlab = xlab[4],
-                  ylim = ylim,
+                  ylim = ylim.weekday,
                   strip = strip,
                   par.strip.text = list(cex = 0.8),
                   key = key,
@@ -237,13 +237,13 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ month | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim <-  rng(data.month) else ylim <- ylim 
+    if (missing(ylim)) ylim.month <-  rng(data.month) else ylim.month <- ylim 
     
     month <- xyplot(myform,  data = data.month, groups = variable,
                     as.table = TRUE,
                     ylab = quickText(ylab, auto.text),
                     xlab = xlab[3],
-                    ylim = ylim,
+                    ylim = ylim.month,
                     xlim = c(0.5, 12.5),
                     key = key,
                     main = main,
@@ -303,13 +303,13 @@ timeVariation <- function(mydata,
         myform <- formula(paste("Mean ~ hour | weekday *", temp, sep = ""))
     }
 
-    if (missing(ylim)) ylim <-  rng(data.day.hour) else ylim <- ylim 
+    if (missing(ylim)) ylim.day.hour <-  rng(data.day.hour) else ylim.day.hour <- ylim 
     
     day.hour <- xyplot(myform ,  data = data.day.hour, groups = variable,
                        as.table = TRUE,
                        main = main,
                        xlim = c(0, 23),
-                       ylim = ylim,
+                       ylim = ylim.day.hour,
                        ylab = quickText(ylab, auto.text),
                        xlab = xlab[1],
                        layout = layout,
