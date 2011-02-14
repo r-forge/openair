@@ -235,21 +235,22 @@ trendLevel <- function(mydata,
     ############################
     #get pollutant value
     #NOTE: this can same as one of x, y, type
-    #so need: 
-    value <- mydata[,pollutant]
+    #so need a temp case 
+    mydata$..z.xx <- mydata[,pollutant]
     #different n.levels for axis and type
     #is.axis applied for x and y
     newdata <- cutData(mydata, x, n.levels=n.levels[1], is.axis=TRUE, ...)
     newdata <- cutData(newdata, y, n.levels=n.levels[2], is.axis=TRUE, ...)
     newdata <- cutData(newdata, type, n.levels=n.levels[3], ...) 
-    newdata <- newdata[c(x,y,type)]
+    newdata <- newdata[c("..z.xx", x,y,type)]
+
 
     ############################
     #calculate statistic
     ############################
     #temp function
     temp <- function(...){
-                tapply(value, newdata[c(x,y,type)],
+                tapply(newdata$..z.xx, newdata[c(x,y,type)],
                     stat.fun, ...)
             }
     if(is.null(stat.args)) {
