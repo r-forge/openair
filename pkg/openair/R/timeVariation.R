@@ -35,6 +35,12 @@ timeVariation <- function(mydata,
         if (group %in% pollutant) stop("Cannot have group the same as a pollutant name.")
     }
 
+    ## check to see if type = "variable" (word used in code, so change)
+    if (type == "variable") {
+        mydata <- rename(mydata, c(variable = "tempVar"))
+        type <- "tempVar"
+    }
+
     ## if group is present, need to add that list of variables
     if (!missing(group)){
         
