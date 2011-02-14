@@ -22,7 +22,6 @@ trendLevel(mydata,
     x = "month", y = "hour", type = "year", 
     xlab = x, ylab = y, main = "",
     rotate.axis = c(90, 0), n.levels = c(10, 10, 4),
-    hemisphere = "northern",
     limits = c(0, 100), cols = "default", auto.text = TRUE, 
     key.header = "use.stat.name", key.footer = pollutant, 
     key.position = "right", key = NULL,
@@ -60,14 +59,11 @@ trendLevel(mydata,
   \code{c(90, 0)}, rotates the x axis by 90 degrees but does not rotate the y axis. (Note: If only one value is 
   supplied, this is applied to both axes; if more than two values are supplied, only the first two are used.) }
 
-  \item{n.levels}{ The number of levels to split \code{x}, \code{y} and \code{type} data into if it is 
+  \item{n.levels}{ The number of levels to split \code{x}, \code{y} and \code{type} data into if 
   numeric. The default, \code{c(10, 10, 4)}, cuts numeric \code{x} and \code{y} data into ten levels and 
   numeric \code{type} data into four levels. (Notes: This option is ignored for date conditioning and factors. 
   If less than three values are supplied, three values are determined by recursion; if more than three values 
-  are supplied, only the first three are used.) }
-
-  \item{hemisphere}{The hemisphere the data was collected in. This can be \code{"northern"} or \code{"southern"}, 
-  and is used when splitting data into local seasons. }  
+  are supplied, only the first three are used.) }  
 
   \item{limits}{ The colour scale range to use when generating the \code{trendLevel} plot. }
 
@@ -116,7 +112,8 @@ trendLevel(mydata,
   would produce blank panels if plotted. Therefore, the default, \code{TRUE}, excludes these empty panels 
   from the plot. The alternative \code{FALSE} plots all \code{type} panels. }
 
-  \item{...}{ Addition options passed to \code{levelplot} in \code{lattice} for evaluation. 
+  \item{...}{ Addition options are passed on to \code{cutData} for \code{type} handling and \code{levelplot} 
+  in \code{lattice} for finer control of the plot itself. 
   Note: Like many other \code{openair} functions \code{trendLevel} that make use of 
   \code{lattice} plots, \code{trendLevel} presets several options preventing user access 
   by this method. For \code{trendLevel} these include \code{scales} and \code{strip}. }  
