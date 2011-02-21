@@ -170,7 +170,7 @@ scatterPlot <- function(mydata,
         ## colour scale transform
         if (trans) thePower <- 2 else thePower <- 1
         
-        mydata <- cutData(mydata, type)
+        mydata <- cutData(mydata, type, ...)
         
         ## use square root transform for key to help highlight typical dustributions
         mydata[ ,group] <- mydata[ , group] ^ (1 / thePower)
