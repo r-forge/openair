@@ -96,9 +96,6 @@ scatterPlot <- function(mydata,
     ## the following makes sure all variables are present, which depends on 'group' and 'type'
     if (continuous & missing(group)) stop("Need to specify a 'group' when using continuous = TRUE")
 
-    ## these are pre-defined type that need a field "date"
-    dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthyear",
-                   "gmtbst", "bstgmt")
 ################################################################################################
     if (any(type %in%  dateTypes) | !missing(avg.time)) {
 
