@@ -5,3 +5,9 @@ Changes in openair 0.4-7 [2011-02-16]
       evaluation purposes.
 *     Fixed \code{importAURN} to account for a change in web domain
       address at AEA.
+
+Changes in openair 0.4-8 [2011-02-24]
+=====================================
+
+*     Added new \code{cutData} \code{type} option \code{daylight}, enabled 
+	using new function \code{cutDaylight}.
