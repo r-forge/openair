@@ -20,6 +20,8 @@ scatterPlot <- function(mydata,
                         xlab = x,
                         pch = 1,
                         lwd = 1,
+                        lty = 1,
+                        plot.type = "p",                        
                         key = TRUE,
                         key.title = group,
                         key.columns = 1,
@@ -123,24 +125,11 @@ scatterPlot <- function(mydata,
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
     
-    ## sometimes x can be a factor like "year"
- #   boxPlot <- FALSE
-
-    ## make a new factor column UNLESS it has already been converted from numeric
-#    if (x %in% dateTypes & class(mydata[ , x])[1] == "numeric") mydata <- cutData(mydata, x)
-
-    ## if there are more than one x values per factor, plot a box and whisker plot instead
-#    if (any(type %in% names(mydata))) {
-        
- #       print(table(mydata[ , x], mydata[ , type]))
- #       if (any(table(mydata[ , x], mydata[ , type]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
- #   } else {
- #       if (any(table(mydata[ , x]) > 1) & is.factor(mydata[ , x])) boxPlot <- TRUE
- #   }
+    
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
-   
+    
     ## remove missing data
     mydata <- na.omit(mydata)
 
@@ -246,10 +235,29 @@ scatterPlot <- function(mydata,
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
         
         if (key & npol > 1) {
-            key <- list(points = list(col = myColors[1:npol]), pch = pch,
-                        text = list(lab = pol.name),  space = "bottom", columns = key.columns,
-                        title = quickText(key.title, auto.text), cex.title = 1.2,
-                        border = "grey")
+            if (plot.type == "p") {
+                key <- list(points = list(col = myColors[1:npol]), pch = pch,                           
+                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            title = quickText(key.title, auto.text), cex.title = 1,
+                            border = "grey")
+            }
+
+            if (plot.type == "l") {
+                key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            title = quickText(key.title, auto.text), cex.title = 1,
+                            border = "grey")
+            }
+
+            if (plot.type == "b") {
+                key <- list(points = list(col = myColors[1:npol]), pch = pch,
+                            lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            title = quickText(key.title, auto.text), cex.title = 1,
+                            border = "grey")
+            }
+            
+            
         } else {
             
             key <- NULL
@@ -265,8 +273,8 @@ scatterPlot <- function(mydata,
         skip <- c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)
     }
 
-        ## proper names of labelling ##############################################################################
-   
+    ## proper names of labelling ##############################################################################
+    
     if (strip) strip <- strip.custom(factor.levels = stripName)
 
     if (length(type) == 1 ) {
@@ -293,6 +301,7 @@ scatterPlot <- function(mydata,
                       as.table = TRUE,
                       pch = pch,
                       lwd = lwd,
+                      lty = lty,
                       main = quickText(main),
                       ylab = quickText(ylab, auto.text),
                       xlab = quickText(xlab, auto.text),
@@ -307,7 +316,7 @@ scatterPlot <- function(mydata,
                       xscale.components = xscale.components.log10,
                       legend = legend,
                       panel =  panel.superpose,...,
-                      panel.groups = function(x, y, col.symbol, col, col.line, lwd, lty,
+                      panel.groups = function(x, y, col.symbol, col, type, col.line, lty, lwd,
                       group.number,
                       subscripts,...)
                   {
@@ -318,34 +327,28 @@ scatterPlot <- function(mydata,
                       }
                       
 
-                    #  if (boxPlot){
-
-                     #     panel.bwplot(x, y, horizontal = FALSE, pch = "|", notch = TRUE)
-                          
-                   #   } else {
-
-                          if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
-                                                       as.table = TRUE, ...)
-                          if (!continuous) panel.xyplot(x, y, col.symbol = myColors[group.number],
-                                                        as.table = TRUE,...)
-                          
-                          if (linear & npol == 1) panel.linear(x, y, col = "black", myColors[group.number],
-                                       lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
-                          if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
-                                                lty = 1, lwd = 1, se = ci, ...)
-                          if (spline) panel.smooth.spline(x, y, col = myColors[group.number], lwd = lwd, ...)
-                          if (mod.line) {
-                              panel.abline(a = c(0, 0.5), lty = 5)
-                              panel.abline(a = c(0, 2), lty = 5)
-                              panel.abline(a = c(0, 1), lty = 1)
-                          }
-                   
-                      ## add reference lines
-                          panel.abline(v = ref.x, lty = 5)                
-                          panel.abline(h = ref.y, lty = 5)
-                                    
+                      if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
+                                                   as.table = TRUE, ...)
+                      if (!continuous) panel.xyplot(x, y, type = plot.type, col.symbol = myColors[group.number],
+                                                    col.line = myColors[group.number], lty = lty, lwd = lwd,
+                                                    as.table = TRUE,...)
                       
-                   #   }
+                      if (linear & npol == 1) panel.linear(x, y, col = "black", myColors[group.number],
+                                   lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
+                      if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
+                                            lty = 1, lwd = 1, se = ci, ...)
+                      if (spline) panel.smooth.spline(x, y, col = myColors[group.number], lwd = lwd, ...)
+                      if (mod.line) {
+                          panel.abline(a = c(0, 0.5), lty = 5)
+                          panel.abline(a = c(0, 2), lty = 5)
+                          panel.abline(a = c(0, 1), lty = 1)
+                      }
+                      
+                      ## add reference lines
+                      panel.abline(v = ref.x, lty = 5)                
+                      panel.abline(h = ref.y, lty = 5)
+                                           
+                                      
                   })
     }
 
@@ -371,8 +374,8 @@ scatterPlot <- function(mydata,
                                   panel.abline(a = c(0, 1), lty = 1)
                               }
                               ## add reference lines
-                          panel.abline(v = ref.x, lty = 5)                
-                          panel.abline(h = ref.y, lty = 5)
+                              panel.abline(v = ref.x, lty = 5)                
+                              panel.abline(h = ref.y, lty = 5)
                           })
     }
 
@@ -441,8 +444,8 @@ scatterPlot <- function(mydata,
                                         panel.abline(a = c(0, 1), lty = 1)
                                     }
                                     ## add reference lines
-                          panel.abline(v = ref.x, lty = 5)                
-                          panel.abline(h = ref.y, lty = 5)
+                                    panel.abline(v = ref.x, lty = 5)                
+                                    panel.abline(h = ref.y, lty = 5)
                                 })
     }
                                         #   if (method == "scatter") print(plt)

@@ -1,3 +1,10 @@
+Changes in openair 0.4-9 [2011-03-04]
+=====================================
+
+*	Added new options to scatterPlot (plot.type, lwd, and lty)
+         making it possible to add points and/or lines
+	 
+
 Changes in openair 0.4-8 [2011-02-24]
 =====================================
 
