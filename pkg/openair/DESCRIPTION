@@ -1,8 +1,8 @@
 Package: openair
 Type: Package
 Title: Tools for the analysis of air pollution data
-Version: 0.4-9
-Date: 2011-03-04
+Version: 0.4-10
+Date: 2011-03-07
 Author: David Carslaw and Karl Ropkins
 Depends: R (>= 2.11.0), 
 Imports: proto, grid, plyr, reshape, mgcv, zoo, lattice, boot,RColorBrewer
