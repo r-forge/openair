@@ -67,7 +67,7 @@ calendarPlot <- function(mydata,
         lastDay <- as.numeric(format(mydata$date[length(mydata$date)], "%d"))
 
         ## number of blank cells at beginning to get calendar format
-        pad.start <- as.numeric(format(mydata$date[1], "%w"))
+        pad.start <- as.numeric(format(mydata$date[1], "%w")) + 1
 
         ## need to do in reverse to plot easily
         conc <- rev(mydata[, pollutant])
