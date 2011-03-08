@@ -197,7 +197,7 @@ one more label than date")
 
 ## function to make it easy to use d/m/y format for subsetting by date
 selectByDate <- function(mydata, start = "1/1/2008", end = "31/12/2008", year = 2008,
-                           month = 1, hour = 1, day = "weekday") {
+                           month = 1, day = "weekday", hour = 1) {
 
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
 

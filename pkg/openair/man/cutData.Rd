@@ -10,10 +10,10 @@
   usually through the option \code{type}.}
 
 \usage{
-mydata<- cutData(x, type = "default", hemisphere = "northern", 
+cutData(x, type = "default", hemisphere = "northern", 
                  n.levels = 4, is.axis = FALSE, ...)
 
-mydata<- cutDaylight(x, local.hour.offset = 0,
+cutDaylight(x, local.hour.offset = 0,
                  latitude = 51.522393, longitude = -0.154700, 
                  ...)
 
