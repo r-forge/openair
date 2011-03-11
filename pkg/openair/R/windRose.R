@@ -1,22 +1,22 @@
-pollutionRose <- function(polar,
+pollutionRose <- function(mydata,
                           pollutant = "nox", key.footer = pollutant,
                           breaks = 6, paddle = FALSE, key.position = "right",
                           ...)
 {
     if(is.null(breaks))  breaks <- 6 
     if(is.numeric(breaks) & length(breaks) == 1){  
-        breaks2 <- co.intervals(polar[ ,pollutant][is.finite(polar[ ,pollutant])], number = 10, overlap = 0)
-        breaks <- pretty(c(min(polar[ ,pollutant], na.rm = TRUE), breaks2[nrow(breaks2), 1]), breaks)
-        breaks <- breaks[breaks >= min(polar[ , pollutant], na.rm = TRUE)]
+        breaks2 <- co.intervals(mydata[ ,pollutant][is.finite(mydata[ ,pollutant])], number = 10, overlap = 0)
+        breaks <- pretty(c(min(mydata[ ,pollutant], na.rm = TRUE), breaks2[nrow(breaks2), 1]), breaks)
+        breaks <- breaks[breaks >= min(mydata[ , pollutant], na.rm = TRUE)]
     }
     windRose(
-             polar, pollutant = pollutant, paddle = paddle, key.position = key.position, 
+             mydata, pollutant = pollutant, paddle = paddle, key.position = key.position, 
              key.footer = key.footer, breaks = breaks, ...
              )
 }
 
 
-windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "default", 
+windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "default", 
                       main = "", grid.line = 5, width = 1, auto.text = TRUE, breaks = 4, 
                       paddle = TRUE, key.header = NULL, key.footer = "(m/s)", key.position = "bottom", 
                       key = NULL, dig.lab = 5, 
@@ -39,36 +39,36 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
     if (!is.null(pollutant)) {
         vars <- c(vars, pollutant)
     }
-    polar <- checkPrep(polar, vars, type, remove.calm = FALSE)
-    polar <- na.omit(polar)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- na.omit(mydata)
 
-    if (is.null(pollutant))   polar$.z.poll <- polar$ws else  names(polar)[names(polar) == pollutant] <- ".z.poll"
+    if (is.null(pollutant))   mydata$.z.poll <- mydata$ws else  names(mydata)[names(mydata) == pollutant] <- ".z.poll"
         
     ## if (type == "ws")  type <- "ws.1"
        
-    polar$wd <- angle * ceiling(polar$wd/angle - 0.5)
-    polar$wd[polar$wd == 0] <- 360
+    mydata$wd <- angle * ceiling(mydata$wd/angle - 0.5)
+    mydata$wd[mydata$wd == 0] <- 360
     
     if (length(breaks) == 1) breaks <- 0:(breaks - 1) * ws.int
     
-    if (max(breaks) < max(polar$.z.poll, na.rm = TRUE)) breaks <- c(breaks, max(polar$.z.poll, na.rm = TRUE))
+    if (max(breaks) < max(mydata$.z.poll, na.rm = TRUE)) breaks <- c(breaks, max(mydata$.z.poll, na.rm = TRUE))
     
-    if (min(breaks) > min(polar$.z.poll, na.rm = TRUE)) breaks <- c(min(polar$.z.poll, na.rm = TRUE), breaks)
+    if (min(breaks) > min(mydata$.z.poll, na.rm = TRUE)) breaks <- c(min(mydata$.z.poll, na.rm = TRUE), breaks)
     
     breaks <- unique(breaks)
-    polar$.z.poll <- cut(polar$.z.poll, breaks = breaks, include.lowest = FALSE, 
+    mydata$.z.poll <- cut(mydata$.z.poll, breaks = breaks, include.lowest = FALSE, 
                          dig.lab = dig.lab)
     
-    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(polar$.z.poll))
+    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$.z.poll))
     theLabels <- gsub("[,]", "-", theLabels)
     
-    prepare.grid <- function(polar) {
-        wd <- factor(polar$wd)
-        levels(polar$.z.poll) <- c(paste(".z.poll", 1:length(theLabels), 
+    prepare.grid <- function(mydata) {
+        wd <- factor(mydata$wd)
+        levels(mydata$.z.poll) <- c(paste(".z.poll", 1:length(theLabels), 
                                          sep = ""))
-        calm <- length(which(polar$wd < 0))/nrow(polar)
-        polar$.z.poll[which(is.na(polar$.z.poll))] <- ".z.poll1"
-        weights <- prop.table(table(polar$wd, polar$.z.poll))
+        calm <- length(which(mydata$wd < 0))/nrow(mydata)
+        mydata$.z.poll[which(is.na(mydata$.z.poll))] <- ".z.poll1"
+        weights <- prop.table(table(mydata$wd, mydata$.z.poll))
         weights <- as.data.frame.matrix(weights)
         weights <- data.frame(t(apply(weights, 1, cumsum)))
         weights$wd <- as.numeric(row.names(weights))
@@ -111,8 +111,8 @@ windRose <- function (polar, ws.int = 2, angle = 30, type = "default", cols = "d
         }
     }
     
-    polar <- cutData(polar, type, ...)
-    results.grid <- ddply(polar, type, prepare.grid)
+    mydata <- cutData(mydata, type, ...)
+    results.grid <- ddply(mydata, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))

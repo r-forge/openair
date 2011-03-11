@@ -10,7 +10,7 @@ concentration of pollutants using a range of commonly used statistics.
 }
 
 \usage{
-polarFreq(polar,
+polarFreq(mydata,
     pollutant = "",
     statistic = "frequency",
     ws.int = 1,
@@ -30,7 +30,7 @@ polarFreq(polar,
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{polar}{A data frame minimally containing \code{ws}, \code{wd} and
+\item{mydata}{A data frame minimally containing \code{ws}, \code{wd} and
 \code{date}.}
 
   \item{pollutant}{Mandatory. A pollutant name corresponding to a

@@ -6,7 +6,7 @@
   Typically plots the concentration of a pollutant by wind direction and as a function of time as an annulus. The function is good for visualising how concentrations of pollutants vary by wind direction and a time period e.g. by month, day of week.
 }
 \usage{
-polarAnnulus(polar,
+polarAnnulus(mydata,
     pollutant = "nox", resolution = "fine",
     local.time = FALSE, period = "hour", type = "default",
     limits = c(0, 100), cols = "default", width = "normal",
@@ -20,7 +20,7 @@ polarAnnulus(polar,
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{polar}{A data frame minimally containing \code{ws}, \code{wd} and
+\item{mydata}{A data frame minimally containing \code{ws}, \code{wd} and
   a pollutant. Can also contain \code{date} if plots by time period are
   required.}
 

@@ -1,5 +1,5 @@
 
-polarPlot <- function(polar,
+polarPlot <- function(mydata,
                       pollutant = "nox",
                       type = "default",
                       resolution = "normal",
@@ -33,7 +33,7 @@ polarPlot <- function(polar,
     ## extract variables of interest
     vars <- c("ws", "wd", "date", pollutant)
 
-    polar <- checkPrep(polar, vars, type)
+    mydata <- checkPrep(mydata, vars, type)
 
     ## if more than one pollutant, need to stack the data and set type = "variable"
     ## this case is most relevent for model-measurement compasrions where data are in columns
@@ -46,7 +46,7 @@ polarPlot <- function(polar,
             type <- type[1]
         }
         ## use pollutants as conditioning variables
-        polar <- melt(polar, measure.vars = pollutant)
+        mydata <- melt(mydata, measure.vars = pollutant)
         ## now set pollutant to "value"
         pollutant <- "value"
         type <- c(type, "variable")
@@ -54,13 +54,13 @@ polarPlot <- function(polar,
 
     ## ##########################################################################################################
     
-    polar <- na.omit(polar)
+    mydata <- na.omit(mydata)
     ## cutData depending on type
-    polar <- cutData(polar, type, ...)
+    mydata <- cutData(mydata, type, ...)
     
 
     ## if upper ws not set, set it to the max to display all information
-    max.ws <- ceiling(max(polar$ws, na.rm = TRUE))
+    max.ws <- ceiling(max(mydata$ws, na.rm = TRUE))
     if(missing(upper)) upper <- max.ws
 
     ## for resolution of grid plotting (default = 101; fine =201)
@@ -80,17 +80,17 @@ polarPlot <- function(polar,
     input.data <- expand.grid(u = seq(-upper, upper, length = int),
                               v = seq(-upper, upper, length = int))
 
-    prepare.grid <- function(polar) {
+    prepare.grid <- function(mydata) {
         ## identify which ws and wd bins the data belong
-        wd <- cut(polar$wd, breaks = seq(0, 360, 10), include.lowest = TRUE)
-        ws <- cut(polar$ws, breaks = seq(0, max.ws, length = 31))
+        wd <- cut(mydata$wd, breaks = seq(0, 360, 10), include.lowest = TRUE)
+        ws <- cut(mydata$ws, breaks = seq(0, max.ws, length = 31))
 
         ## this automatically deals with missing data
-        binned <- tapply(polar[, pollutant], list(wd, ws), mean, na.rm = TRUE)
+        binned <- tapply(mydata[, pollutant], list(wd, ws), mean, na.rm = TRUE)
         binned <- as.vector(t(binned))
 
         ## frequency - remove points with freq < min.bin
-        bin.len <- tapply(polar[, pollutant], list(ws, wd), length)
+        bin.len <- tapply(mydata[, pollutant], list(ws, wd), length)
         binned.len <- as.vector(bin.len)
         ids <- which(binned.len < min.bin)
         binned[ids] <- NA
@@ -155,7 +155,7 @@ polarPlot <- function(polar,
 
     ## ########################################################################################################
 
-    results.grid <- ddply(polar, type, prepare.grid)
+    results.grid <- ddply(mydata, type, prepare.grid)
 
     ## remove wind speeds > upper to make a circle
     results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA

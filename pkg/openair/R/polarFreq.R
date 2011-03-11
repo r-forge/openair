@@ -1,4 +1,4 @@
-polarFreq <- function(polar,
+polarFreq <- function(mydata,
                       pollutant = "",
                       statistic = "frequency",
                       ws.int = 1,
@@ -25,8 +25,8 @@ polarFreq <- function(polar,
     }
 
     ## data checks
-    polar <- checkPrep(polar, vars, type)
-    polar <- cutData(polar, type, ...)
+    mydata <- checkPrep(mydata, vars, type)
+    mydata <- cutData(mydata, type, ...)
 
     ## if pollutant chosen but no statistic - use mean, issue warning
     if (!missing(pollutant) & missing(statistic)) {
@@ -45,43 +45,43 @@ polarFreq <- function(polar,
     if (trans) coef <- 2 else coef <- 1
 
     ## remove all NAs
-    polar <- na.omit(polar)
+    mydata <- na.omit(mydata)
 
-    max.ws <- max(ceiling(polar$ws), na.rm = TRUE)
+    max.ws <- max(ceiling(mydata$ws), na.rm = TRUE)
 
-    prepare.grid <- function(polar)
+    prepare.grid <- function(mydata)
     {
-        wd <- factor(polar$wd)
-        ws <- factor(ws.int * ceiling(polar$ws / ws.int))
+        wd <- factor(mydata$wd)
+        ws <- factor(ws.int * ceiling(mydata$ws / ws.int))
 
         if (statistic == "frequency")     ## case with only ws and wd
         {
-            weights <- tapply(polar$ws, list(wd, ws), function(x) length(na.omit(x)))}
+            weights <- tapply(mydata$ws, list(wd, ws), function(x) length(na.omit(x)))}
 
         if (statistic == "mean")
         {
-            weights <- tapply(polar[, pollutant],
+            weights <- tapply(mydata[, pollutant],
                               list(wd, ws), function(x) mean(x, na.rm = TRUE))}
 
         if (statistic == "median")
         {
-            weights <- tapply(polar[, pollutant],
+            weights <- tapply(mydata[, pollutant],
                               list(wd, ws), function(x) median(x, na.rm = TRUE))}
 
         if (statistic == "max")
         {
-            weights <- tapply(polar[, pollutant],
+            weights <- tapply(mydata[, pollutant],
                               list(wd, ws), function(x) max(x, na.rm = TRUE))}
 
         if (statistic == "stdev")
         {
-            weights <- tapply(polar[, pollutant],
+            weights <- tapply(mydata[, pollutant],
                               list(wd, ws), function(x) sd(x, na.rm = TRUE))}
 
         if (statistic == "weighted.mean")
         {
-            weights <- tapply(polar[, pollutant], list(wd, ws),
-                              function(x) (mean(x) * length(x) / nrow(polar)))
+            weights <- tapply(mydata[, pollutant], list(wd, ws),
+                              function(x) (mean(x) * length(x) / nrow(mydata)))
 
             ## note sum for matrix
             weights <- 100 * weights / sum(sum(weights, na.rm = TRUE))
@@ -90,7 +90,7 @@ polarFreq <- function(polar,
         weights <- as.vector(t(weights))
 
         ## frequency - remove points with freq < min.bin
-        bin.len <- tapply(polar$ws, list(wd, ws), function(x) length(na.omit(x)))
+        bin.len <- tapply(mydata$ws, list(wd, ws), function(x) length(na.omit(x)))
         binned.len <- as.vector(t(bin.len))
         ids <- which(binned.len < min.bin)
         weights[ids] <- NA
@@ -112,7 +112,7 @@ polarFreq <- function(polar,
         lpolygon(c(x1, x2), c(y1, y2), col = colour, border = border.col, lwd = 0.5)
     }
 
-    results.grid <- ddply(polar, type, prepare.grid)
+    results.grid <- ddply(mydata, type, prepare.grid)
     results.grid <- na.omit(results.grid)
 
     ## proper names of labelling ##############################################################################
