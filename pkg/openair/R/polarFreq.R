@@ -128,7 +128,8 @@ polarFreq <- function(mydata,
         pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
-    ## ########################################################################################################
+    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
+########################################################################################################
 
     results.grid$weights <- results.grid$weights ^ (1 / coef)
 

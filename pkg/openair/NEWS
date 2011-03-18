@@ -1,3 +1,9 @@
+Changes in openair 0.4-11 [2011-03-18]
+=====================================
+
+*	More consistent use of strips in default plot (remove them)
+*	Add percentage units to windRose and pollutionRose on radial scale
+
 Changes in openair 0.4-10 [2011-03-07]
 =====================================
 

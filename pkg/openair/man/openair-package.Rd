@@ -64,7 +64,7 @@ Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 \references{
 Most reference details are given under the specific functions.
 
-Carslaw, D.C. and K. Ropkins (2010). Open-source tools for analysing air
+Carslaw, D.C. and K. Ropkins (2011). Open-source tools for analysing air
 pollution data. King's College London and the University of Leeds.  }
 \keyword{methods}
 

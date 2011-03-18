@@ -116,7 +116,7 @@ MannKendall <- function(mydata,
     skip <- FALSE
     layout <- NULL
 
-    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
+   
     
     if (length(type) == 1 & type[1] == "wd") {
         ## re-order to make sensible layout
@@ -138,7 +138,8 @@ MannKendall <- function(mydata,
         pol.name <- sapply(levels(split.data[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
-    ## ########################################################################################################
+    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
+########################################################################################################
  
     
 

@@ -112,7 +112,6 @@ smoothTrend <- function(mydata,
     skip <- FALSE
     layout <- NULL
     
-    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
     
     if (length(type) == 1 & type[1] == "wd") {
         ## re-order to make sensible layout
@@ -135,7 +134,7 @@ smoothTrend <- function(mydata,
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
     ## ########################################################################################################
-
+    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
 
     ## colours according to number of percentiles
     npol <- max(length(percentile), length(pollutant)) ## number of pollutants

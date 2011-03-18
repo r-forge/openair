@@ -127,7 +127,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
         pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
-    ## ########################################################################################################
+    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
+    ##
+########################################################################################################
     
     col <- openColours(cols, length(theLabels))
     max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) + length(type))], na.rm = TRUE)
@@ -187,9 +189,10 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
                           })
                       }
                       ltext(seq((grid.line / 100 + off.set), 1 + off.set, 
-                                grid.line/100) * sin(pi/4), seq((grid.line/100 + 
-                                                                 off.set), 1 + off.set, grid.line / 100) * cos(pi / 4), 
-                            seq(grid.line, 100, by = grid.line), cex = 0.7)
+                                grid.line / 100) * sin(pi/4), seq((grid.line/100 + off.set),
+                                                                1 + off.set, grid.line / 100) *
+                            cos(pi / 4),
+                            paste(seq(grid.line, 100, by = grid.line), "%", sep = ""), cex = 0.7)
                       ltext(max.freq, -max.freq, label = paste("calm = ", 
                                                  sprintf("%.1f", 100 * subdata$calm[1]), "%", 
                                                  sep = ""), adj = c(1, 0), cex = 0.7, col = "forestgreen")
