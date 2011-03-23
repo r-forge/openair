@@ -21,6 +21,7 @@ MannKendall <- function(mydata,
                         dec.place = 2,
                         ylab = pollutant,
                         xlab = "year",
+                        y.relation = "same",
                         main = "",
                         auto.text = TRUE,
                         autocor = FALSE,
@@ -191,8 +192,9 @@ MannKendall <- function(mydata,
                   skip = skip,
                   strip = strip,
                   strip.left = strip.left,
-                  scales = list(x = list(at = dateBreaks(split.data$date, date.breaks)$major, format =
-                                dateBreaks(split.data$date)$format)),...,
+                  scales = list(x = list(at = dateBreaks(split.data$date, date.breaks)$major,
+                                format = dateBreaks(split.data$date)$format),
+                  y = list(relation = y.relation, rot = 0)),...,
 
                   panel = function(x, y, subscripts,...){
                       ## year shading
@@ -284,7 +286,7 @@ MKstats <- function(x, y, alpha, simulate, autocor) {
 
         boot.res <- tsboot(y, MKtau, R = 1000, l = block.length, sim = "fixed")
 
-        ## approx p value; see ?boot for this (which I think is wrong!)
+        ## approx p value; see ?boot for this
         p <- 1 - sum(abs(boot.res$t[, 1] - 1) > abs(boot.res$t0[1] - 1)) / (1 + boot.res$R)
 
     } else {

@@ -55,6 +55,7 @@ export(
        polarAnnulus,
        polarFreq,
        polarPlot,
+       percentileRose,
 
        #kernel density
        kernelExceed, 
