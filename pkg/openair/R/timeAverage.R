@@ -38,8 +38,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         ## start from a particular time, if given
         if (!is.na(start.date)) {
-            firstLine <- data.frame(date = as.POSIXct(start.date, "GMT"))
+            firstLine <- data.frame(date = as.POSIXct(start.date))
             mydata <- rbind.fill(firstLine, mydata)
+           
         }
 
         if ("wd" %in% names(mydata)) {
@@ -91,7 +92,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             
         } else {
 
-            dailymet$date <- as.POSIXct(dailymet$date, "GMT")
+            dailymet$date <- as.POSIXct(dailymet$date)
         }
 
         if ("wd" %in% names(mydata)) {

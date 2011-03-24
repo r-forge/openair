@@ -234,8 +234,8 @@ polarPlot <- function(mydata,
                      par.strip.text = list(cex = 0.8),
                      main = quickText(main, auto.text),
                      scales = list(draw = FALSE),
-                     xlim = c(-upper * 1.15, upper * 1.15),
-                     ylim = c(-upper * 1.15, upper * 1.15),
+                     xlim = c(-upper * 1, upper * 1),
+                     ylim = c(-upper * 1, upper * 1),
                      colorkey = FALSE, legend = legend, 
                      ...,
 
@@ -261,10 +261,11 @@ polarPlot <- function(mydata,
                          larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
                          larrows(0, -upper, 0, upper, code = 3, length = 0.1)
 
-                         ltext(-upper * 1.07, 0, "W", cex = 0.7)
-                         ltext(0, -upper * 1.07, "S", cex = 0.7)
-                         ltext(0, upper * 1.07, "N", cex = 0.7)
-                         ltext(upper * 1.07, 0, "E", cex = 0.7)
+                         ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
+                         ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
+                         ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
+                         ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
+
                      })
 
 

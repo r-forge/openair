@@ -40,25 +40,14 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
         mod.percentiles <- function(i, mydata) {
             ## need to work out how many knots to use in smooth
             thedata <- subset(percentiles, percentile == i)
-            k <- nrow(thedata)
-            wd <- unique(thedata$wd)
 
-            ## only use a cyclic smooth if 360 and 0 degrees are available
-            if (!any(c(0, 360) %in% wd)) {
-                
-                myform <- formula(paste(pollutant, "~ s(wd, k = ", k, ")"))
-
-            } else {
-                
-                myform <- formula(paste(pollutant, "~ s(wd, k = ", k, ", bs = 'cc')"))
-            }
+            ## fit a spline through the data; making sure it goes through each wd value
+            spline.res <- spline(x = thedata[ , "wd"], y = thedata[, pollutant], n = 361)
+          
+            pred <- data.frame(percentile = i, wd = 0:360, pollutant = spline.res$y)
             
-            mod <- gam(myform, data = thedata, knots = list(wd = wd))
-            newdata <- data.frame(wd = 0:360)
-            pred <- predict.gam(mod, newdata)
-            pred <- data.frame(percentile = i, wd = 0:360, pollutant = as.vector(pred))
-
             ## only plot where there are valid wd
+            wd <- unique(percentiles$wd)
             ids <- lapply(wd, function(x) seq(from = x - 5, to = x + 5))
             ids <- unique(do.call(c, ids))
             ids[ids < 0] <- ids[ids < 0] + 360
@@ -113,8 +102,8 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     intervals <- pretty(results.grid$pollutant)
     
     plt <- xyplot(myform,
-                  xlim = c(max(intervals) * -1.15, max(intervals) * 1.15),
-                  ylim = c(max(intervals) * -1.15, max(intervals) * 1.15),
+                  xlim = c(max(intervals) * -1, max(intervals) * 1),
+                  ylim = c(max(intervals) * -1, max(intervals) * 1),
                   data = results.grid,
                   type = "n",
                   strip = strip,
@@ -161,10 +150,11 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                             1.2 * cos(pi * angle.scale / 180) * max(intervals),
                             quickText(pollutant, auto.text), srt = 0, cex = 0.8)
 
-                      ltext(max(intervals) * -1 * 1.07, 0, "W", cex = 0.7)
-                      ltext(0, max(intervals) * -1 * 1.07, "S", cex = 0.7)
-                      ltext(0, max(intervals) * 1.07, "N", cex = 0.7)
-                      ltext(max(intervals) * 1.07, 0, "E", cex = 0.7)
+                      
+                      ltext(max(intervals) * -1 * 0.95, 0.07 * max(intervals), "W", cex = 0.7)
+                      ltext(0.07 * max(intervals), max(intervals) * -1 * 0.95, "S", cex = 0.7)
+                      ltext(0.07 * max(intervals), max(intervals) * 0.95, "N", cex = 0.7)
+                      ltext(max(intervals) * 0.95, 0.07 * max(intervals), "E", cex = 0.7)
 
                       ## draw lines if fill = FALSE
                       if (!fill) {

@@ -62,7 +62,7 @@ key = NULL,  ...)
 
 \item{lwd}{The line width to be used if \code{fill = FALSE}.}
 
-\item{angle.scale}{The wind speed scale is by default shown at a 45
+\item{angle.scale}{The pollutant scale is by default shown at a 45
   degree angle. Sometimes the placement of the scale may interfere with
   an interesting feature. The user can therefore set \code{angle.scale}
   to another value (between 0 and 360 degrees) to mitigate such
@@ -119,10 +119,9 @@ plots them by wind direction. One or more percentile levels can be
 calculated and these are displayed as either filled areas or as lines.
 
 The levels by wind direction are calculated using a cyclic smooth cubic
-spline (see ?cyclic.cubic.spline from the \code{mgcv} package). The wind
-directions are rounded to the nearest 10 degrees, consistent with
-surface data from the UK Met Office before a smooth is fitted (with
-knots placed at each 10 degree value).
+spline. The wind directions are rounded to the nearest 10 degrees,
+consistent with surface data from the UK Met Office before a smooth is
+fitted.
 
 The \code{percentileRose} function compliments other similar functions
 including \code{\link{windRose}}, \code{\link{pollutionRose}},

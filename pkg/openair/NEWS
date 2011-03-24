@@ -5,7 +5,8 @@ Changes in openair 0.4-12 [2011-03-22]
          allow flexible y-scales.
 *	NEW FUNCTION percentileRose for flexible plotting of
          percentiles by wind direction
-
+*	Modified plot layout in polarPlot to maximise plotting area
+*	Initial fixes to functions affected by time zone settings
 
 Changes in openair 0.4-11 [2011-03-18]
 =====================================
