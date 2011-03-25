@@ -103,7 +103,15 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
         mydata <- mydata[order(mydata$date), ]
 
         ## make sure date is the first field
-        mydata <- cbind(subset(mydata, select = date), subset(mydata,select = -date))
+        if (names(mydata)[1] != "date") {
+            mydata <- cbind(subset(mydata, select = date), subset(mydata,select = -date))
+        }
+
+        ## daylight saving time can cause terrible problems - best avoided!!
+        if (length(unique(format(mydata$date, "%Z"))) > 1) {
+            warning("Detected data with Daylight Saving Time, setting to UTC/GMT")
+            mydata$date <- as.POSIXct(format(mydata$date, usetz = TRUE, tz = "GMT"), "GMT")
+        }
     }
 
     ## return data frame

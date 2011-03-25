@@ -20,8 +20,8 @@ time the development will carried out on R-Forge
   \tabular{ll}{
     Package: \tab openair\cr
     Type: \tab Package\cr
-    Version: \tab 0.3-7\cr
-    Date: \tab 2010-09-07\cr
+    Version: \tab 0.4-12\cr
+    Date: \tab 2011-03-25\cr
     License: \tab GPL\cr
     LazyLoad: \tab yes\cr }
 
@@ -48,6 +48,12 @@ install.packages(c("zoo", "reshape", "plyr", "RColorBrewer", "proto"))
 
 If there are problems with the automatic download of these packages, see
 \url{http://www.openair-project.org} for more details.
+
+NOTE: openair assumes that data are not expressed in local time where
+'Daylight Saving Time' is used. All functions check that this is the
+case and issue a warning if TRUE. It is recommended that data are
+expressed in UTC/GMT to avoid potential problems with R and openair
+functions.
 
 To check to see if \code{openair} has been correctly installed, try some
 of the examples below. In case of any problems, contact David Carslaw
