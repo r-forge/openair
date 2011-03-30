@@ -31,7 +31,9 @@ polarPlot <- function(mydata,
     if (uncertainty & length(pollutant) > 1) stop("Can only have one pollutant when uncertainty = TRUE")
 
     ## extract variables of interest
-    vars <- c("ws", "wd", "date", pollutant)
+
+    vars <- c("wd", "ws", pollutant)
+    if (any(type %in%  dateTypes)) vars <- c(vars, "date")    
 
     mydata <- checkPrep(mydata, vars, type)
 

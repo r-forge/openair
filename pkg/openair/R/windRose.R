@@ -34,8 +34,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     }
 
     
-
-    vars <- c("ws", "wd", "date")
+    vars <- c("wd", "ws")
+    if (any(type %in%  dateTypes)) vars <- c(vars, "date")
+   
     if (!is.null(pollutant)) {
         vars <- c(vars, pollutant)
     }

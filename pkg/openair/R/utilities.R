@@ -197,8 +197,14 @@ one more label than date")
 
 ## function to make it easy to use d/m/y format for subsetting by date
 selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year = 2008, 
-    month = 1, day = "weekday", hour = 1, use.local.tz = TRUE) 
+    month = 1, day = "weekday", hour = 1, use.local.tz = TRUE)
+
 {
+     ## extract variables of interest
+    vars <- names(mydata)
+    ## useful to check to see if local time zones are used, which would affect by hour extraction
+    mydata <- checkPrep(mydata, vars, type = "default")
+    
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
     my.tz <- if(use.local.tz)
         format(mydata$date, "%Z")[1] else "GMT"

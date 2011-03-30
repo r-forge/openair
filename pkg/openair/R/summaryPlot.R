@@ -292,6 +292,6 @@ summaryPlot <- function(mydata,
     print(plt2, position = c(0.7, 0, 1, 0.975))
 
     ## use grid to add an overall title
-    grid.text(quickText(main, TRUE), 0.5, 0.975, gp = gpar(fontsize = 14))
+    grid.text(quickText(main, auto.text), 0.5, 0.975, gp = gpar(fontsize = 14))
 }
 

@@ -30,6 +30,7 @@ export(
        selectByDate,
        splitByDate,
        timeAverage,
+       selectRunning,
 
        ##calc utils:
        calcPercentile,

@@ -60,7 +60,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     }
     
     
-    mydata <- cutData(mydata, type)
+    mydata <- cutData(mydata, type, ...)
     results.grid <- ddply(mydata, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################

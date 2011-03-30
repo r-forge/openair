@@ -2,6 +2,7 @@ polarFreq <- function(mydata,
                       pollutant = "",
                       statistic = "frequency",
                       ws.int = 1,
+                      grid.line = 5, 
                       breaks = seq(0, 5000, 500),
                       cols = "default",
                       trans = TRUE,
@@ -18,11 +19,10 @@ polarFreq <- function(mydata,
     
 
     ## extract necessary data
-    if (missing(pollutant)) {
-        vars <- c("date", "ws", "wd")
-    } else {
-        vars <- c("date", "ws", "wd", pollutant)
-    }
+    vars <- c("wd", "ws")
+    if (any(type %in%  dateTypes)) vars <- c(vars, "date")
+    
+    if (!missing(pollutant)) vars <- c(vars, pollutant)
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
@@ -173,7 +173,7 @@ polarFreq <- function(mydata,
     
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
-    
+   
     plt <- xyplot(myform,
                   xlim = c(-max.ws - 4.0, max.ws + 4.0),
                   ylim = c(-max.ws - 4.0, max.ws + 4.0),
@@ -200,16 +200,27 @@ polarFreq <- function(mydata,
                           poly(subdata$wd[i], subdata$ws[i], colour)
                       }
 
-                                        #annotate
+                      ## annotate
                       angles <- seq(0, 2 * pi, length = 360)
-                      sapply(seq(5, 25, 5), function(x)
+                      sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
                              llines((3 + x + ws.int) * sin(angles),
                                     (3 + x + ws.int) * cos(angles),
                                     col = "grey", lty = 5))
 
-                      ltext(seq(3 + ws.int, 28 + ws.int, length = 6) * sin(pi/4),
-                            seq(3 + ws.int, 28 + ws.int, length = 6) * cos(pi/4),
-                            seq(0, 25, 5), cex = 0.7, font = 1)
+                      ## radial labels
+                      sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
+                             ltext((3 + x + ws.int) * sin(pi / 4), (3 + x + ws.int) * cos(pi / 4),
+                                   x, cex = 0.7))                                                 
+
+                       larrows(-max.ws - 4, 0,  -4, 0, code = 1, length = 0.1)
+                      larrows(max.ws + 4, 0,  4, 0, code = 1, length = 0.1)
+                      larrows(0, -max.ws - 4, 0, -4, code = 1, length = 0.1)
+                      larrows(0, max.ws + 4, 0, 4, code = 1, length = 0.1)
+
+                      ltext((-max.ws - 4) * 0.95, 0.07 * (max.ws +4), "W", cex = 0.7)
+                      ltext(0.07 * (max.ws + 4), (-max.ws - 4)  * 0.95, "S", cex = 0.7)
+                      ltext(0.07 * (max.ws + 4), (max.ws + 4) * 0.95, "N", cex = 0.7)
+                      ltext((max.ws + 4) * 0.95, 0.07 * (max.ws + 4), "E", cex = 0.7)
 
                   },
                   legend = legend 

@@ -3,10 +3,19 @@ Changes in openair 0.4-12 [2011-03-22]
 
 *	Added y.relation option to smoothTrend and MannKendall to
          allow flexible y-scales.
-*	NEW FUNCTION percentileRose for flexible plotting of
+*	NEW FUNCTION 'percentileRose' for flexible plotting of
          percentiles by wind direction
+*	 NEW FUNCTION 'selectRunning' for selecting run lengths of a numeric
+         variable above a certain threshold.
 *	Modified plot layout in polarPlot to maximise plotting area
 *	Initial fixes to functions affected by time zone settings
+*	polarFreq now has consistent annotation cf. windRose and
+         percentileRose; new option grid.line to control radial axes.
+*	 Fixed couple of minor auto.text bugs in summaryPlot and
+         timePlot
+*	 Removed dependency of date for polar functions where
+         time-based types are not required.
+
 
 Changes in openair 0.4-11 [2011-03-18]
 =====================================

@@ -14,6 +14,7 @@ polarFreq(mydata,
     pollutant = "",
     statistic = "frequency",
     ws.int = 1,
+grid.line = 5,
     breaks = seq(0, 5000, 500),
     cols = "default",
     trans = TRUE,
@@ -52,7 +53,9 @@ information is given in the examples. Note that for options other than
 pollutant. See function \code{cutData} for further details.}
 
   \item{ws.int}{Wind speed interval assumed. In some cases e.g. a low
-  met mast, an interval of 0.5 may be more appropriate.}
+    met mast, an interval of 0.5 may be more appropriate.}
+
+   \item{grid.line}{Radial spacing of grid lines.}
 
   \item{breaks}{The user can provide their own scale. \code{breaks}
   expects a sequence of numbers that define the range of the scale. The
