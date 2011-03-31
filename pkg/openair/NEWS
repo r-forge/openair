@@ -1,3 +1,8 @@
+Changes in openair 0.4-13 [2011-03-31]
+=====================================
+*	Removed ad-hoc sites from importKCL, added site classification
+	to the help file and ensured GMT is exported.
+
 Changes in openair 0.4-12 [2011-03-22]
 =====================================
 
