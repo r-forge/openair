@@ -10,7 +10,8 @@ openColours(scheme = "default", n = 100)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{scheme}{The pre-defined schemes are "increment", "default", "brewer1", "heat", "jet", "hue".}
+  \item{scheme}{The pre-defined schemes are "increment", "default", 
+  "brewer1", "heat", "jet", "hue", "greyscale".}
   \item{n}{The number of colours to be returned.}
 }
 \details{
@@ -25,6 +26,8 @@ openColours(scheme = "default", n = 100)
 
   To colour-code categorical-type problems e.g. colours for different
   pollutants, "hue" and "brewer1" are useful.
+
+  When publishing in black and white, "greyscale" is often most convenient.
 
   Failing that, the user can define their own schemes based on R colour
   names. To see the full list of names, type \code{colors()} into R.

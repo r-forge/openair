@@ -23,6 +23,19 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
                       pollutant = NULL, 
                       ...) 
 {
+
+    #greyscale handling
+    if(length(cols)==1 && cols=="greyscale") {
+        #strip
+        current.strip<- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+        #other local colours
+        calm.col <- "black"
+    } else {
+        calm.col <- "forestgreen"
+    }
+
+
     if (360/angle != round(360/angle)) {
         warning("In windRose(...):\n  angle will produce some spoke overlap",
                 "\n  suggest one of: 5, 6, 8, 9, 10, 12, 15, 30, 45, etc.", call. = FALSE)
@@ -196,12 +209,16 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
                             paste(seq(grid.line, 100, by = grid.line), "%", sep = ""), cex = 0.7)
                       ltext(max.freq, -max.freq, label = paste("calm = ", 
                                                  sprintf("%.1f", 100 * subdata$calm[1]), "%", 
-                                                 sep = ""), adj = c(1, 0), cex = 0.7, col = "forestgreen")
+                                                 sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
                   }, legend = legend, ...)
 
    ## output ###########################################################################################################
     
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
+
+    #reset if greyscale
+    if(length(cols)==1 && cols=="greyscale") trellis.par.set("strip.background", current.strip)
+
     newdata <- results.grid
  #   if(is.null(pollutant))
   #      theLabels <- paste("ws", theLabels, sep=".") else
