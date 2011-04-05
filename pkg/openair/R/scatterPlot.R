@@ -41,10 +41,21 @@ scatterPlot <- function(mydata,
     ## Author: David Carslaw 27 Jan. 10
     ## method = scatter/hexbin/kernel
     
-    
     x.nam <- x ## names of pollutants for linear model equation
     y.nam <- y
     thekey <- key
+
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+        #other local colours
+        method.col <- "greyscale"
+    } else {
+        method.col <- "default"
+    }
+
 
 ### For Log scaling (adapted from lattice book) ###############################################
     if(log.x) nlog.x <- 10 else nlog.x <- FALSE
@@ -363,7 +374,7 @@ scatterPlot <- function(mydata,
                           par.strip.text = list(cex = 0.8),
                           colorkey = TRUE,
                           aspect = 1,
-                          colramp = function(n) {openColours("default", n)},
+                          colramp = function(n) {openColours(method.col, n)},  #was "default"
                           trans = function(x) log(x), inv = function(x) exp(x),...,
                           panel = function(x,...) {
                               panel.grid(-1, -1)
@@ -414,7 +425,7 @@ scatterPlot <- function(mydata,
 
         nlev2 <- length(breaks)
 
-        col <- openColours("default", (nlev2 - 1))
+        col <- openColours(method.col, (nlev2 - 1)) #was "default"??
         col <- c("transparent", col) ## add white at bottom
         col.scale <- breaks
 
@@ -461,8 +472,12 @@ scatterPlot <- function(mydata,
     newdata <- mydata
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
-    invisible(output)      
 
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
+    invisible(output)      
 
 }
 

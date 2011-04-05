@@ -21,6 +21,13 @@ polarFreq <- function(mydata,
     ## extract necessary data
     vars <- c("wd", "ws")
     if (any(type %in%  dateTypes)) vars <- c(vars, "date")
+
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip only
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
     
     if (!missing(pollutant)) vars <- c(vars, pollutant)
 
@@ -233,6 +240,11 @@ polarFreq <- function(mydata,
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
     invisible(output)  
 
 

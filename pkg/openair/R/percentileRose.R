@@ -14,6 +14,13 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     mydata <- checkPrep(mydata, vars, type)
     mydata <- na.omit(mydata)
 
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip only
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
+
     if (!fill) { ## labels depend on whether line or area are used
         theLabels <- percentile
     } else {
@@ -180,6 +187,11 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                                        
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
     invisible(output)  
 
 }

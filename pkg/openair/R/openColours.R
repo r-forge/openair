@@ -30,14 +30,10 @@ hue <- grDevices::hcl(
                       c = c,
                       l = l)
 
-greyscale <- grey(seq(0.75, 0.25, length=n))
+greyscale <- grey(seq(0.9, 0.1, length=n))
 
 #error catcher
-if(length(scheme)==1){
-    if(!scheme %in% schemes){
-        stop("Unknown openColour 'scheme'. See ?openColours for details."
-        , call.=FALSE)
-    }
+if (length(scheme) == 1){
     if (scheme == "increment") cols <- increment(n)
     if (scheme == "default") cols <- rev(default.col(n))
     if (scheme == "brewer1") cols <- brewer1(n)
@@ -52,7 +48,7 @@ if (!any(scheme %in% schemes)) { #assume user has given own colours
         user.cols  <- colorRampPalette(scheme)
         cols =  user.cols(n)
     } else {
-         cols <- rep(scheme, n)
+        cols <- rep(scheme, n)
     }
 }
 

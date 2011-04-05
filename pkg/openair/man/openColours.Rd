@@ -27,7 +27,10 @@ openColours(scheme = "default", n = 100)
   To colour-code categorical-type problems e.g. colours for different
   pollutants, "hue" and "brewer1" are useful.
 
-  When publishing in black and white, "greyscale" is often most convenient.
+  When publishing in black and white, "greyscale" is often convenient. 
+  With most openair functions, as well as generating a greyscale colour 
+  gradient, it also resets strip background and other coloured text and lines 
+  to greyscale values. 
 
   Failing that, the user can define their own schemes based on R colour
   names. To see the full list of names, type \code{colors()} into R.

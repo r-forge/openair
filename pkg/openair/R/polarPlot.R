@@ -30,6 +30,13 @@ polarPlot <- function(mydata,
 
     if (uncertainty & length(pollutant) > 1) stop("Can only have one pollutant when uncertainty = TRUE")
 
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip only
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
+
     ## extract variables of interest
 
     vars <- c("wd", "ws", pollutant)
@@ -278,6 +285,11 @@ polarPlot <- function(mydata,
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
     invisible(output)  
 
 }

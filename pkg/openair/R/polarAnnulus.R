@@ -27,6 +27,13 @@ polarAnnulus <- function(mydata,
     if (any(c("hour", "weekday", "season", "trend") %in% type)) stop ("Cannot have same type and period.")
     if (length(type) > 2) stop("Cannot have more than two types.")
 
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip only
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
+
     ## check data
     mydata <- checkPrep(mydata, vars, type)
 
@@ -398,6 +405,11 @@ polarAnnulus <- function(mydata,
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
     invisible(output)  
 
 }

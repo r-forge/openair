@@ -24,6 +24,12 @@ smoothTrend <- function(mydata,
                         date.breaks = 7,
                         auto.text = TRUE,...)  {
 
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip only
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
     
     vars <- c("date", pollutant)
 
@@ -141,7 +147,8 @@ smoothTrend <- function(mydata,
     npol <- max(length(percentile), length(pollutant)) ## number of pollutants
 
     ## set up colours
-    myColors <- openColours(cols, npol)
+    myColors <- if (length(cols) == 1 && cols == "greyscale")
+                    openColours(cols, npol+1)[-1] else openColours(cols, npol)
 
     ## information for key
     npol <- unique(split.data$variable)
@@ -208,6 +215,9 @@ smoothTrend <- function(mydata,
     newdata <- split.data
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
     invisible(output)  
 
 }

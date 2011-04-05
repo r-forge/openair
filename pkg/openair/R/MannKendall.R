@@ -22,11 +22,28 @@ MannKendall <- function(mydata,
                         ylab = pollutant,
                         xlab = "year",
                         y.relation = "same",
+                        cols = NULL,
                         main = "",
                         auto.text = TRUE,
                         autocor = FALSE,
                         slope.percent = FALSE,
                         date.breaks = 7,...)  {
+
+
+    #greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+        #strip
+        current.strip <- trellis.par.get("strip.background")
+        trellis.par.set(list(strip.background = list(col = "white")))
+        #other local colours
+        line.col <- "black"
+        data.col <- "darkgrey"
+        text.col <- "black"
+    } else {
+        line.col <- "red"
+        data.col <- "skyblue"
+        text.col <- "forestgreen"
+    }
 
     
     vars <- c("date", pollutant)
@@ -201,16 +218,16 @@ MannKendall <- function(mydata,
                       panel.shade(split.data, start.year, end.year, ylim = current.panel.limits()$ylim)
                       panel.grid(-1, 0)
 
-                      panel.xyplot(x, y, type = "b",...)
+                      panel.xyplot(x, y, type = "b", col = data.col, ...)
 
                       sub.dat <- na.omit(split.data[subscripts, ])
 
                       panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
-                                   col = "red", lwd = 2)
+                                   col = line.col, lwd = 2)
                       panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "upper"] / 365, lty = 5,
-                                   col = "red")
+                                   col = line.col)
                       panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "lower"] / 365, lty = 5,
-                                   col = "red")
+                                   col = line.col)
 
                       ## for text on plot - % trend or not?
                       slope <- "slope"
@@ -230,7 +247,7 @@ MannKendall <- function(mydata,
                                        round(sub.dat[1, lower], dec.place), ", ",
                                        round(sub.dat[1, upper], dec.place), "] ",
                                        units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
-                                 cex = 0.7, pos = 4, col = "forestgreen")                     
+                                 cex = 0.7, pos = 4, col = text.col)                     
                   }
                   )
     
@@ -241,6 +258,11 @@ MannKendall <- function(mydata,
     newdata <- list(main.data = split.data, res2 = res2, subsets = c("main.data", "res2"))
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
+
+    #reset if greyscale
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
+
     invisible(output)  
 
 }

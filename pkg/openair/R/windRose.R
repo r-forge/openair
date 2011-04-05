@@ -25,9 +25,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 {
 
     #greyscale handling
-    if(length(cols)==1 && cols=="greyscale") {
+    if (length(cols) == 1 && cols == "greyscale") {
         #strip
-        current.strip<- trellis.par.get("strip.background")
+        current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
         #other local colours
         calm.col <- "black"
@@ -217,7 +217,8 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
 
     #reset if greyscale
-    if(length(cols)==1 && cols=="greyscale") trellis.par.set("strip.background", current.strip)
+    if (length(cols) == 1 && cols == "greyscale") 
+        trellis.par.set("strip.background", current.strip)
 
     newdata <- results.grid
  #   if(is.null(pollutant))
