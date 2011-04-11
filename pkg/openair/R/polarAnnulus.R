@@ -24,7 +24,7 @@ polarAnnulus <- function(mydata,
     ## extract variables of interest
     vars <- c("wd", "date", pollutant)
 
-    if ("season" %in% type) stop ("Cannot have same type as 'season' and period as 'trend'.")
+    if (period == "trend" & "season" %in% type) stop ("Cannot have same type as 'season' and period as 'trend'.")
     if (length(type) > 2) stop("Cannot have more than two types.")
 
     #greyscale handling
