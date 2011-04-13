@@ -230,9 +230,9 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
     }
     if (!missing(day)) {
         days <- day
-        if (day == "weekday") 
+        if (day[1] == "weekday") 
             days <- weekday.names[1:5]
-        if (day == "weekend") 
+        if (day[1] == "weekend") 
             days <- weekday.names[6:7]
         mydata <- subset(mydata, substr(tolower(format(date, 
             "%A")), 1, 3) %in% substr(tolower(days), 1, 3))

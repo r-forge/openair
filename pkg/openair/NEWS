@@ -1,3 +1,8 @@
+Changes in openair 0.4-15 [2011-04-12]
+=====================================
+*	Preparation for CRAN release
+*	removed some restrictions on type/period combinations in polarAnnulus
+
 Changes in openair 0.4-14 [2011-04-05]
 =====================================
 *	Added preliminary greyscale method to openColours and linked in 

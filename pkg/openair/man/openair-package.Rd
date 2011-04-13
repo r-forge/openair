@@ -20,8 +20,8 @@ time the development will carried out on R-Forge
   \tabular{ll}{
     Package: \tab openair\cr
     Type: \tab Package\cr
-    Version: \tab 0.4-12\cr
-    Date: \tab 2011-03-25\cr
+    Version: \tab 0.4-15\cr
+    Date: \tab 2011-04-12\cr
     License: \tab GPL\cr
     LazyLoad: \tab yes\cr }
 
@@ -32,6 +32,12 @@ available analysis techniques that most users of air quality data and
 model output would not normally have access to. The functions consist of
 those developed by the authors and a growing number from other
 researchers.
+
+The package has a number of requirements for input data and these are
+discussed in the manual (available on the openair website). The key
+requirements are that a date or date-time field must have the name
+`date' (and can be \code{Date} or \code{POSIXct} format), that wind
+speed is represented as `ws' and that wind direction is `wd'.
 
 Most functions work in a very straightforward way, but offer many
 options for finer control and perhaps more in-depth analysis.
