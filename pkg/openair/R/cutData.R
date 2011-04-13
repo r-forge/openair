@@ -45,7 +45,6 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4, 
 
             } else {
 
-
                 temp.levels <- levels(cut(x[, type], unique(quantile(x[, type],
                                                                      probs = seq(0, 1, length =
                                                                      n.levels + 1),
