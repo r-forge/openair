@@ -94,6 +94,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4, 
              ## might only be partial year...
              ids <- which(month.abbs %in% unique(x$month))
              the.months <- month.abbs[ids]
+            
              x[ , type] <- ordered(x[ , type], levels = the.months)
         } 
 
