@@ -82,21 +82,21 @@ date.pad <- function(mydata, type = "default") {
 
 
 rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
-                         data.capture = 75){
+                         data.thresh = 75){
     ## function to calculate rolling means
     ## as fast as rollapply (zoo) but can handle wide "windows" e.g. annual means
 
     if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
 
-    calc.rolling <- function(mydata, pollutant, hours, new.name, data.capture) {
+    calc.rolling <- function(mydata, pollutant, hours, new.name, data.thresh) {
 
         ## pad missing hours
         mydata <- date.pad(mydata)
 
-        roll <- function(x, i, hours, new.name, data.capture) {
+        roll <- function(x, i, hours, new.name, data.thresh) {
             dat <- x[i:(i + hours - 1)]
 
-            if (length(na.omit(dat)) >= round(hours * data.capture / 100)) {
+            if (length(na.omit(dat)) >= round(hours * data.thresh / 100)) {
                 res <- mean(dat, na.rm = TRUE)
             } else {
                 res <- NA
@@ -105,7 +105,7 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         }
 
         res <- sapply(1:(nrow(mydata) - hours + 1), function(i) roll(mydata[ , pollutant], i,
-                                                                     hours, new.name, data.capture))
+                                                                     hours, new.name, data.thresh))
 
         res <- c(rep(NA, (hours - 1)), res) ## pad missing data
         mydata <- cbind(mydata, res)
@@ -118,12 +118,12 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         mydata$site <- factor(mydata$site)
         mydata <- split(mydata, mydata$site)
         mydata <- lapply(mydata, function(x) calc.rolling(x, pollutant, hours,
-                                                          new.name, data.capture))
+                                                          new.name, data.thresh))
 
         mydata <- do.call(rbind, mydata)
         mydata
     } else {
-        mydata <- calc.rolling(mydata, pollutant, hours, new.name, data.capture)
+        mydata <- calc.rolling(mydata, pollutant, hours, new.name, data.thresh)
         mydata
     }
 }
