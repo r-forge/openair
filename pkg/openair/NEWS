@@ -1,5 +1,12 @@
 Changes in openair 0.4-17 [2011-04-21]
 =====================================
+*	use avg.time in calcPercentile instead of 'period' to ensure
+	consistency with other functions (timePlot would fail with percentiles)
+
+Changes in openair 0.4-17 [2011-04-21]
+=====================================
+*	use readRDS and not .readRDS (caused failure on R Dev)
+*	openair now depends on >=R2.13.0
 *	NEW FUNCTION sqStats to calculate common and pollutant-specfic
 	air quality statsitics by year and site.
 *	Changed option data.capture in rollingMean to data.thresh to

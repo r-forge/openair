@@ -107,7 +107,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
         ## use openair function
         Percentile <- calcPercentile(mydata[ , c("date", pollutant)],
                                      pollutant = pollutant, data.thresh,
-                                     percentile = percentile, period = "year")
+                                     percentile = percentile, avg.time = "year")
         names(Percentile)[1] <- "year"
         Percentile$year <- format(Percentile$year, "%Y")
         
