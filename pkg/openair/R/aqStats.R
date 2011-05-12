@@ -33,6 +33,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
         }
 
         daysMoreThan <- function(mydata, threshold, ...) {
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
             ## identify days where pm10 > limit
             daily <- timeAverage(mydata, "day", data.thresh)
             days <- length(which(daily[ , pollutant] > threshold))
@@ -61,12 +62,14 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
         }
 
         maxDaily <- function(mydata, threshold = 50, ...) {
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
             maxDaily <- timeAverage(mydata, "day", statistic = "mean", data.thresh)            
             maxDaily <- max(maxDaily[ , pollutant], na.rm = TRUE)
             maxDaily
         }
 
         rollMax <- function(mydata, hours = hours, ...) {
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
             ## first calculate rolling hourly means
             mydata <- rollingMean(mydata, pollutant = pollutant, hours = hours, data.thresh,
                                   new.name = "rolling")
@@ -74,14 +77,42 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
             rollMax
         }
 
-        
-        Mean <- ddply(mydata[ , c("year", pollutant)], .(year), numcolwise(mean), na.rm = TRUE)
-        names(Mean)[2] <- "mean"
+        Min.fun <- function(mydata, ...) {
+            
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
+            Min <- min(mydata[ , pollutant], na.rm = TRUE)
+            Min
 
-        Min <- ddply(mydata[ , c("year", pollutant)], .(year), numcolwise(min), na.rm = TRUE)
+        }
+
+        Max.fun <- function(mydata, ...) {
+            
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
+            Max <- max(mydata[ , pollutant], na.rm = TRUE)
+            Max
+
+        }
+
+        Mean.fun <- function(mydata, ...) {
+            
+            if (all(is.na(mydata[ , pollutant]))) return(NA)
+            Mean <- mean(mydata[ , pollutant], na.rm = TRUE)
+            Mean
+
+        }
+
+        
+        
+        Mean <- ddply(mydata[ , c("year", pollutant)], .(year), Mean.fun,
+                      pollutant, ...)
+        names(Mean)[2] <- "mean"
+        
+        Min <- ddply(mydata[ , c("year", pollutant)], .(year), Min.fun,
+                     pollutant, ...)
         names(Min)[2] <- "minimum"
 
-        Max <- ddply(mydata[ , c("year", pollutant)], .(year), numcolwise(max), na.rm = TRUE)
+        Max <- ddply(mydata[ , c("year", pollutant)], .(year), Max.fun,
+                     pollutant, ...)
         names(Max)[2] <- "maximum"
 
         maxDaily <- ddply(mydata[ , c("date", "year", pollutant)], .(year), maxDaily, ...)

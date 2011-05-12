@@ -1,7 +1,10 @@
 Changes in openair 0.4-17 [2011-04-21]
 =====================================
 *	use avg.time in calcPercentile instead of 'period' to ensure
-	consistency with other functions (timePlot would fail with percentiles)
+	consistency with other functions (timePlot would fail with
+	percentiles)
+*	return NA in aqStats when no data present; previously it tried
+	to calculate quanities, returning -Inf etc
 
 Changes in openair 0.4-17 [2011-04-21]
 =====================================
