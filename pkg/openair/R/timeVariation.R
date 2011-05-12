@@ -122,7 +122,7 @@ timeVariation <- function(mydata,
             inc <- 0.04 * abs(lims[2] - lims[1])
             lims <- c(lims[1] - inc, lims[2] + inc)
         } else {
-            lims <- range(c(x$value, x$value), na.rm = TRUE)
+            lims <- range(c(x$Mean, x$Mean), na.rm = TRUE)
             inc <- 0.04 * abs(lims[2] - lims[1])
             lims <- c(lims[1] - inc, lims[2] + inc)
         }
