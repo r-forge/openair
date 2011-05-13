@@ -8,6 +8,7 @@ polarFreq <- function(mydata,
                       trans = TRUE,
                       type = "default",
                       min.bin = 1,
+                      ws.upper = NA,
                       border.col = "transparent",
                       main = "",
                       key.header = statistic,
@@ -22,9 +23,9 @@ polarFreq <- function(mydata,
     vars <- c("wd", "ws")
     if (any(type %in%  dateTypes)) vars <- c(vars, "date")
 
-    #greyscale handling
+    ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
-        #strip only
+        ## strip only
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
@@ -34,7 +35,7 @@ polarFreq <- function(mydata,
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
 
-     ## remove all NAs
+    ## remove all NAs
     mydata <- na.omit(mydata)
     
     mydata <- cutData(mydata, type, ...)
@@ -55,8 +56,16 @@ polarFreq <- function(mydata,
     ## apply square root transform?
     if (trans) coef <- 2 else coef <- 1
 
-    max.ws <- max(ceiling(mydata$ws), na.rm = TRUE)
+    ## set the upper wind speed
+    if (is.na(ws.upper)) {
+        max.ws <- max(mydata$ws, na.rm = TRUE)
+    } else {
+        max.ws <- ws.upper
+    }
 
+    ## offset for "hollow" middle
+    offset <- (max.ws) / 5
+       
     prepare.grid <- function(mydata)
     {
         wd <- factor(mydata$wd)
@@ -104,6 +113,7 @@ polarFreq <- function(mydata,
         weights[ids] <- NA
 
         ws.wd <- expand.grid(ws = as.numeric(levels(ws)), wd = as.numeric(levels(wd)))
+        
         weights <- cbind(ws.wd, weights) 
         weights
     }
@@ -111,12 +121,13 @@ polarFreq <- function(mydata,
 
     poly <- function(dir, speed, colour)
     {
-        ## offset by 3 so that centre is not compressed
+        
+        ## offset by 3 * ws.int so that centre is not compressed
         angle <- seq(dir - 5, dir + 5, length = 10)
-        x1 <- (speed + 3) * sin(pi * angle/180)
-        y1 <- (speed + 3) * cos(pi * angle/180)
-        x2 <- rev((speed + ws.int + 3) * sin(pi * angle/180))
-        y2 <- rev((speed + ws.int + 3) * cos(pi * angle/180))
+        x1 <- (speed + offset - ws.int) * sin(pi * angle / 180)
+        y1 <- (speed + offset - ws.int) * cos(pi * angle / 180)
+        x2 <- rev((speed + offset) * sin(pi * angle / 180))
+        y2 <- rev((speed + offset) * cos(pi * angle / 180))
         lpolygon(c(x1, x2), c(y1, y2), col = colour, border = border.col, lwd = 0.5)
     }
 
@@ -164,6 +175,7 @@ polarFreq <- function(mydata,
     results.grid$weights[results.grid$weights == "NaN"] <- 0
     results.grid$weights[which(is.na(results.grid$weights))] <- 0
 
+
     ##  scale key setup ################################################################################################
     legend <- list(col = col[1:length(breaks) - 1], at = breaks, 
                    labels = list(at = br^(1/coef), labels = br),
@@ -181,10 +193,10 @@ polarFreq <- function(mydata,
     
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
-   
+    
     plt <- xyplot(myform,
-                  xlim = c(-max.ws - 4.0, max.ws + 4.0),
-                  ylim = c(-max.ws - 4.0, max.ws + 4.0),
+                  xlim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
+                  ylim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
                   data = results.grid,
                   main = quickText(main, auto.text),
                   par.strip.text = list(cex = 0.8),
@@ -200,7 +212,7 @@ polarFreq <- function(mydata,
                   panel = function(x, y, subscripts,...) {
                       panel.xyplot(x, y,...)
 
-                      subdata <- results.grid[subscripts,]
+                      subdata <- results.grid[subscripts, ]
 
                       for (i in 1:nrow(subdata)) {
                           colour <- col[as.numeric(subdata$div[i])]
@@ -211,38 +223,42 @@ polarFreq <- function(mydata,
                       ## annotate
                       angles <- seq(0, 2 * pi, length = 360)
                       sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
-                             llines((3 + x + ws.int) * sin(angles),
-                                    (3 + x + ws.int) * cos(angles),
+                             llines((offset + x) * sin(angles),
+                                    (offset + x) * cos(angles),
                                     col = "grey", lty = 5))
 
                       ## radial labels
                       sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
-                             ltext((3 + x + ws.int) * sin(pi / 4), (3 + x + ws.int) * cos(pi / 4),
+                             ltext((offset + x) * sin(pi / 4), (offset + x) * cos(pi / 4),
                                    x, cex = 0.7))                                                 
 
-                       larrows(-max.ws - 4, 0,  -4, 0, code = 1, length = 0.1)
-                      larrows(max.ws + 4, 0,  4, 0, code = 1, length = 0.1)
-                      larrows(0, -max.ws - 4, 0, -4, code = 1, length = 0.1)
-                      larrows(0, max.ws + 4, 0, 4, code = 1, length = 0.1)
+                      larrows(-max.ws - offset -ws.int, 0,  -offset, 0, code = 1, length = 0.1)
+                      larrows(max.ws + offset + ws.int, 0,  offset, 0, code = 1, length = 0.1)
+                      larrows(0, -max.ws - offset -ws.int, 0, -offset, code = 1, length = 0.1)
+                      larrows(0, max.ws + offset + ws.int, 0, offset, code = 1, length = 0.1)
 
-                      ltext((-max.ws - 4) * 0.95, 0.07 * (max.ws +4), "W", cex = 0.7)
-                      ltext(0.07 * (max.ws + 4), (-max.ws - 4)  * 0.95, "S", cex = 0.7)
-                      ltext(0.07 * (max.ws + 4), (max.ws + 4) * 0.95, "N", cex = 0.7)
-                      ltext((max.ws + 4) * 0.95, 0.07 * (max.ws + 4), "E", cex = 0.7)
+                      ltext((-max.ws - offset - ws.int) * 0.95, 0.07 * (max.ws + offset + ws.int),
+                            "W", cex = 0.7)
+                      ltext(0.07 * (max.ws + offset + ws.int), (-max.ws - offset - ws.int)  *
+                            0.95, "S", cex = 0.7)
+                      ltext(0.07 * (max.ws + offset + ws.int), (max.ws + offset + ws.int) *
+                            0.95, "N", cex = 0.7)
+                      ltext((max.ws + offset + ws.int) * 0.95, 0.07 * (max.ws + offset + ws.int),
+                            "E", cex = 0.7)
 
                   },
                   legend = legend 
                   )
 
 #################
-                                        #output
+    ## output
 #################
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
 
-    #reset if greyscale
+    ## reset if greyscale
     if (length(cols) == 1 && cols == "greyscale") 
         trellis.par.set("strip.background", current.strip)
 

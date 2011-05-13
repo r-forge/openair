@@ -20,6 +20,7 @@ grid.line = 5,
     trans = TRUE,
     type = "default",
     min.bin = 1,
+    ws.upper = NA,
     border.col = "transparent",
     main = "",
     key.header = statistic,
@@ -106,6 +107,11 @@ scale is used.}
   1 because of the risk of removing real data points. It is recommended
   to consider your data with care. Also, the \code{polarPlot} function
   can be of use in such circumstances.}
+
+\item{ws.upper}{A user-defined upper wind speed to use. This is useful
+  for ensuring a consistent scale between different plots. For example,
+  to always ensure that wind speeds are displayed between 1-10, set
+  \code{ws.int = 10}.}
 
   \item{border.col}{The colour of the boundary of each wind
 speed/direction bin. The default is transparent. Another useful choice

@@ -1,5 +1,6 @@
 Changes in openair 0.4-17 [2011-04-21]
 =====================================
+*	Fixed scaling bug in polarFreq when ws.int != 1
 *	use avg.time in calcPercentile instead of 'period' to ensure
 	consistency with other functions (timePlot would fail with
 	percentiles)
