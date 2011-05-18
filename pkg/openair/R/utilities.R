@@ -202,8 +202,6 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
 {
      ## extract variables of interest
     vars <- names(mydata)
-    ## useful to check to see if local time zones are used, which would affect by hour extraction
-    mydata <- checkPrep(mydata, vars, type = "default")
     
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
     my.tz <- if(use.local.tz)
