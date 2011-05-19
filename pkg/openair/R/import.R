@@ -10,8 +10,8 @@ import <- function (file = file.choose(), file.type = "csv", header.at = 1,
     ################################
     #multi-format data importer
     ################################
-    #kr version 0.2.1
-    #21/10/2010
+    #kr version 0.2.2
+    #09/05/2011
     ###############################
     #
 
@@ -293,7 +293,7 @@ if(previous)
     }
 
     b <- apply(cbind(a, b), 1, paste, collapse = " ")
-    a <- as.POSIXct(b, format = date.order, time.format)
+    a <- as.POSIXct(strptime(b, format = date.order, time.format))
 
     ######################
     #removed yy/yyyy tester
@@ -313,10 +313,12 @@ if(previous)
         bad.time <- gsub("%H", "24", time.order, ignore.case = TRUE)
         bad.time <- gsub("%M", "00", bad.time, ignore.case = TRUE)
         bad.time <- gsub("%S", "00", bad.time, ignore.case = TRUE)
+        good.time <- gsub("24", "00", bad.time)
+        ###########################
+        ##where bad.time replace with good and add day  
         a[grep(bad.time, b, ignore.case = TRUE)] <- 
-            as.POSIXct(
-                as.POSIXlt(strptime(as.character(b[grep(bad.time, b, ignore.case = TRUE)]), 
-                format = date.order, tz = time.format))) + 86400
+             as.POSIXct(strptime(gsub(bad.time, good.time, b[grep(bad.time, b, ignore.case = TRUE)]), 
+             format = date.order, tz = time.format)) + 86400
         if (is.null(misc.info)) {
             misc.info <- 1
             file.misc <- "import operation: bad.24 applied (reset 24:00:00 to 00:00:00 next day)"
