@@ -77,6 +77,9 @@ smoothTrend <- function(mydata,
 
     process.cond <- function(mydata) {
 
+        ## return if nothing to analyse
+        if (all(is.na(mydata$value))) return()
+        
         ## sometimes data have long trailing NAs, so start and end at
         ## first and last data
         min.idx <- min(which(!is.na(mydata[, "value"])))
@@ -137,7 +140,7 @@ smoothTrend <- function(mydata,
     }
 
     ## proper names of labelling ##############################################################################
-    pol.name <- sapply(levels(split.data[ , type[1]]), function(x) quickText(x, auto.text))
+    pol.name <- sapply(levels(factor(split.data[ , type[1]])), function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
@@ -146,7 +149,7 @@ smoothTrend <- function(mydata,
         
     } else { ## two conditioning variables        
         
-        pol.name <- sapply(levels(split.data[ , type[2]]), function(x) quickText(x, auto.text))
+        pol.name <- sapply(levels(factor(split.data[ , type[2]])), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)       
     }
     ## ########################################################################################################

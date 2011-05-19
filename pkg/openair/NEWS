@@ -5,6 +5,8 @@ Changes in openair 0.4-19 [2011-05-19]
 
 Changes in openair 0.4-18 [2011-05-19]
 =====================================
+*	Better handling of missing data in smoothTrend/MannKendall;
+	particularly when there are mutiple sites
 *	Do not run checkPreo on selectByDate because it removes calms
 *	Fixed scaling bug in polarFreq when ws.int != 1
 *	use avg.time in calcPercentile instead of 'period' to ensure
