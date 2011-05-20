@@ -1,7 +1,10 @@
 Changes in openair 0.4-19 [2011-05-19]
-=====================================
-*	Fixed bad.24 and international tz bugs in import
-*	updated import/import.2
+===================================== 
+* 	Added option "statistic" to polarPlot, which can now consider 
+	"mean", "median", "max" (maximum), "frequency". "stdev" 
+	(standard deviation) or "weighted.mean" in a similar way to polarFreq
+* 	Fixed bad.24 and international tz bugs in import 
+* 	updated import/import.2
 
 Changes in openair 0.4-18 [2011-05-19]
 =====================================

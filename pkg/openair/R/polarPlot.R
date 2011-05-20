@@ -2,6 +2,7 @@
 polarPlot <- function(mydata,
                       pollutant = "nox",
                       type = "default",
+                      statistic = "mean",
                       resolution = "normal",
                       limits = NA,
                       exclude.missing = TRUE,
@@ -30,9 +31,16 @@ polarPlot <- function(mydata,
 
     if (uncertainty & length(pollutant) > 1) stop("Can only have one pollutant when uncertainty = TRUE")
 
-    #greyscale handling
+    if (!statistic %in% c("mean", "median", "frequency", "max", "stdev", "weighted.mean")) {
+        stop (paste("statistic '", statistic, "' not recognised", sep = ""))  
+    }
+
+    if (missing(key.header)) key.header <- statistic
+    if (key.header == "weighted.mean") key.header <- c("weighted", "mean")
+
+    ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
-        #strip only
+        ## strip only
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
@@ -93,14 +101,28 @@ polarPlot <- function(mydata,
         ## identify which ws and wd bins the data belong
         wd <- cut(mydata$wd, breaks = seq(0, 360, 10), include.lowest = TRUE)
         ws <- cut(mydata$ws, breaks = seq(0, max.ws, length = 31))
-
-        ## this automatically deals with missing data
-        binned <- tapply(mydata[, pollutant], list(wd, ws), mean, na.rm = TRUE)
+        
+        binned <- switch(statistic,
+                         frequency = tapply(mydata[ , pollutant], list(wd, ws), function(x)
+                         length(na.omit(x))),
+                         mean =  tapply(mydata[, pollutant], list(wd, ws), function(x)
+                         mean(x, na.rm = TRUE)),
+                         median = tapply(mydata[, pollutant], list(wd, ws), function(x)
+                         median(x, na.rm = TRUE)),
+                         max = tapply(mydata[, pollutant], list(wd, ws), function(x)
+                         max(x, na.rm = TRUE)),
+                         stdev = tapply(mydata[, pollutant], list(wd, ws), function(x)
+                         sd(x, na.rm = TRUE)),
+                         weighted.mean = tapply(mydata[, pollutant], list(wd, ws),
+                         function(x) (mean(x) * length(x) / nrow(mydata)))
+                         )
+        
         binned <- as.vector(t(binned))
 
         ## frequency - remove points with freq < min.bin
         bin.len <- tapply(mydata[, pollutant], list(ws, wd), length)
         binned.len <- as.vector(bin.len)
+
         ids <- which(binned.len < min.bin)
         binned[ids] <- NA
 ######################Smoothing#################################################
@@ -286,7 +308,7 @@ polarPlot <- function(mydata,
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
 
-    #reset if greyscale
+    ## reset if greyscale
     if (length(cols) == 1 && cols == "greyscale") 
         trellis.par.set("strip.background", current.strip)
 
