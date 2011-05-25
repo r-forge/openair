@@ -1,5 +1,6 @@
 Changes in openair 0.4-19 [2011-05-19]
 ===================================== 
+* 	scatterPlot type = "wd" labels aligned  
 * 	Added option "statistic" to polarPlot, which can now consider 
 	"mean", "median", "max" (maximum), "frequency". "stdev" 
 	(standard deviation) or "weighted.mean" in a similar way to polarFreq
