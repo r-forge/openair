@@ -241,7 +241,12 @@ scatterPlot <- function(mydata,
     if (log.y)  mydata <- mydata[mydata[ , y] > 0, ]
 
     pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
-    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
+
+###############
+#kr 
+###############
+#stripName woz ere
+#
     
     if (!continuous) { ## non-continuous key
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
@@ -293,7 +298,17 @@ scatterPlot <- function(mydata,
     }
 
     ## proper names of labelling ##############################################################################
-    
+
+################
+#kr
+################
+#stripName moved to post wd handling
+#so it done post factor ordering 
+#otherwise labels out of sych with 
+#panels for type="wd"
+#
+
+    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))    
     if (strip) strip <- strip.custom(factor.levels = stripName)
 
     if (length(type) == 1 ) {
