@@ -102,6 +102,7 @@ polarFreq <- function(mydata,
 
             ## note sum for matrix
             weights <- 100 * weights / sum(sum(weights, na.rm = TRUE))
+           
         }
 
         weights <- as.vector(t(weights))
@@ -194,9 +195,13 @@ polarFreq <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
     
+    span <- ws.int * floor (max.ws / ws.int) + ws.int + offset
+   
     plt <- xyplot(myform,
-                  xlim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
-                  ylim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
+            #      xlim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
+              #    ylim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
+                   xlim = c(-span, span),
+                  ylim = c(-span, span),
                   data = results.grid,
                   main = quickText(main, auto.text),
                   par.strip.text = list(cex = 0.8),
@@ -232,19 +237,15 @@ polarFreq <- function(mydata,
                              ltext((offset + x) * sin(pi / 4), (offset + x) * cos(pi / 4),
                                    x, cex = 0.7))                                                 
 
-                      larrows(-max.ws - offset -ws.int, 0,  -offset, 0, code = 1, length = 0.1)
-                      larrows(max.ws + offset + ws.int, 0,  offset, 0, code = 1, length = 0.1)
-                      larrows(0, -max.ws - offset -ws.int, 0, -offset, code = 1, length = 0.1)
-                      larrows(0, max.ws + offset + ws.int, 0, offset, code = 1, length = 0.1)
+                      larrows(-span, 0,  -offset, 0, code = 1, length = 0.1)
+                      larrows(span, 0,  offset, 0, code = 1, length = 0.1)
+                      larrows(0, -span, 0, -offset, code = 1, length = 0.1)
+                      larrows(0, span, 0, offset, code = 1, length = 0.1)
 
-                      ltext((-max.ws - offset - ws.int) * 0.95, 0.07 * (max.ws + offset + ws.int),
-                            "W", cex = 0.7)
-                      ltext(0.07 * (max.ws + offset + ws.int), (-max.ws - offset - ws.int)  *
-                            0.95, "S", cex = 0.7)
-                      ltext(0.07 * (max.ws + offset + ws.int), (max.ws + offset + ws.int) *
-                            0.95, "N", cex = 0.7)
-                      ltext((max.ws + offset + ws.int) * 0.95, 0.07 * (max.ws + offset + ws.int),
-                            "E", cex = 0.7)
+                      ltext(-span * 0.95, 0.07 * span, "W", cex = 0.7)
+                      ltext(0.07 * span, -span  * 0.95, "S", cex = 0.7)
+                      ltext(0.07 * span, span * 0.95, "N", cex = 0.7)
+                      ltext(span * 0.95, 0.07 * span, "E", cex = 0.7)
 
                   },
                   legend = legend 
