@@ -133,8 +133,6 @@ if(previous)
     ###################
     #check date and time names
     ###################
-    date.name <- make.names(date.name[date.name != ""])
-    time.name <- make.names(time.name[time.name != ""])
     time.name <- time.name[!time.name %in% date.name]
     if (length(c(date.name, time.name)) == 0) {
         stop("No valid date or times set\n       [openair import currently require at least one]", 
@@ -216,10 +214,18 @@ if(previous)
     ######################
     #bind data and names
     ######################
+    #includes forcing names to valid R
+
     temp <- make.names(file.names, unique = TRUE)
-    if(!identical(file.names,temp))
-        warning("Non-unqiue or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]"
-                , call. = FALSE) 
+    if (!identical(file.names, temp)){
+        date.name <- make.names(date.name)
+        time.name <- make.names(time.name)
+        is.ws <- make.names(is.ws)
+        is.wd <- make.names(is.wd)
+        is.site <- make.names(is.site)
+        warning("Non-unqiue or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]", 
+                call. = FALSE)
+    }
     names(file.data) <- temp
 
     #####################

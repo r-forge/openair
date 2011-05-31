@@ -1,5 +1,6 @@
 Changes in openair 0.4-19 [2011-05-19]
 ===================================== 
+* 	improved import date.name/time.name handling of spaces
 * 	Improved scaling for polarFreq
 * 	scatterPlot type = "wd" labels aligned  
 * 	Added option "statistic" to polarPlot, which can now consider 

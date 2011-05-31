@@ -4,13 +4,13 @@ importAURNCsv <- function (file = file.choose(), header.at = 5, data.at = 7, na.
     output = "final", data.order = c("value", "status", "unit"), 
     simplify.names = TRUE, ...) 
 {
-    date.name <- make.names(date.name)
-    time.name <- make.names(time.name)
     initial.ans <- import(file = file, header.at = header.at, 
         na.strings = na.strings, data.at = data.at, date.name = date.name, 
         date.break = date.break, time.name = time.name, misc.info = misc.info, 
         is.site = NULL, bad.24 = bad.24, correct.time = correct.time, 
         output = "working", ...)
+    date.name <- make.names(date.name)
+    time.name <- make.names(time.name)
     site.1 <- read.table(file, header = FALSE, sep = initial.ans$ops$sep, 
         skip = (is.site - 1), nrows = 1, colClasses = "character", 
         col.names = initial.ans$names, fill = TRUE, flush = TRUE)
