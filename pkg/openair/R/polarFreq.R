@@ -9,6 +9,7 @@ polarFreq <- function(mydata,
                       type = "default",
                       min.bin = 1,
                       ws.upper = NA,
+                      offset = 10,
                       border.col = "transparent",
                       main = "",
                       key.header = statistic,
@@ -53,6 +54,9 @@ polarFreq <- function(mydata,
 
     if (!missing(breaks)) trans <- FALSE  ## over-ride transform if breaks supplied
 
+    if (missing(key.header)) key.header <- statistic
+    if (key.header == "weighted.mean") key.header <- c("contribution", "(%)")
+
     ## apply square root transform?
     if (trans) coef <- 2 else coef <- 1
 
@@ -64,8 +68,8 @@ polarFreq <- function(mydata,
     }
 
     ## offset for "hollow" middle
-    offset <- (max.ws) / 5
-       
+    offset <- (max.ws * offset) / 5 / 10
+    
     prepare.grid <- function(mydata)
     {
         wd <- factor(mydata$wd)
@@ -102,7 +106,7 @@ polarFreq <- function(mydata,
 
             ## note sum for matrix
             weights <- 100 * weights / sum(sum(weights, na.rm = TRUE))
-           
+            
         }
 
         weights <- as.vector(t(weights))
@@ -158,7 +162,7 @@ polarFreq <- function(mydata,
     if(missing(breaks)) {
 
         breaks <- unique(c(0, pretty(results.grid$weights, nlev)))
-        br <- pretty((results.grid$weights ^ coef), n = 10)  ## breaks for scale
+        br <- pretty((c(0, results.grid$weights) ^ coef), n = 10)  ## breaks for scale
 
     } else {
 
@@ -196,11 +200,9 @@ polarFreq <- function(mydata,
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
     
     span <- ws.int * floor (max.ws / ws.int) + ws.int + offset
-   
-    plt <- xyplot(myform,
-            #      xlim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
-              #    ylim = c(-max.ws - offset - ws.int, max.ws + offset + ws.int),
-                   xlim = c(-span, span),
+    
+    plt <- xyplot(myform,          
+                  xlim = c(-span, span),
                   ylim = c(-span, span),
                   data = results.grid,
                   main = quickText(main, auto.text),
@@ -226,16 +228,18 @@ polarFreq <- function(mydata,
                       }
 
                       ## annotate
-                      angles <- seq(0, 2 * pi, length = 360)
-                      sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
-                             llines((offset + x) * sin(angles),
-                                    (offset + x) * cos(angles),
-                                    col = "grey", lty = 5))
+                      if (ws.int < max.ws) { ## don't annotate if only 1 interval
+                          angles <- seq(0, 2 * pi, length = 360)
+                          sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
+                                 llines((offset + x) * sin(angles),
+                                        (offset + x) * cos(angles),
+                                        col = "grey", lty = 5))
 
-                      ## radial labels
-                      sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
-                             ltext((offset + x) * sin(pi / 4), (offset + x) * cos(pi / 4),
-                                   x, cex = 0.7))                                                 
+                          ## radial labels
+                          sapply(seq(0, 20 * grid.line, by = grid.line), function(x)
+                                 ltext((offset + x) * sin(pi / 4), (offset + x) * cos(pi / 4),
+                                       x, cex = 0.7))
+                      }
 
                       larrows(-span, 0,  -offset, 0, code = 1, length = 0.1)
                       larrows(span, 0,  offset, 0, code = 1, length = 0.1)

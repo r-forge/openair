@@ -21,6 +21,7 @@ grid.line = 5,
     type = "default",
     min.bin = 1,
     ws.upper = NA,
+    offset = 10,
     border.col = "transparent",
     main = "",
     key.header = statistic,
@@ -112,6 +113,12 @@ scale is used.}
   for ensuring a consistent scale between different plots. For example,
   to always ensure that wind speeds are displayed between 1-10, set
   \code{ws.int = 10}.}
+
+\item{offset}{\code{offset} controls the size of the 'hole' in the
+  middle and is expressed as a percentage of the maximum wind
+  speed. Setting a higher \code{offset} e.g. 50 is useful for
+  \code{statistic = "weighted.mean"} when \code{ws.int} is greater than
+  the maximum wind speed. See example below.}
 
   \item{border.col}{The colour of the boundary of each wind
 speed/direction bin. The default is transparent. Another useful choice
@@ -214,6 +221,9 @@ polarFreq(mydata, type = "year")
 # more complicated user-defined breaks - useful for highlighting bins with a certain number of data points
 \dontrun{polarFreq(mydata, breaks = c(0, 10, 50, 100, 250, 500, 700))}
 
+# source contribution plot and use of offset option
+\dontrun{polarFreq(mydata, pollutant = "pm25", statistic
+="weighted.mean", offset = 50, ws.int = 25, trans = FALSE) }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

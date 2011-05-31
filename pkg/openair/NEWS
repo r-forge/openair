@@ -1,3 +1,8 @@
+Changes in openair 0.4-20 [2011-05-31]
+===================================== 
+* 	NEW FUNCTION importSAQN to import data from the Scottish Air
+	Quality Network
+
 Changes in openair 0.4-19 [2011-05-19]
 ===================================== 
 * 	improved import date.name/time.name handling of spaces
