@@ -10,13 +10,13 @@
 
 timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                         statistic = "mean", percentile = NA, start.date = NA) {
-    
+
     ## extract variables of interest
     vars <- names(mydata)
 
-    mydata <- checkPrep(mydata, vars, type = "default")
-  
-    
+    mydata <- checkPrep(mydata, vars, type = "default", remove.calm = FALSE)
+
+
     if (!is.na(percentile)) {
         percentile <- percentile / 100
         if (percentile < 0 | percentile > 100) stop("Percentile range outside 0-100")
@@ -37,13 +37,13 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     newMax <- function(x) {if (all(is.na(x))) return(NA) else max(x, na.rm = TRUE)}
 
     calc.mean <- function(mydata, start.date) { ## function to calculate means
-        
+
         ## pad out missing data
         mydata <- date.pad(mydata)
 
         ## start from a particular time, if given
         if (!is.na(start.date)) {
-               
+
             firstLine <- data.frame(date = as.POSIXct(start.date))
             mydata <- rbind.fill(firstLine, mydata)
 
@@ -51,10 +51,10 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             ## data frames when system is not GMT puts it in local time!...
             ## and then cut makes a string/factor levels with tz lost...
             TZ <- format(mydata$date, "%Z")[1]
-            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ) 
-     
+            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
+
         }
-       
+
         if ("wd" %in% names(mydata)) {
             if (is.numeric(mydata$wd)) {
                 mydata$u <- sin(2 * pi * mydata$wd / 360)
@@ -62,11 +62,11 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             }
         }
 
-       
+
         ## cut into sections dependent on period
         mydata$cuts <- cut(mydata$date, avg.time)
-        
-        
+
+
         if (data.thresh > 0) {
 
             ## two methods of calculating stats, one that takes account of data capture (slow), the
@@ -79,15 +79,15 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                     res <- NA
                 }
                 res
-            }            
-            
+            }
+
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                          drop = FALSE], list(date = mydata$cuts), newMethod,
                                   na.rm = TRUE,  data.thresh = data.thresh)
         }
 
         if (data.thresh == 0 & statistic != "mean") {
-            
+
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                          drop = FALSE], list(date = mydata$cuts),
                                   function (x) eval(parse(text = form)))
@@ -95,7 +95,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         }
 
         if (data.thresh == 0 & statistic == "mean") {
-            
+
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                          drop = FALSE], list(date = mydata$cuts), mean, na.rm = TRUE)
 
@@ -103,12 +103,12 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         ## return same date class as went in...
         if (class(mydata$date)[1] == "Date") {
             dailymet$date <- as.Date(dailymet$date)
-            
+
         } else {
             ## return the same TZ that we started with
             TZ <- format(mydata$date, "%Z")[1]
-            dailymet$date <- as.POSIXct(format(dailymet$date), tz = TZ)                            
-           
+            dailymet$date <- as.POSIXct(format(dailymet$date), tz = TZ)
+
         }
 
         if ("wd" %in% names(mydata)) {
@@ -127,7 +127,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
 
             dailymet
-     
+
     }
 
     ## split if several sites
