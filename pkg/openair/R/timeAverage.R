@@ -16,6 +16,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
     mydata <- checkPrep(mydata, vars, type = "default", remove.calm = FALSE)
 
+     ## time zone of data
+     TZ <- attr(mydata$date, "tzone")
+     if (is.null(TZ)) TZ <- "GMT" ## as it is on Windows for BST
 
     if (!is.na(percentile)) {
         percentile <- percentile / 100
@@ -45,12 +48,13 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (!is.na(start.date)) {
 
             firstLine <- data.frame(date = as.POSIXct(start.date))
-            mydata <- rbind.fill(firstLine, mydata)
 
+            mydata <- rbind.fill(firstLine, mydata)
+            mydata <- date.pad(mydata)
             ## for cutting data must ensure it is in GMT because combining
             ## data frames when system is not GMT puts it in local time!...
             ## and then cut makes a string/factor levels with tz lost...
-            TZ <- format(mydata$date, "%Z")[1]
+
             mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
 
         }
@@ -104,9 +108,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (class(mydata$date)[1] == "Date") {
             dailymet$date <- as.Date(dailymet$date)
 
+
         } else {
             ## return the same TZ that we started with
-            TZ <- format(mydata$date, "%Z")[1]
             dailymet$date <- as.POSIXct(format(dailymet$date), tz = TZ)
 
         }
