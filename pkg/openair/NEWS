@@ -1,3 +1,12 @@
+Changes in openair 0.4-21 [2011-06-03]
+=====================================
+* 	Fix treatment of calms in checkPrep, which affected cases with
+	zero wind speeds in timeAverage
+*	Fix to vector averaging in timeAverage (did not include wind
+	speed in calculations). For most data this will make very little
+	difference, but will be more important for low wind speeds and/or
+	variable wind directions.
+
 Changes in openair 0.4-20 [2011-05-31]
 =====================================
 * 	Do not remove calms in timeAverage

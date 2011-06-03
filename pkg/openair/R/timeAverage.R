@@ -59,10 +59,10 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         }
 
-        if ("wd" %in% names(mydata)) {
+        if (all(c("wd", "wd") %in% names(mydata))) {
             if (is.numeric(mydata$wd)) {
-                mydata$u <- sin(2 * pi * mydata$wd / 360)
-                mydata$v <- cos(2 * pi * mydata$wd / 360)
+                mydata$u <- mydata$ws * sin(2 * pi * mydata$wd / 360)
+                mydata$v <- mydata$ws * cos(2 * pi * mydata$wd / 360)
             }
         }
 
