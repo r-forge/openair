@@ -18,7 +18,7 @@ calendarPlot <- function(mydata,
                           limits = c(0, 100),
                           main = paste(pollutant, "in", year),
                           key.header = "", key.footer = "",
-                          key.position = "right", key = NULL, 
+                          key.position = "right", key = NULL,
                           auto.text = TRUE,
                           ...) {
 
@@ -29,7 +29,7 @@ calendarPlot <- function(mydata,
 
     ## extract variables of interest
     if (annotate == "date") vars <- c("date", pollutant)
-    if (annotate == "wd") vars <- c("wd", "date", pollutant)
+    if (annotate == "wd") vars <- c("wd", "ws", "date", pollutant)
     if (annotate == "ws") vars <- c("wd", "ws", "date", pollutant)
 
     ## select year first, then check variables
@@ -119,7 +119,7 @@ calendarPlot <- function(mydata,
         mydata <- timeAverage(mydata, "day")
         mydata$date <- as.Date(mydata$date)
     }
-    
+
     ## type not yet used, set to month
     type <- "month"
     mydata <- cutData(mydata, type = type, ...)
@@ -150,15 +150,15 @@ calendarPlot <- function(mydata,
     #################
     #scale key setup
     #################
-    legend <- list(col = col, at = col.scale, space = key.position, 
-         auto.text = auto.text, footer = key.footer, header = key.header, 
+    legend <- list(col = col, at = col.scale, space = key.position,
+         auto.text = auto.text, footer = key.footer, header = key.header,
          height = 1, width = 1.5, fit = "all")
-    if (!is.null(key)) 
-         if (is.list(key)) 
+    if (!is.null(key))
+         if (is.list(key))
              legend[names(key)] <- key
-         else warning("In calendarPlot(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+         else warning("In calendarPlot(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
              call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
          draw = FALSE)))
     names(legend)[1] <- if(is.null(key$space)) key.position else key$space
 
@@ -219,7 +219,7 @@ calendarPlot <- function(mydata,
     newdata <- mydata
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
-    invisible(output)  
+    invisible(output)
 
 }
 

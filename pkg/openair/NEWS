@@ -1,5 +1,10 @@
 Changes in openair 0.4-21 [2011-06-03]
 =====================================
+* 	timeAverage can now expand data to shorter time periods
+	e.g. hourly to 15-minute. This makes it more flexible to combine data
+	sets with differeing averging times. For example, daily mean particle
+	data can be expanded to 1-hour means and combined with an hourly
+	meteorological data set.
 * 	Fix treatment of calms in checkPrep, which affected cases with
 	zero wind speeds in timeAverage
 *	Fix to vector averaging in timeAverage (did not include wind
