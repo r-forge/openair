@@ -1,5 +1,6 @@
 Changes in openair 0.4-21 [2011-06-03]
 =====================================
+* 	small change to final example of re-shaping data in importKCL
 * 	timeAverage can now expand data to shorter time periods
 	e.g. hourly to 15-minute. This makes it more flexible to combine data
 	sets with differeing averging times. For example, daily mean particle
