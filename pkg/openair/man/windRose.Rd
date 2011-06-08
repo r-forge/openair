@@ -13,10 +13,10 @@ pollutant time series, for wind speed. }
 windRose(mydata,
     ws.int = 2, angle = 30, type = "default", 
     cols = "default", main = "", grid.line = 5,
-    width = 1, auto.text = TRUE, breaks = 4, paddle = TRUE,
-    key.header = NULL, key.footer = "(m/s)",
+    width = 1, auto.text = TRUE, breaks = 4, offset = 10, 
+    paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
     key.position = "bottom", key = NULL, dig.lab = 5,
-    pollutant = NULL, 
+    statistic = "prop.count", pollutant = NULL, 
     ...)
 
 
@@ -92,6 +92,9 @@ pollutionRose(mydata,
   of wind speed intervals. For example, \code{width = 1.5} will make the 
   paddle width 1.5 times wider.}
 
+  \item{offset}{The size of the 'hole' in the middle of the plot,
+   expressed as a percentage of the polar axis scale, default 10.}
+
   \item{auto.text}{Either \code{TRUE} (default) or \code{FALSE}. If
   \code{TRUE} titles and axis labels will automatically try and format
   pollutant names and units properly e.g.  by subscripting the `2' in
@@ -114,6 +117,14 @@ pollutionRose(mydata,
   \item{dig.lab}{The number of signficant figures at which scientific 
   number formatting is used in break point and key labelling. Default 
   5.}
+
+  \item{statistic}{The \code{statistic} to be applied to each data bin 
+  in the plot. Encoded options currently include \code{"prop.count"} and 
+  \code{"prop.mean"}. The default \code{"prop.count"} sizes bins according 
+  to the proportion of the measurements, by count, in each bin. Similarly, 
+  \code{prop.mean} sizes bins according to their relative contribution to 
+  the mean. In both cases, results are expressed as percentages of the 
+  'whole-of-panel' \code{statistic} measurement.}
 
   \item{pollutant}{Alternative data series to be sampled 
   instead of wind speed. The \code{windRose} default NULL is equivalent 
@@ -141,10 +152,10 @@ pollutionRose(mydata,
   Summarised proportions can also be extracted directly using the \code{$data} operator, e.g. 
   \code{object$data} for \code{output <- windRose(mydata)}. This returns a data frame with 
   three set columns: \code{cond}, conditioning based on \code{type}; \code{wd}, the wind 
-  direction; and \code{calm}, proportion of data unattributed to any specific wind direction 
-  because it was collected under calm conditions; and then several (one for each range binned 
-  for the plot) columns giving proportions of measurements associated with each \code{ws} or 
-  \code{pollutant} range plotted as a discrete panel.     
+  direction; and \code{calm}, the \code{statistic} for the proportion of data unattributed to 
+  any specific wind direction because it was collected under calm conditions; and then several 
+  (one for each range binned for the plot) columns giving proportions of measurements 
+  associated with each \code{ws} or \code{pollutant} range plotted as a discrete panel.     
   
 }
 
@@ -161,7 +172,11 @@ pollutionRose(mydata,
   
   The argument \code{pollutant} uses the same plotting structure but 
   substitutes another data series, defined by \code{pollutant}, for 
-  wind speed. 
+  wind speed.
+
+  The option \code{statistic = "prop.mean"} provides a measure of the 
+  relative contribution of each bin to the panel mean, and is intended 
+  for use with \code{pollutionRose}. 
 
   \code{pollutionRose} is a \code{windRose} wrapper which brings 
   \code{pollutant} forward in the argument list, and attempts to 
@@ -170,11 +185,7 @@ pollutionRose(mydata,
  
   By default, \code{pollutionRose} will plot a pollution rose of 
   \code{nox} using "wedge" style segments and placing the scale 
-  key to the right of the plot.
-
-  Note also that all rows that contain at least one \code{NA} are
-  removed to make the plot. Therefore the the frequencies will be based
-  on the proportions of data that have had missing data removed first.
+  key to the right of the plot.  
 
 }
 
@@ -190,7 +201,14 @@ Ropkins)}
 \section{Warnings}{Note that \code{windRose} and \code{pollutionRose}
   are designed to work with UK Met Office files. Wind directions of 0
   degrees are assumed to be calms. The function will assume any data
-  with wind speed = 0 or wind direction = 0 will be calm. } 
+  with wind speed = 0 or wind direction = 0 will be calm. 
+
+  Note that any \code{mydata} rows that are not classified as calm and 
+  contain \code{NAs} for \code{wd}, \code{ws} or \code{pollutant} (if 
+  set) cannot be assigned to the windRose structure and are removed 
+  before calculating the \code{statistic} or percent contributions.
+
+} 
  
 \seealso{See \code{\link{drawOpenKey}} for fine control of the scale key. 
  
@@ -207,7 +225,7 @@ windRose(mydata)
 windRose(mydata,type = "year")
 
 # windRose in 10 degree intervals with gridlines and width adjusted
-windRose(mydata, angle = 10, width = 0.3, grid.line = 1)
+windRose(mydata, angle = 10, width = 0.2, grid.line = 1)
 
 # pollutionRose of nox
 pollutionRose(mydata, pollutant = "nox")

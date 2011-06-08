@@ -17,9 +17,9 @@ pollutionRose <- function(mydata,
 
 
 windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "default",
-                      main = "", grid.line = 5, width = 1, auto.text = TRUE, breaks = 4,
+                      main = "", grid.line = 5, width = 1, auto.text = TRUE, breaks = 4, offset = 10,
                       paddle = TRUE, key.header = NULL, key.footer = "(m/s)", key.position = "bottom",
-                      key = NULL, dig.lab = 5,
+                      key = NULL, dig.lab = 5, statistic = "prop.count",
                       pollutant = NULL,
                       ...)
 {
@@ -46,6 +46,12 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
         angle <- 3
     }
 
+    allowed.statistics <- c("prop.count", "prop.mean", "test")
+    if (!is.character(statistic) || !statistic[1] %in% allowed.statistics) {
+        warning("In windRose(...):\n  statistic unrecognised",
+                "\n  enforcing statistic = 'prop.count'", call. = FALSE)
+        statistic <- "prop.count"
+    }
 
     vars <- c("wd", "ws")
     if (any(type %in%  dateTypes)) vars <- c(vars, "date")
@@ -55,18 +61,20 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     }
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
-    ## flag calms as negatives
-    mydata$wd[mydata$ws == 0] <- -999 ## set wd to flag where there are calms
-    mydata$wd[mydata$wd == 0] <- 360
-
     mydata <- na.omit(mydata)
 
-    if (is.null(pollutant))   mydata$.z.poll <- mydata$ws else  names(mydata)[names(mydata) == pollutant] <- ".z.poll"
+    if (is.null(pollutant))
+        pollutant <- "ws"
+    mydata$.z.poll <- mydata[, pollutant]
 
     ## if (type == "ws")  type <- "ws.1"
 
     mydata$wd <- angle * ceiling(mydata$wd/angle - 0.5)
     mydata$wd[mydata$wd == 0] <- 360
+
+    ## flag calms as negatives
+    mydata$wd[mydata$ws == 0] <- -999 ## set wd to flag where there are calms
+                                      ## do after rounding or -999 changes
 
     if (length(breaks) == 1) breaks <- 0:(breaks - 1) * ws.int
 
@@ -81,18 +89,49 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$.z.poll))
     theLabels <- gsub("[,]", "-", theLabels)
 
+    ######################
+    #statistic handling
+    #####################
+
     prepare.grid <- function(mydata) {
-        wd <- factor(mydata$wd)
+
         levels(mydata$.z.poll) <- c(paste(".z.poll", 1:length(theLabels),
                                          sep = ""))
-        calm <- length(which(mydata$wd < 0))/nrow(mydata)
-        mydata$.z.poll[which(is.na(mydata$.z.poll))] <- ".z.poll1"
-        weights <- prop.table(table(mydata$wd, mydata$.z.poll))
-        weights <- as.data.frame.matrix(weights)
-        weights <- data.frame(t(apply(weights, 1, cumsum)))
-        weights$wd <- as.numeric(row.names(weights))
-        weights <- subset(weights, wd > 0)
-        weights$calm <- calm
+        count <- length(mydata$wd)
+        calm <- mydata[mydata$wd == -999, ][, pollutant]
+        mydata <- mydata[mydata$wd != -999, ]
+        mydata <- na.omit(mydata) # needed?
+        
+        if(statistic == "prop.count") {
+            stat.name <- "%count"
+            calm <- length(calm)/count
+            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), length)/count
+        }
+
+        if(statistic == "prop.mean") {
+            stat.name <- "%mean"
+            calm <- mean(calm) * length(calm) / count
+            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), 
+                                  function(x) mean(x) * length(x) / count)
+            temp <- sum(sum(weights)) + calm
+            weights <- weights/temp
+            calm <- calm/temp
+        }
+
+        if(statistic == "test") {
+            stat.name <- "%contribution"
+            calm <- sum(calm)
+            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), sum)
+            temp <- sum(sum(weights)) + calm
+            weights <- weights / temp
+            calm <- calm / temp
+        }
+        
+        weights[is.na(weights)] <- 0        
+        weights <- t(apply(weights, 1, cumsum))
+        weights <- cbind(data.frame(weights), 
+                         wd = as.numeric(row.names(weights)), 
+                         calm = calm)
         weights
     }
 
@@ -131,6 +170,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     }
 
     mydata <- cutData(mydata, type, ...)
+
     results.grid <- ddply(mydata, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################
@@ -152,7 +192,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 
     col <- openColours(cols, length(theLabels))
     max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) + length(type))], na.rm = TRUE)
-    off.set <- max.freq / 10
+    off.set <- max.freq * (offset/100)
     box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25, length.out = length(theLabels)) ^ 4
 
     legend <- list(col = col, space = key.position, auto.text = auto.text,
@@ -212,7 +252,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
                                                                 1 + off.set, grid.line / 100) *
                             cos(pi / 4),
                             paste(seq(grid.line, 100, by = grid.line), "%", sep = ""), cex = 0.7)
-                      ltext(max.freq, -max.freq, label = paste("calm = ",
+                      ltext(max.freq, -max.freq, label = paste(statistic, "\ncalm = ",
                                                  sprintf("%.1f", 100 * subdata$calm[1]), "%",
                                                  sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
                   }, legend = legend, ...)
