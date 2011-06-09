@@ -103,31 +103,35 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
         mydata <- na.omit(mydata) # needed?
         
         if(statistic == "prop.count") {
-            stat.name <- "%count"
             calm <- length(calm)/count
             weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), length)/count
         }
 
         if(statistic == "prop.mean") {
-            stat.name <- "%mean"
-            calm <- mean(calm) * length(calm) / count
+
+            calm <- if(length(calm) < 1 || is.na(mean(calm, na.rm = TRUE))) 
+                        0 else 
+                            mean(calm, na.rm = TRUE) * length(calm) / count
+
+
+
+
             weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), 
                                   function(x) mean(x) * length(x) / count)
-            temp <- sum(sum(weights)) + calm
+            temp <- sum(sum(weights, na.rm = TRUE), na.rm = TRUE) + calm
             weights <- weights/temp
             calm <- calm/temp
         }
 
         if(statistic == "test") {
-            stat.name <- "%contribution"
             calm <- sum(calm)
             weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), sum)
-            temp <- sum(sum(weights)) + calm
+            temp <- sum(sum(weights, na.rm = TRUE), na.rm = TRUE) + calm
             weights <- weights / temp
             calm <- calm / temp
         }
-        
-        weights[is.na(weights)] <- 0        
+
+        weights[is.na(weights)] <- 0                
         weights <- t(apply(weights, 1, cumsum))
         weights <- cbind(data.frame(weights), 
                          wd = as.numeric(row.names(weights)), 
