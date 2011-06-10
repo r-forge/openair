@@ -3,33 +3,36 @@ pollutionRose <- function(mydata,
                           breaks = 6, paddle = FALSE, key.position = "right",
                           ...)
 {
-    if(is.null(breaks))  breaks <- 6
-    if(is.numeric(breaks) & length(breaks) == 1){
-        breaks2 <- co.intervals(mydata[ ,pollutant][is.finite(mydata[ ,pollutant])], number = 10, overlap = 0)
-        breaks <- pretty(c(min(mydata[ ,pollutant], na.rm = TRUE), breaks2[nrow(breaks2), 1]), breaks)
+    if (is.null(breaks))  breaks <- 6
+    if (is.numeric(breaks) & length(breaks) == 1) {
+        breaks2 <- co.intervals(mydata[ , pollutant][is.finite(mydata[ ,pollutant])],
+                                number = 10, overlap = 0)
+        breaks <- pretty(c(min(mydata[ , pollutant], na.rm = TRUE),
+                           breaks2[nrow(breaks2), 1]), breaks)
         breaks <- breaks[breaks >= min(mydata[ , pollutant], na.rm = TRUE)]
     }
-    windRose(
-             mydata, pollutant = pollutant, paddle = paddle, key.position = key.position,
-             key.footer = key.footer, breaks = breaks, ...
-             )
+
+    windRose(mydata, pollutant = pollutant, paddle = paddle,
+             key.position = key.position, key.footer = key.footer,
+             breaks = breaks, ...)
 }
 
 
-windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "default",
-                      main = "", grid.line = 5, width = 1, auto.text = TRUE, breaks = 4, offset = 10,
-                      paddle = TRUE, key.header = NULL, key.footer = "(m/s)", key.position = "bottom",
-                      key = NULL, dig.lab = 5, statistic = "prop.count",
-                      pollutant = NULL,
+windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
+                      cols = "default", main = "", grid.line = 5, width = 1,
+                      auto.text = TRUE, breaks = 4, offset = 10,
+                      paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
+                      key.position = "bottom", key = NULL, dig.lab = 5,
+                      statistic = "prop.count", pollutant = NULL,
                       ...)
 {
 
-    #greyscale handling
+    ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
-        #strip
+        ## strip
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
-        #other local colours
+        ## other local colours
         calm.col <- "black"
     } else {
         calm.col <- "forestgreen"
@@ -74,7 +77,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 
     ## flag calms as negatives
     mydata$wd[mydata$ws == 0] <- -999 ## set wd to flag where there are calms
-                                      ## do after rounding or -999 changes
+    ## do after rounding or -999 changes
 
     if (length(breaks) == 1) breaks <- 0:(breaks - 1) * ws.int
 
@@ -84,19 +87,20 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 
     breaks <- unique(breaks)
     mydata$.z.poll <- cut(mydata$.z.poll, breaks = breaks, include.lowest = FALSE,
-                         dig.lab = dig.lab)
+                          dig.lab = dig.lab)
 
     theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$.z.poll))
     theLabels <- gsub("[,]", "-", theLabels)
 
-    ######################
-    #statistic handling
-    #####################
+######################
+    ## statistic handling
+#####################
 
     prepare.grid <- function(mydata) {
 
         levels(mydata$.z.poll) <- c(paste(".z.poll", 1:length(theLabels),
-                                         sep = ""))
+                                          sep = ""))
+
 
         count <- length(mydata$wd)
         calm <- mydata[mydata$wd == -999, ][, pollutant]
@@ -105,38 +109,42 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 
         if(statistic == "prop.count") {
             calm <- length(calm)/count
-            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), length)/count
+            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll),
+                              length) / count
         }
 
         if(statistic == "prop.mean") {
 
             calm <- if(length(calm) < 1 || is.na(mean(calm, na.rm = TRUE)))
-                        0 else
-                            mean(calm, na.rm = TRUE) * length(calm) / count
-
-
-
+                0 else
+            mean(calm, na.rm = TRUE) * length(calm) / count
 
             weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll),
-                                  function(x) mean(x) * length(x) / count)
+                              function(x) mean(x) * length(x) / count)
             temp <- sum(sum(weights, na.rm = TRUE), na.rm = TRUE) + calm
+
             weights <- weights/temp
             calm <- calm/temp
         }
 
         if(statistic == "test") {
             calm <- sum(calm)
-            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll), sum)
+
+            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll),
+                              sum)
             temp <- sum(sum(weights, na.rm = TRUE), na.rm = TRUE) + calm
+
             weights <- weights / temp
             calm <- calm / temp
         }
 
         weights[is.na(weights)] <- 0
         weights <- t(apply(weights, 1, cumsum))
-        weights <- cbind(data.frame(weights),
-                         wd = as.numeric(row.names(weights)),
-                         calm = calm)
+
+        means <- mean(mydata[ , pollutant])
+        weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),
+                         calm = calm, means = means)
+
 
         weights
     }
@@ -180,7 +188,8 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
     results.grid <- ddply(mydata, type, prepare.grid)
 
     ## proper names of labelling ##############################################################################
-    pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
+    pol.name <- sapply(levels(results.grid[ , type[1]]),
+                       function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
@@ -189,16 +198,18 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
 
     } else { ## two conditioning variables
 
-        pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
+        pol.name <- sapply(levels(results.grid[ , type[2]]),
+                           function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)
     }
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
-    ##
-########################################################################################################
+
+###############################################################################
 
     col <- openColours(cols, length(theLabels))
-    max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) + length(type))], na.rm = TRUE)
-    off.set <- max.freq * (offset/100)
+    max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) +
+                                                         length(type))], na.rm = TRUE)
+    off.set <- max.freq * (offset / 100)
     box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25, length.out = length(theLabels)) ^ 4
 
     legend <- list(col = col, space = key.position, auto.text = auto.text,
@@ -209,18 +220,23 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
         if(is.list(key)) legend[names(key)] <- key else
     warning("In windRose(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
             call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, draw = FALSE)))
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
+                                                  draw = FALSE)))
 
-    names(legend)[1] <- if(is.null(key$space)) key.position else key$space
+    names(legend)[1] <- if (is.null(key$space)) key.position else key$space
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(".z.poll1 ~ wd | ", temp, sep = ""))
+
+    sub.title <- "Proportion contribution of counts (%)"
+    if (statistic == "prop.mean") sub.title <- "Proportion contribution to the mean (%)"
 
     plt <- xyplot(myform,
                   xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
                   ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
                   data = results.grid,
                   type = "n",
+                  sub = sub.title,
                   strip = strip,
                   strip.left = strip.left,
                   xlab = "", ylab = "",
@@ -254,29 +270,28 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default", cols = "
                           })
                       }
                       ltext(seq((grid.line / 100 + off.set), 1 + off.set,
-                                grid.line / 100) * sin(pi/4), seq((grid.line/100 + off.set),
-                                                                1 + off.set, grid.line / 100) *
-                            cos(pi / 4),
-                            paste(seq(grid.line, 100, by = grid.line), "%", sep = ""), cex = 0.7)
-                      ltext(max.freq, -max.freq, label = paste(statistic, "\ncalm = ",
-                                                 sprintf("%.1f", 100 * subdata$calm[1]), "%",
-                                                 sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
+                                grid.line / 100) * sin(pi/4),
+                            seq((grid.line/100 +  off.set), 1 + off.set,
+                                grid.line / 100) *
+                            cos(pi / 4), paste(seq(grid.line, 100, by = grid.line),
+                                               "%", sep = ""), cex = 0.7)
+                      ltext(max.freq, -max.freq,
+                            label = paste("mean=", sprintf("%.1f", subdata$means[1]),
+                            "\ncalm = ", sprintf("%.1f", 100 * subdata$calm[1]),
+                            "%", sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
                   }, legend = legend, ...)
 
-   ## output ###########################################################################################################
+    ## output ################################################################################
 
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
+    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip,
+              strip.left = strip.left))
 
-    #reset if greyscale
+    ## reset if greyscale
     if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
 
     newdata <- results.grid
- #   if(is.null(pollutant))
-  #      theLabels <- paste("ws", theLabels, sep=".") else
-  #      theLabels <- paste(pollutant, theLabels, sep=".")
- #   names(newdata)[1:length(theLabels)] <- theLabels
-  #  newdata <- newdata[c(type, "wd", "calm", theLabels)]
+
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
     invisible(output)
