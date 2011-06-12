@@ -49,7 +49,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
         angle <- 3
     }
 
-    allowed.statistics <- c("prop.count", "prop.mean", "test")
+    allowed.statistics <- c("prop.count", "prop.mean")
     if (!is.character(statistic) || !statistic[1] %in% allowed.statistics) {
         warning("In windRose(...):\n  statistic unrecognised",
                 "\n  enforcing statistic = 'prop.count'", call. = FALSE)
@@ -114,21 +114,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
         }
 
         if(statistic == "prop.mean") {
-
-            calm <- if(length(calm) < 1 || is.na(mean(calm, na.rm = TRUE)))
-                0 else
-            mean(calm, na.rm = TRUE) * length(calm) / count
-
-            weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll),
-                              function(x) mean(x) * length(x) / count)
-            temp <- sum(sum(weights, na.rm = TRUE), na.rm = TRUE) + calm
-
-            weights <- weights/temp
-            calm <- calm/temp
-        }
-
-        if(statistic == "test") {
-            calm <- sum(calm)
+             calm <- sum(calm)
 
             weights <- tapply(mydata[, pollutant], list(mydata$wd, mydata$.z.poll),
                               sum)
@@ -136,6 +122,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
 
             weights <- weights / temp
             calm <- calm / temp
+
         }
 
         weights[is.na(weights)] <- 0
