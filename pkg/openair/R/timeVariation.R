@@ -363,11 +363,11 @@ timeVariation <- function(mydata,
         ## use grid to add an overall title
         grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
     }
-    ind.plot = function(x){
-        update(x, key = list(
+    ind.plot = function(x, ...){
+        plot(update(x, key = list(
                   rectangles = list(col = myColors[1:npol], border = NA),
                   text = list(lab = mylab), space = "top", columns = key.columns)
-               )
+               ), ...)
     }
 
     main.plot()
