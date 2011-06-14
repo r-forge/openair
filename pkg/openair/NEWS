@@ -16,6 +16,8 @@ Changes in openair 0.4-21 [2011-06-03]
 	speed in calculations). For most data this will make very little
 	difference, but will be more important for low wind speeds and/or
 	variable wind directions.
+* 	allow type = 'variable' in smoothTrend
+* 	Add avg.time to smoothTrend for "month" or "year" averages
 
 Changes in openair 0.4-20 [2011-05-31]
 =====================================

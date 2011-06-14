@@ -27,7 +27,7 @@ find.time.interval <- function(dates) {
     ## could have several sites, dates may be unordered
     ## find the most common time gap in all the data
     dates <- unique(dates)  ## make sure they are unique
- 
+
     id <- which.max(table(diff(as.numeric(dates[order(dates)]))))
     seconds <- as.numeric(names(id))
 
@@ -196,13 +196,13 @@ one more label than date")
 #############################################################################################
 
 ## function to make it easy to use d/m/y format for subsetting by date
-selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year = 2008, 
+selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year = 2008,
     month = 1, day = "weekday", hour = 1, use.local.tz = TRUE)
 
 {
      ## extract variables of interest
     vars <- names(mydata)
-    
+
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
     my.tz <- if(use.local.tz)
         format(mydata$date, "%Z")[1] else "GMT"
@@ -219,7 +219,7 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
             mydata <- mydata[as.numeric(format(mydata$date, "%m")) %in% month, ]
         }
         else {
-            mydata <- subset(mydata, substr(tolower(format(date, 
+            mydata <- subset(mydata, substr(tolower(format(date,
                 "%B")), 1, 3) %in% substr(tolower(month), 1, 3))
         }
     }
@@ -228,11 +228,11 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
     }
     if (!missing(day)) {
         days <- day
-        if (day[1] == "weekday") 
+        if (day[1] == "weekday")
             days <- weekday.names[1:5]
-        if (day[1] == "weekend") 
+        if (day[1] == "weekend")
             days <- weekday.names[6:7]
-        mydata <- subset(mydata, substr(tolower(format(date, 
+        mydata <- subset(mydata, substr(tolower(format(date,
             "%A")), 1, 3) %in% substr(tolower(days), 1, 3))
     }
     mydata
@@ -330,7 +330,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
                        type, col.line, col.symbol, fill, pch, cex, font, fontface,
                        fontfamily)
 {
-    
+
     ## panel function to add a smooth line to a plot
     ## Uses a GAM (mgcv) to fit smooth
     ## Optionally can plot 95% confidence intervals and run bootstrap simulations
@@ -361,7 +361,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
         } else { ## simulations required
 
             sam.size <- length(x)
-            print(sam.size)
+
             lims <- current.panel.limits()
             xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
             xseq <- seq(xrange[1], xrange[2], length = sam.size)
@@ -387,7 +387,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
                 ## make new data
                 new.data <- data.frame(x = xseq, y = pred.input + residuals[index[, i]])
 
-                mod <- gam(y ~ s(x),  data = new.data)
+                mod <- gam(y ~ s(x), data = new.data)
 
                 pred <- predict(mod, new.data)
 
@@ -470,16 +470,16 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
 
 ## error in mean from Hmisc
 
-errorInMean <- function (x, mult = qt((1 + conf.int)/2, n - 1), conf.int = 0.95, 
-                         na.rm = TRUE) 
+errorInMean <- function (x, mult = qt((1 + conf.int)/2, n - 1), conf.int = 0.95,
+                         na.rm = TRUE)
 {
-    if (na.rm) 
+    if (na.rm)
         x <- x[!is.na(x)]
     n <- length(x)
-    if (n < 2) 
+    if (n < 2)
         return(c(Mean = mean(x), Lower = NA, Upper = NA))
     xbar <- sum(x)/n
     se <- sqrt(sum((x - xbar)^2)/n/(n - 1))
-    c(Mean = xbar, Lower = xbar - mult * se, Upper = xbar + mult * 
+    c(Mean = xbar, Lower = xbar - mult * se, Upper = xbar + mult *
       se)
 }
