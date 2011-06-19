@@ -1,5 +1,8 @@
 Changes in openair 0.4-21 [2011-06-03]
 =====================================
+* 	fixed bug in polarAnnulus that resulsted in a failure to
+	annotate the plot properly with period = "trend" and less than 1 year
+	of data; improved smoothing default options used
 * 	new 'statistic' option to pollutionRose to show contribution
 	to counts and contribution to the mean. The latter is useful for
 	displaying those wind directions that make most contribution to teh

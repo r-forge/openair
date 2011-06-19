@@ -21,7 +21,7 @@ scatterPlot <- function(mydata,
                         pch = 1,
                         lwd = 1,
                         lty = 1,
-                        plot.type = "p",                        
+                        plot.type = "p",
                         key = TRUE,
                         key.title = group,
                         key.columns = 1,
@@ -40,7 +40,7 @@ scatterPlot <- function(mydata,
     ## basic function to plot single/multiple time series in flexible waysproduce scatterPlot
     ## Author: David Carslaw 27 Jan. 10
     ## method = scatter/hexbin/kernel
-    
+
     x.nam <- x ## names of pollutants for linear model equation
     y.nam <- y
     thekey <- key
@@ -100,12 +100,12 @@ scatterPlot <- function(mydata,
         r[lim[1] <= r & r <= lim[2]]
     }
 
-    
+
     ## average the data if necessary (default does nothing)
     ## note - need to average before cutting data up etc
     if (avg.time != "default") mydata <- timeAverage(mydata, avg.time = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
-    
+
     ## the following makes sure all variables are present, which depends on 'group' and 'type'
     if (continuous & missing(group)) stop("Need to specify a 'group' when using continuous = TRUE")
 
@@ -121,26 +121,26 @@ scatterPlot <- function(mydata,
 
     ## if group is present, need to add that list of variables unless it is a pre-defined date-based one
     if (!missing(group)){
-        
+
         if (group %in%  dateTypes | !missing(avg.time) | any(type %in% dateTypes)) {
             if (group %in%  dateTypes) {
                 vars <- unique(c(vars, "date")) ## don't need group because it is defined by date
             } else {
                 vars <- unique(c(vars, "date", group))
             }
-            
+
         } else {
             vars <- unique(c(vars, group))
         }
-    }   
+    }
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
-    
-    
+
+
 
     ## data checks
     mydata <- checkPrep(mydata, vars, type)
-    
+
     ## remove missing data
     mydata <- na.omit(mydata)
 
@@ -151,14 +151,14 @@ scatterPlot <- function(mydata,
         mydata[, x] <- factor(mydata[, x])
     }
 
-    
-    
+
+
     ## continuous colors ###################################################################################################
     if (!missing(group) & continuous & method == "scatter") {
-        
+
         if (group %in% dateTypes) stop("Colour coding requires 'group' to be continuous numeric variable'")
-        
-        ## check to see if type is numeric/integer       
+
+        ## check to see if type is numeric/integer
         if (class(mydata[, group]) %in% c("integer", "numeric") == FALSE) stop(paste("Continuous colour coding requires ", group , " to be numeric", sep = ""))
 
         ## don't need a key with this
@@ -166,17 +166,17 @@ scatterPlot <- function(mydata,
 
         ## colour scale transform
         if (trans) thePower <- 2 else thePower <- 1
-        
+
         mydata <- cutData(mydata, type, ...)
-        
+
         ## use square root transform for key to help highlight typical dustributions
         mydata[ ,group] <- mydata[ , group] ^ (1 / thePower)
-        
+
         if (missing(cols)) cols <- "default" ## better default colours for this
         thecol <- openColours(cols, 100)[cut(mydata[, group], 100, label = FALSE)]
-        
+
         breaks <- unique(c(0, pretty(mydata[ ,group], 100)))
-        br <- pretty((mydata[ , group] ^ thePower), n = 10)  ## breaks for scale 
+        br <- pretty((mydata[ , group] ^ thePower), n = 10)  ## breaks for scale
 
         min.col <- min(mydata[, group], na.rm = TRUE)
         max.col <- max(mydata[, group], na.rm = TRUE)
@@ -188,41 +188,41 @@ scatterPlot <- function(mydata,
         mydata$NewGroupVar <- "NewGroupVar"
 
         if (missing(pch)) pch <- 16
-        
+
         legend <- list(right = list(fun = draw.colorkey, args =
                        list(key = list(col = openColours(cols, length(breaks)),
                             at = breaks, labels = list(at = br ^ (1 / thePower), labels = br)),
                             draw = FALSE)))
-        
+
     } else {
-        
+
         mydata <- cutData(mydata, type, ...)
         if (missing(group)) {
-            
+
             if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <- factor("group")
             ## don't overwrite a
         } else {  ## means that group is there
-            mydata <- cutData(mydata, group, ...)                    
+            mydata <- cutData(mydata, group, ...)
         }
-        
+
         legend <- NULL
     }
 
     ## if no group to plot, then add a dummy one to make xyplot work
     if (is.null(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
-    
+
     ## number of groups
     npol <- length(levels(mydata[ ,group]))
-    
+
     if (missing(pch)) pch <- seq(npol)
-    
+
     ## set up colours
     myColors <- openColours(cols, npol)
 
-    ## basic function for lattice call + defaults    
+    ## basic function for lattice call + defaults
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(y, "~", x, "|", temp, sep = ""))
-    
+
     scales <- list(x = list(log = nlog.x, rot = x.rot, relation = x.relation),
                    y = list(log = nlog.y, relation = y.relation, rot = 0))
 
@@ -235,19 +235,19 @@ scatterPlot <- function(mydata,
         y = list(log = nlog.y, relation = y.relation))
     }
 
-    
+
     ## if logs are chosen, ensure data >0 for line fitting etc
     if (log.x)  mydata <- mydata[mydata[ , x] > 0, ]
     if (log.y)  mydata <- mydata[mydata[ , y] > 0, ]
 
     pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
-    
+
     if (!continuous) { ## non-continuous key
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
-        
+
         if (key & npol > 1) {
             if (plot.type == "p") {
-                key <- list(points = list(col = myColors[1:npol]), pch = pch,                           
+                key <- list(points = list(col = myColors[1:npol]), pch = pch,
                             text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
@@ -267,14 +267,14 @@ scatterPlot <- function(mydata,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
-            
-            
+
+
         } else {
-            
+
             key <- NULL
-        }                
+        }
     }
-    
+
     ## special wd layout
     skip <- FALSE
     if (length(type) == 1 & type[1] == "wd" ) {
@@ -285,22 +285,22 @@ scatterPlot <- function(mydata,
         ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(mydata$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-        
+
         mydata$wd <- factor(mydata$wd)  ## remove empty factor levels
-        
+
         layout = if (type == "wd") c(3, 3) else NULL
     }
 
     ## proper names of labelling ##############################################################################
 
-    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))    
+    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
     if (strip) strip <- strip.custom(factor.levels = stripName)
 
     if (length(type) == 1 ) {
-        
+
         strip.left <- FALSE
-        
-    } else { ## two conditioning variables        
+
+    } else { ## two conditioning variables
         stripName <- sapply(levels(mydata[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels =  stripName)
     }
@@ -309,11 +309,11 @@ scatterPlot <- function(mydata,
 
     ## no strip needed for single panel
     if (length(type) == 1 & type[1]  == "default") strip <- FALSE
-    
+
     ## not sure how to evaluate "group" in xyplot, so change to a fixed name
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
-    
+
     if (method == "scatter") {
         plt <- xyplot(myform,  data = mydata, groups = MyGroupVar,
                       type = c("p", "g"),
@@ -324,7 +324,7 @@ scatterPlot <- function(mydata,
                       main = quickText(main),
                       ylab = quickText(ylab, auto.text),
                       xlab = quickText(xlab, auto.text),
-                      scales = scales,                    
+                      scales = scales,
                       key = key,
                       par.strip.text = list(cex = 0.8),
                       strip = strip,
@@ -339,12 +339,12 @@ scatterPlot <- function(mydata,
                       group.number,
                       subscripts,...)
                   {
-                      
+
                       if (group.number == 1 & x.nam == "date") {
                           panel.abline(v = dates, col = "grey90")
                           panel.grid(-1, 0)
                       }
-                      
+
 
                       if (continuous) panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                    as.table = TRUE, ...)
@@ -352,7 +352,7 @@ scatterPlot <- function(mydata,
                                                     col.symbol = myColors[group.number],
                                                     col.line = myColors[group.number], lty = lty, lwd = lwd,
                                                     as.table = TRUE,...)
-                      
+
                       if (linear & npol == 1) panel.linear(x, y, col = "black", myColors[group.number],
                                    lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
                       if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
@@ -363,12 +363,12 @@ scatterPlot <- function(mydata,
                           panel.abline(a = c(0, 2), lty = 5)
                           panel.abline(a = c(0, 1), lty = 1)
                       }
-                      
+
                       ## add reference lines
-                      panel.abline(v = ref.x, lty = 5)                
+                      panel.abline(v = ref.x, lty = 5)
                       panel.abline(h = ref.y, lty = 5)
-                      
-                      
+
+
                   })
     }
 
@@ -394,14 +394,14 @@ scatterPlot <- function(mydata,
                                   panel.abline(a = c(0, 1), lty = 1)
                               }
                               ## add reference lines
-                              panel.abline(v = ref.x, lty = 5)                
+                              panel.abline(v = ref.x, lty = 5)
                               panel.abline(h = ref.y, lty = 5)
                           })
     }
 
     ## kernel density
-    
-    
+
+
     if (method == "density") {
         prepare.grid <- function(subdata) {
             x <- subdata[, x]
@@ -440,7 +440,7 @@ scatterPlot <- function(mydata,
         col <- c("transparent", col) ## add white at bottom
         col.scale <- breaks
 
-        ## basic function for lattice call + defaults    
+        ## basic function for lattice call + defaults
         temp <- paste(type, collapse = "+")
         myform <- formula(paste("z ~ x * y", "|", temp, sep = ""))
 
@@ -470,7 +470,7 @@ scatterPlot <- function(mydata,
                                  panel.abline(a = c(0, 1), lty = 1)
                              }
                              ## add reference lines
-                             panel.abline(v = ref.x, lty = 5)                
+                             panel.abline(v = ref.x, lty = 5)
                              panel.abline(h = ref.y, lty = 5)
                          })
     }
@@ -482,17 +482,17 @@ scatterPlot <- function(mydata,
                                         #output
 #################
                                         #   plt <- trellis.last.object()
-    
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left)) 
+
+    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- mydata
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
 
                                         #reset if greyscale
-    if (length(cols) == 1 && cols == "greyscale") 
+    if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
 
-    invisible(output)      
+    invisible(output)
 
 }
 
@@ -543,6 +543,5 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
 
           }, error = function(x) return)
 }
-
 
 
