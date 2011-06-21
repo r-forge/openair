@@ -35,7 +35,7 @@ calendarPlot <- function(mydata,
     ## select year first, then check variables
     mydata <- selectByDate(mydata, year = year)
     if (nrow(mydata) == 0 ) stop("No data to plot - check year chosen")
-    mydata <- checkPrep(mydata, vars, "default")
+    mydata <- checkPrep(mydata, vars, "default", remove.calm = FALSE)
 
     main <- quickText(main, auto.text)
 

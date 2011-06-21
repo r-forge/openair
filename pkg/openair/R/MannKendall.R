@@ -45,7 +45,7 @@ MannKendall <- function(mydata,
         text.col <- "forestgreen"
     }
 
-    
+
     vars <- c("date", pollutant)
     ## if autocor is TRUE, then need simulations
     if (autocor) simulate <- TRUE
@@ -53,7 +53,7 @@ MannKendall <- function(mydata,
     if (!avg.time %in% c("year", "month")) stop ("avg.time can only be 'month' or 'year'.")
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## cutData depending on type
     mydata <- cutData(mydata, type, ...)
@@ -66,7 +66,7 @@ MannKendall <- function(mydata,
 
     ## calculate means
     mydata <- ddply(mydata, type, timeAverage, avg.time = avg.time, statistic = statistic,
-                    percentile = percentile, data.thresh = data.thresh)      
+                    percentile = percentile, data.thresh = data.thresh)
 
     process.cond <- function(mydata) {
 
@@ -83,12 +83,12 @@ MannKendall <- function(mydata,
         end.year <-  endYear(mydata$date)
         start.month <- startMonth(mydata$date)
         end.month <-  endMonth(mydata$date)
-        
+
 
         if (avg.time == "month") {
-            
+
             mydata$date <- as.Date(mydata$date)
-            
+
             deseas <- mydata[, pollutant]
 
             ## can't deseason less than 2 years of data
@@ -111,13 +111,13 @@ MannKendall <- function(mydata,
                 deseas <- as.vector(deseas)
             }
 
-            all.results <- data.frame(date = mydata$date, conc = deseas)                      
+            all.results <- data.frame(date = mydata$date, conc = deseas)
             results <- na.omit(all.results)
-            
+
 
         } else {
 
-            ## assume annual            
+            ## assume annual
             all.results <- data.frame(date = as.Date(mydata$date), conc = mydata[ , pollutant])
             results <- na.omit(all.results)
         }
@@ -125,7 +125,7 @@ MannKendall <- function(mydata,
         ## now calculate trend, uncertainties etc ###############################################
         if (nrow(results) < 2) return()
         MKresults <- MKstats(results$date, results$conc, alpha, simulate, autocor)
-        
+
         ## make sure missing data are put back in for plotting
         results <- suppressWarnings(merge(all.results, MKresults, by = "date", all = TRUE))
         results
@@ -133,12 +133,12 @@ MannKendall <- function(mydata,
 
     split.data <- ddply(mydata, type,  process.cond)
     if (nrow(split.data) < 2) return()
-    
+
     skip <- FALSE
     layout <- NULL
 
-    
-    
+
+
     if (length(type) == 1 & type[1] == "wd") {
         ## re-order to make sensible layout
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
@@ -147,9 +147,9 @@ MannKendall <- function(mydata,
         ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(split.data$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-        
+
         split.data$wd <- factor(split.data$wd)  ## remove empty factor levels
-        
+
         layout = if (type == "wd") c(3, 3) else NULL
     }
 
@@ -158,18 +158,18 @@ MannKendall <- function(mydata,
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
-        
+
         strip.left <- FALSE
-        
-    } else { ## two conditioning variables        
-        
+
+    } else { ## two conditioning variables
+
         pol.name <- sapply(levels(factor(split.data[ , type[2]])), function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels = pol.name)       
+        strip.left <- strip.custom(factor.levels = pol.name)
     }
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
 ########################################################################################################
-    
-    
+
+
 
 #### calculate slopes etc ###############################################################################
 
@@ -184,23 +184,23 @@ MannKendall <- function(mydata,
     ## calculate percentage changes in slope and uncertainties
     ## need start and end dates (in days) to work out concentrations at those points
     ## percentage change defind as 100.(C.end/C.start -1) / duration
-    
+
 
     start <- ddply(split.data, type, function (x) head(x, 1))
     end <- ddply(split.data, type, function (x) tail(x, 1))
     percent.change <- merge(start, end, by = type, suffixes = c(".start", ".end"))
-    
+
     percent.change <- transform(percent.change, slope.percent = 100 * 365 *
                                 ((slope.start * as.numeric(date.end) / 365 + intercept.start) /
                                  (slope.start * as.numeric(date.start) / 365 + intercept.start) - 1) /
                                 (as.numeric(date.end) - as.numeric(date.start)))
-    
+
     percent.change <- transform(percent.change, lower.percent = slope.percent / slope.start * lower.start,
                                 upper.percent = slope.percent / slope.start * upper.start)
 
     percent.change <- percent.change[ ,  c(type, "slope.percent", "lower.percent", "upper.percent")]
 
-    
+
     split.data <- merge(split.data, percent.change, by = type)
 
     res2 <- merge(res2, percent.change, by = type)
@@ -208,7 +208,7 @@ MannKendall <- function(mydata,
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
-    
+
     plt <- xyplot(myform, data = split.data,
                   ylab = quickText(ylab, auto.text),
                   main = quickText(main, auto.text),
@@ -247,14 +247,14 @@ MannKendall <- function(mydata,
                           lower <- "lower"
                           upper <- "upper"
                           units <- "units"
-                          
+
                           if (slope.percent) {
                               slope <- "slope.percent"
                               lower <- "lower.percent"
                               upper <- "upper.percent"
                               units <- "%"
                           }
-                          
+
                           panel.text(min(split.data$date), 0.95 * current.panel.limits()$ylim[2],
                                      paste(round(sub.dat[1, slope], dec.place), " ", "[",
                                            round(sub.dat[1, lower], dec.place), ", ",
@@ -264,7 +264,7 @@ MannKendall <- function(mydata,
                       }
                   }
                   )
-    
+
 #################
     ## output
 #################
@@ -274,10 +274,10 @@ MannKendall <- function(mydata,
     class(output) <- "openair"
 
     ## reset if greyscale
-    if (length(cols) == 1 && cols == "greyscale") 
+    if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
 
-    invisible(output)  
+    invisible(output)
 
 }
 
@@ -285,7 +285,7 @@ MannKendall <- function(mydata,
 
 panel.shade <- function(split.data, start.year, end.year, ylim) {
     ## provides annual shaded 'bands' on plots to help show years
-    
+
     x1 <- as.POSIXct(seq(ISOdate(start.year, 1, 1),
                          ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
     x2 <- as.POSIXct(seq(ISOdate(start.year + 1, 1, 1),

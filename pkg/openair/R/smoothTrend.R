@@ -34,7 +34,7 @@ smoothTrend <- function(mydata,
 
     vars <- c("date", pollutant)
 
-    mydata <- checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     if (!missing(percentile)) statistic <- "percentile"
 

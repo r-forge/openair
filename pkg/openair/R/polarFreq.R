@@ -2,7 +2,7 @@ polarFreq <- function(mydata,
                       pollutant = "",
                       statistic = "frequency",
                       ws.int = 1,
-                      grid.line = 5, 
+                      grid.line = 5,
                       breaks = seq(0, 5000, 500),
                       cols = "default",
                       trans = TRUE,
@@ -17,8 +17,8 @@ polarFreq <- function(mydata,
                       key.position = "right",
                       key = NULL,
                       auto.text = TRUE,...) {
-    
-    
+
+
 
     ## extract necessary data
     vars <- c("wd", "ws")
@@ -30,15 +30,19 @@ polarFreq <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
-    
+
     if (!missing(pollutant)) vars <- c(vars, pollutant)
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+
+    ## to make first interval easier to work with, set ws = 0 + e
+    ids <- which(mydata$ws == 0)
+     mydata$ws[ids] <-  mydata$ws[ids] + 0.0001
 
     ## remove all NAs
     mydata <- na.omit(mydata)
-    
+
     mydata <- cutData(mydata, type, ...)
 
     ## if pollutant chosen but no statistic - use mean, issue warning
@@ -69,12 +73,12 @@ polarFreq <- function(mydata,
 
     ## offset for "hollow" middle
     offset <- (max.ws * offset) / 5 / 10
-    
+
     prepare.grid <- function(mydata)
     {
         wd <- factor(mydata$wd)
         ws <- factor(ws.int * ceiling(mydata$ws / ws.int))
-
+print(levels(ws))
         if (statistic == "frequency")     ## case with only ws and wd
         {
             weights <- tapply(mydata$ws, list(wd, ws), function(x) length(na.omit(x)))}
@@ -106,7 +110,7 @@ polarFreq <- function(mydata,
 
             ## note sum for matrix
             weights <- 100 * weights / sum(sum(weights, na.rm = TRUE))
-            
+
         }
 
         weights <- as.vector(t(weights))
@@ -118,15 +122,15 @@ polarFreq <- function(mydata,
         weights[ids] <- NA
 
         ws.wd <- expand.grid(ws = as.numeric(levels(ws)), wd = as.numeric(levels(wd)))
-        
-        weights <- cbind(ws.wd, weights) 
+
+        weights <- cbind(ws.wd, weights)
         weights
     }
 
 
     poly <- function(dir, speed, colour)
     {
-        
+
         ## offset by 3 * ws.int so that centre is not compressed
         angle <- seq(dir - 5, dir + 5, length = 10)
         x1 <- (speed + offset - ws.int) * sin(pi * angle / 180)
@@ -144,13 +148,13 @@ polarFreq <- function(mydata,
     strip <- strip.custom(factor.levels = pol.name)
 
     if (length(type) == 1 ) {
-        
+
         strip.left <- FALSE
-        
-    } else { ## two conditioning variables        
-        
+
+    } else { ## two conditioning variables
+
         pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels = pol.name)       
+        strip.left <- strip.custom(factor.levels = pol.name)
     }
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
 ########################################################################################################
@@ -182,26 +186,26 @@ polarFreq <- function(mydata,
 
 
     ##  scale key setup ################################################################################################
-    legend <- list(col = col[1:length(breaks) - 1], at = breaks, 
+    legend <- list(col = col[1:length(breaks) - 1], at = breaks,
                    labels = list(at = br^(1/coef), labels = br),
-                   space = key.position, 
-                   auto.text = auto.text, footer = key.footer, header = key.header, 
+                   space = key.position,
+                   auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    if (!is.null(key)) 
-        if (is.list(key)) 
+    if (!is.null(key))
+        if (is.list(key))
             legend[names(key)] <- key
-        else warning("In polarFreq(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]", 
+        else warning("In polarFreq(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
                      call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, 
+    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
                                                   draw = FALSE)))
     names(legend)[1] <- if(is.null(key$space)) key.position else key$space
-    
+
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
-    
+
     span <- ws.int * floor (max.ws / ws.int) + ws.int + offset
-    
-    plt <- xyplot(myform,          
+
+    plt <- xyplot(myform,
                   xlim = c(-span, span),
                   ylim = c(-span, span),
                   data = results.grid,
@@ -252,7 +256,7 @@ polarFreq <- function(mydata,
                       ltext(span * 0.95, 0.07 * span, "E", cex = 0.7)
 
                   },
-                  legend = legend 
+                  legend = legend
                   )
 
 #################
@@ -264,10 +268,10 @@ polarFreq <- function(mydata,
     class(output) <- "openair"
 
     ## reset if greyscale
-    if (length(cols) == 1 && cols == "greyscale") 
+    if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
 
-    invisible(output)  
+    invisible(output)
 
 
 }

@@ -1,5 +1,10 @@
 Changes in openair 0.4-21 [2011-06-03]
 =====================================
+* 	do not remove calm wind speed conditions in any functions
+	where this is unecessary
+
+Changes in openair 0.4-21 [2011-06-03]
+=====================================
 * 	fixed bug in polarAnnulus that resulsted in a failure to
 	annotate the plot properly with period = "trend" and less than 1 year
 	of data; improved smoothing default options used

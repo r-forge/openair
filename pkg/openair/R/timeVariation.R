@@ -55,7 +55,7 @@ timeVariation <- function(mydata,
     }
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
     if (!missing(group))  mydata <- cutData(mydata, group, ...)
     mydata <- cutData(mydata, type, ...)
 

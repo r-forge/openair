@@ -139,7 +139,7 @@ scatterPlot <- function(mydata,
 
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## remove missing data
     mydata <- na.omit(mydata)
