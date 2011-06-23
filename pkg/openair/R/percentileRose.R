@@ -12,6 +12,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     if (any(type %in%  dateTypes)) vars <- c(vars, "date")
 
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    ## round wd
+    mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
+
     mydata <- na.omit(mydata)
 
     #greyscale handling

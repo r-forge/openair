@@ -205,7 +205,9 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
 
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
     my.tz <- if(use.local.tz)
-        format(mydata$date, "%Z")[1] else "GMT"
+
+        attr(mydata$date, "tzone") <- attr(mydata$date, "tzone") else  attr(mydata$date, "tzone") <- "GMT"
+
     if (!missing(start) & !missing(end)) {
         start <- as.POSIXct(strptime(start, format = "%d/%m/%Y"), my.tz)
         end <- as.POSIXct(strptime(end, format = "%d/%m/%Y"), my.tz) + (23 * 3600)
