@@ -37,11 +37,13 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     ## check the data
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
-
+    mydata <- na.omit(mydata)
     mydata <- cutData(mydata, type)
+
 
     procData <- function(mydata){
         mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"), drop = FALSE]
+
         obs <- mydata[ , obs]
         pred <- mydata[ , mod]
         min.d <- min(mydata)
@@ -83,7 +85,6 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     }
 
 
-    mydata <- na.omit(mydata[ , c(mod, obs, type)])
     lo <- min(mydata[ , c(mod, obs)])
     hi <- max(mydata[ , c(mod, obs)])
     all.results <- dlply(mydata, type, procData)

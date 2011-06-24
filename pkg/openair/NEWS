@@ -1,5 +1,11 @@
 Changes in openair 0.4-21 [2011-06-03]
 =====================================
+* 	added method = "level" to scatterPlot for binning data with
+	optional smoothing, plus other code clean-ups
+* 	fix bug in conditionalQuantile that labelled plots wrongly
+	when site(s) has missing data
+*	added ref.x and ref.y to timePlot to allow refernce lines to
+	be added
 * 	do not remove calm wind speed conditions in any functions
 	where this is unecessary
 
