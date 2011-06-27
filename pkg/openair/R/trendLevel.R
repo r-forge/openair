@@ -22,7 +22,7 @@ trendLevel <- function(mydata,
     key.header = "use.stat.name",
     key.footer = pollutant,
     key.position = "right",
-    key = NULL,
+    key = TRUE,
     statistic = c("mean", "max", "frequency"),
     stat.args = NULL,
     stat.safe.mode = TRUE,
@@ -74,6 +74,23 @@ trendLevel <- function(mydata,
     ###############################
     #setup
     ###############################
+
+    ##update.list function
+    #[in development]
+    list.update <- function(a, b, drop.dots = TRUE, 
+                            subset.a = NULL, subset.b = NULL){
+        if(drop.dots){
+            a <- a[names(a) != "..."]
+            b <- b[names(b) != "..."]
+        }
+        if(!is.null(subset.a))
+            a <- a[names(a) %in% subset.a]
+        if(!is.null(subset.b))
+            b <- b[names(b) %in% subset.b]
+        if(length(names(b) > 0))
+            a <- modifyList(a, b)
+        a
+    }
 
     #greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -331,17 +348,32 @@ trendLevel <- function(mydata,
     nlev2 = length(breaks)
     col.regions <- openColours(cols, (nlev2 - 1))
 
+    ##key, colorkey and legend handling
+    #default list
     legend <- list(col = col.regions, at = breaks, space = key.position,
-         auto.text = auto.text, footer = key.footer, header = key.header,
-         height = 1, width = 1.5, fit = "all")
-    if (!is.null(key))
-         if (is.list(key))
-             legend[names(key)] <- key
-         else warning("In trendLevel(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
-             call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
-         draw = FALSE)))
-    names(legend)[1] <- legend$temp$args$key$space #safer than key.position
+                  auto.text = auto.text, footer = key.footer, header = key.header,
+                  height = 1, width = 1.5, fit = "all")
+    #handle logicals and lists
+    if (is.logical(key)) {
+        legend <- if (key) legend else NULL
+    } else if (is.list(key)) {
+            legend <- list.update(legend, key) 
+        } else {
+            if(!is.null(key))
+                warning("In trendLevel(...):\n  unrecognised key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
+                    call. = FALSE)
+            legend <- NULL
+    }
+
+    #structure like legend for drawOpenKey
+    if(!is.null(legend)){
+        legend <- list(right = list(fun = drawOpenKey, args = list(key = legend),
+                         draw =FALSE))
+        if("space" %in% names(legend$right$args$key))    
+            names(legend)[[1]] <- legend$right$args$key$space
+    }
+
+    #turn off colorkey
     colorkey <- FALSE
 
     #stop overlapping labels
