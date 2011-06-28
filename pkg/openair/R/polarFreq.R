@@ -78,7 +78,7 @@ polarFreq <- function(mydata,
     {
         wd <- factor(mydata$wd)
         ws <- factor(ws.int * ceiling(mydata$ws / ws.int))
-print(levels(ws))
+
         if (statistic == "frequency")     ## case with only ws and wd
         {
             weights <- tapply(mydata$ws, list(wd, ws), function(x) length(na.omit(x)))}
