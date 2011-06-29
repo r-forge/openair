@@ -514,7 +514,7 @@ listUpdate <- function(a, b, drop.dots = TRUE,
 
 #############################################################################################################
 
-## makeOpenKeyLegend v0.1
+## makeOpenKeyLegend v0.1 
 
 ##common code for making legend list 
 ##objects for use with drawOpenkey outputs
