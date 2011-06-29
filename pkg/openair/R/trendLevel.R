@@ -75,23 +75,6 @@ trendLevel <- function(mydata,
     #setup
     ###############################
 
-    ##update.list function
-    #[in development]
-    list.update <- function(a, b, drop.dots = TRUE, 
-                            subset.a = NULL, subset.b = NULL){
-        if(drop.dots){
-            a <- a[names(a) != "..."]
-            b <- b[names(b) != "..."]
-        }
-        if(!is.null(subset.a))
-            a <- a[names(a) %in% subset.a]
-        if(!is.null(subset.b))
-            b <- b[names(b) %in% subset.b]
-        if(length(names(b) > 0))
-            a <- modifyList(a, b)
-        a
-    }
-
     #greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
         #strip only
@@ -353,26 +336,7 @@ trendLevel <- function(mydata,
     legend <- list(col = col.regions, at = breaks, space = key.position,
                   auto.text = auto.text, footer = key.footer, header = key.header,
                   height = 1, width = 1.5, fit = "all")
-    #handle logicals and lists
-    if (is.logical(key)) {
-        legend <- if (key) legend else NULL
-    } else if (is.list(key)) {
-            legend <- list.update(legend, key) 
-        } else {
-            if(!is.null(key))
-                warning("In trendLevel(...):\n  unrecognised key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
-                    call. = FALSE)
-            legend <- NULL
-    }
-
-    #structure like legend for drawOpenKey
-    if(!is.null(legend)){
-        legend <- list(right = list(fun = drawOpenKey, args = list(key = legend),
-                         draw =FALSE))
-        if("space" %in% names(legend$right$args$key))    
-            names(legend)[[1]] <- legend$right$args$key$space
-    }
-
+    legend <- makeOpenKeyLegend(key, legend, "trendLevel")
     #turn off colorkey
     colorkey <- FALSE
 

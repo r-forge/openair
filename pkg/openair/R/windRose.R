@@ -22,7 +22,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
                       cols = "default", main = "", grid.line = 5, width = 1,
                       auto.text = TRUE, breaks = 4, offset = 10,
                       paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
-                      key.position = "bottom", key = NULL, dig.lab = 5,
+                      key.position = "bottom", key = TRUE, dig.lab = 5,
                       statistic = "prop.count", pollutant = NULL,
                       ...)
 {
@@ -199,18 +199,12 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
     off.set <- max.freq * (offset / 100)
     box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25, length.out = length(theLabels)) ^ 4
 
+    #key, colorkey, legend
     legend <- list(col = col, space = key.position, auto.text = auto.text,
                    labels = theLabels, footer = key.footer, header = key.header,
                    height = 0.60, width = 1.5, fit = "scale",
                    plot.style = if(paddle) "paddle"  else "other")
-    if(!is.null(key))
-        if(is.list(key)) legend[names(key)] <- key else
-    warning("In windRose(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
-            call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
-                                                  draw = FALSE)))
-
-    names(legend)[1] <- if (is.null(key$space)) key.position else key$space
+    legend <- makeOpenKeyLegend(key, legend, "windRose")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(".z.poll1 ~ wd | ", temp, sep = ""))
@@ -263,7 +257,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
                             cos(pi / 4), paste(seq(grid.line, 100, by = grid.line),
                                                "%", sep = ""), cex = 0.7)
                       ltext(max.freq, -max.freq,
-                            label = paste("mean=", sprintf("%.1f", subdata$means[1]),
+                            label = paste("mean = ", sprintf("%.1f", subdata$means[1]),
                             "\ncalm = ", sprintf("%.1f", 100 * subdata$calm[1]),
                             "%", sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
                   }, legend = legend, ...)

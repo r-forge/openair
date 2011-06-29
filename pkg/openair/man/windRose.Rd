@@ -15,7 +15,7 @@ windRose(mydata,
     cols = "default", main = "", grid.line = 5,
     width = 1, auto.text = TRUE, breaks = 4, offset = 10,
     paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
-    key.position = "bottom", key = NULL, dig.lab = 5,
+    key.position = "bottom", key = TRUE, dig.lab = 5,
     statistic = "prop.count", pollutant = NULL,
     ...)
 

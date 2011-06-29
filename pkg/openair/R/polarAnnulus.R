@@ -17,7 +17,7 @@ polarAnnulus <- function(mydata,
                          key.header = "",
                          key.footer = pollutant,
                          key.position = "right",
-                         key = NULL,
+                         key = TRUE,
                          auto.text = TRUE,...) {
 
 
@@ -280,14 +280,7 @@ polarAnnulus <- function(mydata,
     legend <- list(col = col, at = col.scale, space = key.position,
                    auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    if (!is.null(key))
-        if (is.list(key))
-            legend[names(key)] <- key
-        else warning("In polarAnnulus(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
-                     call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
-                                                  draw = FALSE)))
-    names(legend)[1] <- if(is.null(key$space)) key.position else key$space
+    legend <- makeOpenKeyLegend(key, legend, "polarAnnulus")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))

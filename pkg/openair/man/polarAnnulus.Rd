@@ -13,7 +13,7 @@ polarAnnulus(mydata,
     exclude.missing = TRUE, date.pad = FALSE,
     force.positive = TRUE, k = c(20, 10), normalise = FALSE, main = "",
     key.header = "", key.footer = pollutant,
-    key.position = "right", key = NULL,
+    key.position = "right", key = TRUE,
     auto.text = TRUE, ...)
 }
 

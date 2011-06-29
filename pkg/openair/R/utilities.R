@@ -485,3 +485,62 @@ errorInMean <- function (x, mult = qt((1 + conf.int)/2, n - 1), conf.int = 0.95,
     c(Mean = xbar, Lower = xbar - mult * se, Upper = xbar + mult *
       se)
 }
+
+
+###########################################################################################################
+
+## list update function
+## for lattice type object structure and ... handling
+
+## (currently used by)
+## (all openair plots that include colorkey controlled by drawOpenKey)
+
+##listUpdate function
+#[in development]
+listUpdate <- function(a, b, drop.dots = TRUE, 
+                       subset.a = NULL, subset.b = NULL){
+    if(drop.dots){
+        a <- a[names(a) != "..."]
+        b <- b[names(b) != "..."]
+    }
+    if(!is.null(subset.a))
+        a <- a[names(a) %in% subset.a]
+    if(!is.null(subset.b))
+        b <- b[names(b) %in% subset.b]
+    if(length(names(b) > 0))
+        a <- modifyList(a, b)
+    a
+} 
+
+#############################################################################################################
+
+## makeOpenKeyLegend v0.1
+
+##common code for making legend list 
+##objects for use with drawOpenkey outputs
+
+##uses listUpdate in utilities
+
+makeOpenKeyLegend <- function(key, default.key, fun.name = "function"){
+    #handle logicals and lists
+    if (is.logical(key)) {
+        legend <- if (key) default.key else NULL
+    } else if (is.list(key)) {
+            legend <- listUpdate(default.key, key) 
+        } else {
+            if(!is.null(key))
+                warning(paste("In ", fun.name, "(...):\n unrecognised key not exported/applied\n",
+                              " [see ?drawOpenKey for key structure/options]", sep = ""),
+                        call. = FALSE)
+            legend <- NULL
+    }
+
+    #structure like legend for drawOpenKey
+    if(!is.null(legend)){
+        legend <- list(right = list(fun = drawOpenKey, args = list(key = legend),
+                         draw =FALSE))
+        if("space" %in% names(legend$right$args$key))    
+            names(legend)[[1]] <- legend$right$args$key$space
+    }
+    legend
+}

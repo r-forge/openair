@@ -15,7 +15,7 @@ polarFreq <- function(mydata,
                       key.header = statistic,
                       key.footer = pollutant,
                       key.position = "right",
-                      key = NULL,
+                      key = TRUE,
                       auto.text = TRUE,...) {
 
 
@@ -191,14 +191,7 @@ polarFreq <- function(mydata,
                    space = key.position,
                    auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    if (!is.null(key))
-        if (is.list(key))
-            legend[names(key)] <- key
-        else warning("In polarFreq(...):\n  non-list key not exported/applied\n  [see ?drawOpenKey for key structure/options]",
-                     call. = FALSE)
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend,
-                                                  draw = FALSE)))
-    names(legend)[1] <- if(is.null(key$space)) key.position else key$space
+    legend <- makeOpenKeyLegend(key, legend, "polarFreq")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))

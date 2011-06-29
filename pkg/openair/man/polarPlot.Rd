@@ -19,7 +19,7 @@ polarPlot(mydata,
     ws.int = 5, angle.scale = 45, units = "(m/s)", 
     force.positive = TRUE, k = 100, normalise = FALSE,
 main = "", key.header = "", key.footer = pollutant, 
-    key.position = "right", key = NULL, 
+    key.position = "right", key = TRUE, 
     auto.text = TRUE, ...)  
 }
 %- maybe also 'usage' for other objects documented here.

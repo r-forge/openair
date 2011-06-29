@@ -27,7 +27,7 @@ grid.line = 5,
     key.header = statistic,
     key.footer = pollutant,
     key.position = "right",
-    key = NULL,
+    key = TRUE,
     auto.text = TRUE, ...)
 }
 

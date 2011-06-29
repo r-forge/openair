@@ -1,5 +1,7 @@
-Changes in openair 0.4-21 [2011-06-03]
+Changes in openair 0.4-22 [2011-06-03]
 =====================================
+* 	modifed key handling on plots using drawOpenKey, so  
+  	key = NULL or FALSE now removes colour key.  
 * 	added method = "level" to scatterPlot for binning data with
 	optional smoothing, plus other code clean-ups
 * 	fix bug in conditionalQuantile that labelled plots wrongly

@@ -4,7 +4,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                             angle.scale = 45,
                             main = "",  auto.text = TRUE,  key.header = NULL,
                             key.footer = "percentile", key.position = "bottom",
-                            key = NULL,  ...)
+                            key = TRUE,  ...)
 
 {
 
@@ -91,16 +91,11 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
     col <- openColours(cols, length(theLabels))
 
-
     legend <- list(col = col, space = key.position, auto.text = auto.text,
                    labels = theLabels, footer = key.footer, header = key.header,
                    height = 0.60, width = 1.5, fit = "scale",
                    plot.style =  "other")
-
-    legend <- list(temp = list(fun = drawOpenKey, args = list(key = legend, draw = FALSE)))
-
-    names(legend)[1] <- if(is.null(key$space)) key.position else key$space
-
+    legend <- makeOpenKeyLegend(key, legend, "percentileRose")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("y ~ x | ", temp, sep = ""))

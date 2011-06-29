@@ -15,7 +15,7 @@ fill = TRUE, lwd = 2,
 angle.scale = 45,
 main = "",  auto.text = TRUE,  key.header = NULL,
 key.footer = "percentile", key.position = "bottom",
-key = NULL,  ...)
+key = TRUE,  ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
