@@ -82,6 +82,7 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE) {
             mydata$wd[mydata$wd == 0] <- 360   # angles <5 should be in 360 bin
 
         }
+         mydata$wd[mydata$wd == 0] <- 360 ## set any legitimate wd to 360
     }
 
 
