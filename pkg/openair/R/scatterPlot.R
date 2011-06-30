@@ -316,7 +316,7 @@ scatterPlot <- function(mydata,
                       pch = pch,
                       lwd = lwd,
                       lty = lty,
-                      main = quickText(main),
+                      main = quickText(main, auto.text),
                       ylab = quickText(ylab, auto.text),
                       xlab = quickText(xlab, auto.text),
                       scales = scales,
@@ -373,6 +373,7 @@ scatterPlot <- function(mydata,
                           xlab = quickText(xlab, auto.text),
                           strip = strip,
                           as.table = TRUE,
+                          main = quickText(main, auto.text),
                           xbins = 40,
                           par.strip.text = list(cex = 0.8),
                           colorkey = TRUE,
@@ -427,7 +428,7 @@ scatterPlot <- function(mydata,
 
             ## data with gaps caused by min.bin
             all.data <- na.omit(data.frame(xgrid = mydata$xgrid, ygrid = mydata$ygrid, z))
-            ind <- with(all.data, exclude.too.far(wsp, wdp, mydata$xgrid, mydata$ygrid, dist = 0.03))
+            ind <- with(all.data, exclude.too.far(wsp, wdp, mydata$xgrid, mydata$ygrid, dist = 0.05))
 
             new.data[ind, z] <- NA
 
@@ -537,6 +538,7 @@ scatterPlot <- function(mydata,
                          as.table = TRUE,
                          ylab = quickText(ylab, auto.text),
                          xlab = quickText(xlab, auto.text),
+                         main = quickText(main, auto.text),
                          strip = strip,
                          col.regions = col,
                          region = TRUE,

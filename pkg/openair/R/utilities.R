@@ -497,7 +497,7 @@ errorInMean <- function (x, mult = qt((1 + conf.int)/2, n - 1), conf.int = 0.95,
 
 ##listUpdate function
 #[in development]
-listUpdate <- function(a, b, drop.dots = TRUE, 
+listUpdate <- function(a, b, drop.dots = TRUE,
                        subset.a = NULL, subset.b = NULL){
     if(drop.dots){
         a <- a[names(a) != "..."]
@@ -510,13 +510,13 @@ listUpdate <- function(a, b, drop.dots = TRUE,
     if(length(names(b) > 0))
         a <- modifyList(a, b)
     a
-} 
+}
 
 #############################################################################################################
 
-## makeOpenKeyLegend v0.1 
+## makeOpenKeyLegend v0.1
 
-##common code for making legend list 
+##common code for making legend list
 ##objects for use with drawOpenkey outputs
 
 ##uses listUpdate in utilities
@@ -526,7 +526,7 @@ makeOpenKeyLegend <- function(key, default.key, fun.name = "function"){
     if (is.logical(key)) {
         legend <- if (key) default.key else NULL
     } else if (is.list(key)) {
-            legend <- listUpdate(default.key, key) 
+            legend <- listUpdate(default.key, key)
         } else {
             if(!is.null(key))
                 warning(paste("In ", fun.name, "(...):\n unrecognised key not exported/applied\n",
@@ -539,7 +539,7 @@ makeOpenKeyLegend <- function(key, default.key, fun.name = "function"){
     if(!is.null(legend)){
         legend <- list(right = list(fun = drawOpenKey, args = list(key = legend),
                          draw =FALSE))
-        if("space" %in% names(legend$right$args$key))    
+        if("space" %in% names(legend$right$args$key))
             names(legend)[[1]] <- legend$right$args$key$space
     }
     legend

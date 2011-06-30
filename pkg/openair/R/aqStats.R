@@ -242,12 +242,12 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
     if (transpose) {
         if (length(unique(results$site)) > 1) {
             results <- melt(results, id.vars = c("site", "pollutant", "year"))
-            results <- cast(results, ... ~ site + pollutant)
+            results <- dcast(results, ... ~ site + pollutant)
         } else {
             ## only one site and don't need to add name
             results <- subset(results, select = -site)
             results <- melt(results, id.vars = c("pollutant", "year"))
-            results <- cast(results, ... ~ pollutant)
+            results <- dcast(results, ... ~ pollutant)
         }
         ## sort out names
         names(results) <- gsub("\\_", " ", names(results))

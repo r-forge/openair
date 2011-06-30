@@ -15,6 +15,23 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     ## round wd
     mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
 
+    ## if more than one pollutant, need to stack the data and set type = "variable"
+    ## this case is most relevent for model-measurement compasrions where data are in columns
+    ## Can also do more than one pollutant and a single type that is not "default", in which
+    ## case pollutant becomes a conditioning variable
+    if (length(pollutant) > 1) {
+
+        if (length(type) > 1) {
+            warning(paste("Only type = '", type[1], "' will be used", sep = ""))
+            type <- type[1]
+        }
+        ## use pollutants as conditioning variables
+        mydata <- melt(mydata, measure.vars = pollutant)
+        ## now set pollutant to "value"
+        pollutant <- "value"
+        type <- c(type, "variable")
+    }
+
     mydata <- na.omit(mydata)
 
     #greyscale handling
