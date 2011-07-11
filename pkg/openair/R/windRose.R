@@ -209,7 +209,7 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(".z.poll1 ~ wd | ", temp, sep = ""))
 
-    sub.title <- "Proportion contribution of counts (%)"
+    sub.title <- "Frequency of counts by wind direction (%)"
     if (statistic == "prop.mean") sub.title <- "Proportion contribution to the mean (%)"
 
     plt <- xyplot(myform,

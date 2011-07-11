@@ -285,6 +285,8 @@ help with selection.
   test version. NOTE - Information is required on the site codes for
   easy use.}
 
+\seealso{\code{\link{importKCL}}, \code{\link{importADMS}}, \code{\link{importSAQN}}}
+
 \examples{
 
 ## import all pollutants from Marylebone Rd from 1990:2009

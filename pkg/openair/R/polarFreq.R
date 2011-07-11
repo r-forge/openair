@@ -199,8 +199,8 @@ polarFreq <- function(mydata,
     span <- ws.int * floor (max.ws / ws.int) + ws.int + offset
 
     plt <- xyplot(myform,
-                  xlim = c(-span, span),
-                  ylim = c(-span, span),
+                  xlim = 1.03 * c(-span, span),
+                  ylim = 1.03 * c(-span, span),
                   data = results.grid,
                   main = quickText(main, auto.text),
                   par.strip.text = list(cex = 0.8),

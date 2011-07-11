@@ -583,7 +583,7 @@ SO2, PM10, PM2.5.
   test version. NOTE - Information is required on the site codes for
   easy use.}
 
-\seealso{\code{\link{importAURN}}, \code{\link{importADMS}}}
+\seealso{\code{\link{importAURN}}, \code{\link{importADMS}}, \code{\link{importSAQN}}}
 
 \examples{
 
