@@ -19,7 +19,7 @@ importAURNCsv <- function (file = file.choose(), header.at = 5, data.at = 7, na.
     site.1 <- site.1[!names(site.1) == date.name]
     site.1 <- site.1[!names(site.1) == time.name]
     site.2 <- as.vector(sapply(site.1[!as.character(site.1) == 
-        ""], function(x) {
+        "" & !as.character(site.1) == " "], function(x) {
         grep(x, as.character(site.1), fixed = TRUE)
     }))
     if (length(site.2) > 1) {

@@ -237,10 +237,10 @@ trendLevel <- function(mydata,
     mydata <- checkPrep(mydata, temp, type=c(x,y,type), remove.calm = FALSE)
 
     ############################
-    #cutData2
+    #cutData
     ############################
     #get pollutant value
-    #NOTE: this can same as one of x, y, type
+    #NOTE: this can be same as one of x, y, type
     #so need a temp case
     mydata$..z.xx <- mydata[,pollutant]
     #different n.levels for axis and type
