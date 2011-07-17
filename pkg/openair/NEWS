@@ -1,3 +1,7 @@
+Changes in openair 0.4-23 [2011-07-15]
+=====================================
+*	NEW FUNCTION TaylorDiagram for model evaluation.
+
 Changes in openair 0.4-22 [2011-06-03]
 =====================================
 *	NOTE - use reshape2 in place of reshape for speed and reliability

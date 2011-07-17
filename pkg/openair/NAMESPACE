@@ -60,8 +60,8 @@ export(
        percentileRose,
 
        #kernel density
-       kernelExceed, 
-              
+       kernelExceed,
+
        ##wind roses:
        windRose, pollutionRose,
 
@@ -70,7 +70,8 @@ export(
        ## modStats
        modStats,
        aqStats,
-       conditionalQuantile
+       conditionalQuantile,
+       TaylorDiagram
 
        )
 
