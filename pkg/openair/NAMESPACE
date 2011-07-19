@@ -71,7 +71,10 @@ export(
        modStats,
        aqStats,
        conditionalQuantile,
-       TaylorDiagram
+       TaylorDiagram,
+
+       ## mapping functions
+       GoogleMapsPlot
 
        )
 
