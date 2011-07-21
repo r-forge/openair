@@ -223,7 +223,7 @@ if(previous)
         is.ws <- make.names(is.ws)
         is.wd <- make.names(is.wd)
         is.site <- make.names(is.site)
-        warning("Non-unqiue or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]", 
+        warning("Non-unique or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]", 
                 call. = FALSE)
     }
     names(file.data) <- temp

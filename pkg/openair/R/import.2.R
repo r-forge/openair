@@ -197,7 +197,7 @@ import.2 <- function (file = file.choose(), file.type = "csv", header.at = 1,
     ######################
     temp <- make.names(file.names, unique = TRUE)
     if(!identical(file.names,temp))
-        warning("Non-unqiue or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]"
+        warning("Non-unique or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]"
                 , call. = FALSE) 
     names(file.data) <- temp
 
