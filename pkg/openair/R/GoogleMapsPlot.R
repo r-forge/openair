@@ -69,7 +69,7 @@ GoogleMapsPlot <- function(mydata,
          cex = pollutant, pch = NULL, cex.range =c(1,10),
          xlab = longitude, ylab = latitude, main = "",
          map = NULL, map.raster = TRUE, map.cols = NULL, 
-         aspect = "iso", panel = panel.xyplot,  
+         aspect = 1, as.table = TRUE, panel = panel.xyplot,  
          key = NULL, key.position = "right",
          key.header = "", key.footer = pollutant,
          auto.text = TRUE, ...
@@ -279,7 +279,7 @@ GoogleMapsPlot <- function(mydata,
     #and already done by RgoogleMaps!)
     if(missing(xlim))
         xlim <- c(map$BBOX$ll[2], map$BBOX$ur[2])
-    if(missing(xlim))
+    if(missing(ylim))
         ylim <- c(map$BBOX$ll[1], map$BBOX$ur[1])   
  
     ra <- dim(map$myTile) 
@@ -330,7 +330,7 @@ GoogleMapsPlot <- function(mydata,
 
     plt <- xyplot(myform, data = mydata, z = z, 
                   cex = cex, pch = pch, xlim = xlim, ylim = ylim, 
-                  col = mycols, aspect = aspect, 
+                  col = mycols, aspect = aspect, as.table = as.table, 
                   main = main, xlab = xlab, ylab = ylab,
                   panel = function(x, y, subscripts, ...){ 
                                    map.panel(map)
@@ -361,7 +361,7 @@ GoogleMapsPlot <- function(mydata,
     #reset if greyscale
     if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
-    output <- list(plot = plt, data = mydata, call = match.call())
+    output <- list(plot = plt, data = list(data = mydata, map = map), call = match.call())
     class(output) <- "openair"
     invisible(output)
 }

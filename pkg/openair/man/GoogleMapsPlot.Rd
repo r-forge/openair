@@ -19,9 +19,10 @@ GoogleMapsPlot(mydata,
     cols = "default", limits = c(0, 100), cex = pollutant, 
     pch = NULL, cex.range =c(1,10), xlab = longitude, 
     ylab = latitude, main = "", map = NULL, map.raster = TRUE, 
-    map.cols = NULL, aspect = "iso", panel = panel.xyplot,  
-    key = NULL, key.position = "right", key.header = "", 
-    key.footer = pollutant, auto.text = TRUE, ...
+    map.cols = NULL, aspect = 1, as.tabe = TRUE, 
+    panel = panel.xyplot, key = NULL, key.position = "right", 
+    key.header = "", key.footer = pollutant, auto.text = TRUE, 
+    ...
 )
 
 panel.GoogleMaps(map)
@@ -114,6 +115,11 @@ panel.GoogleMapsRaster(map)
   will override \code{cols = "greyscale"}.)}
 
   \item{aspect}{The aspect ratio of the plot.}
+
+  \item{as.table}{\code{as.table} is a \code{lattice} option that 
+  controls the order in which multiple panels are displayed. The 
+  default (\code{TRUE}) produces layouts similar to other openair 
+  plot.}
 
   \item{panel}{The panel to use to produce the data layer of the plot. 
   By default, this is an x-y style scatter plot, can also be a level 
