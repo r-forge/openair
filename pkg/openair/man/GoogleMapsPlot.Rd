@@ -19,7 +19,7 @@ GoogleMapsPlot(mydata,
     cols = "default", limits = c(0, 100), cex = pollutant, 
     pch = NULL, cex.range =c(1,10), xlab = longitude, 
     ylab = latitude, main = "", map = NULL, map.raster = TRUE, 
-    map.cols = NULL, aspect = 1, as.tabe = TRUE, 
+    map.cols = NULL, aspect = 1, as.table = TRUE, 
     panel = panel.xyplot, key = NULL, key.position = "right", 
     key.header = "", key.footer = pollutant, auto.text = TRUE, 
     ...
