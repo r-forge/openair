@@ -69,7 +69,7 @@ GoogleMapsPlot <- function(mydata,
          cex = pollutant, pch = NULL, cex.range =c(1,10),
          xlab = longitude, ylab = latitude, main = "",
          map = NULL, map.raster = TRUE, map.cols = NULL, 
-         aspect = 1, as.table = TRUE, panel = panel.xyplot,  
+         aspect = 1, as.table = TRUE, plot.type = "xy",  
          key = NULL, key.position = "right",
          key.header = "", key.footer = pollutant,
          auto.text = TRUE, ...
@@ -110,24 +110,37 @@ GoogleMapsPlot <- function(mydata,
     #misc set ups, checks, etc
     ##########################
 
+    #robust args handling
+    extra.args <- list(...)
+
     #map panel
     map.panel <- if(map.raster)     
                      panel.GoogleMapsRaster else panel.GoogleMaps
 
-    #robust args handling
-    extra.args <- list(...)
-
+    #plot.type
+    ##predefined cases
+    if(is.character(plot.type) && plot.type == "xy")
+        plot.type <- panel.xyplot
+    if(is.character(plot.type) && plot.type == "level")
+        plot.type <- panel.levelplot
+        
+    if(!is.function(plot.type)){
+        warning(paste("GoogleMapsPlot did not recognise 'plot.type'",
+            "\n\t[applying default]", sep=""), call.=FALSE)
+        plot.type <- panel.xyplot
+    }
+    
     #pollutant only 1 allowed
     #see suggestions
     if(length(pollutant) > 1){
-        warning(paste("\tGoogleMapsPlot only allows one 'pollutant'.",
+        warning(paste("GoogleMapsPlot only allows one 'pollutant'",
             "\n\t[ignoring all but first]", sep=""), call.=FALSE)
         pollutant <- pollutant[1]
     }
 
     #type upto 2 levels
     if(length(type) > 2){
-        warning(paste("\tGoogleMapsPlot allows up to two 'type' values.",
+        warning(paste("GoogleMapsPlot allows up to two 'type' values",
             "\n\t[ignoring all but first two]", sep=""), call.=FALSE)
         type <- type[1:2]
     }
@@ -203,7 +216,7 @@ GoogleMapsPlot <- function(mydata,
         cols <- "default"
     #if map.cols and cols same use darker range
     col.range <- if(identical(map.cols, cols)) 
-                     openColours(cols, 303)[203:303] else openColours(cols, 101)
+                     openColours(cols, 156)[56:156] else openColours(cols, 101)
 
     if(missing(limits)){
         breaks <- seq(min(z, na.rm = TRUE), quantile(z, probs = 0.95, na.rm = TRUE), length = 101)
@@ -268,7 +281,7 @@ GoogleMapsPlot <- function(mydata,
         #use MapBackground and list of allowed args
         map <- try(do.call(MapBackground, map), silent = TRUE)
         if(is(map)[1] == "try-error")
-            stop(paste("\tGoogleMapsPlot could not apply supplied lat, lon and RgoogleMap args.",
+            stop(paste("\tGoogleMapsPlot could not apply supplied lat, lon and RgoogleMap args",
                        "\n\t[check call settings and data source]", sep = ""),
                  call.=FALSE)
     } 
@@ -277,6 +290,7 @@ GoogleMapsPlot <- function(mydata,
     #use map lims to reset borders for plot
     #(is larger than data range 
     #and already done by RgoogleMaps!)
+
     if(missing(xlim))
         xlim <- c(map$BBOX$ll[2], map$BBOX$ur[2])
     if(missing(ylim))
@@ -288,10 +302,10 @@ GoogleMapsPlot <- function(mydata,
     #recolor map 
     #############
     if(!is.null(map.cols)){
-        #if map.cols and cols same use lighter range
+        #if map.cols and cols same use lighten map range
         temp <- length(attr(map[[4]], "COL"))
         attr(map[[4]], "COL") <- if(identical(map.cols, cols)) 
-                                     openColours(map.cols, 3 * temp)[1:temp] else 
+                                     openColours(map.cols, 7 * temp)[1:temp] else 
                                      openColours(map.cols, temp)
     }
 
@@ -308,6 +322,16 @@ GoogleMapsPlot <- function(mydata,
                   )
     map$myTile <- t(map$myTile)
     map$myTile <- map$myTile[nrow(map$myTile):1,]
+
+###############
+#temp addition
+###############
+#while testing xlim/ylim
+###############
+    map$xlim <- xlim
+    map$ylim <- ylim
+#########
+
 
     #############################
     #plot set up
@@ -331,8 +355,9 @@ GoogleMapsPlot <- function(mydata,
     plt <- xyplot(myform, data = mydata, z = z, 
                   cex = cex, pch = pch, xlim = xlim, ylim = ylim, 
                   col = mycols, aspect = aspect, as.table = as.table, 
+                  at = breaks, col.regions = col.range,
                   main = main, xlab = xlab, ylab = ylab,
-                  panel = function(x, y, subscripts, ...){ 
+                  panel = function(x, y, subscripts, at, col.regions, ...){ 
                                    map.panel(map)
                                    temp <- list(...)
                                    if(!is.null(subscripts)){
@@ -341,9 +366,10 @@ GoogleMapsPlot <- function(mydata,
                                         subscripts <- 1:length(subscripts)
                                    }
                                    temp <- listUpdate(
-                                               list(x = x, y = y, z = temp$z), 
+                                               list(x = x, y = y, z = temp$z, at = at, 
+                                                    col.regions = col.regions, subscripts = subscripts), 
                                                temp)
-                                   do.call(panel, temp)
+                                   do.call(plot.type, temp)
                   }, legend = legend, ...
     )
 
