@@ -20,7 +20,7 @@ GoogleMapsPlot(mydata,
     pch = NULL, cex.range =c(1,10), xlab = longitude, 
     ylab = latitude, main = "", map = NULL, map.raster = TRUE, 
     map.cols = NULL, aspect = 1, as.table = TRUE, 
-    panel = panel.xyplot, key = NULL, key.position = "right", 
+    plot.type = "xy", key = NULL, key.position = "right", 
     key.header = "", key.footer = pollutant, auto.text = TRUE, 
     ...
 )
@@ -121,9 +121,11 @@ panel.GoogleMapsRaster(map)
   default (\code{TRUE}) produces layouts similar to other openair 
   plot.}
 
-  \item{panel}{The panel to use to produce the data layer of the plot. 
-  By default, this is an x-y style scatter plot, can also be a level 
-  plot or a user-defined panel if required. }
+  \item{plot.type}{The method to use to produce the data layer for the plot. 
+  By default (\code{plot.type = "xy"}), this is an x-y style scatter plot, but 
+  can also be other pre-defined options (e.g. "level" for a levelplot)   
+  or a user-defined panel of a similar structire to \code{panel...} functions in 
+  \code{lattice}. }
 
   \item{key}{Fine control for the color scale key. By default (\code{key = NULL}) 
   the key is generated is a colour range exists, but can be forced 
