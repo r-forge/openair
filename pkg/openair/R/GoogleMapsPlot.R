@@ -9,7 +9,8 @@
 #file contains 
 #scripts for:
 #######################
-#function: GoogleMapsPlot 
+#function: GoogleMapsPlot
+#function: openairMapManager 
 #function: panel.GoogleMaps
 #function: panel.GoogleMapsRaster
 #
@@ -19,8 +20,8 @@
 ######################
 #GoogleMapsPlot 
 #requires/loads RgoogleMaps (openair suggests)
-#requires/loads Rgdal (NEEDS to be openair suggests)
-#THIS MAY CHANGE re RgoogleMaps depends
+#RgoogleMaps version 1.1.9.13 (not 10)
+#requires png package for png
 #
 ######################
 #map.panels TRUE/FALSE
@@ -66,10 +67,11 @@
 GoogleMapsPlot <- function(mydata, 
          latitude = "latitude", longitude = "longitude", type = "default",
          xlim, ylim, pollutant = NULL, cols = "default", limits = c(0,100),
-         cex = pollutant, pch = NULL, cex.range =c(1,10),
+         cex = pollutant, pch = NULL, cex.range =c(2,10),
          xlab = longitude, ylab = latitude, main = "",
          map = NULL, map.raster = TRUE, map.cols = NULL, 
-         aspect = 1, as.table = TRUE, plot.type = "xy",  
+         aspect = 1, as.table = TRUE, plot.type = "xy", 
+         plot.transparent = FALSE,
          key = NULL, key.position = "right",
          key.header = "", key.footer = pollutant,
          auto.text = TRUE, ...
@@ -171,7 +173,7 @@ GoogleMapsPlot <- function(mydata,
 
     #z pollutant if set else default
     z <- if(is.null(pollutant))
-             1 else mydata[, pollutant]
+             rep(1, nrow(newdata)) else mydata[, pollutant]
 
     #cex.range setup
     if(is.null(cex.range))
@@ -218,6 +220,25 @@ GoogleMapsPlot <- function(mydata,
     col.range <- if(identical(map.cols, cols)) 
                      openColours(cols, 156)[56:156] else openColours(cols, 101)
 
+    #make transparent
+
+    if(is.logical(plot.transparent) && plot.transparent)
+        plot.transparent <- 0.5
+    
+    if(is.numeric(plot.transparent)){
+        if(any(plot.transparent < 0) | any(plot.transparent > 1)){
+            warning(paste("GoogleMapsPlot could sensibly apply requested 'plot.transparency'",
+                          "\n\t[Sugest numeric in range 0 to 1]", 
+                          "\n\t[resetting value(s) to default, 0.5]",
+                    sep=""), call.=FALSE)
+            plot.transparent[plot.transparent > 1] <- 0.5
+            plot.transparent[plot.transparent < 0] <- 0.5
+        }
+        col.range <- col2rgb(col.range)
+        col.range <- rgb(col.range[1,], col.range[2,], col.range[3,], 
+                      alpha = plot.transparent * 255, max = 255)
+    }
+
     if(missing(limits)){
         breaks <- seq(min(z, na.rm = TRUE), quantile(z, probs = 0.95, na.rm = TRUE), length = 101)
             if(max(breaks, na.rm=TRUE) < max(z, na.rm = TRUE)){
@@ -236,7 +257,7 @@ GoogleMapsPlot <- function(mydata,
     } else {
         mycols <- col.range[cut(mycols, c(breaks[1] - 1, breaks), labels = FALSE)]
     }
-   
+
     ################
     #add in drawOpenKey
     ################
@@ -271,21 +292,30 @@ GoogleMapsPlot <- function(mydata,
                          names(formals(GetMap.bbox)),
                          names(formals(GetMap))))
 
+################ 
+#next bit testing
+#qbox handling of x, ylims
+#if keeping make safe
+#via try
+################
+
         #override some RgoogleMaps defaults
-        map <- list(lon = temp.x, lat = temp.y, destfile = "XtempX.png", 
+        temp2 <- qbbox(lat = temp.y, lon = temp.x)
+
+        map <- list(lon = temp2$lonR, lat = temp2$latR, destfile = "XtempX.png", 
                      size = c(640,640))
 
         ##update my defaults with relevant ones in call
         map <- listUpdate(map, extra.args, subset.b = temp)
 
         #use MapBackground and list of allowed args
-        map <- try(do.call(MapBackground, map), silent = TRUE)
+        map <- try(do.call(GetMap.bbox, map), silent = TRUE)
         if(is(map)[1] == "try-error")
             stop(paste("\tGoogleMapsPlot could not apply supplied lat, lon and RgoogleMap args",
                        "\n\t[check call settings and data source]", sep = ""),
                  call.=FALSE)
     } 
-       
+
     #get xlim, ylim from map if not supplied
     #use map lims to reset borders for plot
     #(is larger than data range 
@@ -296,18 +326,42 @@ GoogleMapsPlot <- function(mydata,
     if(missing(ylim))
         ylim <- c(map$BBOX$ll[1], map$BBOX$ur[1])   
  
+     map <- openairMapManager(map)
+
+###############
+#temp addition
+###############
+#while testing xlim/ylim
+###############
+    map$xlim <- xlim
+    map$ylim <- ylim
+
     ra <- dim(map$myTile) 
 
     ##############
     #recolor map 
     #############
     if(!is.null(map.cols)){
+
         #if map.cols and cols same use lighten map range
-        temp <- length(attr(map[[4]], "COL"))
-        attr(map[[4]], "COL") <- if(identical(map.cols, cols)) 
-                                     openColours(map.cols, 7 * temp)[1:temp] else 
-                                     openColours(map.cols, temp)
+        if(identical(map.cols, cols))
+            map.cols <- if(length(map.cols) == 1 && map.cols == "greyscale")
+                            openColours(c("white", grey(0.65)), 10) else 
+                            openColours(map.cols, 7)[1:2]
+
+        #make an intensity scale
+        temp <- apply(col2rgb(map$myTile), 2, prod)
+
+        #reset cols in frame
+        map$myTile <- level.colors(temp, pretty(temp, 200), openColours(map.cols, 200))
+        dim(map$myTile) <- ra[1:2]
     }
+
+
+
+    
+
+
 
     #################
     #restructure map for panel
@@ -317,19 +371,26 @@ GoogleMapsPlot <- function(mydata,
     #################
     #NOTE: this assumes
     #imagematrix, png
-    map$myTile <- matrix(attr(map$myTile, "COL")[map$myTile],
-                          nrow = ra[1], ncol = ra[2]    
-                  )
-    map$myTile <- t(map$myTile)
-    map$myTile <- map$myTile[nrow(map$myTile):1,]
+#    map$myTile <- matrix(attr(map$myTile, "COL")[map$myTile],
+#                          nrow = ra[1], ncol = ra[2]    
+#                  )
+#    map$myTile <- t(map$myTile)
+#    map$myTile <- map$myTile[nrow(map$myTile):1,]
 
 ###############
 #temp addition
 ###############
 #while testing xlim/ylim
 ###############
-    map$xlim <- xlim
-    map$ylim <- ylim
+#    map$xlim <- xlim
+#    map$ylim <- ylim
+
+#    if(dim(map$myTile)[3] == 4){
+#        map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
+#                          map$myTile[, , 3], map$myTile[, , 4])
+#    dim(map$myTile) <- c(640,640)
+#    }
+
 #########
 
 
@@ -394,6 +455,81 @@ GoogleMapsPlot <- function(mydata,
 
 
 #################################
+#RgoogleMaps version handler
+#IN DEVELOPMENT
+#################################
+#this was introduced on introduction of 
+#RgoogleMaps 1.1.9.10-13
+#rgdal/png dependent change
+#at same time the structures map 
+#structures changed 
+#
+
+openairMapManager <- function(map){
+
+    #set up
+    ra <- dim(map$myTile)
+    
+    #version test
+    tempfun <- function(x, pck = "RgoogleMaps") 
+                  compareVersion(packageDescription(pck)$Version, x)
+
+    #if RgoogleMaps version between 1.1.5 and 1.1.9.13 
+    #currently don't know structure
+    if(tempfun("1.1.9.13") < 0){
+        warning(paste("GoogleMapsPlot may not be able to support this version of 'RgoogleMaps'",
+                      "\n\t[You may encounter problems]", 
+                      "\n\t[If so, suggest updating RgoogleMaps or contacting openair]",
+                sep=""), call.=FALSE)
+
+        #NOTE: this assumes
+        #imagematrix, png
+        #NOT tested for jgp
+        map$myTile <- matrix(attr(map$myTile, "COL")[map$myTile],
+                             nrow = ra[1], ncol = ra[2]    
+                      )
+        map$myTile <- t(map$myTile)
+        map$myTile <- map$myTile[nrow(map$myTile):1,]
+        attr(map$myTile, "type") <- "openair"
+        return(map)
+    }
+
+    if(length(ra) > 2){
+       
+        if(ra[3] == 4 & attr(map$myTile, "type") == "rgb"){
+            map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
+                              map$myTile[, , 3], map$myTile[, , 4])
+            dim(map$myTile) <- ra[1:2]
+            attr(map$myTile, "type") <- "openair"
+            return(map)
+        }
+
+        if(ra[3] == 3 & attr(map$myTile, "type") == "rgb"){
+            map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
+                              map$myTile[, , 3])
+            dim(map$myTile) <- ra[1:2]
+            attr(map$myTile, "type") <- "openair"
+            return(map)
+        }
+
+        if(ra[3] == 1 & attr(map$myTile, "type") == "grey"){
+            map$myTile <- grey(map$myTile[, , 1])
+            dim(map$myTile) <- ra[1:2]
+            attr(map$myTile, "type") <- "openair"
+            return(map)
+        }
+    } 
+
+    warning(paste("GoogleMapsPlot encountered unexpected 'RgoogleMaps' output",
+                  "\n\t[You may encounter problems or some options may not be supported]", 
+                  "\n\t[If so, suggest updating RgoogleMaps or contacting openair]",
+            sep=""), call.=FALSE)
+    return(map)
+
+}
+
+
+#################################
 ##panel.GoogleMapsRaster
 #################################
 #raster map panel
@@ -420,8 +556,16 @@ panel.GoogleMaps <- function(map){
     
     #there has to be a better way
 
+    #both the rect handling
+    #and the map.col generation 
+    #need thinking about
+
+    if(attr(map$myTile, "type") != "openair")
+        map <- openairMapManager(map)
+
     ra <- dim(map$myTile) 
-    map.col <- as.vector(map$myTile[1:ra[1], 1:ra[2]])
+    map.col <- map$myTile
+
     map.lon <- rep(seq(map$BBOX$ll[2], map$BBOX$ur[2], 
                        length.out = ra[1]), 
                    each = ra[2])
