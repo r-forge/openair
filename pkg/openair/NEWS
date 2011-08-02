@@ -1,5 +1,6 @@
 Changes in openair 0.4-23 [2011-07-15]
 =====================================
+*	add annotate option to windRose/pollutionRose
 *	NEW FUNCTION TaylorDiagram for model evaluation.
 
 Changes in openair 0.4-22 [2011-06-03]
