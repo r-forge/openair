@@ -96,7 +96,7 @@ timePlot <- function(mydata,
 #######################################################################################################
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## pad out any missing date/times so that line don't extend between areas of missing data
 
@@ -174,8 +174,8 @@ timePlot <- function(mydata,
 
     strip <- TRUE
     strip.left <- FALSE
-    dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale
-    formats <- dateBreaks(mydata$date, date.breaks)$format
+    dates <- openair:::dateBreaks(mydata$date, date.breaks)$major ## for date scale
+    formats <- openair:::dateBreaks(mydata$date, date.breaks)$format
 
     scales <- list(x = list(at = dates, format = formats), y = list(log = nlog))
 
@@ -197,6 +197,8 @@ timePlot <- function(mydata,
 
         if (missing(lty)) lty <- 1 ## don't need different line types here
     }
+
+    if (type == "default") strip <- FALSE
 
     ## if stacking of plots by year is needed
     if (stack) {
