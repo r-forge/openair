@@ -1,5 +1,6 @@
-Changes in openair 0.4-23 [2011-07-15]
+Changes in openair 0.4-23 [2011-08-03]
 =====================================
+*	enhance 'normalise' option in timePlot
 *	add annotate option to windRose/pollutionRose
 *	NEW FUNCTION TaylorDiagram for model evaluation.
 

@@ -2,7 +2,7 @@ timePlot <- function(mydata,
                      pollutant = "nox",
                      group = FALSE,
                      stack = FALSE,
-                     normalise = FALSE,
+                     normalise = NULL,
                      avg.time = "default",
                      data.thresh = 0,
                      statistic = "mean",
@@ -150,9 +150,31 @@ timePlot <- function(mydata,
         x
     }
 
-    if (normalise) {
+    ## function to normalise data by a specfic date ##################################
+    norm.by.date <- function(x, thedate){
+        ## nearest date in time series
+        ## need to find first non-missing value
+        temp <- na.omit(x)
+        id <-  which(abs(temp$date - thedate) == min(abs(temp$date - thedate)))
+        id <- temp$date[id] ## the nearest date for non-missing data
+        x$value <- 100 * x$value / x$value[x$date == id]
+        x
+    }
+
+    if (!missing(normalise)) {
         ylab <- "normalised level"
-        mydata <-  ddply(mydata, .(variable), divide.by.mean)
+        if (normalise == "mean") {
+
+            mydata <-  ddply(mydata, .(variable), divide.by.mean)
+
+        } else {
+
+            ## scale value to 100 at specific date
+
+            thedate <- as.POSIXct(strptime(normalise, format = "%d/%m/%Y", tz = "GMT"))
+            mydata <-  ddply(mydata, .(variable), norm.by.date, thedate = thedate)
+        }
+
     }
 
     mylab <- sapply(seq_along(pollutant), function(x) quickText(pollutant[x], auto.text))
@@ -167,7 +189,7 @@ timePlot <- function(mydata,
 
     ## set up colours
     myColors <- if (length(cols) == 1 && cols == "greyscale")
-        openColours(cols, npol+1)[-1] else openColours(cols, npol)
+        openColours(cols, npol + 1)[-1] else openColours(cols, npol)
 
     ## basic function for lattice call + defaults
     myform <- formula(paste("value ~ date |", type))
