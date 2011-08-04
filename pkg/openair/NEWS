@@ -1,3 +1,7 @@
+Changes in openair 0.5-0 [2011-08-04]
+=====================================
+*	NEW FUNCTION corPlot for correlation matrices
+
 Changes in openair 0.4-23 [2011-08-03]
 =====================================
 *	enhance 'normalise' option in timePlot
