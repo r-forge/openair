@@ -15,7 +15,7 @@
 
 GoogleMapsPlot(mydata, 
     latitude = "latitude", longitude = "longitude", 
-    type = "default", xlim, ylim, pollutant = NULL, 
+    type = "default", xlim, ylim, pollutant = NULL, labels = NULL,
     cols = "default", limits = c(0, 100), cex = pollutant, 
     pch = NULL, cex.range =c(2,10), xlab = longitude, 
     ylab = latitude, main = "", map = NULL, map.raster = TRUE, 
@@ -59,6 +59,12 @@ panel.GoogleMapsRaster(map)
   \code{mydata} that is to be evaluated at the each measurement 
   point. Depending on settings, nominally \code{cols} and \code{cex}, 
   the evaluation can be by colour, size or both.}
+
+  \item{labels}{If supplied, either the name of \code{mydata} 
+  column/field containing the labels to be used or a list, containing 
+  that field name (as \code{labels}), and any other label properties, 
+  e.g. \code{cex}, \code{col}, etc, required for fine-tuning label 
+  appearance.}
 
   \item{cols}{The colour set to use to colour scaled data. Typically, 
   \code{cols} is passed to \code{openColours} for evaluation, but can 

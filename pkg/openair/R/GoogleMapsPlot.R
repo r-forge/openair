@@ -66,8 +66,8 @@
 
 GoogleMapsPlot <- function(mydata, 
          latitude = "latitude", longitude = "longitude", type = "default",
-         xlim, ylim, pollutant = NULL, cols = "default", limits = c(0,100),
-         cex = pollutant, pch = NULL, cex.range =c(2,10),
+         xlim, ylim, pollutant = NULL, labels = NULL, cols = "default", 
+         limits = c(0,100), cex = pollutant, pch = NULL, cex.range =c(2,10),
          xlab = longitude, ylab = latitude, main = "",
          map = NULL, map.raster = TRUE, map.cols = NULL, 
          aspect = 1, as.table = TRUE, plot.type = "xy", 
@@ -79,13 +79,12 @@ GoogleMapsPlot <- function(mydata,
 
 #googleMapsPlot
 #openair flavour
-#karl 2011-07-07
+#karl 2011-08-04
 
 #to do
 #########################
 #same type and something else conflict
 #
-
 
 #uses 
 #RgoogleMaps MapBackground, etc.
@@ -95,7 +94,19 @@ GoogleMapsPlot <- function(mydata,
 #need to confirm this has not changed
 #check depends with Markus
 #################
-#stopifnot(require("rgdal")) 
+#rgdal/png depending on RgoogleMaps version
+#so let RgoogleMaps handle its depends
+#
+
+##########################
+#column assignment in args
+###########################
+#below code assumes 
+#col assignment by col
+#######################
+#could have characters or numerics?
+#to allow assignment by col number
+#
 
     ##########################
     #greyscale handling/setup
@@ -147,11 +158,28 @@ GoogleMapsPlot <- function(mydata,
         type <- type[1:2]
     }
 
+    #labels only 1 allowed
+    #can be vector or list
+
+    if(is.list(labels)){
+        temp <- labels$labels
+        label2 <- if(length(temp) > 0) 
+                        labels$labels else NULL
+    } else label2 <- if(length(labels) > 0)
+                         labels else NULL
+
+    if(length(label2) > 1)
+        warning(paste("GoogleMapsPlot only allows one 'labels' source",
+                "\n\t[ignoring all but first]", sep=""), call.=FALSE)
+            label2 <- label2[1]
+
     ############################
     #checkPrep
     ############################
-    #get cex and pch if characters
-    temp <- na.omit(sapply(list(cex, pch), function(x){
+    #get cex, pch, labels if characters
+    #using label2 incase list element
+
+    temp <- na.omit(sapply(list(cex, pch, label2), function(x){
                       if("character" %in% is(x)) x else NA}))
    
     #keep date if about
@@ -213,9 +241,11 @@ GoogleMapsPlot <- function(mydata,
         pch <- as.numeric(mydata[, pch[1]])
 
     #cols handling
+
     #belt and braces
     if(is.null(cols))
         cols <- "default"
+
     #if map.cols and cols same use darker range
     col.range <- if(identical(map.cols, cols)) 
                      openColours(cols, 156)[56:156] else openColours(cols, 101)
@@ -259,6 +289,31 @@ GoogleMapsPlot <- function(mydata,
     }
 
     ################
+    #labels handling
+    ################
+    
+    #get labels source
+
+#note 
+#currently make labels even if not there
+#then don't plot if labels$labels NULL
+#rethink?
+
+    if(!is.null(label2))
+        label2 <- mydata[, label2]    
+    
+    #default label style
+
+    temp <- list(labels = label2, cex = 0.75, col = "red", lwd=2)
+    labels <- if(is.list(labels)) 
+                  listUpdate(temp, labels[names(labels) != "labels"]) else temp 
+    
+    #check for label formatting
+    temp <- labels$fun
+    if(!is.null(temp) && is.function(temp))
+        labels$labels <- temp(labels$labels)
+
+    ################
     #add in drawOpenKey
     ################
 
@@ -292,16 +347,13 @@ GoogleMapsPlot <- function(mydata,
                          names(formals(GetMap.bbox)),
                          names(formals(GetMap))))
 
-################ 
-#next bit testing
-#qbox handling of x, ylims
-#if keeping make safe
-#via try
-################
+        temp2 <- try(qbbox(lat = temp.y, lon = temp.x), silent = TRUE)
+        if(is(temp2)[1] == "try-error")
+            stop(paste("\tGoogleMapsPlot could not apply supplied lat, lon combination",
+                       "\n\t[check call settings and data source]", sep = ""),
+                 call.=FALSE)
 
         #override some RgoogleMaps defaults
-        temp2 <- qbbox(lat = temp.y, lon = temp.x)
-
         map <- list(lon = temp2$lonR, lat = temp2$latR, destfile = "XtempX.png", 
                      size = c(640,640))
 
@@ -333,6 +385,7 @@ GoogleMapsPlot <- function(mydata,
 ###############
 #while testing xlim/ylim
 ###############
+
     map$xlim <- xlim
     map$ylim <- ylim
 
@@ -358,42 +411,6 @@ GoogleMapsPlot <- function(mydata,
     }
 
 
-
-    
-
-
-
-    #################
-    #restructure map for panel
-    #################
-    #NOTE:
-    #after any map recolor
-    #################
-    #NOTE: this assumes
-    #imagematrix, png
-#    map$myTile <- matrix(attr(map$myTile, "COL")[map$myTile],
-#                          nrow = ra[1], ncol = ra[2]    
-#                  )
-#    map$myTile <- t(map$myTile)
-#    map$myTile <- map$myTile[nrow(map$myTile):1,]
-
-###############
-#temp addition
-###############
-#while testing xlim/ylim
-###############
-#    map$xlim <- xlim
-#    map$ylim <- ylim
-
-#    if(dim(map$myTile)[3] == 4){
-#        map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
-#                          map$myTile[, , 3], map$myTile[, , 4])
-#    dim(map$myTile) <- c(640,640)
-#    }
-
-#########
-
-
     #############################
     #plot set up
     #############################
@@ -404,10 +421,23 @@ GoogleMapsPlot <- function(mydata,
         myform <- paste(myform, " | ", paste(type, collapse = "+"), sep = "")
     myform <- formula(myform)
 
-    #labels
+
+#labels handling
+
+    #labels via quickText
     main <- quickText(main, auto.text)
     xlab <- quickText(xlab, auto.text)
     ylab <- quickText(ylab, auto.text)
+
+#check quickText space addition
+#can we drop it?
+
+    if(!is.null(labels$labels))
+             labels$labels <- sapply(labels$labels, function(x){ 
+                                                        x <- paste(" ", x, sep = "")
+                                                        quickText(x, auto.text)})
+
+
 
     ##############################
     #plot
@@ -416,14 +446,18 @@ GoogleMapsPlot <- function(mydata,
     plt <- xyplot(myform, data = mydata, z = z, 
                   cex = cex, pch = pch, xlim = xlim, ylim = ylim, 
                   col = mycols, aspect = aspect, as.table = as.table, 
-                  at = breaks, col.regions = col.range,
-                  main = main, xlab = xlab, ylab = ylab,
+                  at = breaks, col.regions = col.range, 
+                  main = main, xlab = xlab, ylab = ylab, labels = labels,
                   panel = function(x, y, subscripts, at, col.regions, ...){ 
                                    map.panel(map)
                                    temp <- list(...)
                                    if(!is.null(subscripts)){
                                         temp <- lapply(temp, function(x) 
                                         x <- if(length(x)>1) x[subscripts] else x )
+
+                                        labels <- lapply(labels, function(x) 
+                                        x <- if(length(x)>1) x[subscripts] else x )
+
                                         subscripts <- 1:length(subscripts)
                                    }
                                    temp <- listUpdate(
@@ -431,6 +465,14 @@ GoogleMapsPlot <- function(mydata,
                                                     col.regions = col.regions, subscripts = subscripts), 
                                                temp)
                                    do.call(plot.type, temp)
+
+
+                                   labels <- listUpdate(
+                                               list(x = x, y = y, subscripts = subscripts), 
+                                               labels)
+                                   if(!is.null(labels$labels))
+                                       do.call(ltext, labels)
+
                   }, legend = legend, ...
     )
 
