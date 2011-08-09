@@ -8,17 +8,15 @@ for use with the openair package. The function uses \code{read.table} (in
 
 \usage{ 
 import(file = file.choose(), file.type="csv",
-header.at = 1, data.at = 2,
-eof.report = NULL, na.strings = c("", "NA"), quote="\"", 
-date.name = "date", date.break = "/", date.order = "dmy", 
-time.name = "date", time.break = ":", time.order = "hm", 
-time.format ="GMT", cipher = NULL,
-is.ws = NULL, is.wd = NULL, is.site = NULL,
-misc.info = NULL, 
-bad.24 = FALSE, 
-correct.time = NULL,
-previous = FALSE, 
-output = "final")
+      sep = NULL, header.at = 1, data.at = 2,
+      eof.report = NULL, na.strings = c("", "NA"), quote="\"", 
+      date.name = "date", date.break = "/", date.order = "dmy", 
+      time.name = "date", time.break = ":", time.order = "hm", 
+      time.format ="GMT", cipher = NULL,
+      is.ws = NULL, is.wd = NULL, is.site = NULL,
+      misc.info = NULL, bad.24 = FALSE, 
+      correct.time = NULL, previous = FALSE, 
+      output = "final")
 }
 
 \arguments{
@@ -30,6 +28,10 @@ tested). }
 
 \item{file.type}{ The file format, defaults to common "csv"
   (comma delimited) format, but also allows "txt" (tab delimited). }
+
+\item{sep}{ R-style file separator, e.g \code{sep = ","} for comma 
+  delimited or \code{"\t"} for tab delimited files. If set, supersedes 
+  \code{file.type}. }
 
 \item{header.at}{ The file row holding header information or 
   \code{NULL} if no header to be used. If valid numeric, this is used
