@@ -355,7 +355,7 @@ GoogleMapsPlot <- function(mydata,
 
         #override some RgoogleMaps defaults
         map <- list(lon = temp2$lonR, lat = temp2$latR, destfile = "XtempX.png", 
-                     size = c(640,640))
+                     maptype = "terrain", size = c(640,640))
 
         ##update my defaults with relevant ones in call
         map <- listUpdate(map, extra.args, subset.b = temp)
