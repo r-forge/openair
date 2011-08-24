@@ -12,8 +12,6 @@ trendLevel <- function(mydata,
     pollutant = "nox",
     x = "month", y = "hour",
     type = "year",
-    xlab = x, ylab = y,
-    main = "",
     rotate.axis = c(90, 0),
     n.levels = c(10, 10, 4),
     limits = c(0, 100),
@@ -99,6 +97,18 @@ trendLevel <- function(mydata,
        #code here for shorten cases x != out
        out
     }
+
+    ##extra.args
+    extra.args <- list(...)
+
+    ##label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText(x, auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(y, auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
 
     ################################
     #check lengths of x, y, type
@@ -303,16 +313,16 @@ trendLevel <- function(mydata,
     myform <- formula(paste(pollutant, " ~ ", x, " * ", y, " | ", temp, sep = ""))
 
     temp <- sapply(unique(newdata[ , type[1]]), function(x) quickText(x, auto.text))
+    if(is.factor(temp)) temp <- as.character(temp)
     strip <- strip.custom(factor.levels = temp, strip.levels=c(TRUE, FALSE), strip.names=FALSE)
     strip.left <- if(length(type)==1) {
                       FALSE
                   } else {
                       temp <- sapply(unique(newdata[ , type[2]]), function(x) quickText(x, auto.text))
+                      if(is.factor(temp)) temp <- as.character(temp)
                       strip.custom(factor.levels = temp)
                   }
-    xlab <- quickText(xlab, auto.text)
-    ylab <- quickText(ylab, auto.text)
-    main <- quickText(main, auto.text)
+
     scales <- list(x = list(rot = rotate.axis[1]),
                    y = list(rot = rotate.axis[2]))
 
@@ -360,11 +370,9 @@ trendLevel <- function(mydata,
     #      the locally defined options below as part of call.
     #      If they do reset it is obviously Caveat emptor... 
 
-    user.list <- list(...)
-
-    #example of special case handling
+    #special case handling
     #layout for wd
-    if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(user.list)) {
+    if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(extra.args)) {
         ## re-order to make sensible layout
         ## starting point code as of ManKendall
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
@@ -376,9 +384,8 @@ trendLevel <- function(mydata,
         if(!"skip" %in% names(user.list))
             user.list$skip <- skip
     }
-
-    temp.list <- list(x = myform, data = newdata, as.table = TRUE, 
-                      xlab=xlab, ylab =ylab, main = main,
+    #openair defaults for plot
+    levelplot.args <- list(x = myform, data = newdata, as.table = TRUE, 
                       legend = legend, colorkey = colorkey,
                       at = breaks, col.regions=col.regions,
                       scales = scales, 
@@ -386,29 +393,9 @@ trendLevel <- function(mydata,
                       xscale.components = xscale.lp,
                       par.strip.text = list(cex = 0.8),
                       strip=strip, strip.left=strip.left)
-    
-    test <- names(user.list)[names(user.list) %in% names(temp.list)]
-    if(length(test)>0){
-        warning(paste("\tUser has reset plot component(s) normally left to openair:",
-            "\n\t", paste(test, collapse=", "),
-            "\n\t[This may make plot unstable]", sep=""), call.=FALSE)
-    }
-    
-    temp.list<- listUpdate(temp.list, user.list)
-    plt <- do.call(levelplot, temp.list) 
-
-
-
-#    plt <- levelplot(myform, data = newdata,
-#               as.table = TRUE, xlab=xlab, ylab =ylab, main = main,
-#               legend = legend, colorkey = colorkey,
-#               at = breaks, col.regions=col.regions,
-#               scales = scales,
-#               yscale.components = yscale.lp,
-#               xscale.components = xscale.lp,
-#               par.strip.text = list(cex = 0.8),
-#               strip=strip, strip.left=strip.left,
-#               ...)
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+    plt <- do.call(levelplot, levelplot.args) 
 
     ##############################
     #update for two levels

@@ -20,7 +20,6 @@
 trendLevel(mydata,
     pollutant = "nox", 
     x = "month", y = "hour", type = "year", 
-    xlab = x, ylab = y, main = "",
     rotate.axis = c(90, 0), n.levels = c(10, 10, 4),
     limits = c(0, 100), cols = "default", auto.text = TRUE, 
     key.header = "use.stat.name", key.footer = pollutant, 
@@ -48,13 +47,6 @@ trendLevel(mydata,
   \item{y, type}{ The names of the data series to use as the \code{trendLevel} y-axis and for additional conditioning, 
   respectively. As \code{x} above. }
 
-  \item{xlab, ylab}{ The x-axis and y-axis labels. All labels are passed via \code{quickText} to 
-  handle formatting if enabled (\code{auto.text = TRUE}). By default \code{trendLevel} uses x and 
-  y names as xlab and ylab, respectively.}
-
-  \item{main}{ The plot title. Like \code{xlab} and \code{ylab}, this is passed via \code{quickText} 
-  to handle formatting if enabled (\code{auto.text = TRUE}). }
-
   \item{rotate.axis}{ The rotation to be applied to \code{trendLevel} \code{x} and \code{y} axes. The default, 
   \code{c(90, 0)}, rotates the x axis by 90 degrees but does not rotate the y axis. (Note: If only one value is 
   supplied, this is applied to both axes; if more than two values are supplied, only the first two are used.) }
@@ -70,9 +62,11 @@ trendLevel(mydata,
   \item{cols}{ The colour set to use to colour the \code{trendLevel} surface. \code{cols} is passed 
   to \code{openColours} for evaluation. See \code{?openColours} for more details. }
 
-  \item{auto.text}{ Automatic routine text formatting. \code{auto.text = TRUE} allows labels 
-  (\code{xlab}, \code{ylab}, \code{main}, etc.) to be passed to the plot via \code{quickText}. 
-  \code{auto.text = FALSE} turns this option off and passes labels to the plot without modification. }
+  \item{auto.text}{ Automatic routine text formatting. \code{auto.text = TRUE} passes common 
+  \code{lattice} labelling terms (e.g. \code{xlab} for the x-axis, \code{ylab} for the y-axis and 
+  \code{main} for the title) to the plot via \code{quickText} to provide common text formatting. 
+  The alternative \code{auto.text = FALSE} turns this option off and passes any supplied labels to 
+  the plot without modification. }
 
   \item{key.header, key.footer}{Adds additional text labels above and/or 
   below the scale key, respectively. For example, passing the options
@@ -113,10 +107,7 @@ trendLevel(mydata,
   from the plot. The alternative \code{FALSE} plots all \code{type} panels. }
 
   \item{...}{ Addition options are passed on to \code{cutData} for \code{type} handling and \code{levelplot} 
-  in \code{lattice} for finer control of the plot itself. 
-  Note: Like many other \code{openair} functions \code{trendLevel} that make use of 
-  \code{lattice} plots, \code{trendLevel} presets several options preventing user access 
-  by this method. For \code{trendLevel} these include \code{scales} and \code{strip}. }  
+  in \code{lattice} for finer control of the plot itself. }  
 
 }
 
