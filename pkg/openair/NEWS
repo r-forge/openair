@@ -1,3 +1,8 @@
+Changes in openair 0.5-4 [2011-08-04]
+=====================================
+*	Use roxygen2 for package documentation and future
+	maintainability
+
 Changes in openair 0.5-0 [2011-08-04]
 =====================================
 *	NEW FUNCTION corPlot for correlation matrices

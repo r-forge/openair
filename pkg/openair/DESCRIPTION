@@ -1,16 +1,83 @@
 Package: openair
 Type: Package
 Title: Tools for the analysis of air pollution data
-Version: 0.5-3
-Date: 2011-08-24
+Version: 0.5-4
+Date: 2011-08-26
 Author: David Carslaw and Karl Ropkins
-Depends: R (>= 2.13.0),
-Imports: proto, Matrix, utils, grid, plyr, reshape2, mgcv, zoo, lattice, boot,RColorBrewer
-Suggests: latticeExtra, hexbin, RgoogleMaps,ellipse
+Depends:
+    R (>= 2.13.0),
+Imports:
+    proto,
+    Matrix,
+    utils,
+    grid,
+    plyr,
+    reshape2,
+    mgcv,
+    zoo,
+    lattice,
+    boot,RColorBrewer
+Suggests:
+    latticeExtra,
+    hexbin,
+    RgoogleMaps,ellipse
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
-Description: Tools to analyse, interpret and understand air pollution data. Data are typically hourly time series and both monitoring data and dispersion model output can be analysed.  Many functions can also be applied to other data, including meteorological and traffic data.
+Description: Tools to analyse, interpret and understand air
+    pollution data. Data are typically hourly time series
+    and both monitoring data and dispersion model output
+    can be analysed.  Many functions can also be applied to
+    other data, including meteorological and traffic data.
 License: GPL (>= 2)
 URL: http://www.openair-project.org/
 LazyLoad: yes
 LazyData: yes
 Packaged: 2010-01-18 09:56:13 UTC; trakr
+Collate:
+    'aqStats.R'
+    'calcFno2.R'
+    'calcPercentile.R'
+    'calendarPlot.R'
+    'checkPrep.R'
+    'conditionalQuantile.R'
+    'corPlot.R'
+    'cutData.R'
+    'date.breaks.R'
+    'drawOpenKey.R'
+    'elimna.R'
+    'GoogleMapsPlot.R'
+    'import.2.R'
+    'import.R'
+    'importADMS.R'
+    'importAURN.R'
+    'importAURNCsv.R'
+    'importKCL.R'
+    'importSAQN.R'
+    'kernelExceed.R'
+    'linearRelation.R'
+    'MannKendall.R'
+    'modStats.R'
+    'openair.generics.R'
+    'openColours.R'
+    'percentileRose.R'
+    'polarAnnulus.R'
+    'polarFreq.R'
+    'polarPlot.R'
+    'quickText.R'
+    'regboot.R'
+    'regci.R'
+    'samp.boot.block.R'
+    'scatterPlot.R'
+    'selectRunning.R'
+    'smoothTrend.R'
+    'summaryPlot.R'
+    'tau.boot.R'
+    'tau.R'
+    'TaylorDiagram.R'
+    'timeAverage.R'
+    'timePlot.R'
+    'timeVariation.R'
+    'trendLevel.R'
+    'tsp1reg.R'
+    'utilities.R'
+    'windRose.R'
+    'zzz.R'
