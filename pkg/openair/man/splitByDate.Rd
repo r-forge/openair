@@ -3,7 +3,7 @@
 \title{Divide up a data frame by time}
 \usage{
   splitByDate(mydata, dates = "1/1/2003", labels =
-  c("before", "after"))
+  c("before", "after"), name = "split.by")
 }
 \arguments{
   \item{mydata}{A data frame containing a \code{date} field
@@ -12,6 +12,9 @@
   \item{dates}{A date or dates to split data by.}
 
   \item{labels}{Labels for each time partition.}
+
+  \item{name}{The name to give the new column to identify
+  the periods split}
 }
 \description{
   Utility function to prepare input data for use in openair

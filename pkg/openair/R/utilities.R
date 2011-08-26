@@ -182,7 +182,7 @@ convert.date <- function(mydata, format = "%d/%m/%Y %H:%M") {
 ##' Utility function to prepare input data for use in openair functions
 ##'
 ##' This function partitions a data frame up into different time segments. It
-##' produces a new column called \code{site} that can be used in many
+##' produces a new column called controlled by \code{name} that can be used in many
 ##' \code{openair} functions. Note that there must be one more label than there
 ##' are dates. See examples below and in full \code{openair} documentation.
 ##'
@@ -190,6 +190,7 @@ convert.date <- function(mydata, format = "%d/%m/%Y %H:%M") {
 ##'   resolution format.
 ##' @param dates A date or dates to split data by.
 ##' @param labels Labels for each time partition.
+##' @param name The name to give the new column to identify the periods split
 ##' @export
 ##' @author David Carslaw
 ##' @keywords methods
@@ -204,15 +205,9 @@ convert.date <- function(mydata, format = "%d/%m/%Y %H:%M") {
 ##' labels = c("before", "during", "after"))
 ##'
 ##'
-splitByDate <- function(mydata, dates = "1/1/2003", labels = c("before", "after")) {
+splitByDate <- function(mydata, dates = "1/1/2003", labels = c("before", "after"), name = "split.by") {
     ## if date in format dd/mm/yyyy hh:mm (basic check)
     if (missing(mydata)) stop("No data frame was supplied!")
-
-    if ("site" %in% names(mydata)) {
-        if (length(levels(factor(mydata$site))) > 1 & any(duplicated(mydata$date))) {
-            stop("More than one site detected - can only deal with a single site at the moment!")
-        }
-    }
 
     mydata <- checkPrep(mydata, names(mydata), "default", remove.calm = FALSE)
     ## check there are sufficent labels for number of dates
@@ -249,7 +244,7 @@ one more label than date")
     }
 
 
-    mydata$site <- cut(as.numeric(mydata$date), breaks = c(0, as.numeric(dates),
+    mydata[ , name] <- cut(as.numeric(mydata$date), breaks = c(0, as.numeric(dates),
                                                 max(mydata$date)), labels = labels,
                        ordered_result = TRUE)
     mydata
