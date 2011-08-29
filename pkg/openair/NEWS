@@ -2,8 +2,10 @@ Changes in openair 0.5-4 [2011-08-04]
 =====================================
 *	Use roxygen2 for package documentation and future
 	maintainability
-*	Allow split by date to handle mutiple sites and output a new
+*	Allow splitByDate to handle mutiple sites and output a new
 	column controlled by argument 'name'
+*	More options for MannKendall: control of colour and variable
+	x-axis scales
 
 Changes in openair 0.5-0 [2011-08-04]
 =====================================

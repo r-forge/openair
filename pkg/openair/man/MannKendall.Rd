@@ -6,9 +6,11 @@
   type = "default", avg.time = "month", statistic = "mean",
   percentile = NA, data.thresh = 0, simulate = FALSE, alpha
   = 0.05, dec.place = 2, ylab = pollutant, xlab = "year",
-  y.relation = "same", cols = NULL, main = "", auto.text =
-  TRUE, autocor = FALSE, slope.percent = FALSE, date.breaks
-  = 7, ...)
+  x.relation = "same", y.relation = "same", data.col =
+  "cornflowerblue", line.col = "red", text.col =
+  "darkgreen", cols = NULL, main = "", auto.text = TRUE,
+  autocor = FALSE, slope.percent = FALSE, date.breaks = 7,
+  ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -31,37 +33,32 @@
   one of the built-in types as detailed in \code{cutData}
   e.g. "season", "year", "weekday" and so on. For example,
   \code{type = "season"} will produce four plots --- one
-  for each season.
-
-  It is also possible to choose \code{type} as another
-  variable in the data frame. If that variable is numeric,
-  then the data will be split into four quantiles (if
-  possible) and labelled accordingly. If type is an
-  existing character or factor variable, then those
-  categories/levels will be used directly. This offers
-  great flexibility for understanding the variation of
-  different variables and how they depend on one another.
-
-  Type can be up length two e.g. \code{type = c("season",
-  "weekday")} will produce a 2x2 plot split by season and
-  day of the week. Note, when two types are provided the
-  first forms the columns and the second the rows.}
+  for each season. \cr\cr It is also possible to choose
+  \code{type} as another variable in the data frame. If
+  that variable is numeric, then the data will be split
+  into four quantiles (if possible) and labelled
+  accordingly. If type is an existing character or factor
+  variable, then those categories/levels will be used
+  directly. This offers great flexibility for understanding
+  the variation of different variables and how they depend
+  on one another. \cr\cr Type can be up length two e.g.
+  \code{type = c("season", "weekday")} will produce a 2x2
+  plot split by season and day of the week. Note, when two
+  types are provided the first forms the columns and the
+  second the rows.}
 
   \item{avg.time}{Either "month" (the default), or "year".
   Determines whether monthly mean or annual mean trends are
-  plotted. Note that for "annual", six or more years are
+  plotted. Note that for "year", six or more years are
   required.}
 
   \item{statistic}{Statistic used for calculating monthly
   values. Default is \code{"mean"}, but can also be
-  \code{"percentile"}. See \code{time.average} for more
+  \code{"percentile"}. See \code{timeAverage} for more
   details.}
 
-  \item{percentile}{Percentile value(s) to use if
-  \code{statistic = "percentile"} is chosen. Can be a
-  vector of numbers e.g. \code{percentile = c(5, 50, 95)}
-  will plot the 5th, 50th and 95th percentile values
-  together on the same plot.}
+  \item{percentile}{Single percentile value to use if
+  \code{statistic = "percentile"} is chosen.}
 
   \item{data.thresh}{The data capture threshold to use (%)
   when aggregating the data using \code{avg.time}. A value
@@ -69,8 +66,7 @@
   particular period regardless if of the number of values
   available. Conversely, a value of 100 will mean that all
   data will need to be present for the average to be
-  calculated, else it is recorded as \code{NA}. Not used if
-  \code{avg.time = "default"}.}
+  calculated, else it is recorded as \code{NA}.}
 
   \item{simulate}{Should simulations be carried out to
   determine the Mann-Kendall tau and p-value. The default
@@ -89,11 +85,25 @@
 
   \item{xlab}{x-axis label.}
 
+  \item{x.relation}{This determines how the x-axis scale is
+  plotted. "same" ensures all panels use the same scale and
+  "free" will use panel-specfic scales. The latter is a
+  useful setting when plotting data with very different
+  values.}
+
   \item{y.relation}{This determines how the y-axis scale is
   plotted. "same" ensures all panels use the same scale and
   "free" will use panel-specfic scales. The latter is a
   useful setting when plotting data with very different
   values.}
+
+  \item{data.col}{Colour name for the data}
+
+  \item{line.col}{Colour name for the slope and uncertainty
+  estimates}
+
+  \item{text.col}{Colour name for the slope/uncertainty
+  numeric estimates}
 
   \item{cols}{Predefined colour scheme, currently only
   enabled for \code{"greyscale"}.}
@@ -119,15 +129,14 @@
   clearly defined. Here the percentage change is expressed
   as 100 * (C.end/C.start - 1) / (end.year - start.year).
   Where C.start is the concentration at the start date and
-  C.end is the concentration at the end date.
-
-  For \code{period = "annual"} (end.year - start.year) will
-  be the total number of years - 1. For example, given a
+  C.end is the concentration at the end date.\cr\cr For
+  \code{avg.time = "year"} (end.year - start.year) will be
+  the total number of years - 1. For example, given a
   concentration in year 1 of 100 units and a percentage
   reduction of 5%/yr, after 5 years there will be 75 units
   but the actual time span will be 6 years i.e. year 1 is
   used as a reference year. Things are slightly different
-  for monthly values e.g. \code{period = "month"}, which
+  for monthly values e.g. \code{avg.time = "month"}, which
   will use the total number of months as a basis of the
   time span and is therefore able to deal with partial
   years. There can be slight differences in the %/yr trend
@@ -142,9 +151,9 @@
   therefore increase or decrease the number of intervals by
   adjusting the value of \code{date.breaks} up or down.}
 
-  \item{\dots}{Other graphical parameters passed onto
+  \item{...}{Other graphical parameters passed onto
   \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
+  the case \code{cutData} the option \code{hemisphere =
   "southern"}.}
 }
 \value{
@@ -191,10 +200,8 @@
   data e.g. why is there a strong downward trend in
   concentration from one wind sector and not another, or
   why trends on one day of the week or a certain time of
-  day are unexpected.
-
-  The Mann-Kendall test from trend is for data that are
-  \emph{monotonic} - see
+  day are unexpected. \cr\cr The Mann-Kendall test from
+  trend is for data that are \emph{monotonic} - see
   \url{http://en.wikipedia.org/wiki/Monotonic_function}.
   The most appropriate use for this function is for data
   that are \sQuote{well-behaved} i.e. tend to be steadily
@@ -216,7 +223,7 @@
   The slope estimate and confidence intervals in the slope
   are plotted and numerical information presented.
 
-  The basic function have been adapted to take account of
+  The basic function has been adapted to take account of
   auto-correlated data using block bootstrap simulations
   (Kunsch, 1989). The principal reason for doing so is to
   gain a better estimate of trend uncertainty.
@@ -240,7 +247,7 @@ MannKendall(mydata, pollutant = "nox")
 \dontrun{MannKendall(select.by.date(mydata, year = 2000:2005), pollutant = "o3", ylab = "o3 (ppb)")}
 }
 \author{
-  David Carslaw with trend code from Rand Wilcox
+  David Carslaw with some trend code from Rand Wilcox
 }
 \references{
   Helsel, D., Hirsch, R., 2002. Statistical methods in

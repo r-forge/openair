@@ -22,8 +22,8 @@
 }
 \details{
   This function partitions a data frame up into different
-  time segments. It produces a new column called
-  \code{site} that can be used in many \code{openair}
+  time segments. It produces a new column called controlled
+  by \code{name} that can be used in many \code{openair}
   functions. Note that there must be one more label than
   there are dates. See examples below and in full
   \code{openair} documentation.

@@ -23,8 +23,7 @@
 ##' and wind direction. This flexibility makes it much easier to draw
 ##' inferences from data e.g. why is there a strong downward trend in
 ##' concentration from one wind sector and not another, or why trends on one
-##' day of the week or a certain time of day are unexpected.
-##'
+##' day of the week or a certain time of day are unexpected. \cr\cr
 ##' The Mann-Kendall test from trend is for data that are \emph{monotonic} -
 ##' see \url{http://en.wikipedia.org/wiki/Monotonic_function}. The most
 ##' appropriate use for this function is for data that are
@@ -43,7 +42,7 @@
 ##' The slope estimate and confidence intervals in the slope are plotted and
 ##' numerical information presented.
 ##'
-##' The basic function have been adapted to take account of auto-correlated
+##' The basic function has been adapted to take account of auto-correlated
 ##' data using block bootstrap simulations (Kunsch, 1989). The principal reason
 ##' for doing so is to gain a better estimate of trend uncertainty.
 ##'
@@ -52,42 +51,43 @@
 ##'   not necessarily) a pollutant.
 ##' @param pollutant The parameter for which a trend test is required.
 ##'   Mandatory.
-##' @param deseason Should the data be de-deasonalized first? If \code{TRUE}
-##'   the function \code{stl} is used (seasonal trend decomposition using
-##'   loess). Note that if \code{TRUE} missing data are first linearly
-##'   interpolated because \code{stl} cannot handle missing data.
-##' @param type \code{type} determines how the data are split i.e. conditioned,
-##'   and then plotted. The default is will produce a single plot using the
-##'   entire data. Type can be one of the built-in types as detailed in
-##'   \code{cutData} e.g. "season", "year", "weekday" and so on. For example,
-##'   \code{type = "season"} will produce four plots --- one for each season.
-##'
-##' It is also possible to choose \code{type} as another variable in the data
-##'   frame. If that variable is numeric, then the data will be split into four
-##'   quantiles (if possible) and labelled accordingly. If type is an existing
-##'   character or factor variable, then those categories/levels will be used
-##'   directly. This offers great flexibility for understanding the variation
-##'   of different variables and how they depend on one another.
-##'
-##' Type can be up length two e.g. \code{type = c("season", "weekday")} will
-##'   produce a 2x2 plot split by season and day of the week. Note, when two
-##'   types are provided the first forms the columns and the second the rows.
+##' @param deseason Should the data be de-deasonalized first? If
+##' \code{TRUE} the function \code{stl} is used (seasonal trend
+##' decomposition using loess). Note that if \code{TRUE} missing data
+##' are first linearly interpolated because \code{stl} cannot handle
+##' missing data.
+##' @param type \code{type} determines how the data are split
+##' i.e. conditioned, and then plotted. The default is will produce a
+##' single plot using the entire data. Type can be one of the built-in
+##' types as detailed in \code{cutData} e.g. "season", "year",
+##' "weekday" and so on. For example, \code{type = "season"} will
+##' produce four plots --- one for each season. \cr\cr
+##' It is also possible to choose \code{type} as another variable in
+##' the data frame. If that variable is numeric, then the data will be
+##' split into four quantiles (if possible) and labelled
+##' accordingly. If type is an existing character or factor variable,
+##' then those categories/levels will be used directly. This offers
+##' great flexibility for understanding the variation of different
+##' variables and how they depend on one another. \cr\cr
+##' Type can be up length two e.g. \code{type = c("season",
+##' "weekday")} will produce a 2x2 plot split by season and day of the
+##' week. Note, when two types are provided the first forms the
+##' columns and the second the rows.
 ##' @param avg.time Either "month" (the default), or "year". Determines whether
-##'   monthly mean or annual mean trends are plotted. Note that for "annual",
+##'   monthly mean or annual mean trends are plotted. Note that for "year",
 ##'   six or more years are required.
 ##' @param statistic Statistic used for calculating monthly values. Default is
 ##'   \code{"mean"}, but can also be \code{"percentile"}. See
-##'   \code{time.average} for more details.
-##' @param percentile Percentile value(s) to use if \code{statistic =
-##'   "percentile"} is chosen. Can be a vector of numbers e.g. \code{percentile
-##'   = c(5, 50, 95)} will plot the 5th, 50th and 95th percentile values
-##'   together on the same plot.
-##' @param data.thresh The data capture threshold to use (%) when aggregating
-##'   the data using \code{avg.time}. A value of zero means that all available
-##'   data will be used in a particular period regardless if of the number of
-##'   values available. Conversely, a value of 100 will mean that all data will
-##'   need to be present for the average to be calculated, else it is recorded
-##'   as \code{NA}. Not used if \code{avg.time = "default"}.
+##'   \code{timeAverage} for more details.
+##' @param percentile Single percentile value to use if \code{statistic =
+##'   "percentile"} is chosen.
+##' @param data.thresh The data capture threshold to use (%) when
+##' aggregating the data using \code{avg.time}. A value of zero means
+##' that all available data will be used in a particular period
+##' regardless if of the number of values available. Conversely, a
+##' value of 100 will mean that all data will need to be present for
+##' the average to be calculated, else it is recorded as
+##' \code{NA}.
 ##' @param simulate Should simulations be carried out to determine the
 ##'   Mann-Kendall tau and p-value. The default is \code{FALSE}. If
 ##'   \code{TRUE}, bootstrap simulations are undertaken, which also account for
@@ -99,10 +99,17 @@
 ##'   at. The default is 2.
 ##' @param ylab y-axis label.
 ##' @param xlab x-axis label.
+##' @param x.relation This determines how the x-axis scale is plotted. "same"
+##'   ensures all panels use the same scale and "free" will use panel-specfic
+##'   scales. The latter is a useful setting when plotting data with very
+##'   different values.
 ##' @param y.relation This determines how the y-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
 ##'   scales. The latter is a useful setting when plotting data with very
 ##'   different values.
+##' @param data.col Colour name for the data
+##' @param line.col Colour name for the slope and uncertainty estimates
+##' @param text.col Colour name for the slope/uncertainty numeric estimates
 ##' @param cols Predefined colour scheme, currently only enabled for
 ##'   \code{"greyscale"}.
 ##' @param main Title of plot, if required.
@@ -120,14 +127,13 @@
 ##'   Percentage changes can often be confusing and should be clearly defined.
 ##'   Here the percentage change is expressed as 100 * (C.end/C.start - 1) /
 ##'   (end.year - start.year). Where C.start is the concentration at the start
-##'   date and C.end is the concentration at the end date.
-##'
-##' For \code{period = "annual"} (end.year - start.year) will be the total
+##'   date and C.end is the concentration at the end date.\cr\cr
+##'  For \code{avg.time = "year"} (end.year - start.year) will be the total
 ##'   number of years - 1. For example, given a concentration in year 1 of 100
 ##'   units and a percentage reduction of 5%/yr, after 5 years there will be 75
 ##'   units but the actual time span will be 6 years i.e. year 1 is used as a
 ##'   reference year. Things are slightly different for monthly values e.g.
-##'   \code{period = "month"}, which will use the total number of months as a
+##'   \code{avg.time = "month"}, which will use the total number of months as a
 ##'   basis of the time span and is therefore able to deal with partial years.
 ##'   There can be slight differences in the %/yr trend estimate therefore,
 ##'   depending on whether monthly or annual values are considered.
@@ -137,9 +143,9 @@
 ##'   This does not always work as desired automatically. The user can
 ##'   therefore increase or decrease the number of intervals by adjusting the
 ##'   value of \code{date.breaks} up or down.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param ... Other graphical parameters passed onto
+##' \code{lattice:xyplot} and \code{cutData}. For example, in the case
+##' \code{cutData} the option \code{hemisphere = "southern"}.
 ##' @export
 ##' @return As well as generating the plot itself, \code{MannKendall} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -162,7 +168,7 @@
 ##'
 ##' Note: In the case of the intercept, it is assumed the y-axis crosses the
 ##'   x-axis on 1/1/1970.
-##' @author David Carslaw with trend code from Rand Wilcox
+##' @author David Carslaw with some trend code from Rand Wilcox
 ##' @seealso See \code{\link{smoothTrend}} for a flexible approach to
 ##'   estimating trends using nonparametric regression. The \code{smoothTrend}
 ##'   function is suitable for cases where trends are not monotonic and is
@@ -219,7 +225,11 @@ MannKendall <- function(mydata,
                         dec.place = 2,
                         ylab = pollutant,
                         xlab = "year",
+                        x.relation = "same",
                         y.relation = "same",
+                        data.col = "cornflowerblue",
+                        line.col = "red",
+                        text.col = "darkgreen",
                         cols = NULL,
                         main = "",
                         auto.text = TRUE,
@@ -238,9 +248,9 @@ MannKendall <- function(mydata,
         data.col <- "darkgrey"
         text.col <- "black"
     } else {
-        line.col <- "red"
-        data.col <- "skyblue"
-        text.col <- "forestgreen"
+        line.col <- line.col
+        data.col <- data.col
+        text.col <- text.col
     }
 
 
@@ -251,16 +261,16 @@ MannKendall <- function(mydata,
     if (!avg.time %in% c("year", "month")) stop ("avg.time can only be 'month' or 'year'.")
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## cutData depending on type
     mydata <- cutData(mydata, type, ...)
 
     ## for overall data and graph plotting
-    start.year <- startYear(mydata$date)
-    end.year <-  endYear(mydata$date)
-    start.month <- startMonth(mydata$date)
-    end.month <-  endMonth(mydata$date)
+    start.year <- openair:::startYear(mydata$date)
+    end.year <-   openair:::endYear(mydata$date)
+    start.month <-  openair:::startMonth(mydata$date)
+    end.month <-   openair:::endMonth(mydata$date)
 
     ## calculate means
     mydata <- ddply(mydata, type, timeAverage, avg.time = avg.time, statistic = statistic,
@@ -277,10 +287,10 @@ MannKendall <- function(mydata,
         mydata <- mydata[min.idx:max.idx, ]
 
         ## these subsets may have different dates to overall
-        start.year <- startYear(mydata$date)
-        end.year <-  endYear(mydata$date)
-        start.month <- startMonth(mydata$date)
-        end.month <-  endMonth(mydata$date)
+        start.year <-  openair:::startYear(mydata$date)
+        end.year <-   openair:::endYear(mydata$date)
+        start.month <-  openair:::startMonth(mydata$date)
+        end.month <-   openair:::endMonth(mydata$date)
 
 
         if (avg.time == "month") {
@@ -417,13 +427,15 @@ MannKendall <- function(mydata,
                   skip = skip,
                   strip = strip,
                   strip.left = strip.left,
-                  scales = list(x = list(at = dateBreaks(split.data$date, date.breaks)$major,
-                                format = dateBreaks(split.data$date)$format),
+                  scales = list(x = list(at = openair:::dateBreaks(split.data$date, date.breaks)$major,
+                                format = openair:::dateBreaks(split.data$date)$format,
+                                relation = x.relation),
                   y = list(relation = y.relation, rot = 0)),...,
 
                   panel = function(x, y, subscripts,...){
                       ## year shading
-                      panel.shade(split.data, start.year, end.year, ylim = current.panel.limits()$ylim)
+                      openair:::panel.shade(split.data, start.year, end.year,
+                                            ylim = current.panel.limits()$ylim)
                       panel.grid(-1, 0)
 
                       panel.xyplot(x, y, type = "b", col = data.col, ...)
@@ -453,12 +465,14 @@ MannKendall <- function(mydata,
                               units <- "%"
                           }
 
-                          panel.text(min(split.data$date), 0.95 * current.panel.limits()$ylim[2],
+                          ## plot top, middle
+                          panel.text(mean(c(current.panel.limits()$xlim[2], current.panel.limits()$xlim[1])),
+                                     current.panel.limits()$ylim[2],
                                      paste(round(sub.dat[1, slope], dec.place), " ", "[",
                                            round(sub.dat[1, lower], dec.place), ", ",
                                            round(sub.dat[1, upper], dec.place), "] ",
                                            units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
-                                     cex = 0.7, pos = 4, col = text.col)
+                                     cex = 0.7, adj = c(0.5, 1), col = text.col, font = 2)
                       }
                   }
                   )
@@ -525,12 +539,12 @@ MKstats <- function(x, y, alpha, simulate, autocor) {
 
     } else {
         ## trend information in days
-        MKtau <- tau(as.numeric(x), y, alpha = alpha)
+        MKtau <- openair:::tau(as.numeric(x), y, alpha = alpha)
         p <- MKtau$siglevel ## signficance level of trend
     }
 
-    coef <- tsp1reg(as.numeric(x), y)$coef
-    uncer <- regci(as.numeric(x), y, alpha = alpha, autocor = autocor)$regci
+    coef <- openair:::tsp1reg(as.numeric(x), y)$coef
+    uncer <- openair:::regci(as.numeric(x), y, alpha = alpha, autocor = autocor)$regci
 
     if (p >= 0.1) stars <- ""
     if (p < 0.1 & p >= 0.05) stars <- "+"

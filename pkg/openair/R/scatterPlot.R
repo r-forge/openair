@@ -413,7 +413,7 @@ scatterPlot <- function(mydata,
     mydata <- openair:::checkPrep(mydata, vars, type)
 
     ## remove missing data
-    mydata <- na.omit(mydata)
+ #   mydata <- na.omit(mydata)
 
     ## if x is a factor/character, then rotate axis labels for clearer labels
     x.rot <- 0
@@ -427,7 +427,7 @@ scatterPlot <- function(mydata,
     ## continuous colors ###################################################################################################
 
     if (!missing(z) & method == "scatter") {
-        if (z %in% openair:::dateTypes) stop("Colour coding requires 'group' to be continuous numeric variable'")
+        if (z %in% openair:::dateTypes) stop("Colour coding requires 'z' to be continuous numeric variable'")
 
         ## check to see if type is numeric/integer
         if (class(mydata[, z]) %in% c("integer", "numeric") == FALSE) stop(paste("Continuous colour coding requires ", z , " to be numeric", sep = ""))
