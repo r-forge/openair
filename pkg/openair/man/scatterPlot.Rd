@@ -1,6 +1,6 @@
 \name{scatterPlot}
 \alias{scatterPlot}
-\title{Flexible scatterPlots}
+\title{Flexible scatter plots}
 \usage{
   scatterPlot(mydata, x = "nox", y = "no2", z = NA, method
   = "scatter", group = NULL, avg.time = "default",
@@ -12,7 +12,7 @@
   key.columns = 1, strip = TRUE, log.x = FALSE, log.y =
   FALSE, x.inc = 10, y.inc = 10, y.relation = "same",
   x.relation = "same", ref.x = NULL, ref.y = NULL, k = 100,
-  trans = TRUE, auto.text = TRUE, ...)
+  trans = TRUE, map = FALSE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing at least two
@@ -85,21 +85,19 @@
   one of the built-in types as detailed in \code{cutData}
   e.g. "season", "year", "weekday" and so on. For example,
   \code{type = "season"} will produce four plots --- one
-  for each season.
-
-  It is also possible to choose \code{type} as another
-  variable in the data frame. If that variable is numeric,
-  then the data will be split into four quantiles (if
-  possible) and labelled accordingly. If type is an
-  existing character or factor variable, then those
-  categories/levels will be used directly. This offers
-  great flexibility for understanding the variation of
-  different variables and how they depend on one another.
-
-  Type can be up length two e.g. \code{type = c("season",
-  "weekday")} will produce a 2x2 plot split by season and
-  day of the week. Note, when two types are provided the
-  first forms the columns and the second the rows.}
+  for each season. \cr\cr It is also possible to choose
+  \code{type} as another variable in the data frame. If
+  that variable is numeric, then the data will be split
+  into four quantiles (if possible) and labelled
+  accordingly. If type is an existing character or factor
+  variable, then those categories/levels will be used
+  directly. This offers great flexibility for understanding
+  the variation of different variables and how they depend
+  on one another.  \cr\cr Type can be up length two e.g.
+  \code{type = c("season", "weekday")} will produce a 2x2
+  plot split by season and day of the week. Note, when two
+  types are provided the first forms the columns and the
+  second the rows.}
 
   \item{layout}{Determines how the panels are laid out. By
   default, plots will be shown in one column with the
@@ -223,12 +221,15 @@
   square root transform is used, if \code{FALSE} a linear
   scale is used.}
 
+  \item{map}{Should a base map be drawn? This option is
+  under development.}
+
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{\dots}{Other graphical parameters passed onto
+  \item{...}{Other graphical parameters passed onto
   \code{lattice:xyplot} and \code{cutData}. For example, in
   the case of \code{cutData} the option \code{hemisphere =
   "southern"}.}

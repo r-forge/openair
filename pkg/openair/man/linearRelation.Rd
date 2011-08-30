@@ -110,7 +110,7 @@
   relationship between two pollutants vary over time, by
   day of the week, diurnally and so on. The
   \code{linearRelation} function does just that - it fits a
-  linearRelationship between two pollutants over a wide
+  linear relationship between two pollutants over a wide
   range of time periods determined by \code{period}.
 
   \code{linearRelation} function is particularly useful if
@@ -135,13 +135,14 @@
   A smooth line is added to all plots except \code{period =
   "weekday"} using \code{smooth.spline}.
   \code{smooth.spline} uses Generalized Cross Validation
-  (GCV) to find a line that is (in laymans terms!) neither
-  too wiggly nor too smooth. The line tends to highlight
-  both the overall tendency of a relationship as well as
-  some of the more interesting features.
+  (GCV) to find a line that is neither too wiggly nor too
+  smooth. The line tends to highlight both the overall
+  tendency of a relationship as well as some of the more
+  interesting features.
 }
 \examples{
-# monthly relationship between NOx and SO2 - note rapid fall in ratio at the beginning of the series
+# monthly relationship between NOx and SO2 - note rapid fall in
+# ratio at the beginning of the series
 linearRelation(mydata, x = "nox", y = "so2")
 
 # monthly oxidant slope - approximately corresponding to f-NO2
@@ -149,9 +150,10 @@ linearRelation(mydata, x = "nox", y = "so2")
 # clear increase in slope at the end of 2002/beginning of 2003
 linearRelation(mydata, x = "nox", y = "ox")
 
-# diurnal oxidant slope by year
-# clear change in magnitude starting 2003, but the diurnal profile has also changed:
-# the morning and evening peak hours are more important, presumably due to change in certain vehicle types
+# diurnal oxidant slope by year # clear change in magnitude
+# starting 2003, but the diurnal profile has also changed: the
+# morning and evening peak hours are more important, presumably due
+# to change in certain vehicle types
 linearRelation(mydata, x = "nox", y = "ox", period = "hour", condition = TRUE)
 
 # PM2.5/PM10 ratio, but only plot where monthly R2 >= 0.8

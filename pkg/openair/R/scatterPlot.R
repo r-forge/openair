@@ -1,4 +1,4 @@
-##' Flexible scatterPlots
+##' Flexible scatter plots
 ##'
 ##' Scatter plots with conditioning and three main approaches: conventional
 ##' scatterPlot, hexagonal binning and kernel density estimates. The former
@@ -40,9 +40,8 @@
 ##' overkill and the user can opt to remove the key and/or the strip by setting
 ##' \code{key} and/or \code{strip} to \code{FALSE}. One reason to do this is to
 ##' maximise the plotting area and therefore the information shown.
-##'
 ##' @param mydata A data frame containing at least two numeric variables to
-##'   plot.
+##' plot.
 ##' @param x Name of the x-variable to plot. Note that x can be a date field or
 ##'   a factor. For example, \code{x} can be one of the \code{openair} built in
 ##'   types such as \code{"year"} or \code{"season"}.
@@ -84,22 +83,22 @@
 ##' @param percentile The percentile level in % used when \code{statistic =
 ##'   "percentile"} and when aggregating the data with \code{avg.time}. The
 ##'   default is 95. Not used if \code{avg.time = "default"}.
-##' @param type \code{type} determines how the data are split i.e. conditioned,
-##'   and then plotted. The default is will produce a single plot using the
-##'   entire data. Type can be one of the built-in types as detailed in
-##'   \code{cutData} e.g. "season", "year", "weekday" and so on. For example,
-##'   \code{type = "season"} will produce four plots --- one for each season.
-##'
-##' It is also possible to choose \code{type} as another variable in the data
-##'   frame. If that variable is numeric, then the data will be split into four
-##'   quantiles (if possible) and labelled accordingly. If type is an existing
-##'   character or factor variable, then those categories/levels will be used
-##'   directly. This offers great flexibility for understanding the variation
-##'   of different variables and how they depend on one another.
-##'
-##' Type can be up length two e.g. \code{type = c("season", "weekday")} will
-##'   produce a 2x2 plot split by season and day of the week. Note, when two
-##'   types are provided the first forms the columns and the second the rows.
+##' @param type \code{type} determines how the data are split
+##' i.e. conditioned, and then plotted. The default is will produce a
+##' single plot using the entire data. Type can be one of the built-in
+##' types as detailed in \code{cutData} e.g. "season", "year",
+##' "weekday" and so on. For example, \code{type = "season"} will
+##' produce four plots --- one for each season. \cr\cr It is also
+##' possible to choose \code{type} as another variable in the data
+##' frame. If that variable is numeric, then the data will be split
+##' into four quantiles (if possible) and labelled accordingly. If
+##' type is an existing character or factor variable, then those
+##' categories/levels will be used directly. This offers great
+##' flexibility for understanding the variation of different variables
+##' and how they depend on one another.  \cr\cr Type can be up length
+##' two e.g. \code{type = c("season", "weekday")} will produce a 2x2
+##' plot split by season and day of the week. Note, when two types are
+##' provided the first forms the columns and the second the rows.
 ##' @param layout Determines how the panels are laid out. By default, plots
 ##'   will be shown in one column with the number of rows equal to the number
 ##'   of pollutants, for example. If the user requires 2 columns and two rows,
@@ -174,12 +173,13 @@
 ##'   a good colour scale with skewed data it is a good idea to "compress" the
 ##'   scale. If \code{TRUE} a square root transform is used, if \code{FALSE} a
 ##'   linear scale is used.
+##' @param map Should a base map be drawn? This option is under development.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param ... Other graphical parameters passed onto \code{lattice:xyplot}
+##'and \code{cutData}. For example, in the case of \code{cutData} the option
+##'\code{hemisphere = "southern"}.
 ##' @export
 ##' @return As well as generating the plot itself, \code{scatterPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -264,7 +264,6 @@
 ##' }
 ##'
 ##'
-##
 scatterPlot <- function(mydata,
                         x = "nox",
                         y = "no2",
@@ -304,6 +303,7 @@ scatterPlot <- function(mydata,
                         ref.y = NULL,
                         k = 100,
                         trans = TRUE,
+                        map = FALSE,
                         auto.text = TRUE, ...)   {
 
     ## basic function to plot single/multiple time series in flexible waysproduce scatterPlot
@@ -462,7 +462,8 @@ scatterPlot <- function(mydata,
 
         legend <- list(right = list(fun = draw.colorkey, args =
                        list(key = list(col = openColours(cols, length(breaks)),
-                            at = breaks, labels = list(at = br ^ (1 / thePower), labels = br)),
+                            at = breaks, labels = list(at = br ^ (1 / thePower),
+                                         labels = br)),
                             draw = FALSE)))
 
 
@@ -471,7 +472,8 @@ scatterPlot <- function(mydata,
         mydata <- cutData(mydata, type, ...)
         if (missing(group)) {
 
-            if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <- factor("group")
+            if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <-
+                factor("group")
             ## don't overwrite a
         } else {  ## means that group is there
             mydata <- cutData(mydata, group, ...)
@@ -510,14 +512,16 @@ scatterPlot <- function(mydata,
         if (key & npol > 1) {
             if (plot.type == "p") {
                 key <- list(points = list(col = myColors[1:npol]), pch = pch,
-                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            text = list(lab = pol.name, cex = 0.8),
+                            space = "bottom", columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
 
             if (plot.type == "l") {
                 key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            text = list(lab = pol.name, cex = 0.8),  space = "bottom",
+                            columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
@@ -525,7 +529,8 @@ scatterPlot <- function(mydata,
             if (plot.type == "b") {
                 key <- list(points = list(col = myColors[1:npol]), pch = pch,
                             lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = "bottom", columns = key.columns,
+                            text = list(lab = pol.name, cex = 0.8),  space = "bottom",
+                            columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
@@ -621,6 +626,13 @@ scatterPlot <- function(mydata,
                                             lty = 1, lwd = 1, se = ci, ...)
                       if (spline) panel.smooth.spline(x, y, col = myColors[group.number],
                                                       lwd = lwd, ...)
+
+
+                      if (map) {
+                          require(maps)
+                          mp <- map(database="world", plot = FALSE)
+                          llines(mp$x, mp$y, col = "black")
+                      }
 
 
                       if (mod.line) {
@@ -759,6 +771,12 @@ scatterPlot <- function(mydata,
                                  panel.abline(a = c(0, 2), lty = 5)
                                  panel.abline(a = c(0, 1), lty = 1)
                              }
+
+                             if (map) {
+                                 require(maps)
+                                 mp <- map(database="world", plot = FALSE)
+                                 llines(mp$x, mp$y, col = "black")
+                      }
                              ## add reference lines
                              panel.abline(v = ref.x, lty = 5)
                              panel.abline(h = ref.y, lty = 5)
@@ -860,12 +878,12 @@ scatterPlot <- function(mydata,
 
 
 
-panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..., se = TRUE,
-                          level = 0.95, n = 100, col = plot.line$col, col.se = col,
-                          lty = plot.line$lty, lwd = plot.line$lwd, alpha = plot.line$alpha,
-                          alpha.se = 0.25, border = NA, subscripts, group.number, group.value,
-                          type, col.line, col.symbol, fill, pch, cex, font, fontface,
-                          fontfamily)
+panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ...,
+                          se = TRUE, level = 0.95, n = 100, col = plot.line$col,
+                          col.se = col, lty = plot.line$lty, lwd = plot.line$lwd,
+                          alpha = plot.line$alpha, alpha.se = 0.25, border = NA,
+                          subscripts, group.number, group.value, type, col.line,
+                          col.symbol, fill, pch, cex, font, fontface, fontfamily)
 {
 
 
@@ -880,8 +898,8 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
 
               if (se) {
                   ## predicts 95% CI by default
-                  panel.polygon(x = c(xseq, rev(xseq)), y = c(pred[, 2], rev(pred[, 3])), col = col.se,
-                                alpha = alpha.se, border = border)
+                  panel.polygon(x = c(xseq, rev(xseq)), y = c(pred[, 2], rev(pred[, 3])),
+                                col = col.se,  alpha = alpha.se, border = border)
               }
 
               pred <- pred[, 1]
@@ -898,13 +916,15 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
               intercept <- coef(mod)[1]
 
               if (intercept > 0) symb <- "+" else symb <- ""
-              panel.text(x, y, quickText(paste(y.nam, "=", format(slope, digits = 2), "[", x.nam, "]", symb,
+              panel.text(x, y, quickText(paste(y.nam, "=", format(slope, digits = 2),
+                                               "[", x.nam, "]", symb,
                                                format(intercept, digits = 2),
                                                " R2=",  format(r.sq, digits = 2),
                                                sep = "")), cex = 0.7, pos = 4)
 
           }, error = function(x) return)
 }
+
 
 
 

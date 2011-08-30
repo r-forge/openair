@@ -103,17 +103,17 @@
 ##'
 ##'
 ##' # monthly relationship between NOx and SO2 - note rapid fall in
-##' ratio at the beginning of the series linearRelation(mydata, x =
-##' "nox", y = "so2")
-##'
-##' # monthly oxidant slope - approximately corresponding to f-NO2
-##' # note data frame needs date, nox, no2 and o3
-##' # clear increase in slope at the end of 2002/beginning of 2003
+##' # ratio at the beginning of the series
+##' linearRelation(mydata, x = "nox", y = "so2")
+##' # monthly relationship between NOx and SO2 - note rapid fall in
+##' ratio at the beginning of the series
+##' linearRelation(mydata, x = "nox", y = "so2")
 ##' linearRelation(mydata, x = "nox", y = "ox")
 ##'
-##' # diurnal oxidant slope by year
-##' # clear change in magnitude starting 2003, but the diurnal profile has also changed:
-##' # the morning and evening peak hours are more important, presumably due to change in certain vehicle types
+##' # diurnal oxidant slope by year # clear change in magnitude
+##' # starting 2003, but the diurnal profile has also changed: the
+##' # morning and evening peak hours are more important, presumably due
+##' # to change in certain vehicle types
 ##' linearRelation(mydata, x = "nox", y = "ox", period = "hour", condition = TRUE)
 ##'
 ##' # PM2.5/PM10 ratio, but only plot where monthly R2 >= 0.8
