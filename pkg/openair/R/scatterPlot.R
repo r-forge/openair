@@ -602,7 +602,6 @@ scatterPlot <- function(mydata,
                       subscripts,...)
                   {
 
-<<<<<<< .mine
 
                       if (!is.na(z)) panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                   as.table = TRUE, ...)
@@ -617,19 +616,6 @@ scatterPlot <- function(mydata,
                                    myColors[group.number], lwd = 1, lty = 5,
                                    x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
 
-=======
-
-                      if (!is.na(z)) panel.xyplot(x, y, col.symbol = thecol[subscripts],
-                                                  as.table = TRUE, ...)
-
-                      if (is.na(z)) panel.xyplot(x, y, type = plot.type,
-                                                 col.symbol = myColors[group.number],
-                                                 col.line = myColors[group.number], lty = lty, lwd = lwd,
-                                                 as.table = TRUE,...)
-
-                      if (linear & npol == 1) panel.linear(x, y, col = "black", myColors[group.number],
-                                   lwd = 1, lty = 5, x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
->>>>>>> .r433
 
                       if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
                                             lty = 1, lwd = 1, se = ci, ...)
@@ -681,7 +667,7 @@ scatterPlot <- function(mydata,
                           })
     }
 
-<<<<<<< .mine
+
     if (method == "level") {
 
         ## bin data
@@ -780,103 +766,7 @@ scatterPlot <- function(mydata,
                          })
     }
 
-=======
-    if (method == "level") {
 
-        ## bin data
-        mydata$ygrid <- round_any(mydata[ , y], y.inc)
-        mydata$xgrid <- round_any(mydata[ , x], x.inc)
-
-        rhs <- c("xgrid", "ygrid", type)
-        rhs <- paste(rhs, collapse = "+")
-        myform <- formula(paste(z, "~", rhs))
-        mydata <-aggregate(myform, data = mydata, mean, na.rm = TRUE)
-
-        smooth.grid <- function(mydata, z) {
-
-            myform <- formula(paste(z, "~ s(xgrid, ygrid, k = ", k , ")", sep = ""))
-            res <- 101
-            Mgam <- gam(myform, data = mydata)
-            new.data <- expand.grid(xgrid = seq(min(mydata$xgrid), max(mydata$xgrid), length = res),
-                                    ygrid = seq(min(mydata$ygrid), max(mydata$ygrid), length = res))
-
-            pred <- predict.gam(Mgam, newdata = new.data)
-            pred <- as.vector(pred)
-
-            new.data[ , z] <- pred
-
-            ## exlcude too far
-            ## exclude predictions too far from data (from mgcv)
-            x <- seq(min(mydata$xgrid), max(mydata$xgrid), length = res)
-            y <- seq(min(mydata$ygrid), max(mydata$ygrid), length = res)
-
-            wsp <- rep(x, res)
-            wdp <- rep(y, rep(res, res))
-
-            ## data with gaps caused by min.bin
-            all.data <- na.omit(data.frame(xgrid = mydata$xgrid, ygrid = mydata$ygrid, z))
-            ind <- with(all.data, exclude.too.far(wsp, wdp, mydata$xgrid, mydata$ygrid, dist = 0.05))
-
-            new.data[ind, z] <- NA
-
-            new.data
-        }
-
-        if (smooth) mydata <- ddply(mydata, type, smooth.grid, z)
-
-        if (missing(main)) main <- paste(x, "vs.", y, "by levels of", z)
-
-        ## basic function for lattice call + defaults
-        temp <- paste(type, collapse = "+")
-        myform <- formula(paste(z, "~ xgrid * ygrid |", temp, sep = ""))
-
-        nlev <- 200
-
-        breaks <- pretty(mydata[ , z], n = nlev)
-
-        nlev2 <- length(breaks)
-
-        if (missing(cols)) cols <- "default"
-        col <- openColours(cols, (nlev2 - 1))
-
-        col.scale <- breaks
-
-
-        plt <- levelplot(myform, data = mydata,
-                         ylab = quickText(ylab, auto.text),
-                         xlab = quickText(xlab, auto.text),
-                         strip = strip,
-                         as.table = TRUE,
-                         layout = layout,
-                         skip = skip,
-                         region = TRUE,
-                         col.regions = col,
-                         at = col.scale,
-                         main = quickText(main, auto.text),
-                         par.strip.text = list(cex = 0.8),
-                         colorkey = TRUE,...,
-                         panel = function(x, y, z, subscripts,...) {
-                             panel.grid(h = -1, v = -1)
-                             panel.levelplot(x, y, z, subscripts,
-                                             interpolate = FALSE,
-                                             at = col.scale,
-                                             pretty = TRUE,
-                                             col.regions = col,
-                                             labels = FALSE)
-
-                             if (mod.line) {
-                                 panel.abline(a = c(0, 0.5), lty = 5)
-                                 panel.abline(a = c(0, 2), lty = 5)
-                                 panel.abline(a = c(0, 1), lty = 1)
-                             }
-                             ## add reference lines
-                             panel.abline(v = ref.x, lty = 5)
-                             panel.abline(h = ref.y, lty = 5)
-
-                         })
-    }
-
->>>>>>> .r433
     ## kernel density
 
 
