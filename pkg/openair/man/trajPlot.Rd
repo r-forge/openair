@@ -5,7 +5,7 @@
 \usage{
   trajLevel(mydata, lon = "lon", lat = "lat", pollutant =
   "pm10", method = "level", smooth = TRUE, map = TRUE,
-  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, cex = NA, ...)
+  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat", pollutant =
   "pm10", method = "scatter", smooth = FALSE, map = TRUE,
@@ -39,18 +39,18 @@
 
   \item{aspect}{Aspect for map.}
 
-  \item{cex}{Size of points used to plot back trajectories
-  in \code{trajPlot}, not used in \code{trajLevel}}
-
   \item{...}{other arguments to \code{scatterPlot} and
   \code{cutData}.}
+
+  \item{cex}{Size of points used in \code{trajPlot} for
+  individual back trajectory points}
 }
 \value{
   NULL
 }
 \description{
   This function plots back trajectories. There are two
-  relation functions: \code{trajPlot} and \code{trajLevel}.
+  related functions: \code{trajPlot} and \code{trajLevel}.
   These functions require that data are imported using the
   \code{importTraj} function.
 }

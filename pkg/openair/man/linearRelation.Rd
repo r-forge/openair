@@ -144,10 +144,8 @@
 # monthly relationship between NOx and SO2 - note rapid fall in
 # ratio at the beginning of the series
 linearRelation(mydata, x = "nox", y = "so2")
-
-# monthly oxidant slope - approximately corresponding to f-NO2
-# note data frame needs date, nox, no2 and o3
-# clear increase in slope at the end of 2002/beginning of 2003
+# monthly relationship between NOx and SO2 - note rapid fall in
+# ratio at the beginning of the series
 linearRelation(mydata, x = "nox", y = "ox")
 
 # diurnal oxidant slope by year # clear change in magnitude

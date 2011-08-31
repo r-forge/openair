@@ -1,18 +1,10 @@
 ##' Trajectory plots with conditioning
 ##'
-##' This function plots back trajectories. There are two relation
+##' This function plots back trajectories. There are two related
 ##' functions: \code{trajPlot} and \code{trajLevel}. These functions
 ##' require that data are imported using the \code{importTraj}
 ##' function.
-##' @aliases trajPlot trajLevel
-##' @usage  trajLevel(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
-##'                    method = "level", smooth = TRUE, map = TRUE, lon.inc = 1.5,
-##'                       lat.inc = 1.5, aspect = 1, cex = NA,  ...)
-##'
-##'  trajPlot(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
-##'                      method = "scatter", smooth = FALSE, map = TRUE, lon.inc = 1.5,
-##'                      lat.inc = 1.5, aspect = 1, cex = 0.1, ...)
-##'
+##' @rdname trajPlot
 ##' @param mydata Data frame, the result of importing a trajectory
 ##' file using \code{importTraj}
 ##' @param lon Column containing the longitude, as a decimal.
@@ -29,8 +21,6 @@
 ##' @param lat.inc The latitude-interval to be used for binning data
 ##' when \code{method = "level"}.
 ##' @param aspect Aspect for map.
-##' @param cex Size of points used to plot back trajectories in
-##' \code{trajPlot}, not used in \code{trajLevel}
 ##' @param ... other arguments to \code{scatterPlot} and \code{cutData}.
 ##' @export
 ##' @return NULL
@@ -38,13 +28,17 @@
 ##' @author David Carslaw
 trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                       method = "level", smooth = TRUE, map = TRUE, lon.inc = 1.5,
-                      lat.inc = 1.5, aspect = 1, cex = NA,...)  {
+                      lat.inc = 1.5, aspect = 1,...)  {
 
     scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
                 map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,  ...)
 
 }
 
+
+##' @rdname trajPlot
+##' @param cex Size of points used in \code{trajPlot} for individual back trajectory points
+##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                      method = "scatter", smooth = FALSE, map = TRUE, lon.inc = 1.5,
                      lat.inc = 1.5, aspect = 1, cex = 0.1, ...)
