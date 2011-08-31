@@ -51,7 +51,7 @@
 ##' @author David Carslaw
 ##' @examples
 ##'
-##' To be added
+##' # To be added
 trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                       method = "level", smooth = TRUE, map = TRUE, lon.inc = 1.5,
                       lat.inc = 1.5, aspect = 1,...)  {

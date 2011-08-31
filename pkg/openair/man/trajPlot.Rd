@@ -75,14 +75,14 @@
   the corresponding concentrations. For these purposes
   \code{trajLevel} should be used. A further useful
   refinement is to smooth the resulting surface, which is
-  possible by setting \code{smooth = FALSE}.
+  possible by setting \code{smooth = TRUE}.
 }
 \note{
   This function is under active development and is likely
   to change
 }
 \examples{
-To be added
+# To be added
 }
 \author{
   David Carslaw
