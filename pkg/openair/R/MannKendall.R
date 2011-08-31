@@ -402,9 +402,16 @@ MannKendall <- function(mydata,
                                 ((slope.start * as.numeric(date.end) / 365 + intercept.start) /
                                  (slope.start * as.numeric(date.start) / 365 + intercept.start) - 1) /
                                 (as.numeric(date.end) - as.numeric(date.start)))
+    ## got upper/lower intercepts mixed up To FIX?
+    percent.change <- transform(percent.change, lower.percent = 100 * 365 *
+                                ((lower.start * as.numeric(date.end) / 365 + intercept.upper.start) /
+                                 (lower.start * as.numeric(date.start) / 365 + intercept.upper.start) - 1) /
+                                (as.numeric(date.end) - as.numeric(date.start)))
 
-    percent.change <- transform(percent.change, lower.percent = slope.percent / slope.start * lower.start,
-                                upper.percent = slope.percent / slope.start * upper.start)
+    percent.change <- transform(percent.change, upper.percent = 100 * 365 *
+                                ((upper.start * as.numeric(date.end) / 365 + intercept.lower.start) /
+                                 (upper.start * as.numeric(date.start) / 365 + intercept.lower.start) - 1) /
+                                (as.numeric(date.end) - as.numeric(date.start)))
 
     percent.change <- percent.change[ ,  c(type, "slope.percent", "lower.percent", "upper.percent")]
 
@@ -440,7 +447,8 @@ MannKendall <- function(mydata,
 
                       panel.xyplot(x, y, type = "b", col = data.col, ...)
 
-                      sub.dat <- na.omit(split.data[subscripts, ])
+                     # sub.dat <- na.omit(split.data[subscripts, ])
+                      sub.dat <- split.data[subscripts, ]
 
                       if (nrow(sub.dat) > 0) {
                           panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
