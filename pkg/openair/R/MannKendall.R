@@ -383,7 +383,7 @@ MannKendall <- function(mydata,
 
     split.data <- transform(split.data, slope = 365 * b, intercept = a,
                             intercept.lower = lower.a, intercept.upper = upper.a,
-                            lower = 365 * upper.b, upper = 365 * lower.b)
+                            lower = 365 * lower.b, upper = 365 * upper.b)
 
     ## aggregated results
 
@@ -404,13 +404,13 @@ MannKendall <- function(mydata,
                                 (as.numeric(date.end) - as.numeric(date.start)))
     ## got upper/lower intercepts mixed up To FIX?
     percent.change <- transform(percent.change, lower.percent = 100 * 365 *
-                                ((lower.start * as.numeric(date.end) / 365 + intercept.upper.start) /
-                                 (lower.start * as.numeric(date.start) / 365 + intercept.upper.start) - 1) /
+                                ((lower.start * as.numeric(date.end) / 365 + intercept.lower.start) /
+                                 (lower.start * as.numeric(date.start) / 365 + intercept.lower.start) - 1) /
                                 (as.numeric(date.end) - as.numeric(date.start)))
 
     percent.change <- transform(percent.change, upper.percent = 100 * 365 *
-                                ((upper.start * as.numeric(date.end) / 365 + intercept.lower.start) /
-                                 (upper.start * as.numeric(date.start) / 365 + intercept.lower.start) - 1) /
+                                ((upper.start * as.numeric(date.end) / 365 + intercept.upper.start) /
+                                 (upper.start * as.numeric(date.start) / 365 + intercept.upper.start) - 1) /
                                 (as.numeric(date.end) - as.numeric(date.start)))
 
     percent.change <- percent.change[ ,  c(type, "slope.percent", "lower.percent", "upper.percent")]
@@ -453,10 +453,10 @@ MannKendall <- function(mydata,
                       if (nrow(sub.dat) > 0) {
                           panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
                                        col = line.col, lwd = 2)
-                          panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "upper"] / 365,
+                          panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "lower"] / 365,
                                        lty = 5,
                                        col = line.col)
-                          panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "lower"] / 365,
+                          panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "upper"] / 365,
                                        lty = 5,
                                        col = line.col)
 
@@ -560,10 +560,11 @@ MKstats <- function(x, y, alpha, simulate, autocor) {
     if (p < 0.01 & p >= 0.001) stars <- "**"
     if (p < 0.001) stars <- "***"
 
-    ## make a data frame with all the results, wanring is about row name
+
     results <- suppressWarnings(data.frame(date = x, a = coef[1], b = coef[2],
-                                           lower.a = uncer[1, 1],
-                                           lower.b = uncer[2, 2], upper.a = uncer[1, 2],
-                                           upper.b = uncer[2, 1],  p = p, p.stars = stars))
+                                           upper.a = uncer[1, 1],
+                                           upper.b = uncer[2, 2],
+                                           lower.a = uncer[1, 2],
+                                           lower.b = uncer[2, 1],  p = p, p.stars = stars))
     results
 }
