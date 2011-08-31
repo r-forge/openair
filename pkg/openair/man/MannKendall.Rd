@@ -6,11 +6,11 @@
   type = "default", avg.time = "month", statistic = "mean",
   percentile = NA, data.thresh = 0, simulate = FALSE, alpha
   = 0.05, dec.place = 2, ylab = pollutant, xlab = "year",
-  x.relation = "same", y.relation = "same", data.col =
-  "cornflowerblue", line.col = "red", text.col =
-  "darkgreen", cols = NULL, main = "", auto.text = TRUE,
-  autocor = FALSE, slope.percent = FALSE, date.breaks = 7,
-  ...)
+  lab.frac = 0.99, lab.cex = 0.8, x.relation = "same",
+  y.relation = "same", data.col = "cornflowerblue",
+  line.col = "red", text.col = "darkgreen", cols = NULL,
+  main = "", auto.text = TRUE, autocor = FALSE,
+  slope.percent = FALSE, date.breaks = 7, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -84,6 +84,11 @@
   \item{ylab}{y-axis label.}
 
   \item{xlab}{x-axis label.}
+
+  \item{lab.frac}{Fraction along the y-axis that the trend
+  information should be printed.}
+
+  \item{lab.cex}{Size of text for trend information.}
 
   \item{x.relation}{This determines how the x-axis scale is
   plotted. "same" ensures all panels use the same scale and

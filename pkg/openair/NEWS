@@ -5,7 +5,12 @@ Changes in openair 0.5-6 [2011-08-30]
 	and plotting pre-defined HYSPLIT back trajectories. These
 	functions are under active development and are for testing
 	purposes only!
-*	Fix error in % upper/lower uncertainty intervals for MannKendall
+*	Fix error in % upper/lower uncertainty intervals for
+	MannKendall
+*	More control over trend information placement for MannKendall
+	- arguments text.col, lab.frac (for vertical position) and
+	lab.cex (for font size)
+
 Changes in openair 0.5-4 [2011-08-04]
 =====================================
 *	Use roxygen2 for package documentation and future

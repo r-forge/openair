@@ -99,6 +99,8 @@
 ##'   at. The default is 2.
 ##' @param ylab y-axis label.
 ##' @param xlab x-axis label.
+##' @param lab.frac Fraction along the y-axis that the trend information should be printed.
+##' @param lab.cex Size of text for trend information.
 ##' @param x.relation This determines how the x-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
 ##'   scales. The latter is a useful setting when plotting data with very
@@ -225,6 +227,8 @@ MannKendall <- function(mydata,
                         dec.place = 2,
                         ylab = pollutant,
                         xlab = "year",
+                        lab.frac = 0.99,
+                        lab.cex = 0.8,
                         x.relation = "same",
                         y.relation = "same",
                         data.col = "cornflowerblue",
@@ -475,12 +479,13 @@ MannKendall <- function(mydata,
 
                           ## plot top, middle
                           panel.text(mean(c(current.panel.limits()$xlim[2], current.panel.limits()$xlim[1])),
-                                     current.panel.limits()$ylim[2],
+                                     current.panel.limits()$ylim[1] + lab.frac *
+                                     (current.panel.limits()$ylim[2] - current.panel.limits()$ylim[1]),
                                      paste(round(sub.dat[1, slope], dec.place), " ", "[",
                                            round(sub.dat[1, lower], dec.place), ", ",
                                            round(sub.dat[1, upper], dec.place), "] ",
                                            units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
-                                     cex = 0.7, adj = c(0.5, 1), col = text.col, font = 2)
+                                     cex = lab.cex, adj = c(0.5, 1), col = text.col, font = 2)
                       }
                   }
                   )
