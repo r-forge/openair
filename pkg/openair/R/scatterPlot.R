@@ -405,6 +405,10 @@ scatterPlot <- function(mydata,
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
+    ## decide if a trajectory plot is being drawn AND if a line is required rather
+    ## than points
+    traj <- FALSE
+    if (all(c("date", "lat", "lon", "height", "pressure") %in% names(mydata)) & plot.type == "l") traj <- TRUE
 
 
     ## data checks
@@ -445,6 +449,7 @@ scatterPlot <- function(mydata,
 
         if (missing(cols)) cols <- "default" ## better default colours for this
         thecol <- openColours(cols, 100)[cut(mydata[, z], 100, label = FALSE)]
+        mydata$col <- thecol
 
         breaks <- unique(c(0, pretty(mydata[ , z], 100)))
         br <- pretty((mydata[ , z] ^ thePower), n = 10)  ## breaks for scale
@@ -581,6 +586,7 @@ scatterPlot <- function(mydata,
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
 
+
     if (method == "scatter") {
         plt <- xyplot(myform,  data = mydata, groups = MyGroupVar,
                       type = c("p", "g"),
@@ -606,9 +612,15 @@ scatterPlot <- function(mydata,
                       lty, lwd, group.number,
                       subscripts,...)
                   {
+                      ## specific treatemt of trajectory lines
+                      ## in order to avoid a line back to the origin, need to process in batches
+                      if (traj) {
+                           ddply(mydata[subscripts, ], .(date), function (x) llines(x$lon, x$lat,
+                                                                                    col.line = x$col,
+                                                                      lwd = lwd, lty = lty))
+                      }
 
-
-                      if (!is.na(z)) panel.xyplot(x, y, col.symbol = thecol[subscripts],
+                      if (!is.na(z) & !traj) panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                   as.table = TRUE, ...)
 
                       if (is.na(z)) panel.xyplot(x, y, type = plot.type,
