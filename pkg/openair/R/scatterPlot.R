@@ -410,6 +410,8 @@ scatterPlot <- function(mydata,
     traj <- FALSE
     if (all(c("date", "lat", "lon", "height", "pressure") %in% names(mydata)) & plot.type == "l") traj <- TRUE
 
+    ## will need date so that trajectory groups can be coloured
+    if (traj)  vars <- c(vars, "date")
 
     ## data checks
 
@@ -615,6 +617,7 @@ scatterPlot <- function(mydata,
                       ## specific treatemt of trajectory lines
                       ## in order to avoid a line back to the origin, need to process in batches
                       if (traj) {
+
                            ddply(mydata[subscripts, ], .(date), function (x) llines(x$lon, x$lat,
                                                                                     col.line = x$col,
                                                                       lwd = lwd, lty = lty))
