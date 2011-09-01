@@ -50,16 +50,19 @@ is.openair <- function(x, full.test=TRUE, ...){
 
 #results
 
+##' @export results
+results <- function(object,...)
+                  UseMethod("results")
+
 ####################
 #results method
 #results.default
 ####################
 #to handle all other cases without error
 #
-##' @S3method results openair
-results <- function(object,...)
-                  UseMethod("results")
+
 ##' @S3method results default
+
 results.default <- function(object,...){
 
     object
@@ -73,6 +76,8 @@ results.default <- function(object,...){
 #################
 #to do
 #################
+
+##' @S3method results openair
 
 results.openair <- function(object,
                        subset = "all", silent=FALSE,
