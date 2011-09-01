@@ -4,7 +4,7 @@
 \title{Traditional wind rose plot and pollution rose variation}
 \usage{
   windRose(mydata, ws.int = 2, angle = 30, type =
-  "default", cols = "default", grid.line = 5, width = 1,
+  "default", cols = "default", grid.line = NULL, width = 1,
   auto.text = TRUE, breaks = 4, offset = 10, paddle = TRUE,
   key.header = NULL, key.footer = "(m/s)", key.position =
   "bottom", key = TRUE, dig.lab = 5, statistic =
@@ -23,17 +23,6 @@
   of 1 or 0.5 m/s may be better. Note, this argument is
   superseded in \code{pollutionRose}. See \code{breaks}
   below.}
-
-  \item{breaks}{The number of break points produced for
-  wind speed in \code{windRose} or pollutant in
-  \code{pollutionRose}. For \code{windRose} and the
-  \code{ws.int} default of 2 m/s, the default, 4, generates
-  the break points 2, 4, 6, 8 m/s. For
-  \code{pollutionRose}, the default, 6, attempts to breaks
-  the supplied data at approximately 6 sensible break
-  points. For example, the argument \code{breaks = c(1, 10,
-  100)} breaks the data into segments <1, 1-10, 10-100,
-  >100.}
 
   \item{angle}{Default angle of "spokes" is 30. Other
   potentially useful angles are 45 and 10. Note that the
@@ -76,32 +65,44 @@
   However, it can also be forced to a specific value, e.g.
   \code{grid.line = 10}.}
 
-  \item{paddle}{Either \code{TRUE} (default) or
-  \code{FALSE}. If \code{TRUE} plots rose using `paddle'
-  style spokes. If \code{FALSE} plots rose using `wedge'
-  style spokes.}
-
   \item{width}{For \code{paddle = TRUE}, the adjustment
   factor for width of wind speed intervals. For example,
   \code{width = 1.5} will make the paddle width 1.5 times
   wider.}
-
-  \item{offset}{The size of the 'hole' in the middle of the
-  plot, expressed as a percentage of the polar axis scale,
-  default 10.}
 
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{key.header,key.footer}{Adds additional text/labels
-  above and/or below the scale key, respectively. For
-  example, passing \code{windRose(mydata, key.header =
-  "ws")} adds the addition text as a scale header. Note:
-  This argument is passed to \code{drawOpenKey} via
-  \code{quickText}, applying the \code{auto.text} argument,
-  to handle formatting.}
+  \item{breaks}{The number of break points produced for
+  wind speed in \code{windRose} or pollutant in
+  \code{pollutionRose}. For \code{windRose} and the
+  \code{ws.int} default of 2 m/s, the default, 4, generates
+  the break points 2, 4, 6, 8 m/s. For
+  \code{pollutionRose}, the default, 6, attempts to breaks
+  the supplied data at approximately 6 sensible break
+  points. For example, the argument \code{breaks = c(1, 10,
+  100)} breaks the data into segments <1, 1-10, 10-100,
+  >100.}
+
+  \item{offset}{The size of the 'hole' in the middle of the
+  plot, expressed as a percentage of the polar axis scale,
+  default 10.}
+
+  \item{paddle}{Either \code{TRUE} (default) or
+  \code{FALSE}. If \code{TRUE} plots rose using `paddle'
+  style spokes. If \code{FALSE} plots rose using `wedge'
+  style spokes.}
+
+  \item{key.header}{Adds additional text/labels above
+  and/or below the scale key, respectively. For example,
+  passing \code{windRose(mydata, key.header = "ws")} adds
+  the addition text as a scale header. Note: This argument
+  is passed to \code{drawOpenKey} via \code{quickText},
+  applying the auto.text argument, to handle formatting.}
+
+  \item{key.footer}{see \code{key.footer}.}
 
   \item{key.position}{Location where the scale key is to
   plotted.  Allowed arguments currently include
