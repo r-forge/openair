@@ -21,7 +21,8 @@ Suggests:
     latticeExtra,
     hexbin,
     RgoogleMaps,
-    ellipse,maps
+    ellipse,
+    maps
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 Description: Tools to analyse, interpret and understand air
     pollution data. Data are typically hourly time series

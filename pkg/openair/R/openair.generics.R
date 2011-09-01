@@ -234,6 +234,8 @@ summary.openair <- function(object, subset = "all", ...)
 
 ##' @S3method head openair
 ##' @importFrom utils head
+##' @S3method tail openair
+##' @importFrom utils tail
 head.openair <- function(x, subset = "all", ...)
     openairApply(x, fun=head, subset=subset, ..., fun.name="head")
 tail.openair <- function(x, subset = "all", ...)
