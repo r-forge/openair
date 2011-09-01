@@ -4,12 +4,11 @@
 \title{Traditional wind rose plot and pollution rose variation}
 \usage{
   windRose(mydata, ws.int = 2, angle = 30, type =
-  "default", cols = "default", main = "", grid.line = 5,
-  width = 1, auto.text = TRUE, breaks = 4, offset = 10,
-  paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
-  key.position = "bottom", key = TRUE, dig.lab = 5,
-  statistic = "prop.count", pollutant = NULL, annotate =
-  TRUE, ...)
+  "default", cols = "default", grid.line = 5, width = 1,
+  auto.text = TRUE, breaks = 4, offset = 10, paddle = TRUE,
+  key.header = NULL, key.footer = "(m/s)", key.position =
+  "bottom", key = TRUE, dig.lab = 5, statistic =
+  "prop.count", pollutant = NULL, annotate = TRUE, ...)
 
   pollutionRose(mydata, pollutant = "nox", key.footer =
   pollutant, breaks = 6, paddle = FALSE, key.position =
@@ -71,9 +70,11 @@
   example would be \code{cols = c("yellow", "green",
   "blue", "black")}.}
 
-  \item{main}{Title of plot.}
-
-  \item{grid.line}{Grid line interval to use.}
+  \item{grid.line}{Grid line interval to use. If
+  \code{NULL}, as in default, this is assigned by
+  \code{windRose} based on the available data range.
+  However, it can also be forced to a specific value, e.g.
+  \code{grid.line = 10}.}
 
   \item{paddle}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} plots rose using `paddle'
@@ -117,14 +118,13 @@
 
   \item{statistic}{The \code{statistic} to be applied to
   each data bin in the plot. Options currently include
-  \code{"prop.count"} and \code{"prop.mean"}. The default
-  \code{"prop.count"} sizes bins according to the
-  proportion of the frequency of measurements, in each bin.
-  Similarly, \code{prop.mean} sizes bins according to their
-  relative contribution to the mean. In both cases, results
-  are expressed as percentages of the 'whole-of-panel'
-  \code{statistic} measurement. The overall value in each
-  panel is shown at the bottom-right.}
+  \code{"prop.count"}, \code{"prop.mean"} and
+  \code{"abs.count"}. The default \code{"prop.count"} sizes
+  bins according to the proportion of the frequency of
+  measurements. Similarly, \code{prop.mean} sizes bins
+  according to their relative contribution to the mean.
+  \code{"abs.count"} provides the absolute count of
+  measurements in each bin.}
 
   \item{pollutant}{Alternative data series to be sampled
   instead of wind speed. The \code{windRose} default NULL
@@ -137,7 +137,10 @@
   are passed on to \code{windRose}. For \code{windRose}
   other parameters that are passed on to
   \code{drawOpenKey}, \code{lattice:xyplot} and
-  \code{cutData}.}
+  \code{cutData}. Axis and title labelling options
+  (\code{xlim}, \code{ylim}, \code{main}) are passed to
+  \code{xyplot} via \code{quickText} to handle routine
+  formatting.}
 }
 \value{
   As well as generating the plot itself, \code{windRose}

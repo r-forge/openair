@@ -525,10 +525,10 @@ trendLevel <- function(mydata,
         newdata$wd <- ordered(newdata$wd, levels = wds)
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(newdata$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-        newdata$wd <- factor(newdata$wd)
-        user.list$layout <- c(3, 3)
-        if(!"skip" %in% names(user.list))
-            user.list$skip <- skip
+        extra.args$wd <- factor(newdata$wd)
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
     }
     #openair defaults for plot
     levelplot.args <- list(x = myform, data = newdata, as.table = TRUE,

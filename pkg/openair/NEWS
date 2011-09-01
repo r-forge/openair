@@ -1,3 +1,11 @@
+Changes in openair 0.5-7 [2011-08-30]
+=====================================
+
+*	update to trendLevel: improved ... handling
+*	update to windRose/pollutionRose: added statistic option
+	"abs.count"; improved scaling of segment widths; improved
+	... handling
+
 Changes in openair 0.5-6 [2011-08-30]
 =====================================
 
