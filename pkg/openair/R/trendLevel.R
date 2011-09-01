@@ -458,7 +458,24 @@ trendLevel <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(pollutant, " ~ ", x, " * ", y, " | ", temp, sep = ""))
 
-    temp <- sapply(unique(newdata[ , type[1]]), function(x) quickText(x, auto.text))
+    #special case handling
+    #layout for wd
+    if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(extra.args)) {
+        ## re-order to make sensible layout
+        ## starting point code as of ManKendall
+        wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
+        newdata$wd <- ordered(newdata$wd, levels = wds)
+        wd.ok <- sapply(wds, function (x) {if (x %in% unique(newdata$wd)) FALSE else TRUE })
+        skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
+        newdata$wd <- factor(newdata$wd)
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
+    }
+
+    temp <- if(is.factor(newdata[ , type[1]]))
+                levels(newdata[ , type[1]]) else unique(newdata[ , type[1]])  
+    temp <- sapply(temp, function(x) quickText(x, auto.text))
     if(is.factor(temp)) temp <- as.character(temp)
     strip <- strip.custom(factor.levels = temp, strip.levels=c(TRUE, FALSE), strip.names=FALSE)
     strip.left <- if(length(type)==1) {
@@ -516,25 +533,11 @@ trendLevel <- function(mydata,
     #      the locally defined options below as part of call.
     #      If they do reset it is obviously Caveat emptor...
 
-    #special case handling
-    #layout for wd
-    if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(extra.args)) {
-        ## re-order to make sensible layout
-        ## starting point code as of ManKendall
-        wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
-        newdata$wd <- ordered(newdata$wd, levels = wds)
-        wd.ok <- sapply(wds, function (x) {if (x %in% unique(newdata$wd)) FALSE else TRUE })
-        skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-        extra.args$wd <- factor(newdata$wd)
-        extra.args$layout <- c(3, 3)
-        if(!"skip" %in% names(extra.args))
-            extra.args$skip <- skip
-    }
     #openair defaults for plot
     levelplot.args <- list(x = myform, data = newdata, as.table = TRUE,
                       legend = legend, colorkey = colorkey,
                       at = breaks, col.regions=col.regions,
-                      scales = scales,
+                      scales = scales, 
                       yscale.components = yscale.lp,
                       xscale.components = xscale.lp,
                       par.strip.text = list(cex = 0.8),
