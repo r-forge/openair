@@ -35,6 +35,9 @@
   and/or years of hourly data are imported it may be better
   to aggregate first and then combine with the meta data
   information.
+
+  Thanks go to Dr Ben Barratt (KCL) and Trevor Davies (AEA)
+  for making these data available.
 }
 \examples{
 ## import AQ data and add meta data to data frame
@@ -49,8 +52,8 @@ aq <- merge(aq, meta, by = "site")
 aq <- importAURN(site = c("kc1", "my1"), year = 2009)
 meta <- importMeta(source = "aurn")
 ## calculate annual means
-annual <- annual <- timeAverage(aq, avg.time = "year")
-aq <- merge(annual, meta, by = "site")
+annual <- timeAverage(aq, avg.time = "year")
+annual <- merge(annual, meta, by = "site")
 ## make a GoogleMapsPlot
 GoogleMapsPlot(annual, pollutant = "no2")
 }
@@ -59,8 +62,10 @@ GoogleMapsPlot(annual, pollutant = "no2")
   David Carslaw
 }
 \seealso{
-  \code{\link{importAURN}}, \code{\link{importKCL}},
-  \code{\link{importSAQN}}, \code{\link{GoogleMapsPlot}}
+  \code{\link{importAURN}}, \code{\link{importKCL}} and
+  \code{\link{importSAQN}} for importing air quality data
+  from each network, and \code{\link{GoogleMapsPlot}} for
+  plotting concentrations on a map.
 }
 \keyword{methods}
 

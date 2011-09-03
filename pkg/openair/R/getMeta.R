@@ -15,6 +15,9 @@
 ##' below. Note if many sites and/or years of hourly data are imported
 ##' it may be better to aggregate first and then combine with the meta
 ##' data information.
+##'
+##' Thanks go to Dr Ben Barratt (KCL) and Trevor Davies (AEA) for
+##' making these data available.
 ##' @param source The data source for the meta data. Can be "aurn",
 ##' "kcl" or "saqn"; upper or lower case.
 ##' @param all When \code{all = FALSE} only the site code, site name,
@@ -22,8 +25,10 @@
 ##' \code{all = TRUE} will import all available meta data.
 ##' @return A data frame with meta data.
 ##' @author David Carslaw
-##' @seealso \code{\link{importAURN}}, \code{\link{importKCL}},
-##'   \code{\link{importSAQN}}, \code{\link{GoogleMapsPlot}}
+##' @seealso \code{\link{importAURN}}, \code{\link{importKCL}} and
+##' \code{\link{importSAQN}} for importing air quality data from each
+##' network, and \code{\link{GoogleMapsPlot}} for plotting
+##' concentrations on a map.
 ##' @keywords methods
 ##' @export
 ##' @examples
@@ -39,8 +44,8 @@
 ##' aq <- importAURN(site = c("kc1", "my1"), year = 2009)
 ##' meta <- importMeta(source = "aurn")
 ##' ## calculate annual means
-##' annual <- annual <- timeAverage(aq, avg.time = "year")
-##' aq <- merge(annual, meta, by = "site")
+##' annual <- timeAverage(aq, avg.time = "year")
+##' annual <- merge(annual, meta, by = "site")
 ##' ## make a GoogleMapsPlot
 ##' GoogleMapsPlot(annual, pollutant = "no2")
 ##' }
@@ -55,7 +60,7 @@ importMeta <- function(source = "aurn", all = FALSE) {
 
     if (source == "aurn") {
         meta <- get(load(url("http://uk-air.defra.gov.uk/openair/R_data/AURN_metadata.RData")))
-        ## only extract one line per site to make it easietr to use file
+        ## only extract one line per site to make it easier to use file
         ## mostly interested in coordinates
 
         ## unique ids
@@ -69,7 +74,7 @@ importMeta <- function(source = "aurn", all = FALSE) {
 
     if (source == "saqn") {
         meta <- get(load(url("http://www.scottishairquality.co.uk/openair/R_data/SCOT_metadata.RData")))
-        ## only extract one line per site to make it easietr to use file
+        ## only extract one line per site to make it easier to use file
         ## mostly interested in coordinates
 
         ## unique ids
