@@ -6,9 +6,9 @@
   "frequency", ws.int = 1, grid.line = 5, breaks = seq(0,
   5000, 500), cols = "default", trans = TRUE, type =
   "default", min.bin = 1, ws.upper = NA, offset = 10,
-  border.col = "transparent", main = "", key.header =
-  statistic, key.footer = pollutant, key.position =
-  "right", key = TRUE, auto.text = TRUE, ...)
+  border.col = "transparent", key.header = statistic,
+  key.footer = pollutant, key.position = "right", key =
+  TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -114,8 +114,6 @@
   speed/direction bin. The default is transparent. Another
   useful choice sometimes is "white".}
 
-  \item{main}{Title of plot.}
-
   \item{key.header,key.footer}{Adds additional text/labels
   to the scale key. For example, passing options
   \code{key.header = "header", key.footer = "footer"} adds
@@ -139,9 +137,14 @@
   properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
   \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \code{lattice:xyplot} and \code{cutData}. For example,
+  \code{polarFreq} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common axis and title
+  labelling options (such as \code{xlim}, \code{ylim},
+  \code{main}) are passed to \code{xyplot} via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself, \code{polarFreq}

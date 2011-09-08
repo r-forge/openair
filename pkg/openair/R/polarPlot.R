@@ -161,7 +161,6 @@
 ##'   patterns of concentrations for several pollutants on different scales
 ##'   e.g. NOx and CO. Often useful if more than one \code{pollutant} is
 ##'   chosen.
-##' @param main The plot title; default is no title.
 ##' @param key.header,key.footer Adds additional text/labels to the scale key.
 ##'   For example, passing the options \code{key.header = "header", key.footer
 ##'   = "footer1"} adds addition text above and below the scale key. These
@@ -175,9 +174,13 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}
+##'   and \code{cutData}. For example, \code{polarPlot} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -262,7 +265,6 @@ polarPlot <- function(mydata,
                       force.positive = TRUE,
                       k = 100,
                       normalise = FALSE,
-                      main = "",
                       key.header = "",
                       key.footer = pollutant,
                       key.position = "right",
@@ -290,6 +292,17 @@ polarPlot <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     ## extract variables of interest
 
@@ -491,7 +504,7 @@ polarPlot <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))
 
-    plt <- levelplot(myform, results.grid, axes = FALSE,
+    levelplot.args <- list(x = myform, results.grid, axes = FALSE,
                      as.table = TRUE,
                      layout = layout,
                      strip = strip,
@@ -500,15 +513,11 @@ polarPlot <- function(mydata,
                      region = TRUE,
                      aspect = 1,
                      at = col.scale,
-                     xlab = "",
-                     ylab = "",
                      par.strip.text = list(cex = 0.8),
-                     main = quickText(main, auto.text),
                      scales = list(draw = FALSE),
                      xlim = c(-upper * 1, upper * 1),
                      ylim = c(-upper * 1, upper * 1),
                      colorkey = FALSE, legend = legend,
-                     ...,
 
                      panel = function(x, y, z,subscripts,...) {
                          panel.levelplot(x, y, z,
@@ -539,6 +548,11 @@ polarPlot <- function(mydata,
 
                      })
 
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+    #plot
+    plt <- do.call(levelplot, levelplot.args)
 
     ## output ##############################################################################################
 

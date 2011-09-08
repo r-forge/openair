@@ -7,8 +7,8 @@
   exclude.missing = TRUE, layout = NULL, uncertainty =
   FALSE, cols = "default", min.bin = 1, upper = NA, ws.int
   = 5, angle.scale = 45, units = "(m/s)", force.positive =
-  TRUE, k = 100, normalise = FALSE, main = "", key.header =
-  "", key.footer = pollutant, key.position = "right", key =
+  TRUE, k = 100, normalise = FALSE, key.header = "",
+  key.footer = pollutant, key.position = "right", key =
   TRUE, auto.text = TRUE, ...)
 }
 \arguments{
@@ -179,8 +179,6 @@
   scales e.g. NOx and CO. Often useful if more than one
   \code{pollutant} is chosen.}
 
-  \item{main}{The plot title; default is no title.}
-
   \item{key.header,key.footer}{Adds additional text/labels
   to the scale key. For example, passing the options
   \code{key.header = "header", key.footer = "footer1"} adds
@@ -204,9 +202,14 @@
   properly e.g.  by subscripting the `2' in NO2.}
 
   \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \code{lattice:levelplot} and \code{cutData}. For example,
+  \code{polarPlot} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common axis and title
+  labelling options (such as \code{xlim}, \code{ylim},
+  \code{main}) are passed to \code{levelplot} via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself, \code{polarPlot}

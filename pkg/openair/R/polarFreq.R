@@ -100,7 +100,6 @@
 ##' @param border.col The colour of the boundary of each wind speed/direction
 ##'   bin. The default is transparent. Another useful choice sometimes is
 ##'   "white".
-##' @param main Title of plot.
 ##' @param key.header,key.footer Adds additional text/labels to the scale key.
 ##'   For example, passing options \code{key.header = "header", key.footer =
 ##'   "footer"} adds addition text above and below the scale key. These
@@ -116,8 +115,12 @@
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
 ##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##'   and \code{cutData}. For example, \code{polarFreq} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{xyplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarFreq} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -177,7 +180,6 @@ polarFreq <- function(mydata,
                       ws.upper = NA,
                       offset = 10,
                       border.col = "transparent",
-                      main = "",
                       key.header = statistic,
                       key.footer = pollutant,
                       key.position = "right",
@@ -196,6 +198,17 @@ polarFreq <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     if (!missing(pollutant)) vars <- c(vars, pollutant)
 
@@ -364,20 +377,17 @@ polarFreq <- function(mydata,
 
     span <- ws.int * floor (max.ws / ws.int) + ws.int + offset
 
-    plt <- xyplot(myform,
+    xyplot.args <- list(x = myform,
                   xlim = 1.03 * c(-span, span),
                   ylim = 1.03 * c(-span, span),
                   data = results.grid,
-                  main = quickText(main, auto.text),
                   par.strip.text = list(cex = 0.8),
                   type = "n",
                   strip = strip,
                   strip.left = strip.left,
-                  xlab = "",
-                  ylab = "",
                   as.table = TRUE,
                   aspect = 1,
-                  scales = list(draw = FALSE),...,
+                  scales = list(draw = FALSE),
 
                   panel = function(x, y, subscripts,...) {
                       panel.xyplot(x, y,...)
@@ -417,6 +427,13 @@ polarFreq <- function(mydata,
                   },
                   legend = legend
                   )
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt <- do.call(xyplot, xyplot.args)
+
 
 #################
     ## output

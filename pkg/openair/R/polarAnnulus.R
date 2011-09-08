@@ -128,7 +128,6 @@
 ##'   patterns of concentrations for several pollutants on different scales
 ##'   e.g. NOx and CO. Often useful if more than one \code{pollutant} is
 ##'   chosen.
-##' @param main Title of plot.
 ##' @param key.header,key.footer Adds additional text/labels to the scale key.
 ##'   For example, passing the options \code{key.header = "header", key.footer
 ##'   = "footer1"} adds addition text above and below the scale key. These
@@ -143,9 +142,13 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}
+##'   and \code{cutData}. For example, \code{polarAnnulus} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarAnnulus} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -195,7 +198,6 @@ polarAnnulus <- function(mydata,
                          force.positive = TRUE,
                          k = c(20, 10),
                          normalise = FALSE,
-                         main = "",
                          key.header = "",
                          key.footer = pollutant,
                          key.position = "right",
@@ -215,6 +217,18 @@ polarAnnulus <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
 
     ## check data
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
@@ -467,12 +481,9 @@ polarAnnulus <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))
 
-    plt <- levelplot(myform, results.grid, axes = FALSE,
+    levelplot.args <- list(x = myform, results.grid, axes = FALSE,
                      as.table = TRUE,
                      aspect = 1,
-                     xlab = "",
-                     ylab = "",
-                     main = quickText(main, auto.text),
                      colorkey = FALSE, legend = legend,
                      at = col.scale, col.regions = col,
                      par.strip.text = list(cex = 0.8),
@@ -480,7 +491,7 @@ polarAnnulus <- function(mydata,
                      strip = strip,
 
                      len <- upper + d + 3,
-                     xlim = c(-len, len), ylim = c(-len, len),...,
+                     xlim = c(-len, len), ylim = c(-len, len),
 
                      panel = function(x, y, z,subscripts,...) {
                          panel.levelplot(x, y, z, subscripts, at = col.scale,
@@ -583,6 +594,13 @@ polarAnnulus <- function(mydata,
                          ltext(upper + d + 1.5, 0, "E", cex = 0.7)
 
                      })
+
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+    #plot
+    plt <- do.call(levelplot, levelplot.args)
+
 
 #################
                                         #output
