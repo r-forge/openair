@@ -106,11 +106,12 @@ pollutionRose <- function(mydata,
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param breaks The number of break points produced for wind speed in
+##' @param breaks Most commonly, the number of break points for wind speed in
 ##'   \code{windRose} or pollutant in \code{pollutionRose}. For \code{windRose}
 ##'   and the \code{ws.int} default of 2 m/s, the default, 4, generates the
 ##'   break points 2, 4, 6, 8 m/s. For \code{pollutionRose}, the default, 6,
 ##'   attempts to breaks the supplied data at approximately 6 sensible break
+##'   points. However, \code{breaks} can also be used to set specific break 
 ##'   points. For example, the argument \code{breaks = c(1, 10, 100)} breaks
 ##'   the data into segments <1, 1-10, 10-100, >100.
 ##' @param offset The size of the 'hole' in the middle of the plot, expressed
@@ -262,6 +263,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
             stat.unit <- "%"
             stat.scale <- "all"
             stat.lab <- "Frequency of counts by wind direction (%)"
+            stat.fun2 <- function(x) round(length(x), 1)
+            stat.lab2 <- "count"
+            stat.labcalm <- function(x) round(x, 1)
         }
 
         if(statistic=="prop.mean"){
@@ -269,6 +273,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
             stat.unit <- "%"
             stat.scale <- "panel"
             stat.lab <- "Proportion contribution to the mean (%)"
+            stat.fun2 <- function(x) signif(mean(x, na.rm = TRUE), 3)
+            stat.lab2 <- "mean"
+            stat.labcalm <- function(x) round(x, 1)
         }
 
         if(statistic=="abs.count" | statistic=="frequency"){
@@ -276,6 +283,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
             stat.unit <- ""
             stat.scale <- "none"
             stat.lab <- "Count by wind direction"
+            stat.fun2 <- function(x) round(length(x), 0)
+            stat.lab2 <- "count"
+            stat.labcalm <- function(x) round(x, 0)
         }
 
     }
@@ -289,11 +299,13 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
     #scale it by total data or panel
     #convert proportions to percentage
     #label it
-
         stat.fun <- statistic$fun
         stat.unit <- statistic$unit
         stat.scale <- statistic$scale
         stat.lab <- statistic$lab
+        stat.fun2 <- statistic$fun2
+        stat.lab2 <- statistic$lab2
+        stat.labcalm <- statistic$labcalm
     }
 
 
@@ -370,9 +382,10 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
             calm <- calm * 100
         }
 
-        means <- mean(mydata[ , pollutant])
+        panel.fun <- stat.fun2(mydata[ , pollutant])
+
         weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),
-                         calm = calm, means = means)
+                         calm = calm, panel.fun = panel.fun)
 
         weights
     }
@@ -414,6 +427,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
     mydata <- cutData(mydata, type, ...)
 
     results.grid <- ddply(mydata, type, prepare.grid)
+
+    #format
+    results.grid$calm <- stat.labcalm(results.grid$calm)
 
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(results.grid[ , type[1]]),
@@ -507,13 +523,9 @@ windRose <- function (mydata, ws.int = 2, angle = 30, type = "default",
                       paste(seq(myby, mymax, by = myby), stat.unit,
                       sep = ""), cex = 0.7)
                   if (annotate)
-                      ltext(max.freq, -max.freq, label = paste("mean = ",
-                          sprintf("%.1f", subdata$means[1]), "\ncalm = ",
-                          if(statistic=="abs.count" | statistic=="frequency"){
-                          subdata$calm[1]} else
-                          {sprintf("%.1f", subdata$calm[1])}, stat.unit,
+                      ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
+                          subdata$panel.fun[1], "\ncalm = ", subdata$calm[1], stat.unit,
                           sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
-
                   }, legend = legend)
 
     #reset for extra.args
