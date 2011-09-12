@@ -97,9 +97,9 @@
 ##'   trend, choose alpha = 0.01 etc.
 ##' @param dec.place The number of decimal places to display the trend estimate
 ##'   at. The default is 2.
-##' @param ylab y-axis label.
-##' @param xlab x-axis label.
-##' @param lab.frac Fraction along the y-axis that the trend information should be printed.
+##' @param xlab x-axis label, by default \code{"year"}. 
+##' @param lab.frac Fraction along the y-axis that the trend information should 
+##'   be printed at, default 0.99. 
 ##' @param lab.cex Size of text for trend information.
 ##' @param x.relation This determines how the x-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
@@ -114,7 +114,6 @@
 ##' @param text.col Colour name for the slope/uncertainty numeric estimates
 ##' @param cols Predefined colour scheme, currently only enabled for
 ##'   \code{"greyscale"}.
-##' @param main Title of plot, if required.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
@@ -145,9 +144,13 @@
 ##'   This does not always work as desired automatically. The user can
 ##'   therefore increase or decrease the number of intervals by adjusting the
 ##'   value of \code{date.breaks} up or down.
-##' @param ... Other graphical parameters passed onto
-##' \code{lattice:xyplot} and \code{cutData}. For example, in the case
-##' \code{cutData} the option \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters passed onto \code{cutData} and 
+##'   \code{lattice:xyplot}. For example, \code{MannKendall} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{xyplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{MannKendall} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -225,7 +228,6 @@ MannKendall <- function(mydata,
                         simulate = FALSE,
                         alpha = 0.05,
                         dec.place = 2,
-                        ylab = pollutant,
                         xlab = "year",
                         lab.frac = 0.99,
                         lab.cex = 0.8,
@@ -235,7 +237,6 @@ MannKendall <- function(mydata,
                         line.col = "red",
                         text.col = "darkgreen",
                         cols = NULL,
-                        main = "",
                         auto.text = TRUE,
                         autocor = FALSE,
                         slope.percent = FALSE,
@@ -256,6 +257,16 @@ MannKendall <- function(mydata,
         data.col <- data.col
         text.col <- text.col
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    #(xlab currently handled in plot because unqiue action)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
 
     vars <- c("date", pollutant)
@@ -428,9 +439,7 @@ MannKendall <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
 
-    plt <- xyplot(myform, data = split.data,
-                  ylab = quickText(ylab, auto.text),
-                  main = quickText(main, auto.text),
+    xyplot.args <- list(x = myform, data = split.data,
                   xlab = quickText(xlab, auto.text),
                   par.strip.text = list(cex = 0.8),
                   as.table = TRUE,
@@ -441,7 +450,7 @@ MannKendall <- function(mydata,
                   scales = list(x = list(at = openair:::dateBreaks(split.data$date, date.breaks)$major,
                                 format = openair:::dateBreaks(split.data$date)$format,
                                 relation = x.relation),
-                  y = list(relation = y.relation, rot = 0)),...,
+                  y = list(relation = y.relation, rot = 0)),
 
                   panel = function(x, y, subscripts,...){
                       ## year shading
@@ -487,8 +496,13 @@ MannKendall <- function(mydata,
                                            units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
                                      cex = lab.cex, adj = c(0.5, 1), col = text.col, font = 2)
                       }
-                  }
-                  )
+                  })
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt <- do.call(xyplot, xyplot.args)
 
 #################
     ## output

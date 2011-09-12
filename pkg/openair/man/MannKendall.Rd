@@ -5,12 +5,11 @@
   MannKendall(mydata, pollutant = "nox", deseason = FALSE,
   type = "default", avg.time = "month", statistic = "mean",
   percentile = NA, data.thresh = 0, simulate = FALSE, alpha
-  = 0.05, dec.place = 2, ylab = pollutant, xlab = "year",
-  lab.frac = 0.99, lab.cex = 0.8, x.relation = "same",
-  y.relation = "same", data.col = "cornflowerblue",
-  line.col = "red", text.col = "darkgreen", cols = NULL,
-  main = "", auto.text = TRUE, autocor = FALSE,
-  slope.percent = FALSE, date.breaks = 7, ...)
+  = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99,
+  lab.cex = 0.8, x.relation = "same", y.relation = "same",
+  data.col = "cornflowerblue", line.col = "red", text.col =
+  "darkgreen", cols = NULL, auto.text = TRUE, autocor =
+  FALSE, slope.percent = FALSE, date.breaks = 7, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -81,12 +80,10 @@
   \item{dec.place}{The number of decimal places to display
   the trend estimate at. The default is 2.}
 
-  \item{ylab}{y-axis label.}
-
-  \item{xlab}{x-axis label.}
+  \item{xlab}{x-axis label, by default \code{"year"}.}
 
   \item{lab.frac}{Fraction along the y-axis that the trend
-  information should be printed.}
+  information should be printed at, default 0.99.}
 
   \item{lab.cex}{Size of text for trend information.}
 
@@ -112,8 +109,6 @@
 
   \item{cols}{Predefined colour scheme, currently only
   enabled for \code{"greyscale"}.}
-
-  \item{main}{Title of plot, if required.}
 
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
@@ -156,10 +151,15 @@
   therefore increase or decrease the number of intervals by
   adjusting the value of \code{date.breaks} up or down.}
 
-  \item{...}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \item{\dots}{Other graphical parameters passed onto
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{MannKendall} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common axis and title
+  labelling options (such as \code{xlim}, \code{ylim},
+  \code{main}) are passed to \code{xyplot} via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself, \code{MannKendall}
