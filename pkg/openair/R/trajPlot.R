@@ -70,8 +70,14 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                      lat.inc = 1.5, aspect = 1, cex = 0.1, ...)
 {
 
-    scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
-                map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,
-                cex = cex,  ...)
+    if (missing(pollutant)) { ## don't need key
+        scatterPlot(mydata, x = lon, y = lat, z = "height", method = method, smooth = smooth,
+                    map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect, key = FALSE,
+                    cex = cex,  ...)
+    } else {
+        scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
+                    map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,
+                    cex = cex,  ...)
+    }
 
 }

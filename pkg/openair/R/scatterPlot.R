@@ -467,11 +467,15 @@ scatterPlot <- function(mydata,
 
         if (missing(pch)) pch <- 16
 
-        legend <- list(right = list(fun = draw.colorkey, args =
-                       list(key = list(col = openColours(cols, length(breaks)),
-                            at = breaks, labels = list(at = br ^ (1 / thePower),
-                                         labels = br)),
-                            draw = FALSE)))
+        if (thekey) {
+            legend <- list(right = list(fun = draw.colorkey, args =
+                           list(key = list(col = openColours(cols, length(breaks)),
+                                at = breaks, labels = list(at = br ^ (1 / thePower),
+                                             labels = br)),
+                                draw = FALSE)))
+        } else {
+            legend <- NULL
+        }
 
 
     } else {
