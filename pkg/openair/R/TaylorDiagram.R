@@ -25,6 +25,14 @@
 ##' day of the week, by levels of a numeric variable e.g. wind speed or by
 ##' land-use type etc.
 ##'
+##' To consider several pollutants on one plot, a column identifying the pollutant name
+##' can be used e.g. \code{pollutant}. Then the Taylor Diagram can be plotted as (assuming
+##' a data frame \code{thedata}):
+##'
+##' \code{TaylorDiagram(thedata, obs = "obs", mod = "mod", group = "model", type = "pollutant")}
+##'
+##' which will give the model performance by pollutant in each panel.
+##'
 ##' Note that it is important
 ##' that each panel represents data with the same mean measured data
 ##' across different groups. Therefore \code{TaylorDiagram(mydata,
@@ -33,20 +41,21 @@
 ##' not because each panel (representing a model) will have four
 ##' different mean values --- one for each season.   Generally, the
 ##' option \code{group} is either missing (one model being evaluated)
-##' or represents a column giving the model name
+##' or represents a column giving the model name.
 ##'
 ##' @param mydata A data frame minimally containing a column of observations
 ##'   and a column of predictions.
 ##' @param newdata Optional second data frame in the same format as
 ##' \code{mydata} that can be used for comparison with
-##' \code{mydata}. By supplying a second data from,
+##' \code{mydata}. By supplying a second data frame,
 ##' \code{TaylorDiagram} can be used to show how one model output
 ##' compares with another. This is useful, for example for model
 ##' development when changes to the model or input data can easily be
 ##' compared with a previous version. If \code{newdata} is supplied
 ##' then arrows are drawn on the Diagram connecting the first set of
 ##' model statistics (using \code{mydata}) with the second set (using
-##' \code{newdata}).
+##' \code{newdata}). The direction of the arrow(s) will show the shift in model
+##' performance in going from \code{mydata} to \code{newdata}.
 ##' @param obs A column of observations with which the predictions (\code{mod})
 ##'   will be compared.
 ##' @param mod A column of model predictions.
