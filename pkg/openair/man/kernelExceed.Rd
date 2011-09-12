@@ -5,8 +5,7 @@
   kernelExceed(polar, x = "wd", y = "ws", pollutant =
   "pm10", type = "default", by = c("day", "dayhour",
   "all"), limit = 50, data.thresh = 0, more.than = TRUE,
-  cols = "default", xlab = x, ylab = y, nbin = 256, main =
-  "", auto.text = TRUE, ...)
+  cols = "default", nbin = 256, auto.text = TRUE, ...)
 }
 \arguments{
   \item{polar}{A data frame minimally containing
@@ -66,14 +65,8 @@
   details). The same line colour can be set for all
   pollutant e.g. \code{cols = "black"}.}
 
-  \item{xlab}{x-axis label.}
-
-  \item{ylab}{y-axis label.}
-
   \item{nbin}{number of bins to be used for the kernel
   density estimate.}
-
-  \item{main}{The plot title; default is no title.}
 
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
@@ -81,9 +74,14 @@
   properly e.g.  by subscripting the `2' in NO2.}
 
   \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}}
+  \code{lattice:levelplot} and \code{cutData}. For example,
+  \code{kernelExceed} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common axis and title
+  labelling options (such as \code{xlim}, \code{ylim},
+  \code{main}) are passed to \code{levelplot} via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   To be completed.

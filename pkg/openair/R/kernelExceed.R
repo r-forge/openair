@@ -84,16 +84,17 @@
 ##'   "increment", "heat", "spectral", "hue", "brewer1" and user defined (see
 ##'   manual for more details). The same line colour can be set for all
 ##'   pollutant e.g. \code{cols = "black"}.
-##' @param xlab x-axis label.
-##' @param ylab y-axis label.
 ##' @param nbin number of bins to be used for the kernel density estimate.
-##' @param main The plot title; default is no title.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}
+##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}
+##'   and \code{cutData}. For example, \code{kernelExceed} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @return To be completed.
 ##' @note This function automatically chooses the bandwidth for the kernel
@@ -129,16 +130,23 @@ kernelExceed <- function(polar,
                          data.thresh = 0,
                          more.than = TRUE,
                          cols = "default",
-                         xlab = x,
-                         ylab = y,
                          nbin = 256,
-                         main = "",
                          auto.text = TRUE, ...) {
 
     ## extract variables of interest
     vars <- c(y, x, "date", pollutant)
     polar <- checkPrep(polar, vars, type, remove.calm = FALSE)
     polar <- subset(polar, wd > 0)
+
+    ##extra.args
+    extra.args <- list(...)
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText(x, auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(y, auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     #greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -230,17 +238,14 @@ kernelExceed <- function(polar,
     scales <- list()
     if (X == "wd")  scales <- list(x = list(at = seq(0, 360, 90)))
 
-     myform <- formula(paste("z ~ u * v |", type))
-    ans <- levelplot(myform, results.grid,
+    myform <- formula(paste("z ~ u * v |", type))
+
+    levelplot.args <- list(x = myform, results.grid,
               as.table = TRUE,
               strip = strip,
               region = TRUE,
-              xlab = quickText(xlab, auto.text),
-              ylab = quickText(ylab, auto.text),
-              main = quickText(main, auto.text),
               scales = scales,
               colorkey = FALSE,
-              ...,
 
               panel = function(x, y, z, subscripts,...) {
 
@@ -267,6 +272,13 @@ kernelExceed <- function(polar,
                              cex = 0.7, ...)
 
               })
+
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+    #plot
+    ans <- do.call(levelplot, levelplot.args)
+
     #reset if greyscale
     if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
