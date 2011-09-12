@@ -82,7 +82,24 @@
   to change
 }
 \examples{
-# To be added
+# show a simple case with no pollutant i.e. just the trajectories
+# let's check to see where the trajectories were coming from when
+# Heathrow Airport was closed due to the Icelandic volcanic eruption
+# 15--21 April 2010.
+# import trajectories for London and plot
+\dontrun{
+lond <- importTraj("london", 2010)
+# well, HYSPLIT seems to think there certainly were conditions where trajectories
+# orginated from Iceland...
+trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l", col = "forestgreen")}
+
+# plot by day, need a column that makes a date
+\dontrun{lond$day <- as.Date(lond$date)
+trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
+col = "forestgreen", type = "day")
+}
+
+# more examples to follow linking with concentration measurements...
 }
 \author{
   David Carslaw

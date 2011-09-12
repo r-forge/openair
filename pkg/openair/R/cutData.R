@@ -156,7 +156,8 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4, 
             ## split by quantiles unless it is a factor, in which case keep as is
             ## number of quantiles set by n.levels
 
-            if (is.factor(x[, type]) | is.character(x[, type])) {
+            if (is.factor(x[, type]) | is.character(x[, type]) | class(x[, type])[1] == "Date" |
+                "POSIXt" %in% class(x[, type])) {
 
                 ## drop unused levels while we are at it
                 x[, type] <- factor(x[, type])
