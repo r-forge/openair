@@ -73,8 +73,8 @@
 ##'   levels.
 ##' @param min.bin The minimum number of points required for the estimates of
 ##'   the 25/75th and 10/90th percentiles.
-##' @param xlab label for the x-axis.
-##' @param ylab label for the y-axis.
+##' @param xlab label for the x-axis, by default \code{"predicted value"}.
+##' @param ylab label for the y-axis, by default \code{"observed value"}.
 ##' @param col Colours to be used for plotting the uncertainty bands and median
 ##'   line. Must be of length 5 or more.
 ##' @param key.columns Number of columns to be used in the key.
@@ -83,9 +83,13 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels etc. will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters passed onto \code{cutData} and 
+##'   \code{lattice:xyplot}. For example, \code{conditionalQuantile} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) are passed to \code{xyplot} via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @author David Carslaw
 ##' @seealso See \code{\link{modStats}} for model evaluation statistics and the
@@ -139,6 +143,14 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     if (length(type) > 2) stop("Only two types can be used with this function")
 
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    #(xlab and ylab handled in formals because unique action)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
     #greyscale handling
     if (length(col) == 1 && col == "greyscale") {
         #strip
@@ -165,7 +177,6 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
     mydata <- na.omit(mydata)
     mydata <- cutData(mydata, type)
-
 
     procData <- function(mydata){
         mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"), drop = FALSE]
@@ -247,14 +258,12 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("x ~ med | ", temp, sep = ""))
-    if (!missing(xlab)) xlab <- xlab
-    if (!missing(ylab)) ylab <- ylab
 
-    scatter <- xyplot(myform, data = results,
+    xyplot.args <- list(x = myform, data = results,
                       xlim = c(lo, hi),
                       ylim = c(lo, hi),
-                      ylab = ylab,
-                      xlab = xlab,
+                      ylab = quickText(ylab, auto.text),
+                      xlab = quickText(xlab, auto.text),
                       as.table = TRUE,
                       aspect = 1,
                       strip = strip,
@@ -267,7 +276,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                                                                "perfect model")),
                       space = key.position,
                       columns = key.columns),
-                      par.strip.text = list(cex = 0.8), ...,
+                      par.strip.text = list(cex = 0.8), 
                       panel = function(x, subscripts,  ...){
                           panel.grid (-1, -1, col = "grey95")
 
@@ -299,6 +308,12 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                                       col = col.5, lwd = 2)
 
                       })
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    scatter <- do.call(xyplot, xyplot.args)
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste(" ~ frcst.cut | ", temp, sep = ""))

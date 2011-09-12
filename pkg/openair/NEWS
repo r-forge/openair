@@ -1,7 +1,8 @@
 Changes in openair 0.5-10 [2011-09-12]
 =====================================
 
-*       update to calendarPlot, kernelExceed, MannKendall
+*       update to calendarPlot, kernelExceed, 
+        MannKendall and conditionalQuantile
         improved ... handling
 *       minor update to GoogleMapsPlot
 

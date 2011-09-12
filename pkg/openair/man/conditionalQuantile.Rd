@@ -47,9 +47,11 @@
   \item{min.bin}{The minimum number of points required for
   the estimates of the 25/75th and 10/90th percentiles.}
 
-  \item{xlab}{label for the x-axis.}
+  \item{xlab}{label for the x-axis, by default
+  \code{"predicted value"}.}
 
-  \item{ylab}{label for the y-axis.}
+  \item{ylab}{label for the y-axis, by default
+  \code{"observed value"}.}
 
   \item{col}{Colours to be used for plotting the
   uncertainty bands and median line. Must be of length 5 or
@@ -68,9 +70,15 @@
   units properly e.g.  by subscripting the `2' in NO2.}
 
   \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{conditionalQuantile} passes the option
+  \code{hemisphere = "southern"} on to \code{cutData} to
+  provide southern (rather than default northern)
+  hemisphere handling of \code{type = "season"}. Similarly,
+  common axis and title labelling options (such as
+  \code{xlim}, \code{ylim}, \code{main}) are passed to
+  \code{xyplot} via \code{quickText} to handle routine
+  formatting.}
 }
 \description{
   Function to calculate conditional quantiles with flexible
