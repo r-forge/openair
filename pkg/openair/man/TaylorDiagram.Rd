@@ -2,16 +2,29 @@
 \alias{TaylorDiagram}
 \title{Taylor Diagram for model evaluation with conditioning}
 \usage{
-  TaylorDiagram(mydata, obs = "obs", mod = "mod", group =
-  NULL, type = "default", normalise = FALSE, layout = NULL,
-  cols = "brewer1", main = "", ylab = NULL, xlab = NULL,
-  pch = 20, cex = 2, rms.col = "darkgoldenrod", cor.col =
-  "black", key = TRUE, key.title = group, key.columns = 1,
-  key.pos = "bottom", strip = TRUE, auto.text = TRUE, ...)
+  TaylorDiagram(mydata, newdata = NULL, obs = "obs", mod =
+  "mod", group = NULL, type = "default", normalise = FALSE,
+  layout = NULL, cols = "brewer1", main = "", ylab = NULL,
+  xlab = NULL, pch = 20, cex = 2, rms.col =
+  "darkgoldenrod", cor.col = "black", arrow.lwd = 3, key =
+  TRUE, key.title = group, key.columns = 1, key.pos =
+  "bottom", strip = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing a column
   of observations and a column of predictions.}
+
+  \item{newdata}{Optional second data frame in the same
+  format as \code{mydata} that can be used for comparison
+  with \code{mydata}. By supplying a second data from,
+  \code{TaylorDiagram} can be used to show how one model
+  output compares with another. This is useful, for example
+  for model development when changes to the model or input
+  data can easily be compared with a previous version. If
+  \code{newdata} is supplied then arrows are drawn on the
+  Diagram connecting the first set of model statistics
+  (using \code{mydata}) with the second set (using
+  \code{newdata}).}
 
   \item{obs}{A column of observations with which the
   predictions (\code{mod}) will be compared.}
@@ -92,6 +105,9 @@
   \item{cor.col}{Colour for correlation coefficient lines
   and text.}
 
+  \item{arrow.lwd}{Width of arrow used when used for
+  comparing two model outputs.}
+
   \item{key}{Should the key be shown?}
 
   \item{key.title}{Title for the key.}
@@ -113,7 +129,7 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{\dots}{Other graphical parameters passed onto
+  \item{...}{Other graphical parameters passed onto
   \code{lattice:xyplot} and \code{cutData}. For example, in
   the case of \code{cutData} the option \code{hemisphere =
   "southern"}.}
@@ -170,27 +186,58 @@
   by season, daylight/nighttime, day of the week, by levels
   of a numeric variable e.g. wind speed or by land-use type
   etc.
+
+  Note that it is important that each panel represents data
+  with the same mean measured data across different groups.
+  Therefore \code{TaylorDiagram(mydata, group = "model",
+  type = "season")} is OK, whereas
+  \code{TaylorDiagram(mydata, group = "season", type =
+  "model")} is not because each panel (representing a
+  model) will have four different mean values --- one for
+  each season.  Generally, the option \code{group} is
+  either missing (one model being evaluated) or represents
+  a column giving the model name
 }
 \examples{
-# load openair data if not loaded already
-data(mydata)
+## dummy model data for 2003
+dat <- selectByDate(mydata, year = 2003)
+dat <- data.frame(date = mydata$date, obs = mydata$nox, mod = mydata$nox)
 
-## first make some dummy data based on year 2000 and call the column 'mod'
-testdat <- selectByDate(mydata, year = 2000)
-testdat$mod = testdat$nox + 200 * rnorm(1:nrow(testdat))
+## now make mod worse by adding bias and noise according to the month
+## do this for 3 different models
+dat <- transform(dat, month = as.numeric(format(date, "\%m")))
+mod1 <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 1")
+## lag the results for mod1 to make the correlation coefficient worse without affecting the sd
+mod1 <- transform(mod1, mod = c(mod[5:length(mod)], mod[(length(mod) - 3) : length(mod)]))
 
-## basic plot
-TaylorDiagram(testdat, obs = "nox", mod = "mod")
+## model 2
+mod2 <- transform(dat, mod = mod + 7 * month + 7 * month * rnorm(nrow(dat)), model = "model 2")
+## model 3
+mod3 <- transform(dat, mod = mod + 3 * month + 3 * month * rnorm(nrow(dat)), model = "model 3")
 
-## don't have actual model data, but can demonstrate a case with
-## multiple models.  The code below makes a new column 'month', which
-## can be thought of as representing different models. Note also it is
-## useful for considering the seasonal performance of a single
-## model. Note we choose to normalise the data.
+mod.dat <- rbind(mod1, mod2, mod3)
 
-testdat <- cutData(testdat, type = "month")
-TaylorDiagram(testdat, obs = "nox", mod = "mod", group = "month",
-normalise = TRUE)
+## basic Taylor plot
+
+TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model")
+
+## Taylor plot by season
+TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model", type = "season")
+
+## now show how to evaluate model improvement (or otherwise)
+mod1a <- transform(dat, mod = mod + 2 * month + 2 * month * rnorm(nrow(dat)), model = "model 1")
+mod2a <- transform(mod2, mod = mod * 1.3)
+mod3a <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 3")
+mod.dat2 <- rbind(mod1a, mod2a, mod3a)
+
+## basic model change plot
+TaylorDiagram(mod1, mod1a, obs = "obs", mod = "mod")
+
+## do for all models
+TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model")
+
+## all models, by season
+TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model", type = "season")
 }
 \author{
   David Carslaw

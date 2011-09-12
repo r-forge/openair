@@ -1,3 +1,4 @@
+
 ##' Taylor Diagram for model evaluation with conditioning
 ##'
 ##' Function to draw Taylor Diagrams for model evaluation. The function allows
@@ -24,8 +25,28 @@
 ##' day of the week, by levels of a numeric variable e.g. wind speed or by
 ##' land-use type etc.
 ##'
+##' Note that it is important
+##' that each panel represents data with the same mean measured data
+##' across different groups. Therefore \code{TaylorDiagram(mydata,
+##' group = "model", type = "season")} is OK, whereas
+##' \code{TaylorDiagram(mydata, group = "season", type = "model")} is
+##' not because each panel (representing a model) will have four
+##' different mean values --- one for each season.   Generally, the
+##' option \code{group} is either missing (one model being evaluated)
+##' or represents a column giving the model name
+##'
 ##' @param mydata A data frame minimally containing a column of observations
 ##'   and a column of predictions.
+##' @param newdata Optional second data frame in the same format as
+##' \code{mydata} that can be used for comparison with
+##' \code{mydata}. By supplying a second data from,
+##' \code{TaylorDiagram} can be used to show how one model output
+##' compares with another. This is useful, for example for model
+##' development when changes to the model or input data can easily be
+##' compared with a previous version. If \code{newdata} is supplied
+##' then arrows are drawn on the Diagram connecting the first set of
+##' model statistics (using \code{mydata}) with the second set (using
+##' \code{newdata}).
 ##' @param obs A column of observations with which the predictions (\code{mod})
 ##'   will be compared.
 ##' @param mod A column of model predictions.
@@ -77,6 +98,7 @@
 ##' @param cex Size of symbol used.
 ##' @param rms.col Colour for centred-RMS lines and text.
 ##' @param cor.col Colour for correlation coefficient lines and text.
+##' @param arrow.lwd Width of arrow used when used for comparing two model outputs.
 ##' @param key Should the key be shown?
 ##' @param key.title Title for the key.
 ##' @param key.columns Number of columns to be used in the key. With many
@@ -90,7 +112,7 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
+##' @param ... Other graphical parameters passed onto \code{lattice:xyplot}
 ##'   and \code{cutData}. For example, in the case of \code{cutData} the option
 ##'   \code{hemisphere = "southern"}.
 ##' @export
@@ -125,29 +147,52 @@
 ##'   USA, 881 pp. (see
 ##'   \url{http://www.grida.no/climate/ipcc_tar/wg1/317.htm#fig84})
 ##' @keywords methods
+##'
 ##' @examples
 ##'
-##' # load openair data if not loaded already
-##' data(mydata)
+##' ## dummy model data for 2003
+##' dat <- selectByDate(mydata, year = 2003)
+##' dat <- data.frame(date = mydata$date, obs = mydata$nox, mod = mydata$nox)
 ##'
-##' ## first make some dummy data based on year 2000 and call the column 'mod'
-##' testdat <- selectByDate(mydata, year = 2000)
-##' testdat$mod = testdat$nox + 200 * rnorm(1:nrow(testdat))
+##' ## now make mod worse by adding bias and noise according to the month
+##' ## do this for 3 different models
+##' dat <- transform(dat, month = as.numeric(format(date, "%m")))
+##' mod1 <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 1")
+##' ## lag the results for mod1 to make the correlation coefficient worse without affecting the sd
+##' mod1 <- transform(mod1, mod = c(mod[5:length(mod)], mod[(length(mod) - 3) : length(mod)]))
 ##'
-##' ## basic plot
-##' TaylorDiagram(testdat, obs = "nox", mod = "mod")
+##' ## model 2
+##' mod2 <- transform(dat, mod = mod + 7 * month + 7 * month * rnorm(nrow(dat)), model = "model 2")
+##' ## model 3
+##' mod3 <- transform(dat, mod = mod + 3 * month + 3 * month * rnorm(nrow(dat)), model = "model 3")
 ##'
-##' ## don't have actual model data, but can demonstrate a case with
-##' ## multiple models.  The code below makes a new column 'month', which
-##' ## can be thought of as representing different models. Note also it is
-##' ## useful for considering the seasonal performance of a single
-##' ## model. Note we choose to normalise the data.
+##' mod.dat <- rbind(mod1, mod2, mod3)
 ##'
-##' testdat <- cutData(testdat, type = "month")
-##' TaylorDiagram(testdat, obs = "nox", mod = "mod", group = "month",
-##' normalise = TRUE)
+##' ## basic Taylor plot
+##'
+##' TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model")
+##'
+##' ## Taylor plot by season
+##' TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model", type = "season")
+##'
+##' ## now show how to evaluate model improvement (or otherwise)
+##' mod1a <- transform(dat, mod = mod + 2 * month + 2 * month * rnorm(nrow(dat)), model = "model 1")
+##' mod2a <- transform(mod2, mod = mod * 1.3)
+##' mod3a <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 3")
+##' mod.dat2 <- rbind(mod1a, mod2a, mod3a)
+##'
+##' ## basic model change plot
+##' TaylorDiagram(mod1, mod1a, obs = "obs", mod = "mod")
+##'
+##' ## do for all models
+##' TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model")
+##'
+##' ## all models, by season
+##' TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model", type = "season")
+##'
 ##'
 TaylorDiagram <- function(mydata,
+                          newdata = NULL,
                           obs = "obs",
                           mod = "mod",
                           group = NULL,
@@ -162,6 +207,7 @@ TaylorDiagram <- function(mydata,
                           cex = 2,
                           rms.col = "darkgoldenrod",
                           cor.col = "black",
+                          arrow.lwd = 3,
                           key = TRUE,
                           key.title = group,
                           key.columns = 1,
@@ -183,6 +229,11 @@ TaylorDiagram <- function(mydata,
 
 
 ################################################################################################
+
+    ## check to see if two data sets are present
+    combine <- FALSE
+    if (!is.null(newdata)) combine <- TRUE
+
     if (any(type %in%  openair:::dateTypes)) {
 
         vars <- c("date", obs, mod)
@@ -210,23 +261,35 @@ TaylorDiagram <- function(mydata,
 
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
-    ## data checks
-    mydata <- openair:::checkPrep(mydata, vars, type)
+    ## data checks, for base and new data if necessary
 
-    ## remove missing data
-    mydata <- na.omit(mydata)
+    data.check <- function(mydata, vars, type) {
 
-    mydata <- cutData(mydata, type, ...)
+        mydata <- openair:::checkPrep(mydata, vars, type)
+
+        ## remove missing data
+        mydata <- na.omit(mydata)
+
+        mydata <- cutData(mydata, type, ...)
+
+        mydata
+    }
+
+    mydata <- data.check(mydata, vars, type)
+
+    if (combine)  newdata <- data.check(newdata, vars, type)
 
     if (missing(group)) {
 
         if ((!"group" %in% type) & (!"group" %in% c(obs, mod))) {
             mydata$group <- factor("group")
+            if (combine) newdata$group <- factor("group")
             group <- "group"
         }
         ## don't overwrite a
     } else {  ## means that group is there
         mydata <- cutData(mydata, group, ...)
+        if (combine) newdata <- cutData(newdata, group, ...)
     }
 
     legend <- NULL
@@ -249,6 +312,9 @@ TaylorDiagram <- function(mydata,
 
     results <- ddply(mydata, c(group, type), calcStats)
 
+    if (combine) results.new <- ddply(newdata, c(group, type), calcStats)
+
+
     ## if no group to plot, then add a dummy one to make xyplot work
     if (is.null(group)) {results$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
 
@@ -267,18 +333,27 @@ TaylorDiagram <- function(mydata,
 
     if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
 
-    if (key & npol > 1) {
+
+
+    if (key & npol > 1 & !combine) {
 
         key <- list(points = list(col = myColors[1:npol]), pch = pch, cex = cex,
                     text = list(lab = pol.name, cex = 0.8), space = key.pos,
                     columns = key.columns,
                     title = quickText(key.title, auto.text),
                     cex.title = 0.8, lines.title = 3)
+    } else if (key & npol > 1 & combine) {
 
+        key <- list(lines = list(col = myColors[1:npol]), lwd = arrow.lwd,
+                    text = list(lab = pol.name, cex = 0.8), space = key.pos,
+                    columns = key.columns,
+                    title = quickText(key.title, auto.text),
+                    cex.title = 0.8, lines.title = 3)
     } else {
-
         key <- NULL
     }
+
+
 
     ## special wd layout
     skip <- FALSE
@@ -433,8 +508,18 @@ TaylorDiagram <- function(mydata,
 
                   results <- transform(results, x = sd.mod * R, y = sd.mod * sin(acos(R)))
 
-                  lpoints(results$x[subscripts], results$y[subscripts],
+
+
+                  if (combine) {
+                      results.new <- transform(results.new, x = sd.mod * R, y = sd.mod * sin(acos(R)))
+                      larrows(results$x[subscripts], results$y[subscripts],
+                              results.new$x[subscripts], results.new$y[subscripts],
+                              angle = 30, length = 0.1, col =  myColors[group.number], lwd = arrow.lwd)
+                  } else {
+
+                      lpoints(results$x[subscripts], results$y[subscripts],
                           col.symbol = myColors[group.number], ...)
+                  }
 
 
 
