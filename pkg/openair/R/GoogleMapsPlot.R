@@ -529,9 +529,9 @@ GoogleMapsPlot <- function(mydata,
     #(is larger than data range
     #and already done by RgoogleMaps!)
 
-    if(missing(xlim))
+#    if(missing(xlim))
         xlim <- c(map$BBOX$ll[2], map$BBOX$ur[2])
-    if(missing(ylim))
+#    if(missing(ylim))
         ylim <- c(map$BBOX$ll[1], map$BBOX$ur[1])
 
      map <- openairMapManager(map)

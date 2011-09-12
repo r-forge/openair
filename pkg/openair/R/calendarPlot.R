@@ -73,7 +73,10 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters.
+##' @param \dots Other graphical parameters are passed onto the \code{lattice} 
+##'   function \code{lattice:levelplot}, with common axis and title labelling 
+##'   options (such as \code{xlim}, \code{ylim}, \code{main}) being passed to 
+##'   via \code{quickText} to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{calendarPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -128,8 +131,18 @@ calendarPlot <- function(mydata,
 
     ##international keyboard
     ##first letter and ordered Sun to Sat
-  #  weekday.abb <- substr(make.weekday.abbs(), 1, 1)[c(7, 1:6)]
+    #weekday.abb <- substr(make.weekday.abbs(), 1, 1)[c(7, 1:6)]
     weekday.abb <- substr(format(ISOdate(2000, 1, 2:8), "%A"), 1, 1)[c(7, 1:6)]
+
+    ##extra args
+    extra.args <- list(...)
+
+    #label controls
+    #(main currently handled in formals)
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
 
     ## extract variables of interest
     if (annotate == "date") vars <- c("date", pollutant)
@@ -259,7 +272,7 @@ calendarPlot <- function(mydata,
          height = 1, width = 1.5, fit = "all")
     legend <- makeOpenKeyLegend(key, legend, "calendarPlot")
 
-    print(levelplot(conc.mat ~ x * y | month, data = mydata,
+    levelplot.args <- list(x = conc.mat ~ x * y | month, data = mydata,
               par.settings = cal.theme,
               main = main,
               at = col.scale,
@@ -269,9 +282,7 @@ calendarPlot <- function(mydata,
               x = list(at = 1:7, labels = weekday.abb, tck = 0),
               par.strip.text = list(cex = 0.8),
               alternating = 1, relation = "free"),
-              xlab = "",
               aspect = 6/7,
-              ylab = "",
               between = list(x = 1),
               colorkey = FALSE, legend = legend,
               panel = function(x, y, subscripts,...) {
@@ -304,7 +315,13 @@ calendarPlot <- function(mydata,
                               angle = 20, length = 0.07, lwd = 0.5)
                   }
 
-              }))
+              })
+
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+    #plot
+    print(do.call(levelplot, levelplot.args))
 
     ## reset theme
     lattice.options(default.theme = def.theme)

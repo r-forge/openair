@@ -73,7 +73,11 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{\dots}{Other graphical parameters.}
+  \item{\dots}{Other graphical parameters are passed onto
+  the \code{lattice} function \code{lattice:levelplot},
+  with common axis and title labelling options (such as
+  \code{xlim}, \code{ylim}, \code{main}) being passed to
+  via \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself,
