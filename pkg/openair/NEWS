@@ -1,25 +1,7 @@
-<<<<<<< .mine
 Changes in openair 0.5-10 [2011-09-12]
 =====================================
 
-*       update to calendarPlot, kernelExceed
-        improved ... handling
-*       minor update to GoogleMapsPlot
-
-Changes in openair 0.5-9 [2011-09-08]
-=====================================
-
-*	allow model performance change to be considered in TaylorDiagram
-*	update to windRose and pollutionRose
-        stat related annotation
-*       update to polarPlot, ploarFreq and polarAnnulus
-        improved ... handling
-
-=======
-Changes in openair 0.5-10 [2011-09-12]
-=====================================
-
-*       update to calendarPlot, kernelExceed, 
+*       update to calendarPlot, kernelExceed,
         MannKendall and conditionalQuantile
         improved ... handling
 *       minor update to GoogleMapsPlot
@@ -33,7 +15,7 @@ Changes in openair 0.5-9 [2011-09-08]
 *       update to polarPlot, ploarFreq and polarAnnulus
         improved ... handling
 
->>>>>>> .r460
+
 Changes in openair 0.5-8 [2011-09-02]
 =====================================
 
