@@ -62,7 +62,12 @@
 \details{
   Several types of trajectory plot are available.
   \code{trajPlot} by default will plot each lat/lon
-  location, colour-coded by the concentration of
+  location showing the origin of each trajectory, if no
+  \code{pollutant} is supplied.
+
+  If a pollutant is given, by merging the trajectory data
+  with concentration data (see example below) the
+  trajectories are colour-coded by the concentration of
   \code{pollutant}. With a long time series there can be
   lots of overplotting making it difficult to gauge the
   overall concentration pattern. In these cases setting
@@ -87,7 +92,6 @@
   to change
 }
 \examples{
-<<<<<<< .mine
 # show a simple case with no pollutant i.e. just the trajectories
 # let's check to see where the trajectories were coming from when
 # Heathrow Airport was closed due to the Icelandic volcanic eruption
@@ -104,25 +108,7 @@ trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type =
 lond$day <- as.Date(lond$date)
 trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
 type = "day")
-=======
-# show a simple case with no pollutant i.e. just the trajectories
-# let's check to see where the trajectories were coming from when
-# Heathrow Airport was closed due to the Icelandic volcanic eruption
-# 15--21 April 2010.
-# import trajectories for London and plot
-\dontrun{
-lond <- importTraj("london", 2010)
-# well, HYSPLIT seems to think there certainly were conditions where trajectories
-# orginated from Iceland...
-trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l", col = "forestgreen")}
-
-# plot by day, need a column that makes a date
-\dontrun{lond$day <- as.Date(lond$date)
-trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
-col = "forestgreen", type = "day")
->>>>>>> .r460
 }
-<<<<<<< .mine
 
 # or show each day grouped by colour, with some other options set
 
@@ -149,15 +135,11 @@ trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "p
 smooth = TRUE, type = "season")
 }
 }
-=======
-
-# more examples to follow linking with concentration measurements...
-}
->>>>>>> .r460
 \author{
   David Carslaw
 }
 \seealso{
-  \code{\link{importTraj}}
+  \code{\link{importTraj}} to import trajectory data from
+  the King's College server.
 }
 
