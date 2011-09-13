@@ -34,31 +34,28 @@
 ##' which will give the model performance by pollutant in each panel.
 ##'
 ##' Note that it is important
-##' that each panel represents data with the same mean measured data
+##' that each panel represents data with the same mean observed data
 ##' across different groups. Therefore \code{TaylorDiagram(mydata,
 ##' group = "model", type = "season")} is OK, whereas
 ##' \code{TaylorDiagram(mydata, group = "season", type = "model")} is
 ##' not because each panel (representing a model) will have four
-##' different mean values --- one for each season.   Generally, the
+##' different mean values --- one for each season. Generally, the
 ##' option \code{group} is either missing (one model being evaluated)
 ##' or represents a column giving the model name.
 ##'
 ##' @param mydata A data frame minimally containing a column of observations
 ##'   and a column of predictions.
-##' @param newdata Optional second data frame in the same format as
-##' \code{mydata} that can be used for comparison with
-##' \code{mydata}. By supplying a second data frame,
-##' \code{TaylorDiagram} can be used to show how one model output
-##' compares with another. This is useful, for example for model
-##' development when changes to the model or input data can easily be
-##' compared with a previous version. If \code{newdata} is supplied
-##' then arrows are drawn on the Diagram connecting the first set of
-##' model statistics (using \code{mydata}) with the second set (using
-##' \code{newdata}). The direction of the arrow(s) will show the shift in model
-##' performance in going from \code{mydata} to \code{newdata}.
 ##' @param obs A column of observations with which the predictions (\code{mod})
 ##'   will be compared.
-##' @param mod A column of model predictions.
+##' @param mod A column of model predictions. Note, \code{mod} can be
+##' of length 2 i.e. two lots of model predictions. If two sets of
+##' predictions are are present e.g. \code{mod = c("base",
+##' "revised")}, then arrows are shown on the Taylor Diafram which
+##' show the change in model performance in going from the first to
+##' the second. This is useful where, for example, there is interest
+##' in comparing how one model run compares with another using
+##' different assumptions e.g. input data or model set up. See
+##' examples below.
 ##' @param group The \code{group} column is used to differentiate between
 ##'   different models and can be a factor or character. The total number of
 ##'   models compared will be equal to the number of unique values of
@@ -158,6 +155,8 @@
 ##' @keywords methods
 ##'
 ##' @examples
+##' ## in the examples below, most effort goes into making some artificial data
+##' ## the function itself can be run very simply
 ##'
 ##' ## dummy model data for 2003
 ##' dat <- selectByDate(mydata, year = 2003)
@@ -166,14 +165,19 @@
 ##' ## now make mod worse by adding bias and noise according to the month
 ##' ## do this for 3 different models
 ##' dat <- transform(dat, month = as.numeric(format(date, "%m")))
-##' mod1 <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 1")
-##' ## lag the results for mod1 to make the correlation coefficient worse without affecting the sd
-##' mod1 <- transform(mod1, mod = c(mod[5:length(mod)], mod[(length(mod) - 3) : length(mod)]))
+##' mod1 <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)),
+##' model = "model 1")
+##' ## lag the results for mod1 to make the correlation coefficient worse
+##' ## without affecting the sd
+##' mod1 <- transform(mod1, mod = c(mod[5:length(mod)], mod[(length(mod) - 3) :
+##' length(mod)]))
 ##'
 ##' ## model 2
-##' mod2 <- transform(dat, mod = mod + 7 * month + 7 * month * rnorm(nrow(dat)), model = "model 2")
+##' mod2 <- transform(dat, mod = mod + 7 * month + 7 * month * rnorm(nrow(dat)),
+##' model = "model 2")
 ##' ## model 3
-##' mod3 <- transform(dat, mod = mod + 3 * month + 3 * month * rnorm(nrow(dat)), model = "model 3")
+##' mod3 <- transform(dat, mod = mod + 3 * month + 3 * month * rnorm(nrow(dat)),
+##' model = "model 3")
 ##'
 ##' mod.dat <- rbind(mod1, mod2, mod3)
 ##'
@@ -185,44 +189,32 @@
 ##' TaylorDiagram(mod.dat, obs = "obs", mod = "mod", group = "model", type = "season")
 ##'
 ##' ## now show how to evaluate model improvement (or otherwise)
-##' mod1a <- transform(dat, mod = mod + 2 * month + 2 * month * rnorm(nrow(dat)), model = "model 1")
+##' mod1a <- transform(dat, mod = mod + 2 * month + 2 * month * rnorm(nrow(dat)),
+##' model = "model 1")
 ##' mod2a <- transform(mod2, mod = mod * 1.3)
-##' mod3a <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)), model = "model 3")
+##' mod3a <- transform(dat, mod = mod + 10 * month + 10 * month * rnorm(nrow(dat)),
+##' model = "model 3")
 ##' mod.dat2 <- rbind(mod1a, mod2a, mod3a)
+##' mod.dat$mod2 <- mod.dat2$mod
 ##'
-##' ## basic model change plot
-##' TaylorDiagram(mod1, mod1a, obs = "obs", mod = "mod")
+##' ## now we have a data frame with 3 models, 1 set of observations
+##' ## and TWO sets of model predictions (mod and mod2)
 ##'
 ##' ## do for all models
-##' TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model")
+##' TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model")
 ##'
 ##' ## all models, by season
-##' TaylorDiagram(mod.dat, mod.dat2, obs = "obs", mod = "mod", group = "model", type = "season")
+##' TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model",
+##' type = "season")
 ##'
 ##'
-TaylorDiagram <- function(mydata,
-                          newdata = NULL,
-                          obs = "obs",
-                          mod = "mod",
-                          group = NULL,
-                          type = "default",
-                          normalise = FALSE,
-                          layout = NULL,
-                          cols = "brewer1",
-                          main = "",
-                          ylab = NULL,
-                          xlab = NULL,
-                          pch = 20,
-                          cex = 2,
-                          rms.col = "darkgoldenrod",
-                          cor.col = "black",
-                          arrow.lwd = 3,
-                          key = TRUE,
-                          key.title = group,
-                          key.columns = 1,
-                          key.pos = "bottom",
-                          strip = TRUE,
-                          auto.text = TRUE, ...)   {
+TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type = "default",
+                          normalise = FALSE, layout = NULL,  cols = "brewer1", main = "",
+                          ylab = NULL, xlab = NULL,  pch = 20, cex = 2,
+                          rms.col = "darkgoldenrod", cor.col = "black", arrow.lwd = 3,
+                          key = TRUE, key.title = group, key.columns = 1,
+                          key.pos = "bottom", strip = TRUE, auto.text = TRUE, ...)
+{
 
 
     ## greyscale handling
@@ -237,11 +229,12 @@ TaylorDiagram <- function(mydata,
     }
 
 
-################################################################################################
+## #######################################################################################
 
     ## check to see if two data sets are present
     combine <- FALSE
-    if (!is.null(newdata)) combine <- TRUE
+
+     if (length(mod) ==2) combine <- TRUE
 
     if (any(type %in%  openair:::dateTypes)) {
 
@@ -272,7 +265,6 @@ TaylorDiagram <- function(mydata,
 
     ## data checks, for base and new data if necessary
 
-    data.check <- function(mydata, vars, type) {
 
         mydata <- openair:::checkPrep(mydata, vars, type)
 
@@ -280,13 +272,6 @@ TaylorDiagram <- function(mydata,
         mydata <- na.omit(mydata)
 
         mydata <- cutData(mydata, type, ...)
-
-        mydata
-    }
-
-    mydata <- data.check(mydata, vars, type)
-
-    if (combine)  newdata <- data.check(newdata, vars, type)
 
     if (missing(group)) {
 
@@ -298,7 +283,7 @@ TaylorDiagram <- function(mydata,
         ## don't overwrite a
     } else {  ## means that group is there
         mydata <- cutData(mydata, group, ...)
-        if (combine) newdata <- cutData(newdata, group, ...)
+
     }
 
     legend <- NULL
@@ -306,7 +291,7 @@ TaylorDiagram <- function(mydata,
     npol <- length(levels(mydata[ , group]))
 
     ## function to calculate stats for TD
-    calcStats <- function(mydata) {
+    calcStats <- function(mydata, obs = obs, mod = mod) {
         R <- cor(mydata[[obs]], mydata[[mod]], use = "pairwise")
         sd.obs <- sd(mydata[[obs]])
         sd.mod <- sd(mydata[[mod]])
@@ -319,9 +304,11 @@ TaylorDiagram <- function(mydata,
         res
     }
 
-    results <- ddply(mydata, c(group, type), calcStats)
+    results <- ddply(mydata, c(group, type), calcStats, obs = obs, mod = mod[1])
 
-    if (combine) results.new <- ddply(newdata, c(group, type), calcStats)
+
+    if (combine) results.new <- ddply(mydata, c(group, type), calcStats,
+                                      obs = obs, mod = mod[2])
 
 
     ## if no group to plot, then add a dummy one to make xyplot work
