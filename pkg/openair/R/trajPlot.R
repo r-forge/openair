@@ -6,7 +6,11 @@
 ##' function.
 ##'
 ##' Several types of trajectory plot are available. \code{trajPlot} by
-##' default will plot each lat/lon location, colour-coded by the
+##' default will plot each lat/lon location showing the origin of
+##' each trajectory, if no \code{pollutant} is supplied.
+##'
+##' If a pollutant is given, by merging the trajectory data with
+##' concentration data (see example below) the trajectories are colour-coded by the
 ##' concentration of \code{pollutant}. With a long time series there
 ##' can be lots of overplotting making it difficult to gauge the
 ##' overall concentration pattern. In these cases setting \code{alpha}
@@ -47,7 +51,8 @@
 ##' @param ... other arguments to \code{scatterPlot} and \code{cutData}.
 ##' @export
 ##' @return NULL
-##' @seealso \code{\link{importTraj}}
+##' @seealso \code{\link{importTraj}} to import trajectory data from the King's
+##' College server.
 ##' @author David Carslaw
 ##' @examples
 ##'
@@ -60,17 +65,41 @@
 ##' lond <- importTraj("london", 2010)
 ##' # well, HYSPLIT seems to think there certainly were conditions where trajectories
 ##' # orginated from Iceland...
-##' trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l", col = "forestgreen")}
+##' trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l")}
 ##'
 ##' # plot by day, need a column that makes a date
-##' \dontrun{lond$day <- as.Date(lond$date)
+##' \dontrun{
+##' lond$day <- as.Date(lond$date)
 ##' trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
-##' col = "forestgreen", type = "day")
+##' type = "day")
 ##' }
 ##'
+##' # or show each day grouped by colour, with some other options set
+##'
+##'  trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
+##' group = "day", col = "jet", lwd = 2, key.pos = "right", key.col = 1)
+##'
 ##' # more examples to follow linking with concentration measurements...
+##'
+##' # import some measurements from KC1 - London
+##' \dontrun{
+##' kc1 <- importAURN("kc1", year = 2010)
+##' # now merge with trajectory data by 'date'
+##' lond <- merge(lond, kc1, by = "date")
+##'
+##' # trajectory plot, no smoothing - and limit lat/lon area of interest
+##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm10")
+##'
+##' # can smooth surface:
+##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
+##' smooth = TRUE)
+##'
+##' # plot by season:
+##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
+##' smooth = TRUE, type = "season")
+##' }
 trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
-                      method = "level", smooth = TRUE, map = TRUE, lon.inc = 1.5,
+                      method = "level", smooth = FALSE, map = TRUE, lon.inc = 1.5,
                       lat.inc = 1.5, aspect = 1,...)  {
 
     scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
@@ -81,20 +110,27 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
 
 ##' @rdname trajPlot
 ##' @param cex Size of points used in \code{trajPlot} for individual back trajectory points
+##' @param group For \code{trajPlot} it is sometimes useful to group
+##' and colour trajectories according to a grouping variable. See example below.
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                      method = "scatter", smooth = FALSE, map = TRUE, lon.inc = 1.5,
-                     lat.inc = 1.5, aspect = 1, cex = 0.1, ...)
+                     lat.inc = 1.5, aspect = 1, group = NA, cex = 0.1, ...)
 {
 
     if (missing(pollutant)) { ## don't need key
-        scatterPlot(mydata, x = lon, y = lat, z = "height", method = method, smooth = smooth,
-                    map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect, key = FALSE,
-                    cex = cex,  ...)
-    } else {
-        scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
+
+        if (is.na(group)) key <- FALSE else key <- TRUE
+
+        scatterPlot(mydata, x = lon, y = lat, z = NA, method = method, smooth = smooth,
                     map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,
-                    cex = cex,  ...)
+                    key = key,
+                    group = group, cex = cex, ...)
+
+    } else {
+        scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method,
+                    smooth = smooth, map = map, x.inc = lon.inc, y.inc = lat.inc,
+                    aspect = aspect, group = group, cex = cex,  ...)
     }
 
 }

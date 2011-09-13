@@ -4,12 +4,13 @@
 \title{Trajectory plots with conditioning}
 \usage{
   trajLevel(mydata, lon = "lon", lat = "lat", pollutant =
-  "pm10", method = "level", smooth = TRUE, map = TRUE,
+  "pm10", method = "level", smooth = FALSE, map = TRUE,
   lon.inc = 1.5, lat.inc = 1.5, aspect = 1, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat", pollutant =
   "pm10", method = "scatter", smooth = FALSE, map = TRUE,
-  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, cex = 0.1, ...)
+  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, group = NA, cex
+  = 0.1, ...)
 }
 \arguments{
   \item{mydata}{Data frame, the result of importing a
@@ -44,6 +45,10 @@
 
   \item{cex}{Size of points used in \code{trajPlot} for
   individual back trajectory points}
+
+  \item{group}{For \code{trajPlot} it is sometimes useful
+  to group and colour trajectories according to a grouping
+  variable. See example below.}
 }
 \value{
   NULL
@@ -82,6 +87,24 @@
   to change
 }
 \examples{
+<<<<<<< .mine
+# show a simple case with no pollutant i.e. just the trajectories
+# let's check to see where the trajectories were coming from when
+# Heathrow Airport was closed due to the Icelandic volcanic eruption
+# 15--21 April 2010.
+# import trajectories for London and plot
+\dontrun{
+lond <- importTraj("london", 2010)
+# well, HYSPLIT seems to think there certainly were conditions where trajectories
+# orginated from Iceland...
+trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l")}
+
+# plot by day, need a column that makes a date
+\dontrun{
+lond$day <- as.Date(lond$date)
+trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
+type = "day")
+=======
 # show a simple case with no pollutant i.e. just the trajectories
 # let's check to see where the trajectories were coming from when
 # Heathrow Airport was closed due to the Icelandic volcanic eruption
@@ -97,10 +120,40 @@ trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type =
 \dontrun{lond$day <- as.Date(lond$date)
 trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
 col = "forestgreen", type = "day")
+>>>>>>> .r460
 }
+<<<<<<< .mine
+
+# or show each day grouped by colour, with some other options set
+
+trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
+group = "day", col = "jet", lwd = 2, key.pos = "right", key.col = 1)
+
+# more examples to follow linking with concentration measurements...
+
+# import some measurements from KC1 - London
+\dontrun{
+kc1 <- importAURN("kc1", year = 2010)
+# now merge with trajectory data by 'date'
+lond <- merge(lond, kc1, by = "date")
+
+# trajectory plot, no smoothing - and limit lat/lon area of interest
+trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm10")
+
+# can smooth surface:
+trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
+smooth = TRUE)
+
+# plot by season:
+trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
+smooth = TRUE, type = "season")
+}
+}
+=======
 
 # more examples to follow linking with concentration measurements...
 }
+>>>>>>> .r460
 \author{
   David Carslaw
 }

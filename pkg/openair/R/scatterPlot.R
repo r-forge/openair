@@ -146,6 +146,9 @@
 ##'   pollutants a single column can make to key too wide. The user can thus
 ##'   choose to use several columns by setting \code{columns} to be less than
 ##'   the number of pollutants.
+##' @param key.position  Location where the scale key is to plotted.  Allowed
+##'   arguments currently include \code{"top"}, \code{"right"}, \code{"bottom"}
+##'   and \code{"left"}
 ##' @param strip Should a strip be drawn? The default is \code{TRUE}.
 ##' @param log.x Should the x-axis appear on a log scale? The default is
 ##'   \code{FALSE}. If \code{TRUE} a well-formatted log10 scale is used. This
@@ -269,7 +272,7 @@ scatterPlot <- function(mydata,
                         y = "no2",
                         z = NA,
                         method = "scatter",
-                        group = NULL,
+                        group = NA,
                         avg.time = "default",
                         data.thresh = 0,
                         statistic = "mean",
@@ -292,6 +295,7 @@ scatterPlot <- function(mydata,
                         key = TRUE,
                         key.title = group,
                         key.columns = 1,
+                        key.position = "bottom",
                         strip = TRUE,
                         log.x = FALSE,
                         log.y = FALSE,
@@ -326,7 +330,7 @@ scatterPlot <- function(mydata,
     }
 
 
-### For Log scaling (adapted from lattice book) ###############################################
+    ## For Log scaling (adapted from lattice book ####################################
     if(log.x) nlog.x <- 10 else nlog.x <- FALSE
     if(log.y) nlog.y <- 10 else nlog.y <- FALSE
     yscale.components.log10 <- function(lim, ...) {
@@ -372,13 +376,15 @@ scatterPlot <- function(mydata,
 
     ## average the data if necessary (default does nothing)
     ## note - need to average before cutting data up etc
+
     if (avg.time != "default") mydata <- timeAverage(mydata, avg.time = avg.time,
         data.thresh = data.thresh, statistic = statistic, percentile = percentile)
 
-    ## the following makes sure all variables are present, which depends on 'group' and 'type'
+    ## the following makes sure all variables are present, which depends on 'group'
+    ## and 'type'
     if (is.na(z) & method == "level") stop("Need to specify 'z' when using method = 'level'")
 
-################################################################################################
+###########################################################################################
     if (any(type %in%  openair:::dateTypes) | !missing(avg.time)) {
 
         vars <- c("date", x, y)
@@ -388,12 +394,15 @@ scatterPlot <- function(mydata,
         vars <- c(x, y)
     }
 
-    ## if group is present, need to add that list of variables unless it is a pre-defined date-based one
-    if (!missing(group)){
+    ## if group is present, need to add that list of variables unless it is a
+    ## pre-defined date-based one
+    if (!is.na(group)){
 
-        if (group %in%  openair:::dateTypes | !missing(avg.time) | any(type %in% openair:::dateTypes)) {
+        if (group %in%  openair:::dateTypes | !missing(avg.time) |
+            any(type %in% openair:::dateTypes)) {
             if (group %in%  openair:::dateTypes) {
-                vars <- unique(c(vars, "date")) ## don't need group because it is defined by date
+                vars <- unique(c(vars, "date")) ## don't need group because it is
+                ## defined by date
             } else {
                 vars <- unique(c(vars, "date", group))
             }
@@ -403,23 +412,27 @@ scatterPlot <- function(mydata,
         }
     }
 
-    if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
+    if (!is.na(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
     ## decide if a trajectory plot is being drawn AND if a line is required rather
     ## than points
     traj <- FALSE
-    if (all(c("date", "lat", "lon", "height", "pressure") %in% names(mydata)) & plot.type == "l") traj <- TRUE
+    if (all(c("date", "lat", "lon", "height", "pressure") %in% names(mydata)) &
+        plot.type == "l") traj <- TRUE
 
     ## will need date so that trajectory groups can be coloured
     if (traj)  vars <- c(vars, "date")
 
     ## data checks
 
-    if (!missing(z)) vars <- c(vars, z)
+    if (!is.na(z)) vars <- c(vars, z)
     mydata <- openair:::checkPrep(mydata, vars, type)
 
-    ## remove missing data
- #   mydata <- na.omit(mydata)
+    ## remove missing data except for time series where we want to show gaps
+    ## this also removes missing factors
+    if (class(mydata[ , x])[1] != "Date" | !"POSIXt" %in% class(mydata[ , x])) {
+        mydata <- na.omit(mydata)
+    }
 
     ## if x is a factor/character, then rotate axis labels for clearer labels
     x.rot <- 0
@@ -428,11 +441,9 @@ scatterPlot <- function(mydata,
         mydata[, x] <- factor(mydata[, x])
     }
 
+    ## continuous colors ##########################################################################################
 
-
-    ## continuous colors ###################################################################################################
-
-    if (!missing(z) & method == "scatter") {
+    if (!is.na(z) & method == "scatter") {
         if (z %in% openair:::dateTypes) stop("Colour coding requires 'z' to be continuous numeric variable'")
 
         ## check to see if type is numeric/integer
@@ -477,24 +488,18 @@ scatterPlot <- function(mydata,
             legend <- NULL
         }
 
-
     } else {
 
         mydata <- cutData(mydata, type, ...)
-        if (missing(group)) {
 
-            if ((!"group" %in% type) & (!"group" %in% c(x, y))) mydata$group <-
-                factor("group")
-            ## don't overwrite a
-        } else {  ## means that group is there
-            mydata <- cutData(mydata, group, ...)
-        }
+        if (!is.na(group))  mydata <- cutData(mydata, group, ...)
 
         legend <- NULL
     }
 
+
     ## if no group to plot, then add a dummy one to make xyplot work
-    if (is.null(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
+    if (is.na(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
 
     ## number of groups
     npol <- length(levels(mydata[ ,group]))
@@ -517,21 +522,21 @@ scatterPlot <- function(mydata,
 
     pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
 
-    if (missing(z)) { ## non-continuous key
+    if (is.na(z)) { ## non-continuous key
         if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
 
         if (key & npol > 1) {
             if (plot.type == "p") {
                 key <- list(points = list(col = myColors[1:npol]), pch = pch,
                             text = list(lab = pol.name, cex = 0.8),
-                            space = "bottom", columns = key.columns,
+                            space = key.position, columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
 
             if (plot.type == "l") {
                 key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = "bottom",
+                            text = list(lab = pol.name, cex = 0.8),  space = key.position,
                             columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
@@ -540,7 +545,7 @@ scatterPlot <- function(mydata,
             if (plot.type == "b") {
                 key <- list(points = list(col = myColors[1:npol]), pch = pch,
                             lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = "bottom",
+                            text = list(lab = pol.name, cex = 0.8),  space = key.position,
                             columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
@@ -569,7 +574,8 @@ scatterPlot <- function(mydata,
         layout = if (type == "wd") c(3, 3) else NULL
     }
 
-    ## proper names of labelling ##############################################################################
+    ## proper names of labelling
+    ## ############################################################################
 
     stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
     if (strip) strip <- strip.custom(factor.levels = stripName)
@@ -579,10 +585,11 @@ scatterPlot <- function(mydata,
         strip.left <- FALSE
 
     } else { ## two conditioning variables
-        stripName <- sapply(levels(mydata[ , type[2]]), function(x) quickText(x, auto.text))
+        stripName <- sapply(levels(mydata[ , type[2]]), function(x)
+                            quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels =  stripName)
     }
-    ## ########################################################################################################
+    ## #############################################################################
 
 
     ## no strip needed for single panel
@@ -618,19 +625,31 @@ scatterPlot <- function(mydata,
                       lty, lwd, group.number,
                       subscripts,...)
                   {
+
                       ## specific treatemt of trajectory lines
-                      ## in order to avoid a line back to the origin, need to process in batches
+                      ## in order to avoid a line back to the origin, need to process
+                      ## in batches
                       if (traj) {
 
-                           ddply(mydata[subscripts, ], .(date), function (x) llines(x$lon, x$lat,
-                                                                                    col.line = x$col,
-                                                                      lwd = lwd, lty = lty))
+                          if (!is.na(z)) {
+                              ## colour by z
+                              ddply(mydata[subscripts, ], "date", function (x)
+                                    llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
+                                           lty = lty))
+                          } else {
+                              ## colour by a grouping variable
+                              ddply(mydata[subscripts, ], .(date), function (x)
+                                    llines(x$lon, x$lat, col.line = myColors[group.number],
+                                           lwd = lwd, lty = lty))
+                          }
+
                       }
 
-                      if (!is.na(z) & !traj) panel.xyplot(x, y, col.symbol = thecol[subscripts],
+                      if (!is.na(z) & !traj) panel.xyplot(x, y,
+                                                          col.symbol = thecol[subscripts],
                                                   as.table = TRUE, ...)
 
-                      if (is.na(z)) panel.xyplot(x, y, type = plot.type,
+                      if (is.na(z) & !traj) panel.xyplot(x, y, type = plot.type,
                                                  col.symbol = myColors[group.number],
                                                  col.line = myColors[group.number],
                                                  lty = lty, lwd = lwd,
@@ -665,7 +684,6 @@ scatterPlot <- function(mydata,
                       panel.abline(v = ref.x, lty = 5)
                       panel.abline(h = ref.y, lty = 5)
 
-
                   })
     }
 
@@ -681,7 +699,7 @@ scatterPlot <- function(mydata,
                           par.strip.text = list(cex = 0.8),
                           colorkey = TRUE,
                           aspect = 1,
-                          colramp = function(n) {openColours(method.col, n)},  #was "default"
+                          colramp = function(n) {openColours(method.col, n)},
                           trans = function(x) log(x), inv = function(x) exp(x),...,
                           panel = function(x,...) {
                               panel.grid(-1, -1)
@@ -906,10 +924,15 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
 
 
     thedata <- data.frame(x = x, y = y)
+    thedata <- na.omit(thedata)
+
     tryCatch({mod <- lm(y ~ x, data = thedata)
 
               lims <- current.panel.limits()
-              xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
+
+              xrange <- c(max(min(lims$x, na.rm = TRUE), min(x, na.rm = TRUE)),
+                          min(max(lims$x, na.rm = TRUE), max(x, na.rm = TRUE)))
+
               xseq <- seq(xrange[1], xrange[2], length = n)
 
               pred <- predict(mod, data.frame(x = xseq), interval = "confidence")

@@ -3,16 +3,17 @@
 \title{Flexible scatter plots}
 \usage{
   scatterPlot(mydata, x = "nox", y = "no2", z = NA, method
-  = "scatter", group = NULL, avg.time = "default",
+  = "scatter", group = NA, avg.time = "default",
   data.thresh = 0, statistic = "mean", percentile = NA,
   type = "default", layout = NULL, smooth = FALSE, spline =
   FALSE, linear = FALSE, ci = TRUE, mod.line = FALSE, cols
   = "hue", main = "", ylab = y, xlab = x, pch = 1, lwd = 1,
   lty = 1, plot.type = "p", key = TRUE, key.title = group,
-  key.columns = 1, strip = TRUE, log.x = FALSE, log.y =
-  FALSE, x.inc = 10, y.inc = 10, y.relation = "same",
-  x.relation = "same", ref.x = NULL, ref.y = NULL, k = 100,
-  trans = TRUE, map = FALSE, auto.text = TRUE, ...)
+  key.columns = 1, key.position = "bottom", strip = TRUE,
+  log.x = FALSE, log.y = FALSE, x.inc = 10, y.inc = 10,
+  y.relation = "same", x.relation = "same", ref.x = NULL,
+  ref.y = NULL, k = 100, trans = TRUE, map = FALSE,
+  auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing at least two
@@ -174,6 +175,11 @@
   too wide. The user can thus choose to use several columns
   by setting \code{columns} to be less than the number of
   pollutants.}
+
+  \item{key.position}{Location where the scale key is to
+  plotted.  Allowed arguments currently include
+  \code{"top"}, \code{"right"}, \code{"bottom"} and
+  \code{"left"}}
 
   \item{strip}{Should a strip be drawn? The default is
   \code{TRUE}.}
