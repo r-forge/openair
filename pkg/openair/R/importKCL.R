@@ -469,17 +469,33 @@ importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE,
 
     ## rows with these site codes
     ## this preserves order of site names
-    load(url(paste("http://www.londonair.org.uk/r_data/", "sites", ".RData", sep = "")))
+    con <- url((paste("http://www.londonair.org.uk/r_data/", "sites", ".RData", sep = "")))
+    load(con)
+    close(con)
 
     id <- sapply(site, function(x) which(sites$SiteCode %in% toupper(x)))
     site.name <- sites$SiteName[id]
 
     ## RData files to import
-    files <- lapply(site, function (x) paste("http://www.londonair.org.uk/r_data/", x, "_", year, ".RData", sep = ""))
+    files <- lapply(site, function (x) paste(x, "_", year, sep = ""))
     files <- do.call(c, files)
 
-    thedata <- suppressWarnings(lapply(files, function(file) tryCatch({get(load(url(file)))}, error = function(ex) {cat(file, "does not exist - ignoring that one.\n")})))
+    loadData <- function(x) {
+        tryCatch({
+             fileName <- paste("http://www.londonair.org.uk/r_data/", x, ".RData", sep = "")
+             con <- url(fileName)
+             load(con)
+             close(con)
+             x
+             },
+                  error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
+
+     }
+
+    thedata <- lapply(files, loadData)
     thedata <- do.call(rbind.fill, thedata)
+
+    if (is.null(thedata)) stop("No data to import - check site codes and year.", call. = FALSE)
 
 
     thedata$code <- thedata$site

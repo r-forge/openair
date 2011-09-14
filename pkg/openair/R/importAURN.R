@@ -185,7 +185,9 @@ importAURN <- function(site = "my1", year = 2009, pollutant = "all", hc = FALSE)
     loadData <- function(x) {
         tryCatch({
              fileName <- paste("http://uk-air.defra.gov.uk/openair/R_data/", x, ".RData", sep = "")
-             load(url(fileName), envir = .GlobalEnv)
+             con <- url(fileName)
+             load(con, envir = .GlobalEnv)
+             close(con)
              x
              },
                   error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})

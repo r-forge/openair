@@ -59,7 +59,9 @@ importMeta <- function(source = "aurn", all = FALSE) {
     if (!source %in% meta.source) stop ("Meta data sources are 'aurn', 'kcl' and 'saqn.")
 
     if (source == "aurn") {
-        meta <- get(load(url("http://uk-air.defra.gov.uk/openair/R_data/AURN_metadata.RData")))
+        con <- url("http://uk-air.defra.gov.uk/openair/R_data/AURN_metadata.RData")
+        meta <- get(load(con))
+        close(con)
         ## only extract one line per site to make it easier to use file
         ## mostly interested in coordinates
 
@@ -73,7 +75,9 @@ importMeta <- function(source = "aurn", all = FALSE) {
     }
 
     if (source == "saqn") {
-        meta <- get(load(url("http://www.scottishairquality.co.uk/openair/R_data/SCOT_metadata.RData")))
+        con <- url("http://www.scottishairquality.co.uk/openair/R_data/SCOT_metadata.RData")
+        meta <- get(load(con))
+        close(con)
         ## only extract one line per site to make it easier to use file
         ## mostly interested in coordinates
 
@@ -86,8 +90,9 @@ importMeta <- function(source = "aurn", all = FALSE) {
     }
 
     if (source == "kcl") {
-
-        meta <- get(load(url("http://www.londonair.org.uk/r_data/sites.RData")))
+        con <- url("http://www.londonair.org.uk/r_data/sites.RData")
+        meta <- get(load(con))
+        close(con)
 
         ## rename to match imported names e.g. importKCL
         meta <- rename(meta, c(SiteCode = "code", SiteName = "site", Classification = "site.type",
