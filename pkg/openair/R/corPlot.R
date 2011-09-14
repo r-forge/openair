@@ -190,7 +190,10 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     #output
     #################
 
-    plot(plt)
+    #currently length(type) 1 only!
+    plot(plt) 
+
+    #openair object
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
