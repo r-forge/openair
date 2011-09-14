@@ -96,23 +96,26 @@ importTraj <- function(site = "london", year = 2009) {
     if (length(site) > 1) stop("Only one site can be imported at a time.")
     site <- tolower(site)
 
-    ## RData files to import
-    files <- lapply(site, function (x) paste("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/Traj/", x, year, ".RData", sep = ""))
+    files <- lapply(site, function (x) paste(x, year, sep = ""))
     files <- do.call(c, files)
 
-    thedata <- suppressWarnings(lapply(files, function(file) tryCatch({get(load(url(file)))}, error = function(ex) {cat(file, "does not exist - ignoring that one.\n")})))
+    loadData <- function(x) {
+        tryCatch({
+             fileName <- paste("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/Traj/", x, ".RData",
+                               sep = "")
+             con <- url(fileName)
+             load(con)
+             close(con)
+             traj
+             },
+                  error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
+     }
+
+    thedata <- lapply(files, loadData)
     thedata <- do.call(rbind.fill, thedata)
-
-
-  #  thedata$code <- thedata$site
-
-  #  thedata$site <- factor(thedata$site, labels = site.name, levels = site)
-
 
     ## change names
     names(thedata) <- tolower(names(thedata))
-
-
 
     thedata
 }
