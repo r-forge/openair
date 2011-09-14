@@ -4,7 +4,7 @@
 \usage{
   corPlot(mydata, type = "default", cluster = TRUE, cols =
   "default", r.thresh = 0.8, text.col = c("black",
-  "black"), main = "", auto.text = TRUE)
+  "black"), auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame which should consist of some
@@ -47,12 +47,16 @@
   correlation values. The first value controls the colour
   of negative correlations and the second positive.}
 
-  \item{main}{The plot title; default is no title.}
-
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
+
+  \item{\dots}{Other graphical parameters passed onto
+  \code{lattice:levelplot}, with common axis and title
+  labelling options (such as \code{xlim}, \code{ylim},
+  \code{main}) being passed via \code{quickText} to handle
+  routine formatting.}
 }
 \description{
   Function to to draw and visualise correlation matrices

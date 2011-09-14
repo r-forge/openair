@@ -51,10 +51,13 @@
 ##' @param text.col The colour of the text used to show the correlation values.
 ##'   The first value controls the colour of negative correlations and the
 ##'   second positive.
-##' @param main The plot title; default is no title.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
+##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}, 
+##'   with common axis and title labelling options (such as \code{xlim}, 
+##'   \code{ylim}, \code{main}) being passed via \code{quickText} 
+##'   to handle routine formatting.
 ##' @export
 ##' @author David Carslaw --- but mostly based on code contained in Sarkar
 ##'   (2007)
@@ -83,7 +86,7 @@
 ##' }
 ##'
 corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", r.thresh = 0.8,
-                         text.col = c("black", "black"),  main = "", auto.text = TRUE) {
+                         text.col = c("black", "black"), auto.text = TRUE, ...) {
 
     if (length(type) > 1) stop ("Only one 'type' allowed in this function.")
 
@@ -91,6 +94,17 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     if (any(type %in% openair:::dateTypes)) {
         if (!"date" %in% names(mydata)) stop ("Need a field 'date'")
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText(NULL, auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(NULL, auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     ## remove variables where all are NA
     mydata <- mydata[ , sapply(mydata, function(x) !all(is.na(x)))]
@@ -153,19 +167,34 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     strip <- strip.custom(factor.levels = pol.name)
     if (type == "default") strip <- FALSE
 
-    levelplot(z ~ x * y | type , data = results.grid,
+    ## plot via ... handler
+    levelplot.args <- list(x = z ~ x * y | type , data = results.grid,
               at = do.breaks(c(-1.01, 1.01), 100),
-              xlab = NULL, ylab = NULL,
               as.table = TRUE,
               strip = strip,
               aspect = 1,
-              main = quickText(main, auto.text),
               colorkey = FALSE,
               col.regions = div.col,
               par.strip.text = list(cex = 0.8),
               scales = list(x = list(rot = 90, labels = labels, at = 1 : npol),
               y = list(labels = labels, at = 1 : npol), relation = "free"),
               panel = panel.corrgram,  text.col = text.col, r.thresh = r.thresh, label = TRUE)
+
+    #reset for extra.args
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+    #plot
+    plt <- do.call(levelplot, levelplot.args)
+
+    #################
+    #output
+    #################
+
+    plot(plt)
+    newdata <- results.grid
+    output <- list(plot = plt, data = newdata, call = match.call())
+    class(output) <- "openair"
+    invisible(output)
 
 }
 

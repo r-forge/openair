@@ -529,6 +529,9 @@ GoogleMapsPlot <- function(mydata,
     #(is larger than data range
     #and already done by RgoogleMaps!)
 
+#Currently disabled because
+#issue with RgoogleMaps
+
 #    if(missing(xlim))
         xlim <- c(map$BBOX$ll[2], map$BBOX$ur[2])
 #    if(missing(ylim))
