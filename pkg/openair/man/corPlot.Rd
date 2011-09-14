@@ -2,13 +2,18 @@
 \alias{corPlot}
 \title{corrgram plot with conditioning}
 \usage{
-  corPlot(mydata, type = "default", cluster = TRUE, cols =
-  "default", r.thresh = 0.8, text.col = c("black",
-  "black"), auto.text = TRUE, ...)
+  corPlot(mydata, pollutants = NULL, type = "default",
+  cluster = TRUE, cols = "default", r.thresh = 0.8,
+  text.col = c("black", "black"), auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame which should consist of some
   numeric columns.}
+
+  \item{pollutants}{the names of data-series in
+  \code{mydata} to be plotted by \code{corPlot}. The
+  default option \code{NULL} and the alternative
+  \code{"all"} use all available valid (numeric) data.}
 
   \item{type}{\code{type} determines how the data are split
   i.e. conditioned, and then plotted. The default is will

@@ -25,6 +25,9 @@
 ##' with too many panels.
 ##'
 ##' @param mydata A data frame which should consist of some numeric columns.
+##' @param pollutants the names of data-series in \code{mydata} to be 
+##'   plotted by \code{corPlot}. The default option \code{NULL} and the alternative 
+##'   \code{"all"} use all available valid (numeric) data. 
 ##' @param type \code{type} determines how the data are split i.e. conditioned,
 ##'   and then plotted. The default is will produce a single plot using the
 ##'   entire data. Type can be one of the built-in types as detailed in
@@ -85,7 +88,7 @@
 ##' corPlot(hc)
 ##' }
 ##'
-corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", r.thresh = 0.8,
+corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE, cols = "default", r.thresh = 0.8,
                          text.col = c("black", "black"), auto.text = TRUE, ...) {
 
     if (length(type) > 1) stop ("Only one 'type' allowed in this function.")
@@ -106,6 +109,22 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
+    ##pollutant(s) handling
+
+    #null and all cases
+    if(is.null(pollutants))
+        pollutants <- names(mydata)
+    if(is.character(pollutants) && length(pollutants)==1 && pollutants == "all")
+        pollutants <- names(mydata)
+
+    #keep date if about
+    pollutants <- if("date" %in% names(mydata))
+                      unique(c("date", pollutants)) else
+                          unique(c(pollutants))
+
+    mydata <- checkPrep(mydata, pollutants, type = type,
+                        remove.calm = FALSE)
+    
     ## remove variables where all are NA
     mydata <- mydata[ , sapply(mydata, function(x) !all(is.na(x)))]
 
@@ -113,12 +132,14 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     mydata <- cutData(mydata, type)
 
     ## proper names of labelling
-    pol.name <- sapply(names(mydata[, sapply(mydata, is.numeric)]),
+    pollutants <- names(mydata[, sapply(mydata, is.numeric)])
+    pol.name <- sapply(pollutants,
                        function(x) quickText(x, auto.text))
 
     ## number of pollutants
     npol <- length(pol.name)
 
+    if (npol < 2) stop ("Need at least two valid (numeric) fields to compare")
 
     prepare.cond <- function(mydata) {
         ## calculate the correlations
@@ -135,7 +156,6 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
 
         if (cluster) {
             ord.dat <- order.dendrogram(as.dendrogram(hclust(dist(thedata))))
-
         } else {
             ord.dat <- 1:ncol(thedata)
         }
@@ -149,12 +169,17 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
         thedata <- as.vector(thedata)
 
         thedata <- cbind(grid, z = thedata, type = mydata[1, type])
-        thedata <- list(thedata = thedata, pol.name = thepols)
+        thedata <- list(thedata = thedata, pol.name = thepols, pol.ord = ord.dat)
         thedata
 
     }
 
     results.grid <- dlply(mydata, type, prepare.cond)
+
+    ##recover by-type order
+    #(re clustering = TRUE)
+    data.order <- unique(as.vector(sapply(1:length(results.grid), function(x) results.grid[[x]]$pol.ord)))
+    pollutants <- pollutants[data.order]
 
     ## list of labels
     labels <-  llply(results.grid, function(x) x$pol.name)
@@ -193,8 +218,17 @@ corPlot <- function(mydata, type = "default", cluster = TRUE, cols = "default", 
     #currently length(type) 1 only!
     plot(plt) 
 
-    #openair object
+    ##openair object
+
     newdata <- results.grid
+
+    #tidy newdata for output
+    rownames(newdata) <- NULL
+    newdata$x <- factor(newdata$x, labels = pollutants)
+    newdata$y <- factor(newdata$y, labels = pollutants)
+    names(newdata)[names(newdata)=="z"] <- "cor"
+
+    #main handling
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
     invisible(output)

@@ -4,6 +4,8 @@ Changes in openair 0.5-11 [2011-09-14]
 *       update to corPlot, scatterPlot
         improved ... handling
 *	remove warnings when importing air pollution data
+*	additional update to corPlot
+        added pollutant option, and openair class output
 
 Changes in openair 0.5-10 [2011-09-12]
 =====================================
