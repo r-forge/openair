@@ -277,7 +277,6 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
 
         if ((!"group" %in% type) & (!"group" %in% c(obs, mod))) {
             mydata$group <- factor("group")
-            if (combine) newdata$group <- factor("group")
             group <- "group"
         }
         ## don't overwrite a
