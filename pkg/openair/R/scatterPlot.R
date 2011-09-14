@@ -126,11 +126,6 @@
 ##'   "increment", "heat", "spectral", "hue", "brewer1" and user defined (see
 ##'   manual for more details). The same line colour can be set for all
 ##'   pollutant e.g. \code{cols = "black"}.
-##' @param main The plot title; default is no title.
-##' @param ylab Name of y-axis variable. By default will use the name of
-##'   \code{y}.
-##' @param xlab Name of x-axis variable. By default will use the name of
-##'   \code{x}.
 ##' @param pch The symbol type used for plotting. Default is to provide
 ##'   different symbol types for different pollutant. If one requires a single
 ##'   symbol for all pollutants, the set \code{pch = 1}, for example.
@@ -180,9 +175,15 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param ... Other graphical parameters passed onto \code{lattice:xyplot}
-##'and \code{cutData}. For example, in the case of \code{cutData} the option
-##'\code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters are passed onto \code{cutData} and 
+##'   an appropriate \code{lattice} plot function (\code{xyplot}, \code{levelplot} 
+##'   or \code{hexbinplot} depending on \code{method}). For example, 
+##'   \code{scatterPlot} passes the option \code{hemisphere = "southern"} on to 
+##'   \code{cutData} to provide southern (rather than default northern) hemisphere 
+##'   handling of \code{type = "season"}. Similarly, for the default case 
+##'   \code{method = "scatter"} common axis and title labelling options (such 
+##'   as \code{xlim}, \code{ylim}, \code{main}) are passed to \code{xyplot} via 
+##'   \code{quickText} to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{scatterPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -285,9 +286,6 @@ scatterPlot <- function(mydata,
                         ci = TRUE,
                         mod.line = FALSE,
                         cols = "hue",
-                        main = "",
-                        ylab = y,
-                        xlab = x,
                         pch = 1,
                         lwd = 1,
                         lty = 1,
@@ -328,6 +326,18 @@ scatterPlot <- function(mydata,
     } else {
         method.col <- "default"
     }
+
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    ##(main handled deferred to plot
+    ##because of unique by-method handling)
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText(x, auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(y, auto.text)
 
 
     ## For Log scaling (adapted from lattice book ####################################
@@ -470,8 +480,6 @@ scatterPlot <- function(mydata,
         min.col <- min(mydata[, z], na.rm = TRUE)
         max.col <- max(mydata[, z], na.rm = TRUE)
 
-        if (missing(main)) main <- paste(x, "vs.", y, "by levels of", z)
-
         ## don't need to group by all levels - want one smooth etc
         group <- "NewGroupVar"
         mydata$NewGroupVar <- "NewGroupVar"
@@ -601,15 +609,13 @@ scatterPlot <- function(mydata,
 
 
     if (method == "scatter") {
-        plt <- xyplot(myform,  data = mydata, groups = MyGroupVar,
+
+        xyplot.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
                       type = c("p", "g"),
                       as.table = TRUE,
                       pch = pch,
                       lwd = lwd,
                       lty = lty,
-                      main = quickText(main, auto.text),
-                      ylab = quickText(ylab, auto.text),
-                      xlab = quickText(xlab, auto.text),
                       scales = scales,
                       key = key,
                       par.strip.text = list(cex = 0.8),
@@ -685,14 +691,28 @@ scatterPlot <- function(mydata,
                       panel.abline(h = ref.y, lty = 5)
 
                   })
+
+        #by default title if z set
+        #else none
+        default.main <- if(is.na(z)) "" else paste(x, "vs.", y, "by levels of", z)
+        extra.args$main <- if("main" %in% names(extra.args))
+                               quickText(extra.args$main, auto.text) else 
+                                   quickText(default.main, auto.text)
+
+        #reset for extra.args
+        xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+        #plot
+        plt <- do.call(xyplot, xyplot.args)
+
     }
 
     if (method == "hexbin") {
         require(hexbin)
-        plt <- hexbinplot(myform, data = mydata,
-                          ylab = quickText(ylab, auto.text),
-                          xlab = quickText(xlab, auto.text),
-                          main = quickText(main, auto.text),
+
+        ##plot via ... handler
+
+        hexbinplot.args <- list(x = myform, data = mydata,
                           strip = strip,
                           as.table = TRUE,
                           xbins = 40,
@@ -700,7 +720,7 @@ scatterPlot <- function(mydata,
                           colorkey = TRUE,
                           aspect = 1,
                           colramp = function(n) {openColours(method.col, n)},
-                          trans = function(x) log(x), inv = function(x) exp(x),...,
+                          trans = function(x) log(x), inv = function(x) exp(x),
                           panel = function(x,...) {
                               panel.grid(-1, -1)
                               panel.hexbinplot(x,...)
@@ -713,6 +733,17 @@ scatterPlot <- function(mydata,
                               panel.abline(v = ref.x, lty = 5)
                               panel.abline(h = ref.y, lty = 5)
                           })
+
+        #by default no title ever
+        extra.args$main <- if("main" %in% names(extra.args))
+                               quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+        #reset for extra.args
+        hexbinplot.args<- listUpdate(hexbinplot.args, extra.args)
+
+        #plot
+        plt <- do.call(hexbinplot, hexbinplot.args)
+
     }
 
 
@@ -762,8 +793,6 @@ scatterPlot <- function(mydata,
 
         if (smooth) mydata <- ddply(mydata, type, smooth.grid, z)
 
-        if (missing(main)) main <- paste(x, "vs.", y, "by levels of", z)
-
         ## basic function for lattice call + defaults
         temp <- paste(type, collapse = "+")
         myform <- formula(paste(z, "~ xgrid * ygrid |", temp, sep = ""))
@@ -779,10 +808,10 @@ scatterPlot <- function(mydata,
 
         col.scale <- breaks
 
+    
+        #plot byt ... handler
 
-        plt <- levelplot(myform, data = mydata,
-                         ylab = quickText(ylab, auto.text),
-                         xlab = quickText(xlab, auto.text),
+        levelplot.args <- list(x = myform, data = mydata,
                          strip = strip,
                          as.table = TRUE,
                          layout = layout,
@@ -790,9 +819,8 @@ scatterPlot <- function(mydata,
                          region = TRUE,
                          col.regions = col,
                          at = col.scale,
-                         main = quickText(main, auto.text),
                          par.strip.text = list(cex = 0.8),
-                         colorkey = TRUE,...,
+                         colorkey = TRUE,
                          panel = function(x, y, z, subscripts,...) {
                              panel.grid(h = -1, v = -1)
                              panel.levelplot(x, y, z, subscripts,
@@ -812,12 +840,24 @@ scatterPlot <- function(mydata,
                                  require(maps)
                                  mp <- map(database="world", plot = FALSE)
                                  llines(mp$x, mp$y, col = "black")
-                      }
+                             }
                              ## add reference lines
                              panel.abline(v = ref.x, lty = 5)
                              panel.abline(h = ref.y, lty = 5)
 
                          })
+
+        #z must exist to get here
+        extra.args$main <- if("main" %in% names(extra.args))
+                               quickText(extra.args$main, auto.text) else 
+                                   quickText(paste(x, "vs.", y, "by levels of", z), auto.text)
+
+        #reset for extra.args
+        levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+        #plot
+        plt <- do.call(levelplot, levelplot.args)
+
     }
 
 
@@ -866,18 +906,15 @@ scatterPlot <- function(mydata,
         temp <- paste(type, collapse = "+")
         myform <- formula(paste("z ~ x * y", "|", temp, sep = ""))
 
-        plt <- levelplot(myform, results.grid,
+        #plot via ... handler
+        levelplot.args <- list(x = myform, data = results.grid,
                          as.table = TRUE,
-                         ylab = quickText(ylab, auto.text),
-                         xlab = quickText(xlab, auto.text),
-                         main = quickText(main, auto.text),
                          strip = strip,
                          col.regions = col,
                          region = TRUE,
                          layout = layout,
                          at = col.scale,
                          colorkey = FALSE,
-                         ...,
 
                          panel = function(x, y, z, subscripts,...) {
                              panel.grid(-1, -1)
@@ -896,6 +933,17 @@ scatterPlot <- function(mydata,
                              panel.abline(v = ref.x, lty = 5)
                              panel.abline(h = ref.y, lty = 5)
                          })
+
+        #by default no title ever
+        extra.args$main <- if("main" %in% names(extra.args))
+                               quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+        #reset for extra.args
+        levelplot.args<- listUpdate(levelplot.args, extra.args)
+
+        #plot
+        plt <- do.call(levelplot, levelplot.args)
+
     }
 
 

@@ -7,13 +7,12 @@
   data.thresh = 0, statistic = "mean", percentile = NA,
   type = "default", layout = NULL, smooth = FALSE, spline =
   FALSE, linear = FALSE, ci = TRUE, mod.line = FALSE, cols
-  = "hue", main = "", ylab = y, xlab = x, pch = 1, lwd = 1,
-  lty = 1, plot.type = "p", key = TRUE, key.title = group,
-  key.columns = 1, key.position = "bottom", strip = TRUE,
-  log.x = FALSE, log.y = FALSE, x.inc = 10, y.inc = 10,
-  y.relation = "same", x.relation = "same", ref.x = NULL,
-  ref.y = NULL, k = 100, trans = TRUE, map = FALSE,
-  auto.text = TRUE, ...)
+  = "hue", pch = 1, lwd = 1, lty = 1, plot.type = "p", key
+  = TRUE, key.title = group, key.columns = 1, key.position
+  = "bottom", strip = TRUE, log.x = FALSE, log.y = FALSE,
+  x.inc = 10, y.inc = 10, y.relation = "same", x.relation =
+  "same", ref.x = NULL, ref.y = NULL, k = 100, trans =
+  TRUE, map = FALSE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing at least two
@@ -142,14 +141,6 @@
   details). The same line colour can be set for all
   pollutant e.g. \code{cols = "black"}.}
 
-  \item{main}{The plot title; default is no title.}
-
-  \item{ylab}{Name of y-axis variable. By default will use
-  the name of \code{y}.}
-
-  \item{xlab}{Name of x-axis variable. By default will use
-  the name of \code{x}.}
-
   \item{pch}{The symbol type used for plotting. Default is
   to provide different symbol types for different
   pollutant. If one requires a single symbol for all
@@ -235,10 +226,18 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{...}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \item{\dots}{Other graphical parameters are passed onto
+  \code{cutData} and an appropriate \code{lattice} plot
+  function (\code{xyplot}, \code{levelplot} or
+  \code{hexbinplot} depending on \code{method}). For
+  example, \code{scatterPlot} passes the option
+  \code{hemisphere = "southern"} on to \code{cutData} to
+  provide southern (rather than default northern)
+  hemisphere handling of \code{type = "season"}. Similarly,
+  for the default case \code{method = "scatter"} common
+  axis and title labelling options (such as \code{xlim},
+  \code{ylim}, \code{main}) are passed to \code{xyplot} via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself, \code{scatterPlot}
