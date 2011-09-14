@@ -126,7 +126,7 @@ summaryPlot <- function(mydata,
                       type = "histogram",
                       pollutant = "nox",
                       period = "years",
-                      breaks = 20,
+                      breaks = NULL,
                       col.trend = "darkgoldenrod2",
                       col.data = "lightblue",
                       col.mis = rgb(0.65, 0.04, 0.07),
@@ -167,7 +167,7 @@ summaryPlot <- function(mydata,
     }
 
     ## for plot
-    dateBreaks <- dateBreaks(mydata$date, date.breaks)$major
+    dateBreaks <- openair:::dateBreaks(mydata$date, date.breaks)$major
 
     ## print data types - helps with debugging
     print(unlist(sapply(mydata, class)))
@@ -226,11 +226,11 @@ summaryPlot <- function(mydata,
     ## round the dates depending on period
     min.year <- as.numeric(min(format(mydata$date, "%Y")))
     max.year <- as.numeric(max(format(mydata$date, "%Y")))
-    start.date <- as.POSIXct(dateTrunc(min(mydata$date), period))
-    end.date <- as.POSIXct(dateCeil(max(mydata$date), period) - 3600)
+    start.date <- as.POSIXct(openair:::dateTrunc(min(mydata$date), period))
+    end.date <- as.POSIXct(openair:::dateCeil(max(mydata$date), period) - 3600)
 
     ## find time interval of data and pad any missing times
-    interval <- find.time.interval(mydata$date)
+    interval <- openair:::find.time.interval(mydata$date)
     all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
     mydata <- merge(mydata, all.dates, all = TRUE)
 
@@ -315,9 +315,9 @@ summaryPlot <- function(mydata,
                    xlim = c(start.date - 60, end.date + 60),
 
                    ## override scaling for more sensible date/time breaks
-                   scales = list(y = list(draw = FALSE), x = list(at =
-                                                         dateBreaks(mydata$date, date.breaks)$major, format =
-                                                         dateBreaks(mydata$date, date.breaks)$format)),
+                   scales = list(y = list(draw = FALSE),
+                   x = list(at = openair:::dateBreaks(mydata$date, date.breaks)$major,
+                   format = openair:::dateBreaks(mydata$date, date.breaks)$format)),
                    layout = c(1, length(unique(mydata$variable))),
                    strip = FALSE,
                    strip.left = strip.custom(horizontal = FALSE, factor.levels = pol.name),
