@@ -5,14 +5,14 @@
   scatterPlot(mydata, x = "nox", y = "no2", z = NA, method
   = "scatter", group = NA, avg.time = "default",
   data.thresh = 0, statistic = "mean", percentile = NA,
-  type = "default", layout = NULL, smooth = FALSE, spline =
-  FALSE, linear = FALSE, ci = TRUE, mod.line = FALSE, cols
-  = "hue", pch = 1, lwd = 1, lty = 1, plot.type = "p", key
-  = TRUE, key.title = group, key.columns = 1, key.position
-  = "bottom", strip = TRUE, log.x = FALSE, log.y = FALSE,
-  x.inc = 10, y.inc = 10, y.relation = "same", x.relation =
-  "same", ref.x = NULL, ref.y = NULL, k = 100, trans =
-  TRUE, map = FALSE, auto.text = TRUE, ...)
+  type = "default", smooth = FALSE, spline = FALSE, linear
+  = FALSE, ci = TRUE, mod.line = FALSE, cols = "hue",
+  plot.type = "p", key = TRUE, key.title = group,
+  key.columns = 1, key.position = "bottom", strip = TRUE,
+  log.x = FALSE, log.y = FALSE, x.inc = 10, y.inc = 10,
+  y.relation = "same", x.relation = "same", ref.x = NULL,
+  ref.y = NULL, k = 100, trans = TRUE, map = FALSE,
+  auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing at least two
@@ -99,14 +99,6 @@
   types are provided the first forms the columns and the
   second the rows.}
 
-  \item{layout}{Determines how the panels are laid out. By
-  default, plots will be shown in one column with the
-  number of rows equal to the number of pollutants, for
-  example. If the user requires 2 columns and two rows,
-  layout should be set to \code{layout = c(2, 2)}. In
-  general, layout is expressed as number of columns times
-  number of rows.}
-
   \item{smooth}{A smooth line is fitted to the data if
   \code{TRUE}; optionally with 95% confidence intervals
   shown. For \code{method = "level"} a smooth surface will
@@ -140,17 +132,6 @@
   "hue", "brewer1" and user defined (see manual for more
   details). The same line colour can be set for all
   pollutant e.g. \code{cols = "black"}.}
-
-  \item{pch}{The symbol type used for plotting. Default is
-  to provide different symbol types for different
-  pollutant. If one requires a single symbol for all
-  pollutants, the set \code{pch = 1}, for example.}
-
-  \item{lwd}{Width of line if used e.g. if \code{plot.type
-  = "l"} or \code{plot.type = "b"}.}
-
-  \item{lty}{Type of line if used e.g. if \code{plot.type =
-  "l"} or \code{plot.type = "b"}.}
 
   \item{plot.type}{\code{lattice} plot type. Can be "p"
   (points --- default), "l" (lines) or "b" (lines and
@@ -237,7 +218,11 @@
   for the default case \code{method = "scatter"} common
   axis and title labelling options (such as \code{xlim},
   \code{ylim}, \code{main}) are passed to \code{xyplot} via
-  \code{quickText} to handle routine formatting.}
+  \code{quickText} to handle routine formatting. Other
+  common graphical parameters, e.g. \code{layout} for panel
+  arrangement, \code{pch} for plot symbol and \code{lwd}
+  and \code{lty} for line width and type, as also available
+  (see examples below).}
 }
 \value{
   As well as generating the plot itself, \code{scatterPlot}

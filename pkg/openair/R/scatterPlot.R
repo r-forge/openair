@@ -99,11 +99,6 @@
 ##' two e.g. \code{type = c("season", "weekday")} will produce a 2x2
 ##' plot split by season and day of the week. Note, when two types are
 ##' provided the first forms the columns and the second the rows.
-##' @param layout Determines how the panels are laid out. By default, plots
-##'   will be shown in one column with the number of rows equal to the number
-##'   of pollutants, for example. If the user requires 2 columns and two rows,
-##'   layout should be set to \code{layout = c(2, 2)}. In general, layout is
-##'   expressed as number of columns times number of rows.
 ##' @param smooth A smooth line is fitted to the data if \code{TRUE};
 ##'   optionally with 95% confidence intervals shown. For \code{method =
 ##'   "level"} a smooth surface will be fitted to binned data.
@@ -126,13 +121,6 @@
 ##'   "increment", "heat", "spectral", "hue", "brewer1" and user defined (see
 ##'   manual for more details). The same line colour can be set for all
 ##'   pollutant e.g. \code{cols = "black"}.
-##' @param pch The symbol type used for plotting. Default is to provide
-##'   different symbol types for different pollutant. If one requires a single
-##'   symbol for all pollutants, the set \code{pch = 1}, for example.
-##' @param lwd Width of line if used e.g. if \code{plot.type = "l"} or
-##'   \code{plot.type = "b"}.
-##' @param lty Type of line if used e.g. if \code{plot.type = "l"} or
-##'   \code{plot.type = "b"}.
 ##' @param plot.type \code{lattice} plot type. Can be "p" (points --- default),
 ##'   "l" (lines) or "b" (lines and points).
 ##' @param key Should a key be drawn? The default is \code{TRUE}.
@@ -183,7 +171,10 @@
 ##'   handling of \code{type = "season"}. Similarly, for the default case 
 ##'   \code{method = "scatter"} common axis and title labelling options (such 
 ##'   as \code{xlim}, \code{ylim}, \code{main}) are passed to \code{xyplot} via 
-##'   \code{quickText} to handle routine formatting.
+##'   \code{quickText} to handle routine formatting. Other common graphical 
+##'   parameters, e.g. \code{layout} for panel arrangement, 
+##'   \code{pch} for plot symbol and \code{lwd} and \code{lty} 
+##'   for line width and type, as also available (see examples below).
 ##' @export
 ##' @return As well as generating the plot itself, \code{scatterPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -279,16 +270,12 @@ scatterPlot <- function(mydata,
                         statistic = "mean",
                         percentile = NA,
                         type = "default",
-                        layout = NULL,
                         smooth = FALSE,
                         spline = FALSE,
                         linear = FALSE,
                         ci = TRUE,
                         mod.line = FALSE,
                         cols = "hue",
-                        pch = 1,
-                        lwd = 1,
-                        lty = 1,
                         plot.type = "p",
                         key = TRUE,
                         key.title = group,
@@ -334,10 +321,21 @@ scatterPlot <- function(mydata,
     #label controls
     ##(main handled deferred to plot
     ##because of unique by-method handling)
+    ##(pch handled specific at different points in code)
+
+#note why is this different for pch, lty, lwd?
+
     extra.args$xlab <- if("xlab" %in% names(extra.args))
                            quickText(extra.args$xlab, auto.text) else quickText(x, auto.text)
     extra.args$ylab <- if("ylab" %in% names(extra.args))
                            quickText(extra.args$ylab, auto.text) else quickText(y, auto.text)
+    if(!"lwd" %in% names(extra.args))
+         extra.args$lwd <- 1
+    if(!"lty" %in% names(extra.args))
+         extra.args$lty <- 1
+    if(!"layout" %in% names(extra.args))
+         extra.args$layout <- NULL
+
 
 
     ## For Log scaling (adapted from lattice book ####################################
@@ -484,7 +482,7 @@ scatterPlot <- function(mydata,
         group <- "NewGroupVar"
         mydata$NewGroupVar <- "NewGroupVar"
 
-        if (missing(pch)) pch <- 16
+        if (!"pch" %in% names(extra.args)) extra.args$pch <- 16
 
         if (thekey) {
             legend <- list(right = list(fun = draw.colorkey, args =
@@ -512,7 +510,7 @@ scatterPlot <- function(mydata,
     ## number of groups
     npol <- length(levels(mydata[ ,group]))
 
-    if (missing(pch)) pch <- seq(npol)
+    if (!"pch" %in% names(extra.args)) extra.args$pch <- seq(npol)
 
     ## set up colours
     myColors <- openColours(cols, npol)
@@ -535,7 +533,8 @@ scatterPlot <- function(mydata,
 
         if (key & npol > 1) {
             if (plot.type == "p") {
-                key <- list(points = list(col = myColors[1:npol]), pch = pch,
+                key <- list(points = list(col = myColors[1:npol]), 
+                            pch = if("pch" %in% names(extra.args)) extra.args$pch else 1, 
                             text = list(lab = pol.name, cex = 0.8),
                             space = key.position, columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
@@ -543,7 +542,7 @@ scatterPlot <- function(mydata,
             }
 
             if (plot.type == "l") {
-                key <- list(lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                key <- list(lines = list(col = myColors[1:npol], lty = extra.args$lty, lwd = extra.args$lwd),
                             text = list(lab = pol.name, cex = 0.8),  space = key.position,
                             columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
@@ -551,8 +550,10 @@ scatterPlot <- function(mydata,
             }
 
             if (plot.type == "b") {
-                key <- list(points = list(col = myColors[1:npol]), pch = pch,
-                            lines = list(col = myColors[1:npol], lty = lty, lwd = lwd),
+                key <- list(points = list(col = myColors[1:npol]), 
+                            pch = if("pch" %in% names(extra.args)) extra.args$pch else 1,
+                            lines = list(col = myColors[1:npol], 
+                            lty = extra.args$lty, lwd = extra.args$lwd),
                             text = list(lab = pol.name, cex = 0.8),  space = key.position,
                             columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
@@ -567,20 +568,20 @@ scatterPlot <- function(mydata,
     }
 
     ## special wd layout
-    skip <- FALSE
-    if (length(type) == 1 & type[1] == "wd" ) {
+    if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
+        ## starting point code as of ManKendall
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         mydata$wd <- ordered(mydata$wd, levels = wds)
-
-        ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(mydata$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-
-        mydata$wd <- factor(mydata$wd)  ## remove empty factor levels
-
-        layout = if (type == "wd") c(3, 3) else NULL
+        mydata$wd <- factor(mydata$wd)
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
     }
+    if(!"skip" %in% names(extra.args))
+         extra.args$skip <- FALSE
 
     ## proper names of labelling
     ## ############################################################################
@@ -613,16 +614,11 @@ scatterPlot <- function(mydata,
         xyplot.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
                       type = c("p", "g"),
                       as.table = TRUE,
-                      pch = pch,
-                      lwd = lwd,
-                      lty = lty,
                       scales = scales,
                       key = key,
                       par.strip.text = list(cex = 0.8),
                       strip = strip,
                       strip.left = strip.left,
-                      layout = layout,
-                      skip = skip,
                       yscale.components = yscale.components.log10,
                       xscale.components = xscale.components.log10,
                       legend = legend,
@@ -695,9 +691,13 @@ scatterPlot <- function(mydata,
         #by default title if z set
         #else none
         default.main <- if(is.na(z)) "" else paste(x, "vs.", y, "by levels of", z)
+
         extra.args$main <- if("main" %in% names(extra.args))
                                quickText(extra.args$main, auto.text) else 
                                    quickText(default.main, auto.text)
+
+        if(!"pch" %in% names(extra.args))
+            extra.args$pch <- 1
 
         #reset for extra.args
         xyplot.args<- listUpdate(xyplot.args, extra.args)
@@ -737,6 +737,9 @@ scatterPlot <- function(mydata,
         #by default no title ever
         extra.args$main <- if("main" %in% names(extra.args))
                                quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+        if(!"pch" %in% names(extra.args))
+            extra.args$pch <- 1
 
         #reset for extra.args
         hexbinplot.args<- listUpdate(hexbinplot.args, extra.args)
@@ -814,8 +817,6 @@ scatterPlot <- function(mydata,
         levelplot.args <- list(x = myform, data = mydata,
                          strip = strip,
                          as.table = TRUE,
-                         layout = layout,
-                         skip = skip,
                          region = TRUE,
                          col.regions = col,
                          at = col.scale,
@@ -851,6 +852,9 @@ scatterPlot <- function(mydata,
         extra.args$main <- if("main" %in% names(extra.args))
                                quickText(extra.args$main, auto.text) else 
                                    quickText(paste(x, "vs.", y, "by levels of", z), auto.text)
+
+        if(!"pch" %in% names(extra.args))
+            extra.args$pch <- 1
 
         #reset for extra.args
         levelplot.args<- listUpdate(levelplot.args, extra.args)
@@ -909,10 +913,8 @@ scatterPlot <- function(mydata,
         #plot via ... handler
         levelplot.args <- list(x = myform, data = results.grid,
                          as.table = TRUE,
-                         strip = strip,
                          col.regions = col,
                          region = TRUE,
-                         layout = layout,
                          at = col.scale,
                          colorkey = FALSE,
 
@@ -937,6 +939,9 @@ scatterPlot <- function(mydata,
         #by default no title ever
         extra.args$main <- if("main" %in% names(extra.args))
                                quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+        if(!"pch" %in% names(extra.args))
+            extra.args$pch <- 1
 
         #reset for extra.args
         levelplot.args<- listUpdate(levelplot.args, extra.args)
