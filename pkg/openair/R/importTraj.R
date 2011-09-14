@@ -62,10 +62,13 @@
 ##' }
 ##' @param site Site code of the network site to import
 ##' e.g. "london". Only one site can be imported at a time. The
-##' following sites are available from 1988-2010: \cr\cr \tabular{lrr}{
-##'      SITE \tab latitude   \tab longitude \cr
-##'      london \tab 51.5 \tab -0.1 \cr
-##' macehead \tab 53.33 \tab -9.9
+##' following sites are available from 1988-2010: \cr\cr \tabular{llrr}{
+##'      SITE CODE \tab SITE NAME \tab LATITUDE   \tab LONGITUDE \cr
+##'      london	\tab Central London \tab	51.5 \tab	-0.1 \cr
+##' lh \tab	Lullington Heath \tab	50.7937	\tab 0.18125 \cr
+##' mh \tab	Mace Head \tab	53.33 \tab	-9.9 \cr
+##' sv \tab	Strath Vaich \tab	57.73446 \tab	-4.776583 \cr
+##' yw \tab	Yarner Wood \tab	50.5976	\tab -3.71651
 ##'        }
 ##' @param year Year or years to import. To import a sequence of years from
 ##'   1990 to 2000 use \code{year = 1990:2000}. To import several specfic years
