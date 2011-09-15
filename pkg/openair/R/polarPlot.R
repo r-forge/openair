@@ -100,10 +100,6 @@
 ##'   i.e. they predict. By removing the points too far from the original data
 ##'   produces a plot where it is clear where the original data lie. If set to
 ##'   \code{FALSE} missing data will be interpolated.
-##' @param layout If set, the \code{c(x, y)} layout for arranging plotted
-##'   panels.  In most cases openair will handle layouts sensibly based on the
-##'   number of panels and plot window dimensions. However, this option allows
-##'   the layout to be forced to other configurations if required.
 ##' @param uncertainty Should the uncertainty in the calculated surface be
 ##'   shown? If \code{TRUE} three plots are produced on the same scale showing
 ##'   the predicted surface together with the estimated lower and upper
@@ -254,7 +250,6 @@ polarPlot <- function(mydata,
                       resolution = "normal",
                       limits = NA,
                       exclude.missing = TRUE,
-                      layout = NULL,
                       uncertainty = FALSE,
                       cols = "default",
                       min.bin = 1,
@@ -303,6 +298,10 @@ polarPlot <- function(mydata,
                            quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+    #layout default
+    if(!"layout" %in% names(extra.args))
+         extra.args$layout <- NULL
 
     ## extract variables of interest
 
@@ -465,8 +464,6 @@ polarPlot <- function(mydata,
     }
     ## ########################################################################################################
 
-
-    skip <- FALSE
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
     if (uncertainty) strip <- TRUE
 
@@ -490,7 +487,11 @@ polarPlot <- function(mydata,
 
     col.scale = breaks
 
-    if (uncertainty & is.null(layout)) layout <- c(3, 1)
+    #special handling of layout for uncertainty
+    if (uncertainty & is.null(extra.args$layout)) {
+        extra.args$layout <- c(3, 1)
+    }
+
 
     ## scale key setup ######################################################################################
 
@@ -506,7 +507,6 @@ polarPlot <- function(mydata,
 
     levelplot.args <- list(x = myform, results.grid, axes = FALSE,
                      as.table = TRUE,
-                     layout = layout,
                      strip = strip,
                      strip.left = strip.left,
                      col.regions = col,
