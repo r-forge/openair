@@ -182,8 +182,12 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
 
     ##recover by-type order
     #(re clustering = TRUE)
-    data.order <- unique(as.vector(sapply(1:length(results.grid), function(x) results.grid[[x]]$pol.ord)))
-    pollutants <- pollutants[data.order]
+    data.order <- lapply(1:length(results.grid), function(x) pollutants[results.grid[[x]]$pol.ord])
+    x2 <- unlist(lapply(1:length(data.order), function(x)
+                     (rep(data.order[[x]], times = length(data.order[[x]])))))
+    y2 <- unlist(lapply(1:length(data.order), function(x)
+                     (rep(data.order[[x]], each = length(data.order[[x]])))))
+
 
     ## list of labels
     labels <-  llply(results.grid, function(x) x$pol.name)
@@ -245,9 +249,10 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
 
     #tidy newdata for output
     rownames(newdata) <- NULL
-    newdata$x <- factor(newdata$x, labels = pollutants)
-    newdata$y <- factor(newdata$y, labels = pollutants)
     names(newdata)[names(newdata)=="z"] <- "cor"
+    names(newdata)[names(newdata)=="x"] <- "row"
+    names(newdata)[names(newdata)=="y"] <- "col"
+    newdata <- cbind(x = x2, y = y2, newdata)
 
     #main handling
     output <- list(plot = plt, data = newdata, call = match.call())
