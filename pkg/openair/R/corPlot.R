@@ -202,7 +202,7 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
         ## re-order to make sensible layout
         ## starting point code as of ManKendall
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
-        results.grid$wd <- ordered(results.grid$type, levels = wds)
+        results.grid$type <- ordered(results.grid$type, levels = wds)
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(results.grid$type)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
         results.grid$type <- factor(results.grid$type)

@@ -268,6 +268,9 @@ MannKendall <- function(mydata,
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
+    #layout default
+    if(!"layout" %in% names(extra.args))
+            extra.args$layout <- NULL
 
     vars <- c("date", pollutant)
     ## if autocor is TRUE, then need simulations
@@ -357,24 +360,24 @@ MannKendall <- function(mydata,
     split.data <- ddply(mydata, type,  process.cond)
     if (nrow(split.data) < 2) return()
 
-    skip <- FALSE
-    layout <- NULL
 
-
-
-    if (length(type) == 1 & type[1] == "wd") {
+    ## special wd layout
+    #(type field in results.grid called type not wd)
+    if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
+        ## starting point code as of ManKendall
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         split.data$wd <- ordered(split.data$wd, levels = wds)
-
-        ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(split.data$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-
-        split.data$wd <- factor(split.data$wd)  ## remove empty factor levels
-
-        layout = if (type == "wd") c(3, 3) else NULL
+        split.data$wd <- factor(split.data$wd)
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
     }
+    if(!"skip" %in% names(extra.args))
+         extra.args$skip <- FALSE
+
 
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(factor(split.data[ , type[1]])), function(x) quickText(x, auto.text))
@@ -443,8 +446,6 @@ MannKendall <- function(mydata,
                   xlab = quickText(xlab, auto.text),
                   par.strip.text = list(cex = 0.8),
                   as.table = TRUE,
-                  layout = layout,
-                  skip = skip,
                   strip = strip,
                   strip.left = strip.left,
                   scales = list(x = list(at = openair:::dateBreaks(split.data$date, date.breaks)$major,
