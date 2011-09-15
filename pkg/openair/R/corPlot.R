@@ -60,7 +60,7 @@
 ##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}, 
 ##'   with common axis and title labelling options (such as \code{xlim}, 
 ##'   \code{ylim}, \code{main}) being passed via \code{quickText} 
-##'   to handle routine formatting.
+##'   to handle routine formatting. 
 ##' @export
 ##' @author David Carslaw --- but mostly based on code contained in Sarkar
 ##'   (2007)
@@ -108,6 +108,10 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
                            quickText(extra.args$ylab, auto.text) else quickText(NULL, auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+    #layout default
+    if(!"layout" %in% names(extra.args))
+            extra.args$layout <- NULL
 
     ##pollutant(s) handling
 
@@ -191,6 +195,23 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
     pol.name <- sapply(levels(results.grid[ , "type"]), function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
     if (type == "default") strip <- FALSE
+
+    ## special wd layout
+    #(type field in results.grid called type not wd)
+    if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
+        ## re-order to make sensible layout
+        ## starting point code as of ManKendall
+        wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
+        results.grid$wd <- ordered(results.grid$type, levels = wds)
+        wd.ok <- sapply(wds, function (x) {if (x %in% unique(results.grid$type)) FALSE else TRUE })
+        skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
+        results.grid$type <- factor(results.grid$type)
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
+    }
+    if(!"skip" %in% names(extra.args))
+         extra.args$skip <- FALSE
 
     ## plot via ... handler
     levelplot.args <- list(x = z ~ x * y | type , data = results.grid,
