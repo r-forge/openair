@@ -1,18 +1,18 @@
 ##' Generic data import for openair
-##' 
+##'
 ##' Generic (workhorse) function for importing and formatting data for use with
 ##' the openair package. The function uses \code{read.table} (in \code{utils}).
-##' 
+##'
 ##' The \code{import()} function was developed to import and format data for
 ##' direct use with the openair package. The main intention was to simplify
 ##' initial data handling for those unfamilar with R, and, in particular,
 ##' associated time series formatting requirements. Using default settings,
 ##' \code{import()} imports files configured like example file "example data
 ##' long.csv" (supplied with openair or available from the openair website).
-##' 
+##'
 ##' Other similar file structures can be readily imported by modifying the
 ##' function arguments.
-##' 
+##'
 ##' More complex data importing and formatting can be achieved using an import
 ##' wrapper.  For example, the \code{importAURNCsv} is an import wrapper that
 ##' uses \code{import()} with modified arguments to import data previously
@@ -20,7 +20,7 @@
 ##' "is.site" and employs two additional arguments, "data.order" and
 ##' "simplify.names" and \code{rbind} (in \code{reshape}) to complete
 ##' additional reformatting.
-##' 
+##'
 ##' @param file The name of the file to be imported. Default, \code{file =
 ##'   file.choose()}, opens browser. Alternatively, the use of
 ##'   \code{read.table} (in \code{utils}) also allows this to be a character
@@ -130,39 +130,40 @@
 ##'   information (as defined in "misc.info") and data adjustments (as set
 ##'   in''bad.24' and 'correct.time') will be retained in the data frame
 ##'   comment.
-##' 
+##'
 ##' Using the alternative \code{output = "working"} setting, the function
 ##'   returns a list containing separate data frames for the different elements
 ##'   of the data frame (data, names, date, misc.info, etc.).
 ##' @author Karl Ropkins
+##' @export
 ##' @seealso Dedicated import functions available for selected file types, e.g.
 ##'   : \code{\link{importAURN}}, \code{\link{importAURNCsv}},
 ##'   \code{\link{importKCL}}, \code{\link{importADMS}}, etc.
 ##' @keywords methods
 ##' @examples
-##' 
-##' 
+##'
+##'
 ##' ##########
 ##' # example 1
 ##' ##########
 ##' # data obtained from http://www.openair-project.org
-##' 
+##'
 ##' #import data as mydata
 ##' # basic plot
 ##' \dontrun{mydata <- import("example data long.csv")}
-##' 
+##'
 ##' #use openair function
 ##' \dontrun{polar.plot(mydata, pollutant="nox")}
-##' 
-##' 
-##' 
-import <- function (file = file.choose(), file.type = "csv", sep = NULL, header.at = 1, 
-    data.at = 2, eof.report = NULL, na.strings = c("", "NA"), 
-    quote = "\"", date.name = "date", date.break = "/", date.order = "dmy", 
-    time.name = "date", time.break = ":", time.order = "hm",  
-    time.format = "GMT", cipher = NULL, is.ws = NULL, is.wd = NULL, is.site = NULL, 
+##'
+##'
+##'
+import <- function (file = file.choose(), file.type = "csv", sep = NULL, header.at = 1,
+    data.at = 2, eof.report = NULL, na.strings = c("", "NA"),
+    quote = "\"", date.name = "date", date.break = "/", date.order = "dmy",
+    time.name = "date", time.break = ":", time.order = "hm",
+    time.format = "GMT", cipher = NULL, is.ws = NULL, is.wd = NULL, is.site = NULL,
     misc.info = NULL, bad.24 = FALSE, correct.time = NULL, previous = FALSE,
-    output = "final") 
+    output = "final")
 {
 
     ################################
@@ -183,7 +184,7 @@ import <- function (file = file.choose(), file.type = "csv", sep = NULL, header.
     #
 
     ##################
-    #to do 
+    #to do
     ##################
     #
 
@@ -203,12 +204,12 @@ import <- function (file = file.choose(), file.type = "csv", sep = NULL, header.
 #else messy!
 ##################
 if(previous)
-    import.2(file = file, file.type = file.type, header.at = header.at, 
-    data.at = data.at, eof.report = eof.report, na.strings = na.strings, 
-    quote = quote, date.name = date.name, date.break = date.break, date.order = date.order, 
-    time.name = time.name, time.break = time.break, time.order = time.order, 
-    time.format = time.format, is.ws = is.ws, is.wd = is.wd, is.site = is.site, 
-    misc.info = misc.info, bad.24 = bad.24, correct.time = correct.time, 
+    import.2(file = file, file.type = file.type, header.at = header.at,
+    data.at = data.at, eof.report = eof.report, na.strings = na.strings,
+    quote = quote, date.name = date.name, date.break = date.break, date.order = date.order,
+    time.name = time.name, time.break = time.break, time.order = time.order,
+    time.format = time.format, is.ws = is.ws, is.wd = is.wd, is.site = is.site,
+    misc.info = misc.info, bad.24 = bad.24, correct.time = correct.time,
     output = output) else {
 
 
@@ -218,7 +219,7 @@ if(previous)
 
     ##################
     #file type
-    ##################    
+    ##################
     #overridden by sep if character
     #
 
@@ -230,13 +231,13 @@ if(previous)
     ##################
     #file data read in
     ##################
-    file.data <- read.table(file, header = FALSE, sep = sep, 
-        skip = (data.at - 1), nrows = -1, na.strings = na.strings, 
+    file.data <- read.table(file, header = FALSE, sep = sep,
+        skip = (data.at - 1), nrows = -1, na.strings = na.strings,
         quote = quote, fill = TRUE)
     if (!is.null(eof.report)) {
-        if (is.na(match(eof.report, as.character(file.data$V1))) == 
+        if (is.na(match(eof.report, as.character(file.data$V1))) ==
             FALSE) {
-            file.data <- file.data[1:(match(eof.report, as.character(file.data$V1)) - 
+            file.data <- file.data[1:(match(eof.report, as.character(file.data$V1)) -
                 1), ]
         }
     }
@@ -245,7 +246,7 @@ if(previous)
     #file names read in
     #################
     file.names <- if(is.null(header.at) || header.at < 1)  paste("...XxX", 1:ncol(file.data), sep="") else
-        read.table(file, header = FALSE, sep = sep, 
+        read.table(file, header = FALSE, sep = sep,
             quote = quote, skip = (header.at - 1), nrows = 1, colClasses = "character")
     file.names <- as.character(file.names)
 
@@ -256,20 +257,20 @@ if(previous)
     #if header not set
     #need numeric or null for field sources
     if(is.null(header.at) || is.numeric(header.at) && header.at < 1){
-        temp <- unlist(lapply(c("date.name", "time.name", "is.ws", "is.wd", "is.site"), 
+        temp <- unlist(lapply(c("date.name", "time.name", "is.ws", "is.wd", "is.site"),
             function(x) if(!is.null(get(x)) & !is.numeric(get(x))) x))
         if(!is.null(temp))
-            stop("Invalid import options for data import without header,\n", 
-                 "       [reset header or use numeric data field/column identifiers]\n", 
-                 "       [current conflicts: ", paste(temp, collapse = ", "), "]", 
+            stop("Invalid import options for data import without header,\n",
+                 "       [reset header or use numeric data field/column identifiers]\n",
+                 "       [current conflicts: ", paste(temp, collapse = ", "), "]",
                  call. = FALSE)
     }
 
     #handle numeric field sources
-    temp <- function(x) 
-        if(is.numeric(x)) { 
+    temp <- function(x)
+        if(is.numeric(x)) {
         x <- file.names[subset(x <- as.integer(x), x > 0 & x <= length(file.names))]
-        x <- if(length(x) < 1) NULL else x 
+        x <- if(length(x) < 1) NULL else x
     } else x
 
     date.name <- temp(date.name)
@@ -280,12 +281,12 @@ if(previous)
 
     temp <- c(unique(c(date.name, time.name)), is.ws, is.wd, is.site)
     temp <- temp[duplicated(temp)]
-    temp <- unlist(lapply(c("date.name", "time.name", "is.ws", "is.wd", "is.site"), 
+    temp <- unlist(lapply(c("date.name", "time.name", "is.ws", "is.wd", "is.site"),
                function(x) if(any(get(x) %in% temp)) x))
     if(!is.null(temp))
-        stop("Invalid import option combination,\n", 
-             "       [conflicting options: ", 
-             paste(temp, collapse = ", "), "]", 
+        stop("Invalid import option combination,\n",
+             "       [conflicting options: ",
+             paste(temp, collapse = ", "), "]",
             call. = FALSE)
 
     ###################
@@ -293,7 +294,7 @@ if(previous)
     ###################
     time.name <- time.name[!time.name %in% date.name]
     if (length(c(date.name, time.name)) == 0) {
-        stop("No valid date or times set\n       [openair import currently require at least one]", 
+        stop("No valid date or times set\n       [openair import currently require at least one]",
             call. = FALSE)
     }
 
@@ -318,24 +319,24 @@ if(previous)
         missing.time.name <- time.name[(!time.name %in% file.names)]
         reply <- "Import conflicts;"
         if (length(missing.date.name) > 0) {
-            reply <- paste(reply, "\n       missing date.name", 
+            reply <- paste(reply, "\n       missing date.name",
                 sep = "")
             if (length(missing.date.name) > 1) {
                 reply <- paste(reply, "s", sep = "")
             }
-            reply <- paste(reply, paste(missing.date.name, collapse = ", ", 
+            reply <- paste(reply, paste(missing.date.name, collapse = ", ",
                 sep = ""), sep = ": ")
         }
         if (length(missing.time.name) > 0) {
-            reply <- paste(reply, "\n       missing time.name", 
+            reply <- paste(reply, "\n       missing time.name",
                 sep = "")
             if (length(missing.time.name) > 1) {
                 reply <- paste(reply, "s", sep = "")
             }
-            reply <- paste(reply, paste(missing.time.name, collapse = ", ", 
+            reply <- paste(reply, paste(missing.time.name, collapse = ", ",
                 sep = ""), sep = ": ")
         }
-        reply <- paste(reply, "\n       [compare openair import settings and data structure]", 
+        reply <- paste(reply, "\n       [compare openair import settings and data structure]",
             sep = "")
         stop(reply, call. = FALSE)
     }
@@ -366,7 +367,7 @@ if(previous)
             warning("Unexpected extra data extracted, extra names created\n       [check openair import settings and data structure if unexpected]"
                 , call. = FALSE)
 
-        }     
+        }
     }
 
     ######################
@@ -381,7 +382,7 @@ if(previous)
         is.ws <- make.names(is.ws)
         is.wd <- make.names(is.wd)
         is.site <- make.names(is.site)
-        warning("Non-unique or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]", 
+        warning("Non-unique or non-R names extracted, names modifications applied\n       [check openair import settings and data structure if unexpected]",
                 call. = FALSE)
     }
     names(file.data) <- temp
@@ -392,39 +393,39 @@ if(previous)
     #old and new handlers
 
     if(is.null(cipher)==FALSE && is.character(cipher)){
-        #new handler 
+        #new handler
         #overrides old
         #uses cipher and date.break, time.break if pasting things together
-        date.order <- date.time.cipher(cipher[1])        
+        date.order <- date.time.cipher(cipher[1])
     } else {
         #old handler
         #uses date.break, date.order, time.break, time.order
-        if(tolower(substr(date.order,1,5))=="posix") {  
+        if(tolower(substr(date.order,1,5))=="posix") {
             date.order <- gsub("posix", "", date.order, ignore.case = TRUE)
             date.order <- gsub("(^ +)|( +$)", "", date.order)
         } else {
-            date.order <- gsub("d", paste("%d", date.break, sep = ""), 
+            date.order <- gsub("d", paste("%d", date.break, sep = ""),
                 date.order, ignore.case = TRUE)
-            date.order <- gsub("j", paste("%j", date.break, sep = ""), 
+            date.order <- gsub("j", paste("%j", date.break, sep = ""),
                 date.order, ignore.case = TRUE)
-            date.order <- gsub("m", paste("%m", date.break, sep = ""), 
+            date.order <- gsub("m", paste("%m", date.break, sep = ""),
                 date.order, ignore.case = TRUE)
-            date.order <- gsub("y", paste("%Y", date.break, sep = ""), 
+            date.order <- gsub("y", paste("%Y", date.break, sep = ""),
                 date.order, ignore.case = TRUE)
-            date.order <- substr(date.order, 1, (nchar(date.order) - 
+            date.order <- substr(date.order, 1, (nchar(date.order) -
                 1))
         }
-        if(tolower(substr(time.order,1,5))=="posix") {  
+        if(tolower(substr(time.order,1,5))=="posix") {
             time.order <- gsub("posix", "", time.order, ignore.case = TRUE)
             time.order <- gsub("(^ +)|( +$)", "", time.order)
         } else {
-            time.order <- gsub("h", paste("%H", time.break, sep = ""), 
+            time.order <- gsub("h", paste("%H", time.break, sep = ""),
                 time.order, ignore.case = TRUE)
-            time.order <- gsub("m", paste("%M", time.break, sep = ""), 
+            time.order <- gsub("m", paste("%M", time.break, sep = ""),
                 time.order, ignore.case = TRUE)
-            time.order <- gsub("s", paste("%S", time.break, sep = ""), 
+            time.order <- gsub("s", paste("%S", time.break, sep = ""),
                 time.order, ignore.case = TRUE)
-            time.order <- substr(time.order, 1, (nchar(time.order) - 
+            time.order <- substr(time.order, 1, (nchar(time.order) -
                 1))
         }
         date.order <- paste(date.order, time.order, sep = " ")
@@ -461,15 +462,15 @@ if(previous)
 
     ######################
     #removed yy/yyyy tester
-    #due to 2.11/2.12 handling 
+    #due to 2.11/2.12 handling
     ######################
     ###yy/yyyy tester
     ###if invalid try year
-    ###NOTE: Can't test for Y first 
-    ###(Y%=01 is year 0001!, etc 
+    ###NOTE: Can't test for Y first
+    ###(Y%=01 is year 0001!, etc
     ##if(all(is.na(a))){
     ##    date.order <- gsub("y", "Y", date.order)
-    ##    a <- as.POSIXct(b, format = paste(date.order, time.order, 
+    ##    a <- as.POSIXct(b, format = paste(date.order, time.order,
     ##        sep = " "), time.format)
     ##}
 
@@ -479,9 +480,9 @@ if(previous)
         bad.time <- gsub("%S", "00", bad.time, ignore.case = TRUE)
         good.time <- gsub("24", "00", bad.time)
         ###########################
-        ##where bad.time replace with good and add day  
-        a[grep(bad.time, b, ignore.case = TRUE)] <- 
-             as.POSIXct(strptime(gsub(bad.time, good.time, b[grep(bad.time, b, ignore.case = TRUE)]), 
+        ##where bad.time replace with good and add day
+        a[grep(bad.time, b, ignore.case = TRUE)] <-
+             as.POSIXct(strptime(gsub(bad.time, good.time, b[grep(bad.time, b, ignore.case = TRUE)]),
              format = date.order, tz = time.format)) + 86400
         if (is.null(misc.info)) {
             misc.info <- 1
@@ -495,16 +496,16 @@ if(previous)
         a <- a + correct.time
         if (is.null(misc.info)) {
             misc.info <- 1
-            file.misc <- paste("import operation: correct.time applied (", 
+            file.misc <- paste("import operation: correct.time applied (",
                 correct.time, " seconds)", sep = "")
         }
         else {
-            file.misc <- c(file.misc, paste("import operation: correct.time applied (", 
+            file.misc <- c(file.misc, paste("import operation: correct.time applied (",
                 correct.time, " seconds)", sep = ""))
         }
     }
 
-    file.data <- file.data[!names(file.data) %in% c(date.name, 
+    file.data <- file.data[!names(file.data) %in% c(date.name,
         time.name)]
 
     ###############
@@ -525,18 +526,18 @@ if(previous)
         ids <- which(is.na(ans$date))
         if (length(ids) > 0) {
             if (length(ids) == nrow(ans)) {
-                stop("Invalid date (and time) format requested\n       [compare openair import settings and data structure]", 
+                stop("Invalid date (and time) format requested\n       [compare openair import settings and data structure]",
                   call. = FALSE)
             }
             ans <- ans[-ids, ]
-            warning(paste("Missing dates detected, removing", 
+            warning(paste("Missing dates detected, removing",
                 length(ids), "lines"), call. = FALSE)
         }
         print(unlist(sapply(ans, class)))
         return(ans)
     }
     else {
-        ans <- list(data = file.data, names = file.names, names2 = file.names2, 
+        ans <- list(data = file.data, names = file.names, names2 = file.names2,
             date = a, ops = list(sep = sep))
         if (!is.null(misc.info)) {
             ans$misc <- file.misc
@@ -606,7 +607,7 @@ cipher <- gsub("06.", "%OS", cipher)
 cipher <- gsub("06", "%S", cipher)
 
 #note:
-#time zone, output only 
+#time zone, output only
 #so, handled in main structure at moment
 
 #at end tidy

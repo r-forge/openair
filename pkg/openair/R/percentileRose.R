@@ -127,9 +127,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 {
 
     vars <- c("wd", pollutant)
-    if (any(type %in%  dateTypes)) vars <- c(vars, "date")
+    if (any(type %in%  openair:::dateTypes)) vars <- c(vars, "date")
 
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
     ## round wd
     mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
 
@@ -230,7 +230,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                    labels = theLabels, footer = key.footer, header = key.header,
                    height = 0.60, width = 1.5, fit = "scale",
                    plot.style =  "other")
-    legend <- makeOpenKeyLegend(key, legend, "percentileRose")
+    legend <- openair:::makeOpenKeyLegend(key, legend, "percentileRose")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("y ~ x | ", temp, sep = ""))
@@ -240,6 +240,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
     ## nice intervals for pollutant concentrations
     intervals <- pretty(results.grid$pollutant)
+    labs <- intervals ## intervals
+
+    if (min(results.grid$pollutant) < 0) warning ("Negative data detected, plot may be incorrect.")
 
     plt <- xyplot(myform,
                   xlim = c(max(intervals) * -1, max(intervals) * 1),
@@ -308,7 +311,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
                       ltext(intervals * sin(pi * angle.scale / 180),
                             intervals * cos(pi * angle.scale / 180),
-                            paste(intervals, c("", "", rep("", 7))), cex = 0.7)
+                            paste(labs, c("", "", rep("", 7))), cex = 0.7)
 
 
                   }, legend = legend)
