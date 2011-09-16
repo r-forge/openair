@@ -155,7 +155,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
     mydata <- na.omit(mydata)
 
-    #greyscale handling
+    ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
         #strip only
         current.strip <- trellis.par.get("strip.background")
@@ -165,10 +165,10 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     if (!fill) { ## labels depend on whether line or area are used
         theLabels <- percentile
     } else {
-      #  values <- cbind(c(0, percentile[-length(percentile)]), percentile)
-        values <- cbind(percentile[-length(percentile)], percentile[-1])
 
+        values <- cbind(percentile[-length(percentile)], percentile[-1])
         theLabels <- paste(values[ , 1], "-", values[ , 2], sep = "")
+
     }
 
 
@@ -293,16 +293,17 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
                               if (i == 1) {
                                   subdata <- subset(results.grid[subscripts, ], percentile == value)
-                                 # lpolygon(subdata$x, subdata$y, col = col[1], border = NA)
                                   lpolygon(subdata$x, subdata$y, col = "white", border = NA)
 
                              } else {
+
                                   subdata1 <- subset(results.grid[subscripts, ], percentile == value)
                                   value2 <- percentile[i - 1]
                                   subdata2 <- subset(results.grid[subscripts, ],
                                                      percentile == value2)
                                   lpolygon(c(subdata1$x, subdata2$x),  c(subdata1$y, subdata2$y),
-                                           col = col[i], border = NA)
+                                           col = col[i - 1], border = NA)
+
                               }
                           }
                       }
