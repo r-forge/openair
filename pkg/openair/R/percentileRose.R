@@ -133,6 +133,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     ## round wd
     mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
 
+    ## need lowest value if shading
+    if (fill) percentile <- unique(c(0, percentile))
+
     ## if more than one pollutant, need to stack the data and set type = "variable"
     ## this case is most relevent for model-measurement compasrions where data are in columns
     ## Can also do more than one pollutant and a single type that is not "default", in which
@@ -162,7 +165,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     if (!fill) { ## labels depend on whether line or area are used
         theLabels <- percentile
     } else {
-        values <- cbind(c(0, percentile[-length(percentile)]), percentile)
+      #  values <- cbind(c(0, percentile[-length(percentile)]), percentile)
+        values <- cbind(percentile[-length(percentile)], percentile[-1])
+
         theLabels <- paste(values[ , 1], "-", values[ , 2], sep = "")
     }
 
@@ -185,11 +190,16 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
         mod.percentiles <- function(i, mydata) {
             ## need to work out how many knots to use in smooth
             thedata <- subset(percentiles, percentile == i)
+            min.dat <- min(thedata)
 
             ## fit a spline through the data; making sure it goes through each wd value
-            spline.res <- spline(x = thedata[ , "wd"], y = thedata[, pollutant], n = 361)
+            spline.res <- spline(x = thedata[ , "wd"], y = thedata[, pollutant], n = 361,
+                                 method = "natural")
 
             pred <- data.frame(percentile = i, wd = 0:360, pollutant = spline.res$y)
+
+            ## don't let interpolated percentile be lower than data
+            pred$pollutant[pred$pollutant < min.dat] <- min.dat
 
             ## only plot where there are valid wd
             wd <- unique(percentiles$wd)
@@ -235,14 +245,30 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("y ~ x | ", temp, sep = ""))
 
+    ## keep unstransformed copy in case data are negative
+    results <- results.grid
+
     results.grid <- transform(results.grid, x = pollutant * sin(wd * pi / 180),
                               y = pollutant * cos(wd * pi / 180))
 
+    min.res <- min(results.grid$pollutant)
+
+    newdata <- results.grid ## data to return
+
     ## nice intervals for pollutant concentrations
     intervals <- pretty(results.grid$pollutant)
-    labs <- intervals ## intervals
+    labs <- intervals ## the labels
 
-    if (min(results.grid$pollutant) < 0) warning ("Negative data detected, plot may be incorrect.")
+    ## if negative data, add to make all postive to plot properly
+    min.int <- min(intervals)
+
+    if (min.int < 0 ) {
+        intervals <- intervals + -1 * min.int
+        results$pollutant <- results$pollutant + -1 * min.int
+        results.grid <- transform(results, x = pollutant * sin(wd * pi / 180),
+                              y = pollutant * cos(wd * pi / 180))
+    }
+
 
     plt <- xyplot(myform,
                   xlim = c(max(intervals) * -1, max(intervals) * 1),
@@ -267,9 +293,10 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
                               if (i == 1) {
                                   subdata <- subset(results.grid[subscripts, ], percentile == value)
-                                  lpolygon(subdata$x, subdata$y, col = col[1], border = NA)
+                                 # lpolygon(subdata$x, subdata$y, col = col[1], border = NA)
+                                  lpolygon(subdata$x, subdata$y, col = "white", border = NA)
 
-                              } else {
+                             } else {
                                   subdata1 <- subset(results.grid[subscripts, ], percentile == value)
                                   value2 <- percentile[i - 1]
                                   subdata2 <- subset(results.grid[subscripts, ],
@@ -289,8 +316,8 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                       larrows(0, max(intervals) * -1, 0, max(intervals), code = 3, length = 0.1)
 
 
-                      ltext(1.2 * sin(pi * angle.scale / 180) * max(intervals),
-                            1.2 * cos(pi * angle.scale / 180) * max(intervals),
+                      ltext(0.7 * sin(pi * (angle.scale + 10) / 180) * max(intervals),
+                            0.7 * cos(pi * (angle.scale + 10) / 180) * max(intervals),
                             quickText(pollutant, auto.text), srt = 0, cex = 0.8)
 
 
@@ -319,7 +346,6 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     ## output ####################################################################################
 
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
-    newdata <- results.grid
 
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"

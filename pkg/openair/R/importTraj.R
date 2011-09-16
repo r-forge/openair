@@ -63,8 +63,10 @@
 ##' @param site Site code of the network site to import
 ##' e.g. "london". Only one site can be imported at a time. The
 ##' following sites are available from 1988-2010:
-##' \tabular{llll}{
-##' SITE CODE \tab SITE NAME        \tab LATITUDE      \tab LONGITUDE      \cr
+##' \tabular{llrr}{
+##' SITE CODE \tab SITE NAME        \tab LATITUDE \tab LONGITUDE\cr
+##' birm      \tab Birmigham Centre \tab 52.47972 \tab -1.908078\cr
+##' ed        \tab Edinburgh        \tab 55.95197 \tab -3.195775\cr
 ##' london    \tab Central London   \tab 51.5     \tab -0.1     \cr
 ##' lh        \tab Lullington Heath \tab 50.7937  \tab 0.18125  \cr
 ##' mh        \tab Mace Head        \tab 53.33    \tab -9.9     \cr
