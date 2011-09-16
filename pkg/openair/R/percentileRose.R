@@ -317,9 +317,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                       larrows(0, max(intervals) * -1, 0, max(intervals), code = 3, length = 0.1)
 
 
-                      ltext(0.7 * sin(pi * (angle.scale + 10) / 180) * max(intervals),
-                            0.7 * cos(pi * (angle.scale + 10) / 180) * max(intervals),
-                            quickText(pollutant, auto.text), srt = 0, cex = 0.8)
+                      ltext(0.7 * sin(pi * (angle.scale + 5) / 180) * max(intervals),
+                            0.7 * cos(pi * (angle.scale + 5) / 180) * max(intervals),
+                            quickText(pollutant, auto.text), srt = 0, cex = 0.8, pos = 4)
 
 
                       ltext(max(intervals) * -1 * 0.95, 0.07 * max(intervals), "W", cex = 0.7)
