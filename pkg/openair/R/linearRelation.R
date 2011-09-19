@@ -70,14 +70,12 @@
 ##'   still produced.
 ##' @param ylim y-axis limits, specified by the user.
 ##' @param ylab y-axis title, specified by the user.
-##' @param xlab x-axis title, specified by the user.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
 ##' @param cols Predefined colour scheme, currently only enabled for
 ##'   \code{"greyscale"}.
-##' @param main Title of plot.
 ##' @param span span for \code{loess} fit. Controls the fit line: lower values
 ##'   produce a more "wiggly" fit.
 ##' @param \dots Other graphical parameters. A useful one to remove the strip
@@ -128,10 +126,8 @@ linearRelation <- function(mydata,
                             rsq.thresh = 0,
                             ylim = c(0, 20),
                             ylab = paste("slope from ", y, " = m.", x, " + c", sep = ""),
-                            xlab = NULL,
                             auto.text = TRUE,
                             cols = NULL,
-                            main = "",
                             span = 0.3,...) {
 
     adj <- 1 ## factors for ratios (oxidant is a percentage)
@@ -148,6 +144,18 @@ linearRelation <- function(mydata,
         data.col <- "#3366FF"
         line.col <- "red"
     }
+
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    ##ylab handled in args because unique
+    ##further xlab handled in code because mulitple outputs by period
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else NULL
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
 
     ## prepare data
@@ -190,7 +198,10 @@ linearRelation <- function(mydata,
 ################################################################################################
     if (period == "hour") {
 
-        if(is.null(xlab)) xlab <- "hour"
+        #xlab default
+        if(is.null(extra.args$xlab))
+            extra.args$xlab <- "hour"
+
         models <- dlply(mydata, .(cond, hour = as.numeric(format(date, "%H"))), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
         names(results) <- c("cond", "hour", "intercept", "slope", "rsquare", "seslope", "N")
@@ -202,13 +213,11 @@ linearRelation <- function(mydata,
         if (condition) eq <- formula(slope ~ hour | cond)
         if (missing(ylim)) ylim <- rng(results)
 
-        plt <- xyplot(eq, data = results,
+        xyplot.args <- list(x = eq, data = results,
                       as.table = TRUE,
                       ylim = ylim,
-                      xlab = xlab,
-                      main = quickText(main, auto.text),
                       ylab = quickText(ylab, auto.text),
-                      scales = list(x = list(at = c(0, 6, 12, 18, 23))),...,
+                      scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                       panel = function(x, y, subscripts, ...) {
                           panel.grid(-1, 0)
                           panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
@@ -217,12 +226,21 @@ linearRelation <- function(mydata,
                                          y + results$seslope[subscripts], col = data.col,
                                          lwd = 2)
                       })
+
+        #reset for extra.args
+        xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+        #plot
+        plt <- do.call(xyplot, xyplot.args)
     }
 ################################################################################################
 
     if (period == "monthly" | period == "weekly") {
 
-        if(is.null(xlab)) xlab <- "year"
+        #xlab default
+        if(is.null(extra.args$xlab))
+            extra.args$xlab <- "year"
+
         if (period == "monthly") {
             models <- dlply(mydata, .(cond, year = as.numeric(format(date, "%Y")),
                                       month = as.numeric(format(date, "%m"))), model)
@@ -255,11 +273,9 @@ linearRelation <- function(mydata,
         yrs <- seq(ISOdate(start.year, 1, 1), ISOdate(end.year + 1, 1, 1), by = "1 years")
         if (missing(ylim)) ylim <- rng(results)
 
-        plt <- xyplot(slope ~ date, data = results,
-                      xlab = xlab,
+        xyplot.args <- list(x = slope ~ date, data = results,
                       ylim = ylim,
-                      main = quickText(main, auto.text),
-                      ylab = quickText(ylab, auto.text),...,
+                      ylab = quickText(ylab, auto.text),
                       panel = function(x, y, subscripts, ...) {
                           panel.grid(-1, 0)
                           panel.abline(v = yrs, col = "grey85")
@@ -268,12 +284,21 @@ linearRelation <- function(mydata,
                                          y + results$seslope[subscripts], col = data.col)
                           panel.loess(x, y, col = line.col, lwd = 2, span = span)
                       })
+
+        #reset for extra.args
+        xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+        #plot
+        plt <- do.call(xyplot, xyplot.args)
     }
 ################################################################################################
 
     if (period == "weekday") {
 
-        if(is.null(xlab)) xlab <- "weekday"
+        #xlab default
+        if(is.null(extra.args$xlab))
+            extra.args$xlab <- "weekday"
+
         models <- dlply(mydata, .(cond, weekday = format(date, "%a")), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
         names(results) <- c("cond", "weekday", "intercept", "slope", "rsquare", "seslope", "N")
@@ -281,15 +306,13 @@ linearRelation <- function(mydata,
         results$slope <- results$slope * adj
         results$seslope <- results$seslope * adj
 
-        results$weekday <- ordered(results$weekday, levels = format(ISOdate(2000, 1, 3:9), "%A"))
+        results$weekday <- ordered(results$weekday, levels = format(ISOdate(2000, 1, 3:9), "%a"))
         if (missing(ylim)) ylim <- rng(results)
 
-        plt <- xyplot(slope ~ weekday | cond, data = results,
+        xyplot.args <- list(x = slope ~ weekday | cond, data = results,
                       as.table = TRUE,
-                      xlab = xlab,
-                      main = quickText(main, auto.text),
                       ylim = ylim,
-                      ylab = quickText(ylab, auto.text),...,
+                      ylab = quickText(ylab, auto.text),
                       panel = function(x, y, subscripts, ...) {
                           panel.grid(-1, 0)
                           panel.abline(v = 1:7, col = "grey85")
@@ -298,12 +321,21 @@ linearRelation <- function(mydata,
                                          y + results$seslope[subscripts], col = data.col,
                                          lwd = 2)
                       })
+
+        #reset for extra.args
+        xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+        #plot
+        plt <- do.call(xyplot, xyplot.args)
     }
 ################################################################################################
 
     if (period == "day.hour") {
 
-        if(is.null(xlab)) xlab <- "hour"
+        #xlab default
+        if(is.null(extra.args$xlab))
+            extra.args$xlab <- "hour"
+
         models <- dlply(mydata, .(cond, weekday = format(date, "%A"),
                                   hour = as.numeric(format(date, "%H"))), model)
         results <- ldply(models, function(x) c(coef(x), rsq(x), seslope(x), len(x)))
@@ -318,12 +350,10 @@ linearRelation <- function(mydata,
         if (condition) eq <- formula(slope ~ hour | weekday * cond)
         if (missing(ylim)) ylim <- rng(results)
 
-        plt <- xyplot(eq, data = results,
+        xyplot.args <- list(x = eq, data = results,
                       as.table = TRUE,
                       layout = c(7, length(unique(results$cond))),
-                      xlab = xlab,
-                      main = quickText(main, auto.text),
-                      ylim = ylim,...,
+                      ylim = ylim,
                       ylab = quickText(ylab, auto.text),
                       scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                       panel = function(x, y, subscripts, ...) {
@@ -334,6 +364,12 @@ linearRelation <- function(mydata,
                                          y + results$seslope[subscripts], col = data.col,
                                          lwd = 2)
                       })
+
+        #reset for extra.args
+        xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+        #plot
+        plt <- do.call(xyplot, xyplot.args)
     }
 
     if (condition & period == "day.hour") print(useOuterStrips(plt)) else print(plt)

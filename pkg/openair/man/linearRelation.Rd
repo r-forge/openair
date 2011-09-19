@@ -5,8 +5,8 @@
   linearRelation(mydata, x = "nox", y = "no2", period =
   "monthly", condition = FALSE, n = 20, rsq.thresh = 0,
   ylim = c(0, 20), ylab = paste("slope from ", y, " = m.",
-  x, " + c", sep = ""), xlab = NULL, auto.text = TRUE, cols
-  = NULL, main = "", span = 0.3, ...)
+  x, " + c", sep = ""), auto.text = TRUE, cols = NULL, span
+  = 0.3, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -54,8 +54,6 @@
 
   \item{ylab}{y-axis title, specified by the user.}
 
-  \item{xlab}{x-axis title, specified by the user.}
-
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
@@ -63,8 +61,6 @@
 
   \item{cols}{Predefined colour scheme, currently only
   enabled for \code{"greyscale"}.}
-
-  \item{main}{Title of plot.}
 
   \item{span}{span for \code{loess} fit. Controls the fit
   line: lower values produce a more "wiggly" fit.}
