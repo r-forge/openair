@@ -74,24 +74,13 @@
 ##' @param cols Colours to use. Can be a vector of colours e.g. \code{cols =
 ##'   c("black", "green")} or pre-defined openair colours --- see
 ##'   \code{openColours} for more details.
-##' @param ylab y-axis label.
-##' @param xlab x-axis label.
-##' @param lty Line type to use, can be a vector of types if the option
-##'   \code{statistic = "percentile"} is used e.g. \code{lty = c(5, 1, 5)}.
-##' @param lwd Line width to use, can be a vector of widths if the option
-##'   \code{statistic = "percentile"} is used e.g. \code{lwd = c(1, 2, 1)}.
-##' @param pch Plot symbol to use, can be a vector of symbols if the option
-##'   \code{statistic = "percentile"} is used e.g. \code{pch = c(1, 2, 1)}. To
-##'   remove symbols altogether use \code{pch = NA}.
-##' @param cex Plot symbol size, can be a vector of sizes if the option
-##'   \code{statistic = "percentile"} is used e.g. \code{cex = c(1, 2, 4)}.
+##' @param xlab x-axis label, by default \code{"year"}.
 ##' @param y.relation This determines how the y-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
 ##'   scales. The latter is a useful setting when plotting data with very
 ##'   different values.
 ##' @param key.columns Number of columns used if a key is drawn when using the
 ##'   option \code{statistic = "percentile"}.
-##' @param main Title of plot, if required.
 ##' @param ci Should confidence intervals be plotted? The default is
 ##'   \code{FALSE}.
 ##' @param alpha The alpha transparency of shaded confidence intervals - if
@@ -106,9 +95,19 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
-##' @param \dots Other graphical parameters e.g. pch = 16 for filled circles
-##'   and to \code{cutData}.  For example, in the case of \code{cutData} the
-##'   option \code{hemisphere = "southern"}
+##' @param \dots Other graphical parameters are passed onto \code{cutData} and 
+##'   \code{lattice:xyplot}. For example, \code{smoothTrend} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common graphical arguments, such as \code{xlim} and \code{ylim} 
+##'   for plotting ranges and \code{pch} and \code{cex} for plot symbol type and 
+##'   size, are passed on \code{xyplot}, although some local modifications may 
+##'   be applied by openair. For example, axis and title labelling options (such 
+##'   as \code{xlab}, \code{ylab} and \code{main}) are passed to \code{xyplot} via 
+##'   \code{quickText} to handle routine formatting. One special case here is 
+##'   that many graphical parameters can be vectors when used with 
+##'   \code{statistic = "percentile"} and a vector of \code{percentile} values, 
+##'   see examples below.   
 ##' @export
 ##' @return As well as generating the plot itself, \code{smoothTrend} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -160,15 +159,9 @@ smoothTrend <- function(mydata,
                         n = 200, #bootstrap simulations
                         autocor = FALSE,
                         cols = "brewer1",
-                        ylab = pollutant,
                         xlab = "year",
-                        lty = 1,
-                        lwd = 1,
-                        pch = 1,
-                        cex = 0.6,
                         y.relation = "same",
                         key.columns = length(percentile),
-                        main = "",
                         ci = TRUE,
                         alpha = 0.2,
                         date.breaks = 7,
@@ -180,6 +173,29 @@ smoothTrend <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    ##xlab in args because local unique 
+    ##ylab in code before plot because of local unique
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+    
+    #lty, lwd, pch, cex handling
+    if(!"lty" %in% names(extra.args))
+        extra.args$lty <- 1
+    if(!"lwd" %in% names(extra.args))
+        extra.args$lwd <- 1
+    if(!"pch" %in% names(extra.args))
+        extra.args$pch <- 1
+    if(!"cex" %in% names(extra.args))
+        extra.args$cex <- 1
+
+    #layout default
+    if(!"layout" %in% names(extra.args))
+            extra.args$layout <- NULL
 
     vars <- c("date", pollutant)
 
@@ -277,23 +293,24 @@ smoothTrend <- function(mydata,
 
     split.data <- ddply(mydata, c(type, "variable"),  process.cond)
 
-    skip <- FALSE
-    layout <- NULL
 
-
-    if (length(type) == 1 & type[1] == "wd") {
+    ## special wd layout
+    #(type field in results.grid called type not wd)
+    if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         split.data$wd <- ordered(split.data$wd, levels = wds)
-
         ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(split.data$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-
         split.data$wd <- factor(split.data$wd)  ## remove empty factor levels
-
-        layout = if (type == "wd") c(3, 3) else NULL
+        extra.args$layout = if (type == "wd") c(3, 3) else NULL
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
     }
+    if(!"skip" %in% names(extra.args))
+         extra.args$skip <- FALSE
+
 
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(factor(split.data[ , type[1]])), function(x) quickText(x, auto.text))
@@ -324,10 +341,11 @@ smoothTrend <- function(mydata,
 
     if (length(npol) > 1) {
         key.columns <- length(npol)
-        key <- list(lines = list(col = myColors[1 : length(npol)], lty = lty, lwd = lwd,
-                    pch = pch, type = "b", cex = cex),
+        key <- list(lines = list(col = myColors[1 : length(npol)], lty = extra.args$lty, lwd = extra.args$lwd,
+                    pch = extra.args$pch, type = "b", cex = extra.args$cex),
                     text = list(lab = key.lab),  space = "bottom", columns = key.columns)
-        if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ")
+        if (!"ylab" %in% names(extra.args)) 
+            extra.args$ylab <-  quickText(paste(pollutant, collapse = ", "), auto.text)
 
     } else {
         key <- NULL ## either there is a key or there is not
@@ -336,26 +354,21 @@ smoothTrend <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
 
-    plt <- xyplot(myform, data = split.data, groups = variable,
+    #ylab
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
+
+    xyplot.args <- list(x = myform, data = split.data, groups = split.data$variable,
                   as.table = TRUE,
                   strip = strip,
                   strip.left = strip.left,
-                  layout = layout,
                   key = key,
-                  lwd = lwd,
-                  lty = lty,
-                  pch = pch,
-                  cex = cex,
-                  skip = skip,
                   par.strip.text = list(cex = 0.8),
                   xlab = quickText(xlab, auto.text),
-                  ylab = quickText(ylab, auto.text),
-                  main = quickText(main, auto.text),
                   scales = list(x = list(at = date.at, format = date.format),
                   y = list(relation = y.relation, rot = 0)),
                   panel = panel.superpose,
-                  ...,
-
+                  
                   panel.groups = function(x, y, group.number, lwd, lty, pch, col, col.line, col.symbol,
                   subscripts, type = "b",...) {
 
@@ -376,6 +389,12 @@ smoothTrend <- function(mydata,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
                   })
+
+    #reset for extra.args
+    xyplot.args <- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt <- do.call(xyplot, xyplot.args)
 
 #################
     ## output

@@ -5,11 +5,10 @@
   smoothTrend(mydata, pollutant = "nox", deseason = FALSE,
   type = "default", statistic = "mean", avg.time = "month",
   percentile = NA, data.thresh = 0, simulate = FALSE, n =
-  200, autocor = FALSE, cols = "brewer1", ylab = pollutant,
-  xlab = "year", lty = 1, lwd = 1, pch = 1, cex = 0.6,
-  y.relation = "same", key.columns = length(percentile),
-  main = "", ci = TRUE, alpha = 0.2, date.breaks = 7,
-  auto.text = TRUE, ...)
+  200, autocor = FALSE, cols = "brewer1", xlab = "year",
+  y.relation = "same", key.columns = length(percentile), ci
+  = TRUE, alpha = 0.2, date.breaks = 7, auto.text = TRUE,
+  ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -91,26 +90,7 @@
   openair colours --- see \code{openColours} for more
   details.}
 
-  \item{ylab}{y-axis label.}
-
-  \item{xlab}{x-axis label.}
-
-  \item{lty}{Line type to use, can be a vector of types if
-  the option \code{statistic = "percentile"} is used e.g.
-  \code{lty = c(5, 1, 5)}.}
-
-  \item{lwd}{Line width to use, can be a vector of widths
-  if the option \code{statistic = "percentile"} is used
-  e.g. \code{lwd = c(1, 2, 1)}.}
-
-  \item{pch}{Plot symbol to use, can be a vector of symbols
-  if the option \code{statistic = "percentile"} is used
-  e.g. \code{pch = c(1, 2, 1)}. To remove symbols
-  altogether use \code{pch = NA}.}
-
-  \item{cex}{Plot symbol size, can be a vector of sizes if
-  the option \code{statistic = "percentile"} is used e.g.
-  \code{cex = c(1, 2, 4)}.}
+  \item{xlab}{x-axis label, by default \code{"year"}.}
 
   \item{y.relation}{This determines how the y-axis scale is
   plotted. "same" ensures all panels use the same scale and
@@ -121,8 +101,6 @@
   \item{key.columns}{Number of columns used if a key is
   drawn when using the option \code{statistic =
   "percentile"}.}
-
-  \item{main}{Title of plot, if required.}
 
   \item{ci}{Should confidence intervals be plotted? The
   default is \code{FALSE}.}
@@ -144,10 +122,23 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
-  \item{\dots}{Other graphical parameters e.g. pch = 16 for
-  filled circles and to \code{cutData}.  For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}}
+  \item{\dots}{Other graphical parameters are passed onto
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{smoothTrend} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common graphical
+  arguments, such as \code{xlim} and \code{ylim} for
+  plotting ranges and \code{pch} and \code{cex} for plot
+  symbol type and size, are passed on \code{xyplot},
+  although some local modifications may be applied by
+  openair. For example, axis and title labelling options
+  (such as \code{xlab}, \code{ylab} and \code{main}) are
+  passed to \code{xyplot} via \code{quickText} to handle
+  routine formatting. One special case here is that many
+  graphical parameters can be vectors when used with
+  \code{statistic = "percentile"} and a vector of
+  \code{percentile} values, see examples below.}
 }
 \value{
   As well as generating the plot itself, \code{smoothTrend}
