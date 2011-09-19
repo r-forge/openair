@@ -4,9 +4,9 @@
 \usage{
   percentileRose(mydata, pollutant = "nox", type =
   "default", percentile = c(25, 50, 75, 90, 95), cols =
-  "default", fill = TRUE, lwd = 2, angle.scale = 45, main =
-  "", auto.text = TRUE, key.header = NULL, key.footer =
-  "percentile", key.position = "bottom", key = TRUE, ...)
+  "default", fill = TRUE, angle.scale = 45, auto.text =
+  TRUE, key.header = NULL, key.footer = "percentile",
+  key.position = "bottom", key = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing \code{wd}
@@ -54,9 +54,6 @@
   (default) or should lines be drawn (\code{fill =
   FALSE}).}
 
-  \item{lwd}{The line width to be used if \code{fill =
-  FALSE}.}
-
   \item{angle.scale}{The pollutant scale is by default
   shown at a 45 degree angle. Sometimes the placement of
   the scale may interfere with an interesting feature. The
@@ -64,8 +61,6 @@
   value (between 0 and 360 degrees) to mitigate such
   problems. For example \code{angle.scale = 315} will draw
   the scale heading in a NW direction.}
-
-  \item{main}{Title of plot.}
 
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
@@ -89,10 +84,20 @@
   \code{drawOpenKey}. See \code{drawOpenKey} for further
   details.}
 
-  \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \item{\dots}{Other graphical parameters are passed onto
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{percentileRose} passes the option \code{hemisphere
+  = "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common graphical
+  arguments, such as \code{xlim} and \code{ylim} for
+  plotting ranges and \code{lwd} for line thickness when
+  using \code{fill = FALSE}, are passed on \code{xyplot},
+  although some local modifications may be applied by
+  openair. For example, axis and title labelling options
+  (such as \code{xlab}, \code{ylab} and \code{main}) are
+  passed to \code{xyplot} via \code{quickText} to handle
+  routine formatting.}
 }
 \value{
   As well as generating the plot itself,

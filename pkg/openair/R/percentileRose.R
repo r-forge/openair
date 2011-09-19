@@ -57,14 +57,12 @@
 ##'   "green", "blue")}.
 ##' @param fill Should the percentile intervals be filled (default) or should
 ##'   lines be drawn (\code{fill = FALSE}).
-##' @param lwd The line width to be used if \code{fill = FALSE}.
 ##' @param angle.scale The pollutant scale is by default shown at a 45 degree
 ##'   angle. Sometimes the placement of the scale may interfere with an
 ##'   interesting feature. The user can therefore set \code{angle.scale} to
 ##'   another value (between 0 and 360 degrees) to mitigate such problems. For
 ##'   example \code{angle.scale = 315} will draw the scale heading in a NW
 ##'   direction.
-##' @param main Title of plot.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
@@ -79,9 +77,16 @@
 ##'   and \code{"left"}.
 ##' @param key Fine control of the scale key via \code{drawOpenKey}. See
 ##'   \code{drawOpenKey} for further details.
-##' @param \dots Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters are passed onto \code{cutData} and 
+##'   \code{lattice:xyplot}. For example, \code{percentileRose} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
+##'   Similarly, common graphical arguments, such as \code{xlim} and \code{ylim} 
+##'   for plotting ranges and \code{lwd} for line thickness when using 
+##'   \code{fill = FALSE}, are passed on \code{xyplot}, although some local 
+##'   modifications may be applied by openair. For example, axis and title 
+##'   labelling options (such as \code{xlab}, \code{ylab} and \code{main}) 
+##'   are passed to \code{xyplot} via \code{quickText} to handle routine formatting. 
 ##' @export
 ##' @return As well as generating the plot itself, \code{percentileRose} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -118,9 +123,9 @@
 ##'
 percentileRose <- function (mydata, pollutant = "nox", type = "default",
                             percentile = c(25, 50, 75, 90, 95), cols = "default",
-                            fill = TRUE, lwd = 2,
+                            fill = TRUE,
                             angle.scale = 45,
-                            main = "",  auto.text = TRUE,  key.header = NULL,
+                            auto.text = TRUE,  key.header = NULL,
                             key.footer = "percentile", key.position = "bottom",
                             key = TRUE,  ...)
 
@@ -153,6 +158,22 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
         type <- c(type, "variable")
     }
 
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+    #lwd handling
+    if(!"lwd" %in% names(extra.args))
+        extra.args$lwd <- 2
+
     mydata <- na.omit(mydata)
 
     ## greyscale handling
@@ -165,10 +186,8 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     if (!fill) { ## labels depend on whether line or area are used
         theLabels <- percentile
     } else {
-
         values <- cbind(percentile[-length(percentile)], percentile[-1])
         theLabels <- paste(values[ , 1], "-", values[ , 2], sep = "")
-
     }
 
 
@@ -269,20 +288,17 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                               y = pollutant * cos(wd * pi / 180))
     }
 
-
-    plt <- xyplot(myform,
+    xyplot.args <- list(x = myform,
                   xlim = c(max(intervals) * -1, max(intervals) * 1),
                   ylim = c(max(intervals) * -1, max(intervals) * 1),
                   data = results.grid,
                   type = "n",
                   strip = strip,
                   strip.left = strip.left,
-                  xlab = "", ylab = "",
-                  main = quickText(main, auto.text),
                   as.table = TRUE,
                   aspect = 1,
                   par.strip.text = list(cex = 0.8),
-                  scales = list(draw = FALSE),...,
+                  scales = list(draw = FALSE),
 
                   panel = function(x, y, subscripts, ...) {
 
@@ -332,7 +348,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                           for (i in seq_along(percentile)) {
                               value <- percentile[i]
                               subdata <- subset(results.grid[subscripts, ], percentile == value)
-                              llines(subdata$x, subdata$y, col = col[i], lwd = lwd)
+                              llines(subdata$x, subdata$y, col = col[i], lwd = extra.args$lwd)
                           }
 
                       }
@@ -343,6 +359,13 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
 
                   }, legend = legend)
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt <- do.call(xyplot, xyplot.args)
+
 
     ## output ####################################################################################
 
