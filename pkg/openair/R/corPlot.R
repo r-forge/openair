@@ -58,8 +58,8 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
 ##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}, 
-##'   with common axis and title labelling options (such as \code{xlim}, 
-##'   \code{ylim}, \code{main}) being passed via \code{quickText} 
+##'   with common axis and title labelling options (such as \code{xlab}, 
+##'   \code{ylab}, \code{main}) being passed via \code{quickText} 
 ##'   to handle routine formatting. 
 ##' @export
 ##' @author David Carslaw --- but mostly based on code contained in Sarkar

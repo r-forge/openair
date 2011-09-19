@@ -174,8 +174,8 @@
 ##'   and \code{cutData}. For example, \code{polarPlot} passes the option 
 ##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
-##'   Similarly, common axis and title labelling options (such as \code{xlim}, 
-##'   \code{ylim}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
+##'   Similarly, common axis and title labelling options (such as \code{xlab}, 
+##'   \code{ylab}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
 ##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarPlot} also

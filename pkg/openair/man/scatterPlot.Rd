@@ -216,8 +216,8 @@
   provide southern (rather than default northern)
   hemisphere handling of \code{type = "season"}. Similarly,
   for the default case \code{method = "scatter"} common
-  axis and title labelling options (such as \code{xlim},
-  \code{ylim}, \code{main}) are passed to \code{xyplot} via
+  axis and title labelling options (such as \code{xlab},
+  \code{ylab}, \code{main}) are passed to \code{xyplot} via
   \code{quickText} to handle routine formatting. Other
   common graphical parameters, e.g. \code{layout} for panel
   arrangement, \code{pch} for plot symbol and \code{lwd}

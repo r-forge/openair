@@ -75,7 +75,7 @@
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
 ##' @param \dots Other graphical parameters are passed onto the \code{lattice} 
 ##'   function \code{lattice:levelplot}, with common axis and title labelling 
-##'   options (such as \code{xlim}, \code{ylim}, \code{main}) being passed to 
+##'   options (such as \code{xlab}, \code{ylab}, \code{main}) being passed to 
 ##'   via \code{quickText} to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{calendarPlot} also

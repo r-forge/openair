@@ -76,7 +76,7 @@
   \item{\dots}{Other graphical parameters are passed onto
   the \code{lattice} function \code{lattice:levelplot},
   with common axis and title labelling options (such as
-  \code{xlim}, \code{ylim}, \code{main}) being passed to
+  \code{xlab}, \code{ylab}, \code{main}) being passed to
   via \code{quickText} to handle routine formatting.}
 }
 \value{

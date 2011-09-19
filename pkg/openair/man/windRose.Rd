@@ -140,7 +140,7 @@
   other parameters that are passed on to
   \code{drawOpenKey}, \code{lattice:xyplot} and
   \code{cutData}. Axis and title labelling options
-  (\code{xlim}, \code{ylim}, \code{main}) are passed to
+  (\code{xlab}, \code{ylab}, \code{main}) are passed to
   \code{xyplot} via \code{quickText} to handle routine
   formatting.}
 }

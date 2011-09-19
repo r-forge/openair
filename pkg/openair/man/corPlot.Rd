@@ -59,7 +59,7 @@
 
   \item{\dots}{Other graphical parameters passed onto
   \code{lattice:levelplot}, with common axis and title
-  labelling options (such as \code{xlim}, \code{ylim},
+  labelling options (such as \code{xlab}, \code{ylab},
   \code{main}) being passed via \code{quickText} to handle
   routine formatting.}
 }
