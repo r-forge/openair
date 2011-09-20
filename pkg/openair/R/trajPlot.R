@@ -47,8 +47,13 @@
 ##' when \code{method = "level"}.
 ##' @param lat.inc The latitude-interval to be used for binning data
 ##' when \code{method = "level"}.
-##' @param aspect Aspect for map.
-##' @param ... other arguments to \code{scatterPlot} and \code{cutData}.
+##' @param ... other arguments as passed to \code{cutData} and 
+##' \code{scatterPlot}. This provides access to arguments used in 
+##' both these functions and functions that they in turn pass 
+##' arguments on to. For example, \code{plotTraj} passes the argument 
+##' \code{cex} on to \code{scatterPlot} which in turn passes it on to 
+##' the \code{lattice} function \code{xyplot} where it is applied to 
+##' set the plot symbol size.  
 ##' @export
 ##' @return NULL
 ##' @seealso \code{\link{importTraj}} to import trajectory data from the King's
@@ -100,37 +105,66 @@
 ##' }
 trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                       method = "level", smooth = FALSE, map = TRUE, lon.inc = 1.5,
-                      lat.inc = 1.5, aspect = 1,...)  {
+                      lat.inc = 1.5,...)  {
 
-    scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method, smooth = smooth,
-                map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,  ...)
+    ##extra.args
+    extra.args <- list(...)
+
+    #aspect
+    if(!"aspect" %in% names(extra.args))
+        extra.args$aspect <- 1
+
+    ##the plot
+    scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, 
+                             method = method, smooth = smooth, map = map, 
+                             x.inc = lon.inc, y.inc = lat.inc)
+
+    #reset for extra.args
+    scatterPlot.args<- listUpdate(scatterPlot.args, extra.args)
+
+    #plot
+    do.call(scatterPlot, scatterPlot.args)
 
 }
 
 
 ##' @rdname trajPlot
-##' @param cex Size of points used in \code{trajPlot} for individual back trajectory points
 ##' @param group For \code{trajPlot} it is sometimes useful to group
 ##' and colour trajectories according to a grouping variable. See example below.
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
                      method = "scatter", smooth = FALSE, map = TRUE, lon.inc = 1.5,
-                     lat.inc = 1.5, aspect = 1, group = NA, cex = 0.1, ...)
+                     lat.inc = 1.5, group = NA, ...)
 {
+
+    ##extra.args
+    extra.args <- list(...)
+
+    #aspect, cex
+    if(!"aspect" %in% names(extra.args))
+        extra.args$aspect <- 1
+    if(!"cex" %in% names(extra.args))
+        extra.args$cex <- 0.1
 
     if (missing(pollutant)) { ## don't need key
 
         if (is.na(group)) key <- FALSE else key <- TRUE
 
-        scatterPlot(mydata, x = lon, y = lat, z = NA, method = method, smooth = smooth,
-                    map = map, x.inc = lon.inc, y.inc = lat.inc, aspect = aspect,
-                    key = key,
-                    group = group, cex = cex, ...)
+        scatterPlot.args <- list(mydata, x = lon, y = lat, z = NA, method = method, smooth = smooth,
+                                 map = map, x.inc = lon.inc, y.inc = lat.inc, key = key, group = group)
 
     } else {
-        scatterPlot(mydata, x = lon, y = lat, z = pollutant, method = method,
-                    smooth = smooth, map = map, x.inc = lon.inc, y.inc = lat.inc,
-                    aspect = aspect, group = group, cex = cex,  ...)
+        scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, method = method,
+                                 smooth = smooth, map = map, x.inc = lon.inc, y.inc = lat.inc,
+                                 group = group)
     }
+
+    #reset for extra.args
+    scatterPlot.args<- listUpdate(scatterPlot.args, extra.args)
+
+    #plot
+    do.call(scatterPlot, scatterPlot.args)
+
+
 
 }

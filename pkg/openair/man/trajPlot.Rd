@@ -5,12 +5,11 @@
 \usage{
   trajLevel(mydata, lon = "lon", lat = "lat", pollutant =
   "pm10", method = "level", smooth = FALSE, map = TRUE,
-  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, ...)
+  lon.inc = 1.5, lat.inc = 1.5, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat", pollutant =
   "pm10", method = "scatter", smooth = FALSE, map = TRUE,
-  lon.inc = 1.5, lat.inc = 1.5, aspect = 1, group = NA, cex
-  = 0.1, ...)
+  lon.inc = 1.5, lat.inc = 1.5, group = NA, ...)
 }
 \arguments{
   \item{mydata}{Data frame, the result of importing a
@@ -38,13 +37,14 @@
   \item{lat.inc}{The latitude-interval to be used for
   binning data when \code{method = "level"}.}
 
-  \item{aspect}{Aspect for map.}
-
-  \item{...}{other arguments to \code{scatterPlot} and
-  \code{cutData}.}
-
-  \item{cex}{Size of points used in \code{trajPlot} for
-  individual back trajectory points}
+  \item{...}{other arguments as passed to \code{cutData}
+  and \code{scatterPlot}. This provides access to arguments
+  used in both these functions and functions that they in
+  turn pass arguments on to. For example, \code{plotTraj}
+  passes the argument \code{cex} on to \code{scatterPlot}
+  which in turn passes it on to the \code{lattice} function
+  \code{xyplot} where it is applied to set the plot symbol
+  size.}
 
   \item{group}{For \code{trajPlot} it is sometimes useful
   to group and colour trajectories according to a grouping
