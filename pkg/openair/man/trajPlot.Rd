@@ -37,7 +37,7 @@
   \item{lat.inc}{The latitude-interval to be used for
   binning data when \code{method = "level"}.}
 
-  \item{...}{other arguments as passed to \code{cutData}
+  \item{...}{other arguments are passed to \code{cutData}
   and \code{scatterPlot}. This provides access to arguments
   used in both these functions and functions that they in
   turn pass arguments on to. For example, \code{plotTraj}
