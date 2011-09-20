@@ -3,11 +3,11 @@
 \title{Diurnal, day of the week and monthly variation}
 \usage{
   timeVariation(mydata, pollutant = "nox", local.time =
-  FALSE, normalise = FALSE, ylab = pollutant, xlab =
-  c("hour", "hour", "month", "weekday"), ylim = NA,
-  name.pol = pollutant, type = "default", group = NULL, ci
-  = TRUE, cols = "hue", main = "", key = NULL, key.columns
-  = 1, auto.text = TRUE, alpha = 0.4, ...)
+  FALSE, normalise = FALSE, xlab = c("hour", "hour",
+  "month", "weekday"), name.pol = pollutant, type =
+  "default", group = NULL, ci = TRUE, cols = "hue", key =
+  NULL, key.columns = 1, auto.text = TRUE, alpha = 0.4,
+  ...)
 }
 \arguments{
   \item{mydata}{A data frame of hourly (or higher temporal
@@ -39,12 +39,7 @@
   to compare the shape of the diurnal trends for variables
   on very different scales.}
 
-  \item{ylab}{Name of y-axis variable. By default will use
-  the name of \code{pollutant}.}
-
   \item{xlab}{x-axis label; one for each sub-plot.}
-
-  \item{ylim}{user-specified y-axis limits.}
 
   \item{name.pol}{Names to be given to the pollutant(s).
   This is useful if you want to give a fuller description
@@ -84,8 +79,6 @@
   include "default", "increment", "heat", "spectral", "hue"
   (default) and user defined (see manual for more
   details).}
-
-  \item{main}{The plot title; default is no title.}
 
   \item{key}{By default \code{timeVariation} produces four
   plots on one page. While it is useful to see these plots

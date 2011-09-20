@@ -47,10 +47,7 @@
 ##'   \code{FALSE}. If \code{TRUE} then the variable(s) are divided by their
 ##'   mean values. This helps to compare the shape of the diurnal trends for
 ##'   variables on very different scales.
-##' @param ylab Name of y-axis variable. By default will use the name of
-##'   \code{pollutant}.
 ##' @param xlab x-axis label; one for each sub-plot.
-##' @param ylim user-specified y-axis limits.
 ##' @param name.pol Names to be given to the pollutant(s). This is useful if
 ##'   you want to give a fuller description of the variables, maybe also
 ##'   including subscripts etc.
@@ -77,7 +74,6 @@
 ##' @param cols Colours to be used for plotting. Options include "default",
 ##'   "increment", "heat", "spectral", "hue" (default) and user defined (see
 ##'   manual for more details).
-##' @param main The plot title; default is no title.
 ##' @param key By default \code{timeVariation} produces four plots on one page.
 ##'   While it is useful to see these plots together, it is sometimes necessary
 ##'   just to use one for a report. If \code{key} is \code{TRUE}, a key is
@@ -172,15 +168,12 @@ timeVariation <- function(mydata,
                           pollutant = "nox",
                           local.time = FALSE,
                           normalise = FALSE,
-                          ylab = pollutant,
                           xlab = c("hour", "hour", "month", "weekday"),
-                          ylim = NA,
                           name.pol = pollutant,
                           type = "default",
                           group = NULL,
                           ci = TRUE,
                           cols = "hue",
-                          main = "",
                           key = NULL,
                           key.columns = 1,
                           auto.text = TRUE,
@@ -193,6 +186,22 @@ timeVariation <- function(mydata,
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
+
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    ##xlab handled in formals and code because unique
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else 
+                               quickText(paste(pollutant, collapse=", "), auto.text)
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+    #ylim
+    ylim.handler <- if("ylim" %in% names(extra.args))
+                        FALSE else TRUE
 
     vars <- c("date", pollutant)
 
@@ -232,13 +241,12 @@ timeVariation <- function(mydata,
     mydata <- na.omit(mydata)
 
     ## title for overall and individual plots
-    overall.main <- quickText(main, auto.text)
-    main <- ""
+    overall.main <- extra.args$main
+    extra.args$main <- ""
 
     if (local.time) attr(mydata$date, "tzone") <- "Europe/London"
 
     ## ylabs for more than one pollutant
-    if (missing(ylab)) ylab <-  paste(pollutant, collapse = ", ")
 
     if (missing(name.pol)) mylab <- sapply(seq_along(pollutant), function(x)
                                            quickText(pollutant[x], auto.text))
@@ -266,7 +274,7 @@ timeVariation <- function(mydata,
         x
     }
 
-    if (normalise) ylab <- "normalised level"
+    if (normalise) extra.args$ylab <- "normalised level"
 
     ## calculate temporal components
     mydata <- within(mydata, {
@@ -311,7 +319,7 @@ timeVariation <- function(mydata,
         key <- list(rectangles = list(col = myColors[1:npol], border = NA),
                     text = list(lab = mylab),  space = "bottom", columns = key.columns)
 
-        main <- overall.main
+        extra.args$main <- overall.main
     }
 
 
@@ -335,21 +343,21 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ hour | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim.hour <- rng(data.hour) else ylim.hour <- ylim
-
-    hour <- xyplot(myform,  data = data.hour, groups = variable,
+    #ylim hander
+    if(ylim.handler) 
+        extra.args$ylim <- rng(data.hour)
+  
+    #plot  
+    xyplot.args <- list(x = myform,  data = data.hour, groups = data.hour$variable,
                    as.table = TRUE,
-                   main = main,
-                   ylab = quickText(ylab, auto.text),
                    xlab = xlab[2],
                    xlim = c(0, 23),
-                   ylim = ylim.hour,
                    strip = strip,
                    par.strip.text = list(cex = 0.8),
                    key = key,
                    scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                    par.settings = simpleTheme(col = myColors),
-                   panel =  panel.superpose,...,
+                   panel =  panel.superpose,
                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
                        if (group.number == 1) {
                            panel.grid(-1, 0)
@@ -361,6 +369,13 @@ timeVariation <- function(mydata,
                                         data.hour$Upper[subscripts], group.number)}
 
                    })
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    hour <- do.call(xyplot, xyplot.args)
+
     ## weekday ############################################################################
 
     data.weekday <- calc.wd(mydata, vars = "weekday", pollutant, type)
@@ -377,20 +392,20 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ weekday | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim.weekday <- rng(data.weekday) else ylim.weekday <- ylim
-
-    day <- xyplot(myform,  data = data.weekday, groups = variable,
+    #ylim hander
+    if(ylim.handler) 
+        extra.args$ylim <- rng(data.weekday)
+  
+    #plot  
+    xyplot.args <- list(x = myform,  data = data.weekday, groups = data.weekday$variable,
                   as.table = TRUE,
                   par.settings = simpleTheme(col = myColors, pch = 16),
                   scales = list(x = list(at = 1:7, labels = format(ISOdate(2000, 1, 3:9), "%a"))),
-                  ylab = quickText(ylab, auto.text),
                   xlab = xlab[4],
-                  ylim = ylim.weekday,
                   strip = strip,
                   par.strip.text = list(cex = 0.8),
                   key = key,
-                  main = main,
-                  panel =  panel.superpose,...,
+                  panel =  panel.superpose,
                   panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
                       if (group.number == 1) {
                           panel.grid(-1, 0)
@@ -405,6 +420,12 @@ timeVariation <- function(mydata,
                                           border = NA, alpha = alpha)}
                   })
 
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    day <- do.call(xyplot, xyplot.args)
+
     ## month ############################################################################
 
     data.month <- calc.wd(mydata, vars = "month", pollutant, type)
@@ -416,22 +437,22 @@ timeVariation <- function(mydata,
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ month | ", temp, sep = ""))
 
-    if (missing(ylim)) ylim.month <-  rng(data.month) else ylim.month <- ylim
-
-    month <- xyplot(myform,  data = data.month, groups = variable,
+    #ylim hander
+    if(ylim.handler) 
+        extra.args$ylim <- rng(data.month)
+  
+    #plot  
+    xyplot.args <- list(x = myform,  data = data.month, groups = data.month$variable,
                     as.table = TRUE,
-                    ylab = quickText(ylab, auto.text),
                     xlab = xlab[3],
-                    ylim = ylim.month,
                     xlim = c(0.5, 12.5),
                     key = key,
-                    main = main,
                     strip = strip,
                     par.strip.text = list(cex = 0.8),
                     par.settings = simpleTheme(col = myColors, pch = 16),
                     scales = list(x = list(at = 1:12, labels = substr(format(seq(as.Date("2000-01-01"),
                                                       as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
-                    panel =  panel.superpose,...,
+                    panel =  panel.superpose,
                     panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
                         if (group.number == 1) {
                             panel.grid(-1, 0)
@@ -445,6 +466,13 @@ timeVariation <- function(mydata,
                                             fill = myColors[group.number],
                                             border = NA, alpha = alpha)}
                     })
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    month <- do.call(xyplot, xyplot.args)
+
     ## #######################################################################################
 
     ## day and hour ############################################################################
@@ -482,14 +510,14 @@ timeVariation <- function(mydata,
         myform <- formula(paste("Mean ~ hour | weekday *", temp, sep = ""))
     }
 
-    if (missing(ylim)) ylim.day.hour <-  rng(data.day.hour) else ylim.day.hour <- ylim
-
-    day.hour <- xyplot(myform ,  data = data.day.hour, groups = variable,
+    #ylim hander
+    if(ylim.handler) 
+        extra.args$ylim <- rng(data.day.hour)
+  
+    #plot  
+    xyplot.args <- list(x = myform,  data = data.day.hour, groups = data.day.hour$variable,
                        as.table = TRUE,
-                       main = main,
                        xlim = c(0, 23),
-                       ylim = ylim.day.hour,
-                       ylab = quickText(ylab, auto.text),
                        xlab = xlab[1],
                        layout = layout,
                        par.settings = simpleTheme(col = myColors),
@@ -498,7 +526,7 @@ timeVariation <- function(mydata,
                        strip = strip,
                        strip.left = strip.left,
                        par.strip.text = list(cex = 0.8),
-                       panel =  panel.superpose,...,
+                       panel =  panel.superpose,
                        panel.groups = function(x, y, col.line, type, group.number,
                        subscripts,...) {
                            ## add grid lines once (otherwise they overwrite the data)
@@ -511,6 +539,13 @@ timeVariation <- function(mydata,
                            if (ci) {poly.na(x, data.day.hour$Lower[subscripts], x,
                                             data.day.hour$Upper[subscripts], group.number)}
                        })
+
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    day.hour <- do.call(xyplot, xyplot.args)
+
 
     subsets = c("day.hour", "hour", "day", "month")
 
