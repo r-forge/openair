@@ -47,13 +47,13 @@
 ##' when \code{method = "level"}.
 ##' @param lat.inc The latitude-interval to be used for binning data
 ##' when \code{method = "level"}.
-##' @param ... other arguments are passed to \code{cutData} and 
-##' \code{scatterPlot}. This provides access to arguments used in 
-##' both these functions and functions that they in turn pass 
-##' arguments on to. For example, \code{plotTraj} passes the argument 
-##' \code{cex} on to \code{scatterPlot} which in turn passes it on to 
-##' the \code{lattice} function \code{xyplot} where it is applied to 
-##' set the plot symbol size. 
+##' @param ... other arguments are passed to \code{cutData} and
+##' \code{scatterPlot}. This provides access to arguments used in
+##' both these functions and functions that they in turn pass
+##' arguments on to. For example, \code{plotTraj} passes the argument
+##' \code{cex} on to \code{scatterPlot} which in turn passes it on to
+##' the \code{lattice} function \code{xyplot} where it is applied to
+##' set the plot symbol size.
 ##' @export
 ##' @return NULL
 ##' @seealso \code{\link{importTraj}} to import trajectory data from the King's
@@ -115,8 +115,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
         extra.args$aspect <- 1
 
     ##the plot
-    scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, 
-                             method = method, smooth = smooth, map = map, 
+    scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant,
+                             method = method, smooth = smooth, map = map,
                              x.inc = lon.inc, y.inc = lat.inc)
 
     #reset for extra.args
@@ -144,7 +144,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
     if(!"aspect" %in% names(extra.args))
         extra.args$aspect <- 1
     if(!"cex" %in% names(extra.args))
-        extra.args$aspect <- 0.1
+        extra.args$cex <- 0.1
 
     if (missing(pollutant)) { ## don't need key
 
