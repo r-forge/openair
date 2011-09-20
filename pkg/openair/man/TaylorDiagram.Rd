@@ -3,12 +3,11 @@
 \title{Taylor Diagram for model evaluation with conditioning}
 \usage{
   TaylorDiagram(mydata, obs = "obs", mod = "mod", group =
-  NULL, type = "default", normalise = FALSE, layout = NULL,
-  cols = "brewer1", main = "", ylab = NULL, xlab = NULL,
-  pch = 20, cex = 2, rms.col = "darkgoldenrod", cor.col =
-  "black", arrow.lwd = 3, key = TRUE, key.title = group,
-  key.columns = 1, key.pos = "bottom", strip = TRUE,
-  auto.text = TRUE, ...)
+  NULL, type = "default", normalise = FALSE, cols =
+  "brewer1", rms.col = "darkgoldenrod", cor.col = "black",
+  arrow.lwd = 3, key = TRUE, key.title = group, key.columns
+  = 1, key.pos = "bottom", strip = TRUE, auto.text = TRUE,
+  ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing a column
@@ -67,35 +66,12 @@
   statistics for different species (maybe with different
   units) on the same plot.}
 
-  \item{layout}{Determines how the panels are laid out. By
-  default, plots will be shown in one column with the
-  number of rows equal to the number of pollutants, for
-  example. If the user requires 2 columns and two rows,
-  layout should be set to \code{layout = c(2, 2)}. In
-  general, layout is expressed as number of columns times
-  number of rows.}
-
   \item{cols}{Colours to be used for plotting. Options
   include "default", "increment", "heat", "spectral",
   "hue", "brewer1", "greyscale" and user defined (see
   \code{openColours} for more details). The same line
   colour can be set for all pollutant e.g. \code{cols =
   "black"}.}
-
-  \item{main}{The plot title; default is no title.}
-
-  \item{ylab}{Name of y-axis variable. By default will use
-  the name of \code{y}.}
-
-  \item{xlab}{Name of x-axis variable. By default will use
-  the name of \code{x}.}
-
-  \item{pch}{The symbol type used for plotting. Default is
-  to provide different symbol types for different
-  pollutant. If one requires a single symbol for all
-  pollutants, the set \code{pch = 1}, for example.}
-
-  \item{cex}{Size of symbol used.}
 
   \item{rms.col}{Colour for centred-RMS lines and text.}
 
@@ -126,10 +102,20 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{...}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \item{\dots}{Other graphical parameters are passed onto
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{TaylorDiagram} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, common graphical
+  parameters, such as \code{layout} for panel arrangement
+  and \code{pch} and \code{cex} for plot symbol type and
+  size, are passed on to \code{xyplot}. Most are passed
+  unmodified, although there are some special cases where
+  \code{openair} may locally manage this process. For
+  example, common axis and title labelling options (such as
+  \code{xlab}, \code{ylab}, \code{main}) are passed via
+  \code{quickText} to handle routine formatting.}
 }
 \value{
   As well as generating the plot itself,

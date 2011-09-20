@@ -84,24 +84,10 @@
 ##'   on the x-axis at unit distance from the origin. This makes it possible to
 ##'   plot statistics for different species (maybe with different units) on the
 ##'   same plot.
-##' @param layout Determines how the panels are laid out. By default, plots
-##'   will be shown in one column with the number of rows equal to the number
-##'   of pollutants, for example. If the user requires 2 columns and two rows,
-##'   layout should be set to \code{layout = c(2, 2)}. In general, layout is
-##'   expressed as number of columns times number of rows.
 ##' @param cols Colours to be used for plotting. Options include "default",
 ##'   "increment", "heat", "spectral", "hue", "brewer1", "greyscale" and user
 ##'   defined (see \code{openColours} for more details). The same line colour
 ##'   can be set for all pollutant e.g. \code{cols = "black"}.
-##' @param main The plot title; default is no title.
-##' @param ylab Name of y-axis variable. By default will use the name of
-##'   \code{y}.
-##' @param xlab Name of x-axis variable. By default will use the name of
-##'   \code{x}.
-##' @param pch The symbol type used for plotting. Default is to provide
-##'   different symbol types for different pollutant. If one requires a single
-##'   symbol for all pollutants, the set \code{pch = 1}, for example.
-##' @param cex Size of symbol used.
 ##' @param rms.col Colour for centred-RMS lines and text.
 ##' @param cor.col Colour for correlation coefficient lines and text.
 ##' @param arrow.lwd Width of arrow used when used for comparing two model outputs.
@@ -118,9 +104,16 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param ... Other graphical parameters passed onto \code{lattice:xyplot}
-##'   and \code{cutData}. For example, in the case of \code{cutData} the option
-##'   \code{hemisphere = "southern"}.
+##' @param \dots Other graphical parameters are passed onto \code{cutData} and 
+##'   \code{lattice:xyplot}. For example, \code{TaylorDiagram} passes the option 
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   (rather than default northern) hemisphere handling of \code{type = "season"}. 
+##'   Similarly, common graphical parameters, such as \code{layout} for panel 
+##'   arrangement and \code{pch} and \code{cex} for plot symbol type and size, 
+##'   are passed on to \code{xyplot}. Most are passed unmodified, although there are 
+##'   some special cases where \code{openair} may locally manage this process. For 
+##'   example, common axis and title labelling options (such as \code{xlab}, \code{ylab}, 
+##'   \code{main}) are passed via \code{quickText} to handle routine formatting. 
 ##' @export
 ##' @return As well as generating the plot itself, \code{TaylorDiagram} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -209,8 +202,7 @@
 ##'
 ##'
 TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type = "default",
-                          normalise = FALSE, layout = NULL,  cols = "brewer1", main = "",
-                          ylab = NULL, xlab = NULL,  pch = 20, cex = 2,
+                          normalise = FALSE,  cols = "brewer1", 
                           rms.col = "darkgoldenrod", cor.col = "black", arrow.lwd = 3,
                           key = TRUE, key.title = group, key.columns = 1,
                           key.pos = "bottom", strip = TRUE, auto.text = TRUE, ...)
@@ -228,6 +220,27 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
         method.col <- "default"
     }
 
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls (some local xlab, ylab management in code)
+    extra.args$xlab <- if("xlab" %in% names(extra.args))
+                           quickText(extra.args$xlab, auto.text) else NULL
+    extra.args$ylab <- if("ylab" %in% names(extra.args))
+                           quickText(extra.args$ylab, auto.text) else NULL
+    extra.args$main <- if("main" %in% names(extra.args))
+                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
+    #layout (also code in body)
+    if(!"layout" %in% names(extra.args))
+        extra.args$layout <- NULL
+
+    #pch, cex (also code in body)
+    if(!"pch" %in% names(extra.args))
+        extra.args$pch <- 20
+    if(!"cex" %in% names(extra.args))
+        extra.args$cex <- 2
 
 ## #######################################################################################
 
@@ -264,7 +277,6 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
     if (!missing(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
 
     ## data checks, for base and new data if necessary
-
 
         mydata <- openair:::checkPrep(mydata, vars, type)
 
@@ -332,7 +344,7 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
 
     if (key & npol > 1 & !combine) {
 
-        key <- list(points = list(col = myColors[1:npol]), pch = pch, cex = cex,
+        key <- list(points = list(col = myColors[1:npol]), pch = extra.args$pch, cex = extra.args$cex,
                     text = list(lab = pol.name, cex = 0.8), space = key.pos,
                     columns = key.columns,
                     title = quickText(key.title, auto.text),
@@ -349,22 +361,22 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
     }
 
 
-
     ## special wd layout
-    skip <- FALSE
-    if (length(type) == 1 & type[1] == "wd" ) {
+    if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         mydata$wd <- ordered(mydata$wd, levels = wds)
-
         ## see if wd is actually there or not
         wd.ok <- sapply(wds, function (x) {if (x %in% unique(mydata$wd)) FALSE else TRUE })
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-
         mydata$wd <- factor(mydata$wd)  ## remove empty factor levels
-
-        layout = if (type == "wd") c(3, 3) else NULL
+        extra.args$layout <- c(3, 3)
+        if(!"skip" %in% names(extra.args))
+            extra.args$skip <- skip
     }
+    if(!"skip" %in% names(extra.args))
+         extra.args$skip <- FALSE
+
 
     ## proper names of labelling ##############################################################################
 
@@ -391,31 +403,29 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
 
     maxsd <- 1.2 * max(results$sd.obs, results$sd.mod)
 
-    if (missing(ylab)) {
-        if (normalise) ylab <- "standard deviation (normalised)" else ylab <- "standard deviation"
-    }
+    #xlim, ylim handling
+    if(!"ylim" %in% names(extra.args))
+        extra.args$ylim <- 1.12 * c(0, maxsd)
+    if(!"xlim" %in% names(extra.args))
+        extra.args$xlim <- 1.12 * c(0, maxsd)
 
-    if (missing(xlab)) xlab <- ylab
+    #xlab, ylab local management
+    if(is.null(extra.args$ylab))
+        extra.args$ylab <- if(normalise) "standard deviation (normalised)" else "standard deviation"
+    if(is.null(extra.args$xlab))
+        extra.args$xlab <- extra.args$ylab
 
-    plt <- xyplot(myform,  data = results, groups = MyGroupVar,
-                  xlim = 1.12 * c(0, maxsd),
-                  ylim = 1.12 * c(0, maxsd),
+    #plot
+    xyplot.args <- list(x = myform,  data = results, groups = results$MyGroupVar,
                   aspect = 1,
                   type = "n",
                   as.table = TRUE,
-                  pch = pch,
-                  cex = cex,
-                  main = quickText(main, auto.text),
-                  ylab = quickText(ylab, auto.text),
-                  xlab = quickText(xlab, auto.text),
                   scales = scales,
                   key = key,
                   par.strip.text = list(cex = 0.8),
                   strip = strip,
                   strip.left = strip.left,
-                  layout = layout,
-                  skip = skip,
-                  panel =  panel.superpose,...,
+                  panel =  panel.superpose,
                   panel.groups = function(x, y, col.symbol, col, type, col.line, lty, lwd,
                   group.number,
 
@@ -503,8 +513,6 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
 
                   results <- transform(results, x = sd.mod * R, y = sd.mod * sin(acos(R)))
 
-
-
                   if (combine) {
                       results.new <- transform(results.new, x = sd.mod * R, y = sd.mod * sin(acos(R)))
                       larrows(results$x[subscripts], results$y[subscripts],
@@ -516,10 +524,13 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
                           col.symbol = myColors[group.number], ...)
                   }
 
-
-
               })
 
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt <- do.call(xyplot, xyplot.args)
 
 
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
