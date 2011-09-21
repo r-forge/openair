@@ -5,11 +5,9 @@
   timePlot(mydata, pollutant = "nox", group = FALSE, stack
   = FALSE, normalise = NULL, avg.time = "default",
   data.thresh = 0, statistic = "mean", percentile = NA,
-  date.pad = FALSE, type = "default", layout = c(1, 1),
-  cols = "brewer1", main = "", ylab = pollutant, plot.type
-  = "l", lty = 1:length(pollutant), lwd = 1, pch = NA, key
-  = TRUE, strip = TRUE, log = FALSE, smooth = FALSE, ci =
-  TRUE, ref.x = NULL, ref.y = NULL, key.columns = 1,
+  date.pad = FALSE, type = "default", cols = "brewer1",
+  plot.type = "l", key = TRUE, log = FALSE, smooth = FALSE,
+  ci = TRUE, ref.x = NULL, ref.y = NULL, key.columns = 1,
   name.pol = pollutant, date.breaks = 7, auto.text = TRUE,
   ...)
 }
@@ -108,55 +106,18 @@
   Only one \code{type} is currently allowed in
   \code{timePlot}.}
 
-  \item{layout}{Determines how the panels are laid out. By
-  default, plots will be shown in one column with the
-  number of rows equal to the number of pollutants, for
-  example. If the user requires 2 columns and two rows,
-  layout should be set to \code{layout = c(2, 2)}. In
-  general, layout is expressed as number of columns times
-  number of rows.}
-
   \item{cols}{Colours to be used for plotting. Options
   include "default", "increment", "heat", "spectral",
   "hue", "brewer1" (default) and user defined (see manual
   for more details). The same line colour can be set for
   all pollutant e.g. \code{cols = "black"}.}
 
-  \item{main}{The plot title; default is no title.}
-
-  \item{ylab}{Name of y-axis variable. By default will use
-  the name of \code{pollutant}(s).}
-
   \item{plot.type}{The \code{lattice} plot type, which is a
   line (\code{plot.type = "l"}) by default. Another useful
   option is \code{plot.type = "h"}, which draws vertical
   lines.}
 
-  \item{lty}{The line type used for plotting. Default is to
-  provide different line types for different pollutant. If
-  one requires a continuous line for all pollutants, the
-  set \code{lty = 1}, for example. See \code{lty} option
-  for standard plotting.}
-
-  \item{lwd}{The line width used; default is 1. To set a
-  wider line for all pollutant the choose, for example,
-  \code{lwd = 2}. Alternatively, varying line widths can be
-  chosen depending on the pollutant. For example, if
-  \code{pollutant = c("nox", "no2", "o3")}, and a wider
-  line was wanted for ozone, then \code{lwd} can be
-  expressed as \code{lwd = c(1, 1, 2)}.}
-
-  \item{pch}{The type of symbol to be plotted. The default
-  is not to plot a symbol. It can be useful to do so in
-  cases where there are not consecutive points in time and
-  a line cannot be drawn between two points. Symbols can be
-  plotted as a vector of types e.g. for unfilled and filled
-  symbols use \code{pch = c(1, 16)}.}
-
   \item{key}{Should a key be drawn? The default is
-  \code{TRUE}.}
-
-  \item{strip}{Should a strip be drawn? The default is
   \code{TRUE}.}
 
   \item{log}{Should the y-axis appear on a log scale? The
@@ -207,10 +168,20 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{\dots}{Other graphical parameters passed onto
-  \code{lattice:xyplot} and \code{cutData}. For example, in
-  the case of \code{cutData} the option \code{hemisphere =
-  "southern"}.}
+  \item{\dots}{Other graphical parameters are passed onto
+  \code{cutData} and \code{lattice:xyplot}. For example,
+  \code{timePlot} passes the option \code{hemisphere =
+  "southern"} on to \code{cutData} to provide southern
+  (rather than default northern) hemisphere handling of
+  \code{type = "season"}. Similarly, most common plotting
+  parameters, such as \code{layout} for panel arrangement
+  and \code{pch} and \code{cex} for plot symbol type and
+  size and \code{lty} and \code{lwd} for line type and
+  width, as passed to \code{xyplot}, although some maybe
+  locally managed by \code{openair} on route, e.g. axis and
+  title labelling options (such as \code{xlab},
+  \code{ylab}, \code{main}) are passed via \code{quickText}
+  to handle routine formatting. See examples below.}
 }
 \value{
   As well as generating the plot itself, \code{timePlot}
