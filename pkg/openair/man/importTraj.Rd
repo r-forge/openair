@@ -2,7 +2,7 @@
 \alias{importTraj}
 \title{Import pre-calculated HYSPLIT 96-hour back trajectories}
 \usage{
-  importTraj(site = "london", year = 2009)
+  importTraj(site = "london", year = 2009, local = NA)
 }
 \arguments{
   \item{site}{Site code of the network site to import e.g.
@@ -22,6 +22,9 @@
   of years from 1990 to 2000 use \code{year = 1990:2000}.
   To import several specfic years use \code{year = c(1990,
   1995, 2000)} for example.}
+
+  \item{local}{Used for testing purposes on a local file
+  system.}
 }
 \value{
   Returns a data frame with pre-calculated back

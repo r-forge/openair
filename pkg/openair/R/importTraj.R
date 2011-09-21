@@ -77,6 +77,7 @@
 ##'   1990 to 2000 use \code{year = 1990:2000}. To import several specfic years
 ##'   use \code{year = c(1990, 1995, 2000)} for example.
 ##'
+##' @param local Used for testing purposes on a local file system.
 ##' @export
 ##' @return Returns a data frame with pre-calculated back trajectories.
 ##' @author David Carslaw
@@ -97,7 +98,7 @@
 ##' ## combine with measurements
 ##' \dontrun{theData <- importAURN(site = "kc1", year = 2009)
 ##' mytraj <- merge(mytraj, theData, by = "date")}
-importTraj <- function(site = "london", year = 2009) {
+importTraj <- function(site = "london", year = 2009, local = NA) {
 
     if (length(site) > 1) stop("Only one site can be imported at a time.")
     site <- tolower(site)
@@ -107,15 +108,26 @@ importTraj <- function(site = "london", year = 2009) {
 
     loadData <- function(x) {
         tryCatch({
-             fileName <- paste("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/Traj/", x, ".RData",
-                               sep = "")
-             con <- url(fileName)
-             load(con)
-             close(con)
-             traj
-             },
-                  error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
-     }
+
+            if (is.na(local)) {
+                fileName <- paste("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/Traj/", x, ".RData",
+                                  sep = "")
+                con <- url(fileName)
+                load(con)
+                close(con)
+
+            } else { ## load from local file system
+
+                con <- paste(local, x, ".RData", sep = "")
+                load(con)
+
+            }
+
+
+            traj
+        },
+                 error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
+    }
 
     thedata <- lapply(files, loadData)
     thedata <- do.call(rbind.fill, thedata)
