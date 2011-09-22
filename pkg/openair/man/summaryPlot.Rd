@@ -6,9 +6,8 @@
   = 0.99, type = "histogram", pollutant = "nox", period =
   "years", breaks = NULL, col.trend = "darkgoldenrod2",
   col.data = "lightblue", col.mis = rgb(0.65, 0.04, 0.07),
-  col.hist = "forestgreen", cols = NULL, main = "",
-  date.breaks = 7, auto.text = TRUE, xlab = NULL, ylab =
-  NULL, ...)
+  col.hist = "forestgreen", cols = NULL, date.breaks = 7,
+  auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame to be summarised. Must contain
@@ -68,8 +67,6 @@
   \item{cols}{Predefined colour scheme, currently only
   enabled for \code{"greyscale"}.}
 
-  \item{main}{The title of the plot, if required.}
-
   \item{date.breaks}{Number of major x-axis intervals to
   use. The function will try and choose a sensible number
   of dates/times as well as formatting the date/time
@@ -83,11 +80,15 @@
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
-  \item{xlab}{x-axis label.}
-
-  \item{ylab}{y-axis label.}
-
-  \item{...}{Other graphical parameters.}
+  \item{...}{Other graphical parameters. Commonly used
+  examples include the axis and title labelling options
+  (such as \code{xlab}, \code{ylab} and \code{main}), which
+  are all passed to the plot via \code{quickText} to handle
+  routine formatting. As \code{summaryPlot} has two
+  components, the axis labels may be a vector. For example,
+  the default case (\code{type = "histogram"}) sets y
+  labels equivalent to \code{ylab = c("", "Percent of
+  Total")}.}
 }
 \description{
   This function provides a quick graphical and numerical

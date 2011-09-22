@@ -76,7 +76,6 @@
 ##' @param col.hist Colour for the histogram or density plot.
 ##' @param cols Predefined colour scheme, currently only enabled for
 ##'   \code{"greyscale"}.
-##' @param main The title of the plot, if required.
 ##' @param date.breaks Number of major x-axis intervals to use. The function
 ##'   will try and choose a sensible number of dates/times as well as
 ##'   formatting the date/time appropriately to the range being considered.
@@ -87,9 +86,12 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
-##' @param xlab x-axis label.
-##' @param ylab y-axis label.
-##' @param ... Other graphical parameters.
+##' @param ... Other graphical parameters. Commonly used examples include the 
+##'   axis and title labelling options (such as \code{xlab}, \code{ylab} and 
+##'   \code{main}), which are all passed to the plot via \code{quickText} to handle 
+##'   routine formatting. As \code{summaryPlot} has two components, the axis 
+##'   labels may be a vector. For example, the default case (\code{type = "histogram"}) 
+##'   sets y labels equivalent to \code{ylab = c("", "Percent of Total")}.
 ##' @export
 ##' @author David Carslaw
 ##' @keywords methods
@@ -132,11 +134,8 @@ summaryPlot <- function(mydata,
                       col.mis = rgb(0.65, 0.04, 0.07),
                       col.hist = "forestgreen",
                       cols = NULL,
-                      main = "",
                       date.breaks = 7,
                       auto.text = TRUE,
-                      xlab = NULL,
-                      ylab = NULL,
                       ...) {
 
     #greyscale handling
@@ -154,6 +153,23 @@ summaryPlot <- function(mydata,
         col.stat <- "darkgreen"
     }
 
+
+    ##extra.args setup
+    extra.args <- list(...)
+
+    #label controls
+    #all handled further in code body
+    xlab <- if("xlab" %in% names(extra.args))
+                extra.args$xlab else NULL
+    ylab <- if("ylab" %in% names(extra.args))
+                extra.args$xlab else NULL
+    main <- if("main" %in% names(extra.args))
+                extra.args$main else ""
+
+    #drop main, xlab, ylab from extra.args
+    extra.args <- extra.args[!names(extra.args) %in% c("xlab", "ylab", "main")]
+
+#the above might be a better retro fix for more complex functions?
 
     ## if date in format dd/mm/yyyy hh:mm (basic check)
     if (length(grep("/", as.character(mydata$date[1]))) > 0) {
@@ -297,21 +313,30 @@ summaryPlot <- function(mydata,
     max.x <- as.numeric(max(mydata$date))
     seq.year <- seq(start.date, end.date, by = period)
 
-    if(is.null(ylab[1])) {
-        ylab[1] <- ""
-    } else {
-        if(is.na(ylab[1])) ylab[1] <- ""
-    }
-    if(is.null(xlab[1])) {
-        xlab[1] <- "date"
-    } else {
-        if(is.na(xlab[1])) xlab[1] <- "date"
-    }
 
-    plt1 <- xyplot(value ~ date | variable , data = dummy.dat, type = "n",
+    #xlab, ylab handling for plt1
+    #(so user inputs go through quicktext)
+    my.ylab <- if(is.null(ylab[1]) || is.na(ylab[1]))
+                   "" else quickText(ylab[1], auto.text)
+    my.xlab <- if(is.null(xlab[1]) || is.na(xlab[1]))
+                   "date" else quickText(xlab[1], auto.text)
+
+#    if(is.null(ylab[1])) {
+#        ylab[1] <- ""
+#    } else {
+#        if(is.na(ylab[1])) ylab[1] <- ""
+#    }
+#    if(is.null(xlab[1])) {
+#        xlab[1] <- "date"
+#    } else {
+#        if(is.na(xlab[1])) xlab[1] <- "date"
+#    }
+
+
+    xyplot.args <- list(x = value ~ date | variable , data = dummy.dat, type = "n",
                    ylim = c(0, 5.5),
-                   ylab = ylab[1],
-                   xlab = xlab[1],
+                   ylab = my.ylab,
+                   xlab = my.xlab,
                    xlim = c(start.date - 60, end.date + 60),
 
                    ## override scaling for more sensible date/time breaks
@@ -322,7 +347,7 @@ summaryPlot <- function(mydata,
                    strip = FALSE,
                    strip.left = strip.custom(horizontal = FALSE, factor.levels = pol.name),
 
-                   par.strip.text = list(cex = 0.7),...,
+                   par.strip.text = list(cex = 0.7),
                    panel = function(x, y, subscripts)  {
                        panelNo <- panel.number()
 
@@ -363,6 +388,12 @@ summaryPlot <- function(mydata,
                        ltext(seq.year, 5 , paste(data.cap, "%"), cex = 0.6, col = col.stat, pos = 4)
                    })
 
+    #reset for extra.args
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
+
+    #plot
+    plt1 <- do.call(xyplot, xyplot.args)
+
     print(plt1, position = c(0, 0, 0.7, 1), more = TRUE)
 
     ## clip data to help show interesting part of distribution
@@ -375,22 +406,39 @@ summaryPlot <- function(mydata,
         row.names(mydata) <- NULL
     }
 
-    if(is.null(xlab[2])) {
-        xlab[2] <- "value"
+    #xlab, ylab handling for plt2
+    #(so user inputs go through quicktext)
+    #(and unique histogram/density naming is handled)
+    my.ylab <- if(is.null(ylab[2]) || is.na(ylab[2]))
+                   "" else ylab[2]
+    if(my.ylab == ""){
+
+        if(type == "histogram") my.ylab <- "Percent of Total"
+        if(type == "density") my.ylab <- "Density"
+
     } else {
-        if(is.na(xlab[2])) xlab[2] <- "value"
+        my.lab <- quickText(my.lab, auto.text)
     }
+
+    my.xlab <- if(is.null(xlab[2]) || is.na(xlab[2]))
+                   "value" else quickText(xlab[2], auto.text)
+
+#    if(is.null(xlab[2])) {
+#        xlab[2] <- "value"
+#    } else {
+#        if(is.na(xlab[2])) xlab[2] <- "value"
+#    }
 
     if (type == "histogram") {
 
-        if(is.null(ylab[2])) {
-           ylab[2] <- "Percent of Total"
-        } else {
-           if(is.na(ylab[2])) ylab[2] <- "Percent of Total"
-        }
+#        if(is.null(ylab[2])) {
+#           ylab[2] <- "Percent of Total"
+#        } else {
+#           if(is.na(ylab[2])) ylab[2] <- "Percent of Total"
+#        }
 
-        plt2 <- histogram(~ value | variable, data = mydata,
-                          xlab = xlab[2], ylab = ylab[2],
+        histogram.args <- list(x = ~ value | variable, data = mydata,
+                          xlab = my.xlab, ylab = my.ylab,
                           par.strip.text = list(cex = 0.7),
                           breaks = breaks,
                           layout = c(1, length(unique(mydata$variable))),
@@ -401,17 +449,25 @@ summaryPlot <- function(mydata,
                               panel.grid(-1, -1)
                               panel.histogram(x,  col = col.hist, border = NA,...)
                           })
+
+        #reset for extra.args
+##(currently off so like summaryPlot previously)
+##        histogram.args<- listUpdate(histogram.args, extra.args)
+
+        #plot
+        plt2 <- do.call(histogram, histogram.args)
+
     } else {
 
-        if(is.null(ylab[2])) {
-           ylab[2] <- "Density"
-        } else {
-           if(is.na(ylab[2])) ylab[2] <- "Density"
-        }
+#        if(is.null(ylab[2])) {
+#           ylab[2] <- "Density"
+#        } else {
+#           if(is.na(ylab[2])) ylab[2] <- "Density"
+#        }
 
-        plt2 <- densityplot(~ value | variable, data = mydata,
+        densityplot.args <- list(x = ~ value | variable, data = mydata,
                             par.strip.text = list(cex = 0.7),
-                            xlab = xlab[2], ylab = ylab[2],
+                            xlab = my.xlab, ylab = my.ylab,
                             layout = c(1, length(unique(mydata$variable))),
                             scales = list(relation = "free", y = list(rot = 0), cex = 0.7),
                             strip = FALSE,
@@ -421,6 +477,15 @@ summaryPlot <- function(mydata,
                                 panel.densityplot(x, lwd = 2, plot.points = FALSE,
                                                   col = col.hist,...)
                             })
+
+        #reset for extra.args
+##(currently off so like summaryPlot previously)
+##        densityplot.args<- listUpdate(densityplot.args, extra.args)
+
+        #plot
+        plt2 <- do.call(densityplot, densityplot.args)
+
+        plt2 <- densityplot()
     }
 
     print(plt2, position = c(0.7, 0, 1, 0.975))

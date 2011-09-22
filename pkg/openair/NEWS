@@ -3,7 +3,7 @@ Changes in openair 0.5-11 [2011-09-14]
 
 *       update to corPlot, scatterPlot, smoothTrend, linearRelation,
         percentileRose, trajPlot, trajLevel, timeVariation, TaylorDiagram,
-        timePlot
+        timePlot, summaryPlot
         improved ... handling
 *	remove warnings when importing air pollution data
 *	additional update to corPlot
