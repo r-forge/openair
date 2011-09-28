@@ -197,7 +197,7 @@
   Mann-Kendall test is a commonly used test in
   environmental sciences to detect the presence of a trend.
   It is often used with the Sen-Theil (or just Sen)
-  estimate of slope. See references.  The
+  estimate of slope. See references. The
   \code{Mann-Kendall} function is flexible in the sense
   that it can be applied to data in many ways e.g. by day
   of the week, hour of day and wind direction. This
@@ -217,6 +217,14 @@
   TRUE}.Similarly, for data that increase, then decrease,
   or show sharp changes it may be better to use
   \code{\link{smoothTrend}}.
+
+  Note that since version 0.5-11 openair uses Sen-Theil to
+  derive the p values also. This is to ensure there is
+  consistency between the slope uncertainties at a
+  particular p value and the estimate of whether the trend
+  is signficant or not at a certain p value. This change
+  may slightly affect some of the p-estimates previously
+  given by openair.
 
   Some of the code used in \code{MannKendall} is based on
   that from Rand Wilcox

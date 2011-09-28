@@ -14,25 +14,35 @@
 ##'
 ##' Mann-Kendall tests for trend with Sen-Theil slope estimates.
 ##'
-##' The \code{Mann-Kendall} function provides a collection of functions to
-##' analyse trends in air pollution data. The Mann-Kendall test is a commonly
-##' used test in environmental sciences to detect the presence of a trend. It
-##' is often used with the Sen-Theil (or just Sen) estimate of slope. See
-##' references.  The \code{Mann-Kendall} function is flexible in the sense that
-##' it can be applied to data in many ways e.g. by day of the week, hour of day
-##' and wind direction. This flexibility makes it much easier to draw
-##' inferences from data e.g. why is there a strong downward trend in
-##' concentration from one wind sector and not another, or why trends on one
-##' day of the week or a certain time of day are unexpected. \cr\cr
-##' The Mann-Kendall test from trend is for data that are \emph{monotonic} -
-##' see \url{http://en.wikipedia.org/wiki/Monotonic_function}. The most
+##' The \code{Mann-Kendall} function provides a collection of
+##' functions to analyse trends in air pollution data. The
+##' Mann-Kendall test is a commonly used test in environmental
+##' sciences to detect the presence of a trend. It is often used with
+##' the Sen-Theil (or just Sen) estimate of slope. See references.
+##' The \code{Mann-Kendall} function is flexible in the sense that it
+##' can be applied to data in many ways e.g. by day of the week, hour
+##' of day and wind direction. This flexibility makes it much easier
+##' to draw inferences from data e.g. why is there a strong downward
+##' trend in concentration from one wind sector and not another, or
+##' why trends on one day of the week or a certain time of day are
+##' unexpected. \cr\cr The Mann-Kendall test from trend is for data
+##' that are \emph{monotonic} - see
+##' \url{http://en.wikipedia.org/wiki/Monotonic_function}. The most
 ##' appropriate use for this function is for data that are
-##' \sQuote{well-behaved} i.e. tend to be steadily increasing or decreasing or
-##' steady. For data that are strongly seasonal, perhaps from a background
-##' site, or a pollutant such as ozone, it will be important to deseasonalise
-##' the data (using the option \code{deseason = TRUE}.Similarly, for data that
-##' increase, then decrease, or show sharp changes it may be better to use
+##' \sQuote{well-behaved} i.e. tend to be steadily increasing or
+##' decreasing or steady. For data that are strongly seasonal, perhaps
+##' from a background site, or a pollutant such as ozone, it will be
+##' important to deseasonalise the data (using the option
+##' \code{deseason = TRUE}.Similarly, for data that increase, then
+##' decrease, or show sharp changes it may be better to use
 ##' \code{\link{smoothTrend}}.
+##'
+##' Note that since version 0.5-11 openair uses Sen-Theil to derive
+##' the p values also. This is to ensure there is consistency between
+##' the slope uncertainties at a particular p value and the estimate
+##' of whether the trend is signficant or not at a certain p
+##' value. This change may slightly affect some of the p-estimates
+##' previously given by openair.
 ##'
 ##' Some of the code used in \code{MannKendall} is based on that from Rand
 ##' Wilcox \url{http://www-rcf.usc.edu/~rwilcox/}. This mostly relates to the
@@ -97,9 +107,9 @@
 ##'   trend, choose alpha = 0.01 etc.
 ##' @param dec.place The number of decimal places to display the trend estimate
 ##'   at. The default is 2.
-##' @param xlab x-axis label, by default \code{"year"}. 
-##' @param lab.frac Fraction along the y-axis that the trend information should 
-##'   be printed at, default 0.99. 
+##' @param xlab x-axis label, by default \code{"year"}.
+##' @param lab.frac Fraction along the y-axis that the trend information should
+##'   be printed at, default 0.99.
 ##' @param lab.cex Size of text for trend information.
 ##' @param x.relation This determines how the x-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
@@ -144,12 +154,12 @@
 ##'   This does not always work as desired automatically. The user can
 ##'   therefore increase or decrease the number of intervals by adjusting the
 ##'   value of \code{date.breaks} up or down.
-##' @param \dots Other graphical parameters passed onto \code{cutData} and 
-##'   \code{lattice:xyplot}. For example, \code{MannKendall} passes the option 
-##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##' @param \dots Other graphical parameters passed onto \code{cutData} and
+##'   \code{lattice:xyplot}. For example, \code{MannKendall} passes the option
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
-##'   Similarly, common axis and title labelling options (such as \code{xlab}, 
-##'   \code{ylab}, \code{main}) are passed to \code{xyplot} via \code{quickText} 
+##'   Similarly, common axis and title labelling options (such as \code{xlab},
+##'   \code{ylab}, \code{main}) are passed to \code{xyplot} via \code{quickText}
 ##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{MannKendall} also
@@ -551,28 +561,10 @@ panel.shade <- function(split.data, start.year, end.year, ylim) {
 }
 
 MKstats <- function(x, y, alpha, simulate, autocor) {
-    ## function to calculate Mann-Kendall stats with different options
-    if (simulate) {
 
-        block.length <- 1
-        ## block length equal to length ts^(1/3) - need reference
-        if (autocor) block.length <- round(length(x) ^ (1 / 3))
+    estimates <- regci(as.numeric(x), y, alpha = alpha, autocor = autocor)$regci
 
-        MKtau <- function(z) tau.boot(z)$cor
-
-        boot.res <- tsboot(y, MKtau, R = 1000, l = block.length, sim = "fixed")
-
-        ## approx p value; see ?boot for this
-        p <- 1 - sum(abs(boot.res$t[, 1] - 1) > abs(boot.res$t0[1] - 1)) / (1 + boot.res$R)
-
-    } else {
-        ## trend information in days
-        MKtau <- openair:::tau(as.numeric(x), y, alpha = alpha)
-        p <- MKtau$siglevel ## signficance level of trend
-    }
-
-    coef <- openair:::tsp1reg(as.numeric(x), y)$coef
-    uncer <- openair:::regci(as.numeric(x), y, alpha = alpha, autocor = autocor)$regci
+    p <- estimates[2, 5]
 
     if (p >= 0.1) stars <- ""
     if (p < 0.1 & p >= 0.05) stars <- "+"
@@ -580,11 +572,10 @@ MKstats <- function(x, y, alpha, simulate, autocor) {
     if (p < 0.01 & p >= 0.001) stars <- "**"
     if (p < 0.001) stars <- "***"
 
-
-    results <- suppressWarnings(data.frame(date = x, a = coef[1], b = coef[2],
-                                           upper.a = uncer[1, 1],
-                                           upper.b = uncer[2, 2],
-                                           lower.a = uncer[1, 2],
-                                           lower.b = uncer[2, 1],  p = p, p.stars = stars))
+    results <- suppressWarnings(data.frame(date = x, a = estimates[1, 3], b = estimates[2, 3],
+                                           upper.a = estimates[1, 1],
+                                           upper.b = estimates[2, 2],
+                                           lower.a = estimates[1, 2],
+                                           lower.b = estimates[2, 1],  p = p, p.stars = stars))
     results
 }
