@@ -530,10 +530,11 @@ MannKendall <- function(mydata,
 panel.shade <- function(split.data, start.year, end.year, ylim) {
     ## provides annual shaded 'bands' on plots to help show years
 
-    x1 <- as.POSIXct(seq(ISOdate(start.year, 1, 1),
+    x1 <- as.POSIXct(seq(ISOdate(start.year - 2, 1, 1),
                          ISOdate(end.year + 1, 1, 1), by = "2 years"), "GMT")
-    x2 <- as.POSIXct(seq(ISOdate(start.year + 1, 1, 1),
+    x2 <- as.POSIXct(seq(ISOdate(start.year + 1 - 2, 1, 1),
                          ISOdate(end.year + 2, 1, 1), by = "2 years"), "GMT")
+
     if (class(split.data$date)[1]  == "Date") {x1 <- as.Date(x1)
                                                x2 <- as.Date(x2)
                                            }
