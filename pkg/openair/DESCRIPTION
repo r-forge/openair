@@ -55,7 +55,6 @@ Collate:
     'importSAQN.R'
     'kernelExceed.R'
     'linearRelation.R'
-    'MannKendall.R'
     'modStats.R'
     'openair.generics.R'
     'openColours.R'
@@ -81,3 +80,4 @@ Collate:
     'importTraj.R'
     'getMeta.R'
     'senTheil.R'
+    'TheilSen.R'

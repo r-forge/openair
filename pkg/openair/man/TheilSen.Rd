@@ -1,15 +1,18 @@
-\name{MannKendall}
+\name{TheilSen}
 \alias{MannKendall}
-\title{Mann-Kendall trend tests}
+\alias{TheilSen}
+\title{Tests for trends using Theil-Sen estimates}
 \usage{
-  MannKendall(mydata, pollutant = "nox", deseason = FALSE,
+  TheilSen(mydata, pollutant = "nox", deseason = FALSE,
   type = "default", avg.time = "month", statistic = "mean",
   percentile = NA, data.thresh = 0, alpha = 0.05, dec.place
   = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
   x.relation = "same", y.relation = "same", data.col =
   "cornflowerblue", line.col = "red", text.col =
   "darkgreen", cols = NULL, auto.text = TRUE, autocor =
-  FALSE, slope.percent = FALSE, date.breaks = 7, ...)
+  FALSE, slope.percent = FALSE, date.breaks = 7,...)
+
+  MannKendall(mydata,...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -32,19 +35,21 @@
   one of the built-in types as detailed in \code{cutData}
   e.g. "season", "year", "weekday" and so on. For example,
   \code{type = "season"} will produce four plots --- one
-  for each season. \cr\cr It is also possible to choose
-  \code{type} as another variable in the data frame. If
-  that variable is numeric, then the data will be split
-  into four quantiles (if possible) and labelled
-  accordingly. If type is an existing character or factor
-  variable, then those categories/levels will be used
-  directly. This offers great flexibility for understanding
-  the variation of different variables and how they depend
-  on one another. \cr\cr Type can be up length two e.g.
-  \code{type = c("season", "weekday")} will produce a 2x2
-  plot split by season and day of the week. Note, when two
-  types are provided the first forms the columns and the
-  second the rows.}
+  for each season.
+
+  It is also possible to choose \code{type} as another
+  variable in the data frame. If that variable is numeric,
+  then the data will be split into four quantiles (if
+  possible) and labelled accordingly. If type is an
+  existing character or factor variable, then those
+  categories/levels will be used directly. This offers
+  great flexibility for understanding the variation of
+  different variables and how they dcepend on one another.
+
+  Type can be up length two e.g. \code{type = c("season",
+  "weekday")} will produce a 2x2 plot split by season and
+  day of the week. Note, when two types are provided the
+  first forms the columns and the second the rows.}
 
   \item{avg.time}{Either "month" (the default), or "year".
   Determines whether monthly mean or annual mean trends are
@@ -121,20 +126,21 @@
   year? The default is \code{FALSE} and the slope is
   expressed as an average units/year change e.g. ppb.
   Percentage changes can often be confusing and should be
-  clearly defined. Here the percentage change is expressed
+  clearly defined.  Here the percentage change is expressed
   as 100 * (C.end/C.start - 1) / (end.year - start.year).
   Where C.start is the concentration at the start date and
-  C.end is the concentration at the end date.\cr\cr For
-  \code{avg.time = "year"} (end.year - start.year) will be
-  the total number of years - 1. For example, given a
+  C.end is the concentration at the end date.
+
+  For \code{avg.time = "year"} (end.year - start.year) will
+  be the total number of years - 1. For example, given a
   concentration in year 1 of 100 units and a percentage
   reduction of 5%/yr, after 5 years there will be 75 units
   but the actual time span will be 6 years i.e. year 1 is
   used as a reference year. Things are slightly different
-  for monthly values e.g. \code{avg.time = "month"}, which
+  for monthly values e.g.  \code{avg.time = "month"}, which
   will use the total number of months as a basis of the
   time span and is therefore able to deal with partial
-  years. There can be slight differences in the %/yr trend
+  years.  There can be slight differences in the %/yr trend
   estimate therefore, depending on whether monthly or
   annual values are considered.}
 
@@ -148,7 +154,7 @@
 
   \item{...}{Other graphical parameters passed onto
   \code{cutData} and \code{lattice:xyplot}. For example,
-  \code{MannKendall} passes the option \code{hemisphere =
+  \code{TheilSen} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
   \code{type = "season"}. Similarly, common axis and title
@@ -157,14 +163,14 @@
   \code{quickText} to handle routine formatting.}
 }
 \value{
-  As well as generating the plot itself, \code{MannKendall}
+  As well as generating the plot itself, \code{TheilSen}
   also returns an object of class ``openair''. The object
   includes three main components: \code{call}, the command
   used to generate the plot; \code{data}, the data frame of
   summarised information used to make the plot; and
   \code{plot}, the plot itself. If retained, e.g. using
-  \code{output <- MannKendall(mydata, "nox")}, this output
-  can be used to recover the data, reproduce or rework the
+  \code{output <- TheilSen(mydata, "nox")}, this output can
+  be used to recover the data, reproduce or rework the
   original plot or undertake further analysis.
 
   An openair output can be manipulated using a number of
@@ -172,87 +178,83 @@
   and \code{summary}. See \code{\link{openair.generics}}
   for further details.
 
-  The \code{data} component of the \code{MannKendall}
-  output includes two subsets: \code{main.data}, the
-  monthly data \code{res2} the trend statistics. For
-  \code{output <- MannKendall(mydata, "nox")}, these can be
-  extracted as \code{object$data$main.data} and
-  \code{object$data$res2}, respectively.
+  The \code{data} component of the \code{TheilSen} output
+  includes two subsets: \code{main.data}, the monthly data
+  \code{res2} the trend statistics. For \code{output <-
+  TheilSen(mydata, "nox")}, these can be extracted as
+  \code{object$data$main.data} and \code{object$data$res2},
+  respectively.
 
   Note: In the case of the intercept, it is assumed the
   y-axis crosses the x-axis on 1/1/1970.
 }
 \description{
-  Mann-Kendall tests for trend with Sen-Theil slope
-  estimates.
+  Theil-Sen slope estimates and tests for trend.
 }
 \details{
-  The \code{Mann-Kendall} function provides a collection of
+  The \code{TheilSen} function provides a collection of
   functions to analyse trends in air pollution data. The
   Mann-Kendall test is a commonly used test in
   environmental sciences to detect the presence of a trend.
-  It is often used with the Sen-Theil (or just Sen)
-  estimate of slope. See references. The
-  \code{Mann-Kendall} function is flexible in the sense
-  that it can be applied to data in many ways e.g. by day
-  of the week, hour of day and wind direction. This
-  flexibility makes it much easier to draw inferences from
-  data e.g. why is there a strong downward trend in
-  concentration from one wind sector and not another, or
-  why trends on one day of the week or a certain time of
-  day are unexpected. \cr\cr The Mann-Kendall test from
-  trend is for data that are \emph{monotonic} - see
-  \url{http://en.wikipedia.org/wiki/Monotonic_function}.
-  The most appropriate use for this function is for data
-  that are \sQuote{well-behaved} i.e. tend to be steadily
-  increasing or decreasing or steady. For data that are
-  strongly seasonal, perhaps from a background site, or a
-  pollutant such as ozone, it will be important to
-  deseasonalise the data (using the option \code{deseason =
-  TRUE}.Similarly, for data that increase, then decrease,
-  or show sharp changes it may be better to use
-  \code{\link{smoothTrend}}.
+  It is often used with the Theil-Sen (or just Sen)
+  estimate of slope. See references.  The \code{TheilSen}
+  function is flexible in the sense that it can be applied
+  to data in many ways e.g. by day of the week, hour of day
+  and wind direction. This flexibility makes it much easier
+  to draw inferences from data e.g. why is there a strong
+  downward trend in concentration from one wind sector and
+  not another, or why trends on one day of the week or a
+  certain time of day are unexpected.
 
-  Note that since version 0.5-11 openair uses Sen-Theil to
+  For data that are strongly seasonal, perhaps from a
+  background site, or a pollutant such as ozone, it will be
+  important to deseasonalise the data (using the option
+  \code{deseason = TRUE}.Similarly, for data that increase,
+  then decrease, or show sharp changes it may be better to
+  use \code{\link{smoothTrend}}.
+
+  Note! that since version 0.5-11 openair uses Theil-Sen to
   derive the p values also. This is to ensure there is
-  consistency between the slope uncertainties at a
-  particular p value and the estimate of whether the trend
-  is signficant or not at a certain p value. This change
-  may slightly affect some of the p-estimates previously
-  given by openair.
+  consistency between the calculated p value and other
+  trend parameters i.e. slope estimates and uncertianties.
+  This change may slightly affect some of the p-estimates
+  previously given by openair because the p estimates are
+  now calculated using bootstrap resampling by default and
+  previously they were not. However, users can still for
+  the moment call the \code{TheilSen} function using
+  \code{MannKendall}
 
-  Some of the code used in \code{MannKendall} is based on
-  that from Rand Wilcox
-  \url{http://www-rcf.usc.edu/~rwilcox/}. This mostly
-  relates to the Sen-Theil slope estimates and
-  uncertainties.  Further modifications have been made to
+  Some of the code used in \code{TheilSen} is based on that
+  from Rand Wilcox \url{http://www-rcf.usc.edu/~rwilcox/}.
+  This mostly relates to the Theil-Sen slope estimates and
+  uncertainties. Further modifications have been made to
   take account of correlated data based on Kunsch (1989).
+  The basic function has been adapted to take account of
+  auto-correlated data using block bootstrap simulations if
+  \code{autocor = TRUE} (Kunsch, 1989). We follow the
+  suggestion of Kunsch (1989) of setting the block length
+  to n(1/3) where n is the length of the time series.
 
   The slope estimate and confidence intervals in the slope
   are plotted and numerical information presented.
-
-  The basic function has been adapted to take account of
-  auto-correlated data using block bootstrap simulations
-  (Kunsch, 1989). The principal reason for doing so is to
-  gain a better estimate of trend uncertainty.
 }
 \examples{
 # load example data from package
 data(mydata)
 
 # trend plot for nox
-MannKendall(mydata, pollutant = "nox")
+TheilSen(mydata, pollutant = "nox")
 
 # trend plot for ozone with p=0.01 i.e. uncertainty in slope shown at
 # 99 \% confidence interval
 
-\dontrun{MannKendall(mydata, pollutant = "o3", ylab = "o3 (ppb)", alpha = 0.01)}
+\dontrun{TheilSen(mydata, pollutant = "o3", ylab = "o3 (ppb)", alpha = 0.01)}
 
 # trend plot by each of 8 wind sectors
-\dontrun{MannKendall(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")}
+\dontrun{TheilSen(mydata, pollutant = "o3", type = "wd", ylab = "o3 (ppb)")}
 
 # and for a subset of data (from year 2000 onwards)
-\dontrun{MannKendall(select.by.date(mydata, year = 2000:2005), pollutant = "o3", ylab = "o3 (ppb)")}
+\dontrun{TheilSen(select.by.date(mydata, year = 2000:2005), pollutant = "o3", ylab = "o3 (ppb)")}
 }
 \author{
   David Carslaw with some trend code from Rand Wilcox
@@ -271,6 +273,16 @@ MannKendall(mydata, pollutant = "nox")
   Kunsch, H. R., 1989. The jackknife and the bootstrap for
   general stationary observations. Annals of Statistics 17
   (3), 1217-1241.
+
+  Sen, P. K., 1968. Estimates of regression coefficient
+  based on Kendall's tau. Journal of the American
+  Statistical Association 63(324).
+
+  Theil, H., 1950. A rank invariant method of linear and
+  polynomial regression analysis, i, ii, iii. Proceedings
+  of the Koninklijke Nederlandse Akademie Wetenschappen,
+  Series A - Mathematical Sciences 53, 386-392, 521-525,
+  1397-1412.
 
   \dots{} see also several of the Air Quality Expert Group
   (AQEG) reports for the use of similar tests applied to

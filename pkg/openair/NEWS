@@ -9,7 +9,7 @@ Changes in openair 0.5-11 [2011-09-14]
 *	additional update to corPlot
         added pollutant option, and openair class output
 *	tweak scaling on percentileRose deal with negative data
-*	change MannKendall to use Sen-Theil for all estimates for
+*	change MannKendall to use TheilSen for all estimates for
         consistency. May slightly affect some p estimates.
 
 Changes in openair 0.5-10 [2011-09-12]
