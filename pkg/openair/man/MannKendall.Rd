@@ -4,10 +4,10 @@
 \usage{
   MannKendall(mydata, pollutant = "nox", deseason = FALSE,
   type = "default", avg.time = "month", statistic = "mean",
-  percentile = NA, data.thresh = 0, simulate = FALSE, alpha
-  = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99,
-  lab.cex = 0.8, x.relation = "same", y.relation = "same",
-  data.col = "cornflowerblue", line.col = "red", text.col =
+  percentile = NA, data.thresh = 0, alpha = 0.05, dec.place
+  = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
+  x.relation = "same", y.relation = "same", data.col =
+  "cornflowerblue", line.col = "red", text.col =
   "darkgreen", cols = NULL, auto.text = TRUE, autocor =
   FALSE, slope.percent = FALSE, date.breaks = 7, ...)
 }
@@ -67,11 +67,6 @@
   data will need to be present for the average to be
   calculated, else it is recorded as \code{NA}.}
 
-  \item{simulate}{Should simulations be carried out to
-  determine the Mann-Kendall tau and p-value. The default
-  is \code{FALSE}. If \code{TRUE}, bootstrap simulations
-  are undertaken, which also account for autocorrelation.}
-
   \item{alpha}{For the confidence interval calculations of
   the slope. The default is 0.05. To show 99% confidence
   intervals for the value of the trend, choose alpha = 0.01
@@ -118,7 +113,7 @@
   \item{autocor}{Should autocorrelation be considered in
   the trend uncertainty estimates? The default is
   \code{FALSE}. Generally, accounting for autocorrelation
-  increases the uncertainty of the trend estimate -
+  increases the uncertainty of the trend estimate ---
   sometimes by a large amount.}
 
   \item{slope.percent}{Should the slope and the slope
@@ -151,7 +146,7 @@
   therefore increase or decrease the number of intervals by
   adjusting the value of \code{date.breaks} up or down.}
 
-  \item{\dots}{Other graphical parameters passed onto
+  \item{...}{Other graphical parameters passed onto
   \code{cutData} and \code{lattice:xyplot}. For example,
   \code{MannKendall} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern

@@ -47,7 +47,9 @@ regci <- function(x, y, regfun = tsreg, nboot = 599, alpha = 0.05, autocor = aut
 	if(autocor) block.length <- round(length(y) ^ (1 / 3))
     ## need to transpose ...
 	data <- t(samp.boot.block(length(y), nboot, block.length))
+
     bvec <- apply(data, 1, regboot, x, y, regfun, ...)
+
     ## bvec is a p+1 by nboot matrix. The first row
     ##                     contains the bootstrap intercepts, the second row
     ##                     contains the bootstrap values for first predictor, etc.
@@ -139,6 +141,7 @@ tsreg <- function(x, y, xout = FALSE, outfun = out, iter = 10, varfun = pbvar,
         x <- as.matrix(x)
     }
     if (ncol(x) == 1) {
+
         temp1 <- tsp1reg(x, y)
         coef <- temp1$coef
         res <- temp1$res

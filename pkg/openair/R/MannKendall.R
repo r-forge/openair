@@ -98,10 +98,6 @@
 ##' value of 100 will mean that all data will need to be present for
 ##' the average to be calculated, else it is recorded as
 ##' \code{NA}.
-##' @param simulate Should simulations be carried out to determine the
-##'   Mann-Kendall tau and p-value. The default is \code{FALSE}. If
-##'   \code{TRUE}, bootstrap simulations are undertaken, which also account for
-##'   autocorrelation.
 ##' @param alpha For the confidence interval calculations of the slope. The
 ##'   default is 0.05. To show 99% confidence intervals for the value of the
 ##'   trend, choose alpha = 0.01 etc.
@@ -130,7 +126,7 @@
 ##'   in NO2.
 ##' @param autocor Should autocorrelation be considered in the trend
 ##'   uncertainty estimates? The default is \code{FALSE}. Generally, accounting
-##'   for autocorrelation increases the uncertainty of the trend estimate -
+##'   for autocorrelation increases the uncertainty of the trend estimate ---
 ##'   sometimes by a large amount.
 ##' @param slope.percent Should the slope and the slope uncertainties be
 ##'   expressed as a percentage change per year? The default is \code{FALSE}
@@ -154,7 +150,7 @@
 ##'   This does not always work as desired automatically. The user can
 ##'   therefore increase or decrease the number of intervals by adjusting the
 ##'   value of \code{date.breaks} up or down.
-##' @param \dots Other graphical parameters passed onto \code{cutData} and
+##' @param ... Other graphical parameters passed onto \code{cutData} and
 ##'   \code{lattice:xyplot}. For example, \code{MannKendall} passes the option
 ##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
@@ -235,7 +231,6 @@ MannKendall <- function(mydata,
                         statistic = "mean",
                         percentile = NA,
                         data.thresh = 0,
-                        simulate = FALSE,
                         alpha = 0.05,
                         dec.place = 2,
                         xlab = "year",
@@ -268,23 +263,22 @@ MannKendall <- function(mydata,
         text.col <- text.col
     }
 
-    ##extra.args setup
+    ## extra.args setup
     extra.args <- list(...)
 
-    #label controls
-    #(xlab currently handled in plot because unqiue action)
+    ## label controls
+    ## (xlab currently handled in plot because unqiue action)
     extra.args$ylab <- if("ylab" %in% names(extra.args))
-                           quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
+        quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
-                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+        quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
-    #layout default
+    ## layout default
     if(!"layout" %in% names(extra.args))
-            extra.args$layout <- NULL
+        extra.args$layout <- NULL
 
     vars <- c("date", pollutant)
-    ## if autocor is TRUE, then need simulations
-    if (autocor) simulate <- TRUE
+
 
     if (!avg.time %in% c("year", "month")) stop ("avg.time can only be 'month' or 'year'.")
 
@@ -360,7 +354,7 @@ MannKendall <- function(mydata,
 
         ## now calculate trend, uncertainties etc ###############################################
         if (nrow(results) < 2) return()
-        MKresults <- MKstats(results$date, results$conc, alpha, simulate, autocor)
+        MKresults <- MKstats(results$date, results$conc, alpha, autocor)
 
         ## make sure missing data are put back in for plotting
         results <- suppressWarnings(merge(all.results, MKresults, by = "date", all = TRUE))
@@ -372,7 +366,7 @@ MannKendall <- function(mydata,
 
 
     ## special wd layout
-    #(type field in results.grid called type not wd)
+                                        #(type field in results.grid called type not wd)
     if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
         ## starting point code as of ManKendall
@@ -386,7 +380,7 @@ MannKendall <- function(mydata,
             extra.args$skip <- skip
     }
     if(!"skip" %in% names(extra.args))
-         extra.args$skip <- FALSE
+        extra.args$skip <- FALSE
 
 
     ## proper names of labelling ##############################################################################
@@ -453,71 +447,71 @@ MannKendall <- function(mydata,
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
 
     xyplot.args <- list(x = myform, data = split.data,
-                  xlab = quickText(xlab, auto.text),
-                  par.strip.text = list(cex = 0.8),
-                  as.table = TRUE,
-                  strip = strip,
-                  strip.left = strip.left,
-                  scales = list(x = list(at = openair:::dateBreaks(split.data$date, date.breaks)$major,
-                                format = openair:::dateBreaks(split.data$date)$format,
-                                relation = x.relation),
-                  y = list(relation = y.relation, rot = 0)),
+                        xlab = quickText(xlab, auto.text),
+                        par.strip.text = list(cex = 0.8),
+                        as.table = TRUE,
+                        strip = strip,
+                        strip.left = strip.left,
+                        scales = list(x = list(at = openair:::dateBreaks(split.data$date, date.breaks)$major,
+                                      format = openair:::dateBreaks(split.data$date)$format,
+                                      relation = x.relation),
+                        y = list(relation = y.relation, rot = 0)),
 
-                  panel = function(x, y, subscripts,...){
-                      ## year shading
-                      openair:::panel.shade(split.data, start.year, end.year,
-                                            ylim = current.panel.limits()$ylim)
-                      panel.grid(-1, 0)
+                        panel = function(x, y, subscripts,...){
+                            ## year shading
+                            openair:::panel.shade(split.data, start.year, end.year,
+                                                  ylim = current.panel.limits()$ylim)
+                            panel.grid(-1, 0)
 
-                      panel.xyplot(x, y, type = "b", col = data.col, ...)
+                            panel.xyplot(x, y, type = "b", col = data.col, ...)
 
-                     # sub.dat <- na.omit(split.data[subscripts, ])
-                      sub.dat <- split.data[subscripts, ]
+                                        # sub.dat <- na.omit(split.data[subscripts, ])
+                            sub.dat <- split.data[subscripts, ]
 
-                      if (nrow(sub.dat) > 0) {
-                          panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
-                                       col = line.col, lwd = 2)
-                          panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "lower"] / 365,
-                                       lty = 5,
-                                       col = line.col)
-                          panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "upper"] / 365,
-                                       lty = 5,
-                                       col = line.col)
+                            if (nrow(sub.dat) > 0) {
+                                panel.abline(a = sub.dat[1, "intercept"], b = sub.dat[1, "slope"] / 365,
+                                             col = line.col, lwd = 2)
+                                panel.abline(a = sub.dat[1, "intercept.lower"], b = sub.dat[1, "lower"] / 365,
+                                             lty = 5,
+                                             col = line.col)
+                                panel.abline(a = sub.dat[1, "intercept.upper"], b = sub.dat[1, "upper"] / 365,
+                                             lty = 5,
+                                             col = line.col)
 
-                          ## for text on plot - % trend or not?
-                          slope <- "slope"
-                          lower <- "lower"
-                          upper <- "upper"
-                          units <- "units"
+                                ## for text on plot - % trend or not?
+                                slope <- "slope"
+                                lower <- "lower"
+                                upper <- "upper"
+                                units <- "units"
 
-                          if (slope.percent) {
-                              slope <- "slope.percent"
-                              lower <- "lower.percent"
-                              upper <- "upper.percent"
-                              units <- "%"
-                          }
+                                if (slope.percent) {
+                                    slope <- "slope.percent"
+                                    lower <- "lower.percent"
+                                    upper <- "upper.percent"
+                                    units <- "%"
+                                }
 
-                          ## plot top, middle
-                          panel.text(mean(c(current.panel.limits()$xlim[2], current.panel.limits()$xlim[1])),
-                                     current.panel.limits()$ylim[1] + lab.frac *
-                                     (current.panel.limits()$ylim[2] - current.panel.limits()$ylim[1]),
-                                     paste(round(sub.dat[1, slope], dec.place), " ", "[",
-                                           round(sub.dat[1, lower], dec.place), ", ",
-                                           round(sub.dat[1, upper], dec.place), "] ",
-                                           units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
-                                     cex = lab.cex, adj = c(0.5, 1), col = text.col, font = 2)
-                      }
-                  })
+                                ## plot top, middle
+                                panel.text(mean(c(current.panel.limits()$xlim[2], current.panel.limits()$xlim[1])),
+                                           current.panel.limits()$ylim[1] + lab.frac *
+                                           (current.panel.limits()$ylim[2] - current.panel.limits()$ylim[1]),
+                                           paste(round(sub.dat[1, slope], dec.place), " ", "[",
+                                                 round(sub.dat[1, lower], dec.place), ", ",
+                                                 round(sub.dat[1, upper], dec.place), "] ",
+                                                 units, "/", xlab, " ", sub.dat[1, "p.stars"], sep = ""),
+                                           cex = lab.cex, adj = c(0.5, 1), col = text.col, font = 2)
+                            }
+                        })
 
-    #reset for extra.args
+                                        #reset for extra.args
     xyplot.args<- listUpdate(xyplot.args, extra.args)
 
-    #plot
+                                        #plot
     plt <- do.call(xyplot, xyplot.args)
 
-#################
-    ## output
-#################
+
+    ## output ######################################################################################
+
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- list(main.data = split.data, res2 = res2, subsets = c("main.data", "res2"))
     output <- list(plot = plt, data = newdata, call = match.call())
@@ -560,7 +554,7 @@ panel.shade <- function(split.data, start.year, end.year, ylim) {
                                                col = "grey95", border = "grey95"))
 }
 
-MKstats <- function(x, y, alpha, simulate, autocor) {
+MKstats <- function(x, y, alpha, autocor) {
 
     estimates <- regci(as.numeric(x), y, alpha = alpha, autocor = autocor)$regci
 
