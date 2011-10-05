@@ -147,6 +147,7 @@
 ##'   \code{\link{importKCL}} for importing comprehensive data in and around
 ##'   London.
 ##' @keywords methods
+##' @export
 ##' @examples
 ##'
 ##'
