@@ -171,11 +171,11 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
 ##' @param \dots Other graphical parameters passed onto \code{lattice:levelplot}
-##'   and \code{cutData}. For example, \code{polarPlot} passes the option 
-##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##'   and \code{cutData}. For example, \code{polarPlot} passes the option
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
-##'   Similarly, common axis and title labelling options (such as \code{xlab}, 
-##'   \code{ylab}, \code{main}) are passed to \code{levelplot} via \code{quickText} 
+##'   Similarly, common axis and title labelling options (such as \code{xlab},
+##'   \code{ylab}, \code{main}) are passed to \code{levelplot} via \code{quickText}
 ##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarPlot} also
@@ -336,7 +336,12 @@ polarPlot <- function(mydata,
 
     ## if upper ws not set, set it to the max to display all information
     max.ws <- ceiling(max(mydata$ws, na.rm = TRUE))
-    if(missing(upper)) upper <- max.ws
+    clip <- TRUE ## used for removing data where ws > upper
+
+    if(missing(upper)) {
+        upper <- max.ws
+        clip <- FALSE
+    }
 
     ## for resolution of grid plotting (default = 101; fine =201)
     if (resolution == "normal") int <- 101
@@ -447,7 +452,7 @@ polarPlot <- function(mydata,
     results.grid <- ddply(mydata, type, prepare.grid)
 
     ## remove wind speeds > upper to make a circle
-    results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
+    if (clip) results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
@@ -515,8 +520,8 @@ polarPlot <- function(mydata,
                      at = col.scale,
                      par.strip.text = list(cex = 0.8),
                      scales = list(draw = FALSE),
-                     xlim = c(-upper * 1, upper * 1),
-                     ylim = c(-upper * 1, upper * 1),
+                     xlim = c(-upper * 1.025, upper * 1.025),
+                     ylim = c(-upper * 1.025, upper * 1.025),
                      colorkey = FALSE, legend = legend,
 
                      panel = function(x, y, z,subscripts,...) {
