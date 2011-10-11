@@ -285,8 +285,10 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 
     ## if negative data, add to make all postive to plot properly
     min.int <- min(intervals)
+    zero <- NA
 
     if (min.int < 0 ) {
+        zero <- which(intervals == 0) ## the zero line
         intervals <- intervals + -1 * min.int
         results$pollutant <- results$pollutant + -1 * min.int
         results.grid <- transform(results, x = pollutant * sin(wd * pi / 180),
@@ -332,6 +334,11 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                       angles <- seq(0, 2 * pi, length = 360)
                       sapply(intervals, function(x) llines(x * sin(angles), x * cos(angles),
                                                            col = "grey85", lty = 5))
+
+                      ## zero line if needed
+                      if (!is.na(zero)) llines(intervals[zero] * sin(angles),
+                                               intervals[zero] * cos(angles), col = "grey85")
+
 
                       ## add axis lines
                       larrows(max(intervals) * -1, 0, max(intervals), 0, code = 3, length = 0.1)
