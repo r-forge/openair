@@ -69,6 +69,8 @@
 
   \item \eqn{r}, the Pearson correlation coefficient.
 
+  \item \eqn{IOA}, the Index of Agreement.
+
   }
 
   All statistics are based on complete pairs of \code{mod}
