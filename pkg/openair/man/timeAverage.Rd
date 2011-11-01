@@ -15,7 +15,10 @@
   flexibility a number can precede these options followed
   by a space. For example, a time average of 2 months would
   be \code{avg.time = "2 month"}. See \code{cut.POSIXt} for
-  further details on this.
+  further details on this. In addition, \code{avg.time} can
+  equal "season", in which case 3-month seasonal values are
+  calculated with spring defined as March, April, May and
+  so on.
 
   Note that \code{avg.time} can be \emph{less} than the
   time interval of the original series, in which case the
@@ -92,7 +95,7 @@
 
   It is also very useful for plotting data using
   \code{\link{timePlot}}. Often the data are too dense to
-  see patterns and setting different averaging periods
+  see patterns and setheiltting different averaging periods
   easily helps with interpretation.
 }
 \examples{

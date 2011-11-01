@@ -30,16 +30,20 @@
 ##' with outputs from instruments where there are a range of time periods used.
 ##'
 ##' It is also very useful for plotting data using \code{\link{timePlot}}.
-##' Often the data are too dense to see patterns and setting different
+##' Often the data are too dense to see patterns and setheiltting different
 ##' averaging periods easily helps with interpretation.
 ##'
 ##' @param mydata A data frame containing a \code{date} field . Can be class
 ##'   \code{POSIXct} or \code{Date}.
-##' @param avg.time This defines the time period to average to. Can be "sec",
-##'   "min", "hour", "day", "DSTday", "week", "month", "quarter" or "year". For
-##'   much increased flexibility a number can precede these options followed by
-##'   a space. For example, a time average of 2 months would be \code{avg.time
-##'   = "2 month"}. See \code{cut.POSIXt} for further details on this.
+##' @param avg.time This defines the time period to average to. Can be
+##' "sec", "min", "hour", "day", "DSTday", "week", "month", "quarter"
+##' or "year". For much increased flexibility a number can precede
+##' these options followed by a space. For example, a time average of
+##' 2 months would be \code{avg.time = "2 month"}. See
+##' \code{cut.POSIXt} for further details on this. In addition,
+##' \code{avg.time} can equal "season", in which case 3-month seasonal
+##' values are calculated with spring defined as March, April, May and
+##' so on.
 ##'
 ##' Note that \code{avg.time} can be \emph{less} than the time interval of the
 ##'   original series, in which case the series is expanded to the new time
@@ -101,7 +105,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     ## extract variables of interest
     vars <- names(mydata)
 
-    mydata <- checkPrep(mydata, vars, type = "default", remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type = "default", remove.calm = FALSE)
 
     ## time zone of data
     TZ <- attr(mydata$date, "tzone")
@@ -129,10 +133,11 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     calc.mean <- function(mydata, start.date) { ## function to calculate means
 
         ## pad out missing data
-        mydata <- date.pad(mydata)
+        mydata <- openair:::date.pad(mydata)
 
         ## time diff in seconds of orginal data
-        timeDiff <-  as.numeric(strsplit(find.time.interval(mydata$date), " ")[[1]][1])
+        timeDiff <-  as.numeric(strsplit(openair:::find.time.interval(mydata$date),
+                                         " ")[[1]][1])
 
         ## time diff of new interval
         by2 <- strsplit(avg.time, " ", fixed = TRUE)[[1]]
@@ -148,8 +153,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (units == "day") int <- 3600 * 24
         if (units == "week") int <- 3600 * 24 * 7
         if (units == "month") int <- 3600 * 24 * 30 ## approx
-        if (units == "month") int <- 3600 * 24 * 30 ## approx
-        if (units == "quarter") int <- 3600 * 24 * 30 * 3 ## approx
+        if (units == "quarter" || units == "season") int <- 3600 * 24 * 30 * 3 ## approx
         if (units == "year") int <- 3600 * 8760 ## approx
 
         seconds <- seconds * int ## interval in seconds
@@ -214,9 +218,32 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             }
         }
 
+        if (avg.time == "season") {
+            ## special case for season
+            ## need to group specific months: Dec/Jan/Feb etc
 
-        ## cut into sections dependent on period
-        mydata$cuts <- cut(mydata$date, avg.time)
+            mydata <- cutData(mydata, type = "season")
+            ## remove any missing seasons e.g. through type = "season"
+            mydata <- mydata[!is.na(mydata$season), ]
+
+            ## calculate year
+            mydata <- transform(mydata, year = as.numeric(format(date, "%Y")),
+                                month = as.numeric(format(date, "%m")))
+
+            ## ids where month = 12, make December part of following year's season
+            ids <- which(mydata$month == 12)
+            mydata$year[ids] <- mydata$year[ids] + 1
+
+            ## find mean date in year-season
+            mydata <- transform(mydata, cuts = ave(date, list(year, season), FUN = mean))
+
+            mydata <- subset(mydata, select = -c(year, month))
+
+
+        } else {
+            ## cut into sections dependent on period
+            mydata$cuts <- cut(mydata$date, avg.time)
+        }
 
 
         if (data.thresh > 0) {

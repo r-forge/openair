@@ -52,9 +52,12 @@
   \code{"percentile"}. See \code{timeAverage} for more
   details.}
 
-  \item{avg.time}{Either "month" (the default), or "year".
-  Determines whether monthly mean or annual mean trends are
-  plotted.}
+  \item{avg.time}{Can be "month" (the default), "season" or
+  "year". Determines the time over which data should be
+  averaged. Note that for "year", six or more years are
+  required. For "season" the data are plit up into spring:
+  March, April, May etc. Note that December is considered
+  as belonging to winter of the following year.}
 
   \item{percentile}{Percentile value(s) to use if
   \code{statistic = "percentile"} is chosen. Can be a
