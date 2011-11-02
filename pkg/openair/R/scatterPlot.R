@@ -491,7 +491,7 @@ scatterPlot <- function(mydata,
                            list(key = list(col = openColours(cols, length(breaks)),
                                 at = breaks, labels = list(at = br ^ (1 / thePower),
                                              labels = br)),
-                                draw = FALSE)), key.footer = extra.args$key.footer)
+                                draw = FALSE)))
         } else {
             legend <- NULL
         }
