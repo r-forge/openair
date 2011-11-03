@@ -146,9 +146,9 @@
   \code{output <- timeVariation(mydata, "nox")}
 }
 \description{
-  Plots the diurnal and day of the week variation for
-  different variables, typically pollutant concentrations.
-  Three separate plots are produced.
+  Plots the diurnal, day of the week and monthly variation
+  for different variables, typically pollutant
+  concentrations. Four separate plots are produced.
 }
 \details{
   The variation of pollutant concentrations by hour of the
@@ -162,10 +162,8 @@
   how concentrations (and many other variable types) vary
   by hour of the day and day of the week.
 
-  The plots also show the 95% confidence intervals in the
-  mean, which is particularly useful for comparing two
-  different pollutants whose concentrations have been
-  normalised. The 95% confidence intervals in the mean are
+  The plots also show the 95\% confidence intervals in the
+  mean. The 95\% confidence intervals in the mean are
   calculated through bootstrap simulations, which will
   provide more robust estimates of the confidence intervals
   (particularly when there are relatively few data).
@@ -180,7 +178,7 @@
 
   The option \code{difference} will calculate the
   difference in means of two pollutants together with
-  bootstrap estimates of the 95% confidence intervals in
+  bootstrap estimates of the 95\% confidence intervals in
   the difference in the mean. This works in two ways:
   either two pollutants are supplied in separate columns
   e.g. \code{pollutant = c("no2", "o3")}, or there are two

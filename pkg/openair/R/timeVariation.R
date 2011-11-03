@@ -1,7 +1,8 @@
 ##' Diurnal, day of the week and monthly variation
 ##'
-##' Plots the diurnal and day of the week variation for different variables,
-##' typically pollutant concentrations. Three separate plots are produced.
+##' Plots the diurnal, day of the week and monthly variation for
+##' different variables, typically pollutant concentrations. Four
+##' separate plots are produced.
 ##'
 ##' The variation of pollutant concentrations by hour of the day and
 ##' day of the week etc. can reveal many interesting features that
@@ -13,13 +14,11 @@
 ##' concentrations (and many other variable types) vary by hour of the
 ##' day and day of the week.
 ##'
-##' The plots also show the 95% confidence intervals in the mean,
-##' which is particularly useful for comparing two different
-##' pollutants whose concentrations have been normalised. The 95%
-##' confidence intervals in the mean are calculated through bootstrap
-##' simulations, which will provide more robust estimates of the
-##' confidence intervals (particularly when there are relatively few
-##' data).
+##' The plots also show the 95\% confidence intervals in the mean. The
+##' 95\% confidence intervals in the mean are calculated through
+##' bootstrap simulations, which will provide more robust estimates of
+##' the confidence intervals (particularly when there are relatively
+##' few data).
 ##'
 ##' The function can handle multiple pollutants and uses the flexible
 ##' \code{type} option to provide separate panels for each 'type' ---
@@ -30,7 +29,7 @@
 ##'
 ##' The option \code{difference} will calculate the difference in
 ##' means of two pollutants together with bootstrap estimates of the
-##' 95% confidence intervals in the difference in the mean. This works
+##' 95\% confidence intervals in the difference in the mean. This works
 ##' in two ways: either two pollutants are supplied in separate
 ##' columns e.g. \code{pollutant = c("no2", "o3")}, or there are two
 ##' unique values of \code{group}. The difference is calculated as the
@@ -223,7 +222,7 @@ timeVariation <- function(mydata,
 
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
-        #strip only
+                                        #strip only
         current.strip <- trellis.par.get("strip.background")
         trellis.par.set(list(strip.background = list(col = "white")))
     }
@@ -235,16 +234,16 @@ timeVariation <- function(mydata,
     ## label controls
     ## xlab handled in formals and code because unique
     extra.args$ylab <- if("ylab" %in% names(extra.args))
-                           quickText(extra.args$ylab, auto.text) else
-                               quickText(paste(pollutant, collapse=", "), auto.text)
+        quickText(extra.args$ylab, auto.text) else
+    quickText(paste(pollutant, collapse=", "), auto.text)
 
     extra.args$main <- if("main" %in% names(extra.args))
-                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+        quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     extra.args$lwd <- if("lwd" %in% names(extra.args)) extra.args$lwd else 2
 
     ylim.handler <- if("ylim" %in% names(extra.args))
-                        FALSE else TRUE
+        FALSE else TRUE
 
     vars <- c("date", pollutant)
 
@@ -266,13 +265,13 @@ timeVariation <- function(mydata,
         if (missing(group)) {
 
             if (length(pollutant) != 2)
-            stop("Need to specify two pollutants to calculate their difference.")
+                stop("Need to specify two pollutants to calculate their difference.")
         }
 
-         if (!missing(group)) {
-             if (length(unique(mydata[ , group])) != 2)
-             stop("Need to specify two pollutants to calculate their difference.")
-         }
+        if (!missing(group)) {
+            if (length(unique(mydata[ , group])) != 2)
+                stop("Need to specify two pollutants to calculate their difference.")
+        }
     }
 
     ## #############################################################################################
@@ -328,12 +327,12 @@ timeVariation <- function(mydata,
         mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
         the.names <- levels(mydata[ , "variable"])
         if (difference) the.names <- c(the.names, paste(levels(mydata$variable)[2], "-",
-                                           levels(mydata$variable)[1]))
+                                                        levels(mydata$variable)[1]))
         mylab <-  sapply(the.names, function(x) quickText(x, auto.text))
     }
 
 
-
+    ## function to normalise
     divide.by.mean <- function(x) {
         Mean <- mean(x$Mean, na.rm = TRUE)
         x$Mean <- x$Mean / Mean
@@ -363,6 +362,13 @@ timeVariation <- function(mydata,
 
     ## y range taking account of expanded uncertainties
     rng <- function(x) {
+
+        ## if no CI information, just return
+        if (all(is.na(x[, c("Lower", "Upper")]))) {
+            lims <- NULL
+            return(lims)
+        }
+
         if (ci) {
             lims <- range(c(x$Lower, x$Upper), na.rm = TRUE)
             inc <- 0.04 * abs(lims[2] - lims[1])
@@ -398,8 +404,6 @@ timeVariation <- function(mydata,
 
     ## hour ############################################################################
 
-
-
     if (difference) {
         data.hour <- errorDiff(mydata, vars = "hour", type = type, poll1 = poll1,
                                poll2 = poll2, B = B)
@@ -430,31 +434,31 @@ timeVariation <- function(mydata,
 
     ## plot
     xyplot.args <- list(x = myform,  data = data.hour, groups = data.hour$variable,
-                   as.table = TRUE,
-                   xlab = xlab[2],
-                   xlim = c(0, 23),
-                   strip = strip,
-                   par.strip.text = list(cex = 0.8),
-                   key = key,
-                   scales = list(x = list(at = c(0, 6, 12, 18, 23))),
-                   par.settings = simpleTheme(col = myColors),
-                   panel =  panel.superpose,
-                   panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                       if (group.number == 1) {
-                           panel.grid(-1, 0)
-                           panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
-                       }
+                        as.table = TRUE,
+                        xlab = xlab[2],
+                        xlim = c(0, 23),
+                        strip = strip,
+                        par.strip.text = list(cex = 0.8),
+                        key = key,
+                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
+                        par.settings = simpleTheme(col = myColors),
+                        panel =  panel.superpose,
+                        panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
+                            if (group.number == 1) {
+                                panel.grid(-1, 0)
+                                panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
+                            }
 
-                       if (difference) panel.abline(h = 0, lty = 5)
+                            if (difference) panel.abline(h = 0, lty = 5)
 
-                       panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
-                       if (ci) {poly.na(x, data.hour$Lower[subscripts], x,
-                                        data.hour$Upper[subscripts], group.number)}
+                            if (ci) {poly.na(x, data.hour$Lower[subscripts], x,
+                                             data.hour$Upper[subscripts], group.number)}
 
-                   })
+                        })
 
-    #reset for extra.args
+    ## reset for extra.args
     xyplot.args<- listUpdate(xyplot.args, extra.args)
 
     ## plot
@@ -486,30 +490,30 @@ timeVariation <- function(mydata,
 
     ## plot
     xyplot.args <- list(x = myform,  data = data.weekday, groups = data.weekday$variable,
-                  as.table = TRUE,
-                  par.settings = simpleTheme(col = myColors, pch = 16),
-                  scales = list(x = list(at = 1:7, labels = format(ISOdate(2000, 1, 3:9), "%a"))),
-                  xlab = xlab[4],
-                  strip = strip,
-                  par.strip.text = list(cex = 0.8),
-                  key = key,
-                  panel =  panel.superpose,
-                  panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                      if (group.number == 1) {
-                          panel.grid(-1, 0)
-                          panel.abline(v = 1:7, col = "grey85")
-                      }
+                        as.table = TRUE,
+                        par.settings = simpleTheme(col = myColors, pch = 16),
+                        scales = list(x = list(at = 1:7, labels = format(ISOdate(2000, 1, 3:9), "%a"))),
+                        xlab = xlab[4],
+                        strip = strip,
+                        par.strip.text = list(cex = 0.8),
+                        key = key,
+                        panel =  panel.superpose,
+                        panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
+                            if (group.number == 1) {
+                                panel.grid(-1, 0)
+                                panel.abline(v = 1:7, col = "grey85")
+                            }
 
-                      if (difference) panel.abline(h = 0, lty = 5)
+                            if (difference) panel.abline(h = 0, lty = 5)
 
-                      panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
-                      panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
 
-                      if (ci) {panel.rect(x - 0.3, data.weekday$Lower[subscripts], x + 0.3,
-                                          data.weekday$Upper[subscripts],
-                                          fill = myColors[group.number],
-                                          border = NA, alpha = alpha)}
-                  })
+                            if (ci) {panel.rect(x - 0.3, data.weekday$Lower[subscripts], x + 0.3,
+                                                data.weekday$Upper[subscripts],
+                                                fill = myColors[group.number],
+                                                border = NA, alpha = alpha)}
+                        })
 
     ## reset for extra.args
     xyplot.args<- listUpdate(xyplot.args, extra.args)
@@ -519,11 +523,9 @@ timeVariation <- function(mydata,
 
     ## month ############################################################################
 
-
-
     if (difference) {
         data.month <- errorDiff(mydata, vars = "month", type = type, poll1 = poll1,
-                               poll2 = poll2, B = B)
+                                poll2 = poll2, B = B)
     } else {
         data.month <- calc.wd(mydata, vars = "month", pollutant, type, B = B)
     }
@@ -542,33 +544,33 @@ timeVariation <- function(mydata,
 
     ## plot
     xyplot.args <- list(x = myform,  data = data.month, groups = data.month$variable,
-                    as.table = TRUE,
-                    xlab = xlab[3],
-                    xlim = c(0.5, 12.5),
-                    key = key,
-                    strip = strip,
-                    par.strip.text = list(cex = 0.8),
-                    par.settings = simpleTheme(col = myColors, pch = 16),
-                    scales = list(x = list(at = 1:12, labels = substr(format(seq(as.Date("2000-01-01"),
-                                                      as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
-                    panel =  panel.superpose,
-                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                        if (group.number == 1) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = 1:12, col = "grey85")
-                        }
-                        if (difference) panel.abline(h = 0, lty = 5)
+                        as.table = TRUE,
+                        xlab = xlab[3],
+                        xlim = c(0.5, 12.5),
+                        key = key,
+                        strip = strip,
+                        par.strip.text = list(cex = 0.8),
+                        par.settings = simpleTheme(col = myColors, pch = 16),
+                        scales = list(x = list(at = 1:12, labels = substr(format(seq(as.Date("2000-01-01"),
+                                                          as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
+                        panel =  panel.superpose,
+                        panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
+                            if (group.number == 1) {
+                                panel.grid(-1, 0)
+                                panel.abline(v = 1:12, col = "grey85")
+                            }
+                            if (difference) panel.abline(h = 0, lty = 5)
 
-                        panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
 
-                        panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
 
-                        if (ci) {panel.rect(x - 0.3, data.month$Lower[subscripts], x + 0.3,
-                                            data.month$Upper[subscripts],
-                                            fill = myColors[group.number],
-                                            border = NA, alpha = alpha)}
-                    })
+                            if (ci) {panel.rect(x - 0.3, data.month$Lower[subscripts], x + 0.3,
+                                                data.month$Upper[subscripts],
+                                                fill = myColors[group.number],
+                                                border = NA, alpha = alpha)}
+                        })
 
     ## reset for extra.args
     xyplot.args<- listUpdate(xyplot.args, extra.args)
@@ -580,7 +582,7 @@ timeVariation <- function(mydata,
 
     if (difference) {
         data.day.hour <- errorDiff(mydata, vars = "day.hour", type = type, poll1 = poll1,
-                               poll2 = poll2, B = B)
+                                   poll2 = poll2, B = B)
     } else {
         data.day.hour <- calc.wd(mydata, vars = "day.hour", pollutant, type, B = B)
     }
@@ -623,32 +625,32 @@ timeVariation <- function(mydata,
 
     ## plot
     xyplot.args <- list(x = myform,  data = data.day.hour, groups = data.day.hour$variable,
-                       as.table = TRUE,
-                       xlim = c(0, 23),
-                       xlab = xlab[1],
-                       layout = layout,
-                       par.settings = simpleTheme(col = myColors),
-                       scales = list(x = list(at = c(0, 6, 12, 18, 23))),
-                       key = key,
-                       strip = strip,
-                       strip.left = strip.left,
-                       par.strip.text = list(cex = 0.8),
-                       panel =  panel.superpose,
-                       panel.groups = function(x, y, col.line, type, group.number,
-                       subscripts,...) {
-                           ## add grid lines once (otherwise they overwrite the data)
-                           if (group.number == 1) {
-                               panel.grid(-1, 0)
-                               panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
-                           }
+                        as.table = TRUE,
+                        xlim = c(0, 23),
+                        xlab = xlab[1],
+                        layout = layout,
+                        par.settings = simpleTheme(col = myColors),
+                        scales = list(x = list(at = c(0, 6, 12, 18, 23))),
+                        key = key,
+                        strip = strip,
+                        strip.left = strip.left,
+                        par.strip.text = list(cex = 0.8),
+                        panel =  panel.superpose,
+                        panel.groups = function(x, y, col.line, type, group.number,
+                        subscripts,...) {
+                            ## add grid lines once (otherwise they overwrite the data)
+                            if (group.number == 1) {
+                                panel.grid(-1, 0)
+                                panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
+                            }
 
-                           if (difference) panel.abline(h = 0, lty = 5)
+                            if (difference) panel.abline(h = 0, lty = 5)
 
-                           panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
+                            panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
-                           if (ci) {poly.na(x, data.day.hour$Lower[subscripts], x,
-                                            data.day.hour$Upper[subscripts], group.number)}
-                       })
+                            if (ci) {poly.na(x, data.day.hour$Lower[subscripts], x,
+                                             data.day.hour$Upper[subscripts], group.number)}
+                        })
 
     ## reset for extra.args
     xyplot.args<- listUpdate(xyplot.args, extra.args)
@@ -679,22 +681,22 @@ timeVariation <- function(mydata,
     }
     ind.plot = function(x, ...){
         plot(update(x, key = list(
-                  rectangles = list(col = myColors[1:npol], border = NA),
-                  text = list(lab = mylab), space = "top", columns = key.columns)
-               ), ...)
+                       rectangles = list(col = myColors[1:npol], border = NA),
+                       text = list(lab = mylab), space = "top", columns = key.columns)
+                    ), ...)
     }
 
     main.plot()
     output <- list(plot = list(day.hour, hour, day, month, subsets = subsets),
-                    data = list(data.day.hour, data.hour, data.weekday, data.month, subsets = subsets),
-                    call = match.call(),
-                    main.plot = main.plot, ind.plot = ind.plot
-                    )
+                   data = list(data.day.hour, data.hour, data.weekday, data.month, subsets = subsets),
+                   call = match.call(),
+                   main.plot = main.plot, ind.plot = ind.plot
+                   )
     names(output$data)[1:4] <- subsets
     names(output$plot)[1:4] <- subsets
     class(output) <- "openair"
 
-    #reset if greyscale
+                                        #reset if greyscale
     if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set("strip.background", current.strip)
 

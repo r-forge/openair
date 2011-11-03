@@ -630,6 +630,18 @@ bootMeanDiff <- function (mydata, x = "x", y = "y", conf.int = 0.95, B = 1000, n
     x <- na.omit(mydata[ , x])
     y <- na.omit(mydata[ , y])
     Mean <- mean(y) - mean(x)
+
+    if (nrow(mydata) < 2) {
+        res1 <- data.frame(variable = x.name, Mean = mean(x), Lower = NA, Upper = NA)
+        res2 <- data.frame(variable = y.name, Mean = mean(y), Lower = NA, Upper = NA)
+        res <- data.frame(variable = paste(y.name, "-", x.name), Mean = Mean, Lower = NA, Upper = NA)
+
+        res <- rbind.fill(res1, res2, res)
+        res$variable <- factor(res$variable)
+        return(res)
+
+    }
+
     x <- attr(bootMean(x,  B = B, reps = TRUE), 'reps')
     y <- attr(bootMean(y,  B = B, reps = TRUE), 'reps')
     quant1 <- quantile(x, c((1 - conf.int) / 2, (1 + conf.int) / 2))
