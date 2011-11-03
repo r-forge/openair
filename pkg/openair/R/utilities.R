@@ -601,6 +601,52 @@ errorInMean <- function (x, mult = qt((1 + conf.int)/2, n - 1), conf.int = 0.95,
       se)
 }
 
+## bootsrap confidence intervals in the mean from Hmisc
+bootMean <- function (x, conf.int = 0.95, B = 1000, na.rm = TRUE, reps = FALSE)
+{
+    if (na.rm)
+        x <- x[!is.na(x)]
+    n <- length(x)
+    xbar <- mean(x)
+    if (n < 2)
+        return(c(Mean = xbar, Lower = NA, Upper = NA))
+    z <- unlist(lapply(1:B, function(i, x, N)
+                       sum(x[.Internal(sample(N, N, TRUE, NULL))]), x = x, N = n)) / n
+    quant <- quantile(z, c((1 - conf.int) / 2, (1 + conf.int) / 2))
+    names(quant) <- NULL
+    res <- c(Mean = xbar, Lower = quant[1], Upper = quant[2])
+    if (reps)
+        attr(res, "reps") <- z
+    res
+}
+
+bootMeanDiff <- function (mydata, x = "x", y = "y", conf.int = 0.95, B = 1000, na.rm = TRUE, reps = TRUE)
+{
+
+    ## calculates bootstrap mean differences
+    ## assumes y - x
+    x.name <- x
+    y.name <- y
+    x <- na.omit(mydata[ , x])
+    y <- na.omit(mydata[ , y])
+    Mean <- mean(y) - mean(x)
+    x <- attr(bootMean(x,  B = B, reps = TRUE), 'reps')
+    y <- attr(bootMean(y,  B = B, reps = TRUE), 'reps')
+    quant1 <- quantile(x, c((1 - conf.int) / 2, (1 + conf.int) / 2))
+    quant2 <- quantile(y, c((1 - conf.int) / 2, (1 + conf.int) / 2))
+    quant <- quantile(y - x, c((1 - conf.int) / 2, (1 + conf.int) / 2))
+    names(quant1) <- NULL
+    names(quant2) <- NULL
+    names(quant) <- NULL
+
+    res1 <- data.frame(variable = x.name, Mean = mean(x), Lower = quant1[1], Upper = quant1[2])
+    res2 <- data.frame(variable = y.name, Mean = mean(y), Lower = quant2[1], Upper = quant2[2])
+    res <- data.frame(variable = paste(y.name, "-", x.name), Mean = Mean, Lower = quant[1], Upper = quant[2])
+
+    res <- rbind.fill(res1, res2, res)
+    res$variable <- factor(res$variable)
+    res
+}
 
 ###########################################################################################################
 

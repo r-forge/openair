@@ -8,6 +8,11 @@ Changes in openair 0.5-12 [2011-10-10]
 *       new averaging time "season" for timeAverage
 *	better treatment of avg.time = "season" and type = "season" in
 	TheilSen and smoothTrend
+*	use bootstrap methods to calculate 95% confidence intervals in
+        the mean for timeVariation
+*	New option 'difference' in timeVariation to show difference
+        between two variables with bootstrap 95% CI in the mean
+*	Byte-compile package
 
 Changes in openair 0.5-11 [2011-09-14]
 =====================================
