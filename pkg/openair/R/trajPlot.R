@@ -103,26 +103,49 @@
 ##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
 ##' smooth = TRUE, type = "season")
 ##' }
-trajLevel <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
-                      method = "level", smooth = FALSE, map = TRUE, lon.inc = 1.5,
-                      lat.inc = 1.5,...)  {
+trajLevel <- function(mydata, lon = "lon", lat = "lat",
+                      pollutant = "pm10", method = "level", smooth = FALSE,
+                      map = TRUE, lon.inc = 1.5, lat.inc = 1.5,...)  {
 
-    ##extra.args
+    ## mydata can be a list of several trajectory files; in which case combine them
+    ## before averaging
+
+    if (is.list(mydata)) mydata <- rbind.fill(mydata)
+
+    mydata <- cutData(mydata, type)
+
+    ## bin data
+    mydata$ygrid <- round_any(mydata[ , lat], lat.inc)
+    mydata$xgrid <- round_any(mydata[ , lon], lon.inc)
+
+    rhs <- c("xgrid", "ygrid", type)
+    rhs <- paste(rhs, collapse = "+")
+    mydata <- mydata[ , c("date", "xgrid", "ygrid", type, pollutant)]
+    ids <- which(names(mydata) %in% c("xgrid", "ygrid", type))
+
+    mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+    attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
+
+    ## change x/y names to gridded values
+    lon <- "xgrid"
+    lat <- "ygrid"
+
+    ## extra.args
     extra.args <- list(...)
 
-    #aspect
+    ## aspect
     if(!"aspect" %in% names(extra.args))
         extra.args$aspect <- 1
 
-    ##the plot
+    ## the plot
     scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant,
                              method = method, smooth = smooth, map = map,
                              x.inc = lon.inc, y.inc = lat.inc)
 
-    #reset for extra.args
-    scatterPlot.args<- listUpdate(scatterPlot.args, extra.args)
+    ## reset for extra.args
+    scatterPlot.args<- openair:::listUpdate(scatterPlot.args, extra.args)
 
-    #plot
+    ## plot
     do.call(scatterPlot, scatterPlot.args)
 
 }
