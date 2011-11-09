@@ -239,12 +239,12 @@ timeVariation(mydata, pollutant = "nox", group = "gmtbst")
 ## difference in concentrations
 timeVariation(mydata, poll= c("pm25", "pm10"), difference = TRUE)
 
-It is also useful to consider how concentrations vary by
-considering two different periods e.g. in intervention
-analysis. In the following plot NO2 has clearly increased but much
-less so at weekends - perhaps suggesting vehicles other than cars
-are important because flows of cars are approximately invariant by
-day of the week
+# It is also useful to consider how concentrations vary by
+# considering two different periods e.g. in intervention
+# analysis. In the following plot NO2 has clearly increased but much
+# less so at weekends - perhaps suggesting vehicles other than cars
+# are important because flows of cars are approximately invariant by
+# day of the week
 
 mydata <- splitByDate(mydata, dates= "1/1/2003", labels = c("before Jan. 2003", "After Jan. 2003"))
 timeVariation(mydata, pollutant = "no2", group = "split.by", difference = TRUE)

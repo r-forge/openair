@@ -8,7 +8,7 @@
   type = "default", smooth = FALSE, spline = FALSE, linear
   = FALSE, ci = TRUE, mod.line = FALSE, cols = "hue",
   plot.type = "p", key = TRUE, key.title = group,
-  key.columns = 1, key.position = "bottom", strip = TRUE,
+  key.columns = 1, key.position = "right", strip = TRUE,
   log.x = FALSE, log.y = FALSE, x.inc = 10, y.inc = 10,
   y.relation = "same", x.relation = "same", ref.x = NULL,
   ref.y = NULL, k = 100, trans = TRUE, map = FALSE,

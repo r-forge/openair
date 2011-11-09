@@ -280,7 +280,7 @@ scatterPlot <- function(mydata,
                         key = TRUE,
                         key.title = group,
                         key.columns = 1,
-                        key.position = "bottom",
+                        key.position = "right",
                         strip = TRUE,
                         log.x = FALSE,
                         log.y = FALSE,
@@ -531,7 +531,6 @@ scatterPlot <- function(mydata,
     pol.name <- sapply(levels(mydata[ , group]), function(x) quickText(x, auto.text))
 
     if (is.na(z)) { ## non-continuous key
-        if (missing(key.columns)) if (npol < 5) key.columns <- npol else key.columns <- 4
 
         if (key & npol > 1) {
             if (plot.type == "p") {

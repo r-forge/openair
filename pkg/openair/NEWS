@@ -13,6 +13,8 @@ Changes in openair 0.5-12 [2011-10-10]
 *	New option 'difference' in timeVariation to show difference
         between two variables with bootstrap 95% CI in the mean
 *	Byte-compile package
+*	Place key on right be default in scatterPlot to avoid clash
+        with x or y axis labels.
 
 Changes in openair 0.5-11 [2011-09-14]
 =====================================

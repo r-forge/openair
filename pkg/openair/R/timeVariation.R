@@ -184,12 +184,12 @@
 ##' ## difference in concentrations
 ##' timeVariation(mydata, poll= c("pm25", "pm10"), difference = TRUE)
 ##'
-##' It is also useful to consider how concentrations vary by
-##' considering two different periods e.g. in intervention
-##' analysis. In the following plot NO2 has clearly increased but much
-##' less so at weekends - perhaps suggesting vehicles other than cars
-##' are important because flows of cars are approximately invariant by
-##' day of the week
+##' # It is also useful to consider how concentrations vary by
+##' # considering two different periods e.g. in intervention
+##' # analysis. In the following plot NO2 has clearly increased but much
+##' # less so at weekends - perhaps suggesting vehicles other than cars
+##' # are important because flows of cars are approximately invariant by
+##' # day of the week
 ##'
 ##' mydata <- splitByDate(mydata, dates= "1/1/2003", labels = c("before Jan. 2003", "After Jan. 2003"))
 ##' timeVariation(mydata, pollutant = "no2", group = "split.by", difference = TRUE)
@@ -211,21 +211,11 @@
 ##' ## tail(myplot, subset = "month") #tail/top of month data set
 ##'
 ##'
-timeVariation <- function(mydata,
-                          pollutant = "nox",
-                          local.time = FALSE,
-                          normalise = FALSE,
+timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normalise = FALSE,
                           xlab = c("hour", "hour", "month", "weekday"),
-                          name.pol = pollutant,
-                          type = "default",
-                          group = NULL,
-                          difference = FALSE,
-                          B = 500,
-                          ci = TRUE,
-                          cols = "hue",
-                          key = NULL,
-                          key.columns = 1,
-                          auto.text = TRUE,
+                          name.pol = pollutant, type = "default", group = NULL,
+                          difference = FALSE, B = 500, ci = TRUE, cols = "hue",
+                          key = NULL, key.columns = 1, auto.text = TRUE,
                           alpha = 0.4, ...)   {
 
 
@@ -737,7 +727,7 @@ calc.wd <- function(mydata, vars = "day.hour", pollutant, type, B = B) {
 
     if ("wd" %in% pollutant) {
         data2 <-  subset(mydata, variable == "wd")
-        data2 <-  summary.values(data2, vars, wd.smean.normal, type, B = B)
+        data2 <-  summary.values(data2, vars,bootMean, type, B = B)
         data2 <- data.frame(subset(data2, select = -value), data2$value)
     }
 
