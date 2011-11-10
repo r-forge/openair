@@ -669,7 +669,7 @@ scatterPlot <- function(mydata,
                                                       lwd = lwd, ...)
 
 
-                      if (map) {
+                      if (map && group.number == 1) {
                           require(maps)
                           mp <- map(database="world", plot = FALSE)
                           llines(mp$x, mp$y, col = "black")
@@ -839,6 +839,7 @@ scatterPlot <- function(mydata,
                              }
 
                              if (map) {
+
                                  require(maps)
                                  mp <- map(database="world", plot = FALSE)
                                  llines(mp$x, mp$y, col = "black")
