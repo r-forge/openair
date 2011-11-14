@@ -284,7 +284,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
     ## if group is present, need to add that list of variables
     if (!missing(group)){
 
-        if (group %in%  dateTypes) {
+        if (group %in%  openair:::dateTypes) {
             vars <- unique(c(vars, "date"))
         } else {
             vars <- unique(c(vars, group))
@@ -292,7 +292,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
     }
 
     ## data checks
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
     if (!missing(group))  mydata <- cutData(mydata, group, ...)
     mydata <- cutData(mydata, type, ...)
 
@@ -458,7 +458,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                         })
 
     ## reset for extra.args
-    xyplot.args<- listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     ## plot
     hour <- do.call(xyplot, xyplot.args)
@@ -515,7 +515,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                         })
 
     ## reset for extra.args
-    xyplot.args<- listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     ## plot
     day <- do.call(xyplot, xyplot.args)
@@ -572,7 +572,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                         })
 
     ## reset for extra.args
-    xyplot.args<- listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     ## plot
     month <- do.call(xyplot, xyplot.args)
@@ -589,9 +589,10 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
     if (normalise) data.day.hour <-  ddply(data.day.hour, .(variable), divide.by.mean)
 
     ids <- which(is.na(data.day.hour$Lower)) ## missing Lower ci, set to mean
-    data.day.hour$Lower[ids] <-  data.day.hour$Mean
+
+    data.day.hour$Lower[ids] <-  data.day.hour$Mean[ids]
     ids <- which(is.na(data.day.hour$Upper)) ## missing Upper ci, set to mean
-    data.day.hour$Upper[ids] <-  data.day.hour$Mean
+    data.day.hour$Upper[ids] <-  data.day.hour$Mean[ids]
 
     if (is.null(xlab[1]) | is.na(xlab[1])) xlab[1] <- "hour"
 
@@ -652,7 +653,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                         })
 
     ## reset for extra.args
-    xyplot.args<- listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     ## plot
     day.hour <- do.call(xyplot, xyplot.args)
@@ -678,6 +679,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
         ## use grid to add an overall title
         grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
     }
+
     ind.plot = function(x, ...){
         plot(update(x, key = list(
                        rectangles = list(col = myColors[1:npol], border = NA),
@@ -721,13 +723,13 @@ calc.wd <- function(mydata, vars = "day.hour", pollutant, type, B = B) {
     ## function to calculate statistics dealing with wd properly
     if (any(!pollutant %in% "wd")) {
         data1 <- subset(mydata, variable != "wd")
-        data1 <-  summary.values(data1, vars, bootMean, type, B = B)
+        data1 <-  summary.values(data1, vars, openair:::bootMean, type, B = B)
         data1 <- data.frame(subset(data1, select = -value), data1$value)
     }
 
     if ("wd" %in% pollutant) {
         data2 <-  subset(mydata, variable == "wd")
-        data2 <-  summary.values(data2, vars,bootMean, type, B = B)
+        data2 <-  summary.values(data2, vars, openair:::bootMean, type, B = B)
         data2 <- data.frame(subset(data2, select = -value), data2$value)
     }
 
@@ -758,7 +760,7 @@ wd.smean.normal <- function(wd, B = B) {
     ids <- which(wd.diff > 180)
     wd.diff[ids] <- abs(wd.diff[ids] - 360)
 
-    conf.int <- bootMean(wd.diff, B = B)
+    conf.int <- openair:::bootMean(wd.diff, B = B)
     Lower <- conf.int[2]
     names(Lower) <- NULL
 
@@ -779,7 +781,7 @@ errorDiff <- function(mydata, vars = "day.hour", poll1, poll2, type, B = B)
     if (vars == "weekday") splits <- c("weekday", type)
     if (vars == "month") splits <- c("month", type)
 
-    res <- ddply(mydata, splits, bootMeanDiff, x = poll1, y = poll2, B = B)
+    res <- ddply(mydata, splits, openair:::bootMeanDiff, x = poll1, y = poll2, B = B)
 
     res
 }
