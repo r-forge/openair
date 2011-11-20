@@ -2,14 +2,15 @@
 \alias{polarAnnulus}
 \title{Bivariate polarAnnulus plot}
 \usage{
-  polarAnnulus(mydata, pollutant = "nox", resolution =
-  "fine", local.time = FALSE, period = "hour", type =
-  "default", limits = c(0, 100), cols = "default", width =
-  "normal", min.bin = 1, exclude.missing = TRUE, date.pad =
-  FALSE, force.positive = TRUE, k = c(20, 10), normalise =
-  FALSE, key.header = "", key.footer = pollutant,
-  key.position = "right", key = TRUE, auto.text = TRUE,
-  ...)
+  polarAnnulus(mydata, pollutant = "nox",
+    resolution = "fine", local.time = FALSE,
+    period = "hour", type = "default", limits = c(0, 100),
+    cols = "default", width = "normal", min.bin = 1,
+    exclude.missing = TRUE, date.pad = FALSE,
+    force.positive = TRUE, k = c(20, 10),
+    normalise = FALSE, key.header = "",
+    key.footer = pollutant, key.position = "right",
+    key = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -155,7 +156,7 @@
   \code{pollutant} is chosen.}
 
   \item{key.header}{Adds additional text/labels to the
-  scale key. For example, passing the options
+  scale key.  For example, passing the options
   \code{key.header = "header", key.footer = "footer1"} adds
   addition text above and below the scale key. These
   arguments are passed to \code{drawOpenKey} via
@@ -183,7 +184,7 @@
   \code{polarAnnulus} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}. Similarly, common axis and title
+  \code{type = "season"}.  Similarly, common axis and title
   labelling options (such as \code{xlab}, \code{ylab},
   \code{main}) are passed to \code{levelplot} via
   \code{quickText} to handle routine formatting.}
