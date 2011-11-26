@@ -181,10 +181,18 @@
 ##' concentrations were first subtracted resulting in data that is
 ##' legitimately negative. For the vast majority of situations it is
 ##' expected that the user will not need to alter the default option.
-##' @param k This is the smoothing parameter that is set if
-##' auto.smooth is set to \code{FALSE}. Typically, value of around 100
-##' (the default) seems to be suitable and will resolve more features
-##' in the plot.
+##' @param k This is the smoothing parameter used by the \code{gam}
+##' function in package \code{mgcv}. Typically, value of around 100
+##' (the default) seems to be suitable and will resolve important
+##' features in the plot. The most appropriate choice of \code{k} is
+##' problem-dependent; but extensive testing of polar plots for many
+##' different problems suggests a value of \code{k} of about 100 is
+##' suitable. Setting \code{k} to higher values will not tend to
+##' affect the surface predictions by much but will add to the
+##' computation time. Lower values of \code{k} will increase
+##' smoothing. Sometimes with few data to plot \code{polarPlot} will
+##' fail. Under these circumstances it can be worth lowering the value
+##' of \code{k}.
 ##' @param normalise If \code{TRUE} concentrations are normalised by
 ##' dividing by their mean value. This is done \emph{after} fitting
 ##' the smooth surface. This option is particularly useful if one is
