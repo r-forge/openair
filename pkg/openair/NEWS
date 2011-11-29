@@ -1,3 +1,9 @@
+Changes in openair 0.5-14 [2011-11-29]
+=====================================
+
+*       NEW FUNCTION polarCluster for undertaking k-means clustering
+        of bivariate polar plots
+
 Changes in openair 0.5-13 [2011-11-18]
 =====================================
 
