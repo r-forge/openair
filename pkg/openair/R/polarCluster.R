@@ -206,14 +206,14 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
     ## find ids of u and v if only one cluster used
     if (length(n.clusters) == 1) {
 
-        results.grid$u.id <- findInterval(results.grid$u, uv.id, all.inside = TRUE)
-        results.grid$v.id <- findInterval(results.grid$v, uv.id, all.inside = TRUE)
+        results.grid$u.id <- findInterval(results.grid$u, uv.id)
+        results.grid$v.id <- findInterval(results.grid$v, uv.id)
 
         mydata <- na.omit(mydata)
 
         mydata <- transform(mydata, u = get(x) * sin(wd * pi / 180), v = get(x) * cos(wd * pi / 180))
-        mydata$u.id <- findInterval(mydata$u, uv.id, all.inside = TRUE)
-        mydata$v.id <- findInterval(mydata$v, uv.id, all.inside = TRUE)
+        mydata$u.id <- findInterval(mydata$u, uv.id)
+        mydata$v.id <- findInterval(mydata$v, uv.id)
 
         cluster <- sapply(1:nrow(mydata), function (x)
                           results.grid$cluster[results.grid$u.id == mydata$u.id[x] &
