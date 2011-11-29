@@ -156,7 +156,10 @@ results <- polarCluster(mydata, pollutant = "nox", n.clusters = 6)
 ## get results
 head(results$data)
 
-## plot clusters 3 and 4 as a timeVariation plot using same colours as in
+## how many points are there in each cluster?
+table(results$data$cluster)
+
+## plot clusters 3 and 4 as a timeVariation plot using SAME colours as in
 ## cluster plot
 timeVariation(subset(results$data, cluster \%in\% c("3", "4")), pollutant = "nox",
 group = "cluster", col = openColours("Set3", 6)[c(3, 4)])
