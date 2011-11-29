@@ -3,6 +3,8 @@ Changes in openair 0.5-13 [2011-11-18]
 
 *       Major update to polarPlot allowing variables other than
 	"ws" to be plotted with wind direction.
+*       Improve documentation for polarPlot/TaylorDiagram
+*	Update openair citation information to Journal article
 
 Changes in openair 0.5-12 [2011-11-14]
 =====================================

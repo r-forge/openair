@@ -6,7 +6,7 @@
     group = NULL, type = "default", normalise = FALSE,
     cols = "brewer1", rms.col = "darkgoldenrod",
     cor.col = "black", arrow.lwd = 3, key = TRUE,
-    key.title = group, key.columns = 1, key.pos = "bottom",
+    key.title = group, key.columns = 1, key.pos = "right",
     strip = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
@@ -53,7 +53,12 @@
   Type can be up length two e.g. \code{type = c("season",
   "weekday")} will produce a 2x2 plot split by season and
   day of the week. Note, when two types are provided the
-  first forms the columns and the second the rows.}
+  first forms the columns and the second the rows.
+
+  Note that often it will make sense to use \code{type =
+  "site"} when multiple sites are available. This will
+  ensure that each panel contains data specific to an
+  individual site.}
 
   \item{normalise}{Should the data be normalised by
   dividing the standard deviation of the observations? The
@@ -191,6 +196,13 @@
   each season. Generally, the option \code{group} is either
   missing (one model being evaluated) or represents a
   column giving the model name.
+
+  Also note that if multiple sites are present it makes
+  sense to use \code{type = "site"} to ensure that each
+  panel represents an individual site with its own specific
+  standard deviation etc. If this is not the case then
+  select a single site from the data first e.g.
+  \code{subset(mydata, site == "Harwell")}.
 }
 \examples{
 ## in the examples below, most effort goes into making some artificial data

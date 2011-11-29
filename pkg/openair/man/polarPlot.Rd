@@ -14,7 +14,7 @@
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
-  \code{wd}, another veraibel to plot in polar coordinates
+  \code{wd}, another variable to plot in polar coordinates
   (the default is a column "ws" --- wind speed) and a
   pollutant. Should also contain \code{date} if plots by
   time period are required.}
@@ -147,16 +147,16 @@
   \item{units}{The units shown on the polar axis scale.}
 
   \item{force.positive}{The default is \code{TRUE}.
-  Sometimes if smoothing data with streep gradients it is
+  Sometimes if smoothing data with steep gradients it is
   possible for predicted values to be negative.
   \code{force.positive = TRUE} ensures that predictions
-  remain postive. This is useful for several reasons.
+  remain positive. This is useful for several reasons.
   First, with lots of missing data more interpolation is
-  needed and this can result in artefacts because the
+  needed and this can result in artifacts because the
   predictions are too far from the original data. Second,
-  if it is known beforehand that the data are all postive,
+  if it is known beforehand that the data are all positive,
   then this option carries that assumption through to the
-  prediction. The only likley time where setting
+  prediction. The only likely time where setting
   \code{force.positive = FALSE} would be if background
   concentrations were first subtracted resulting in data
   that is legitimately negative. For the vast majority of
