@@ -17,6 +17,7 @@ Imports:
     mgcv,
     zoo,
     lattice,
+    cluster,
     boot,RColorBrewer
 Suggests:
     latticeExtra,
@@ -82,3 +83,4 @@ Collate:
     'getMeta.R'
     'senTheil.R'
     'TheilSen.R'
+    'polarCluster.R'
