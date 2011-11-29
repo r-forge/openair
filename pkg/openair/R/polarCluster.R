@@ -178,6 +178,9 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
         extra.args$layout <- NULL
 
     results.grid <- polarPlot(mydata, pollutant = pollutant, x = x, ...)$data
+
+    ## remove missing because we don't want to find clusters for those points
+    ## saves a lot on computation
     results.grid <- na.omit(results.grid)
     results.grid <- subset(results.grid, select = c(u, v, z))
 
@@ -209,6 +212,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
     ## find ids of u and v if only one cluster used
     if (length(n.clusters) == 1) {
 
+        ## find indices in u-v space
         results.grid$u.id <- findInterval(results.grid$u, uv.id)
         results.grid$v.id <- findInterval(results.grid$v, uv.id)
 
@@ -218,11 +222,17 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
         mydata$u.id <- findInterval(mydata$u, uv.id)
         mydata$v.id <- findInterval(mydata$v, uv.id)
 
-        cluster <- sapply(1:nrow(mydata), function (x)
-                          results.grid$cluster[results.grid$u.id == mydata$u.id[x] &
-                                               results.grid$v.id == mydata$v.id[x]][1])
-        cluster <- as.factor(unlist(cluster))
-        mydata$cluster <- cluster
+        ## convert to matrix for direct lookup
+        ## need to do this because some data are missing due to exclude.missing in polarPlot
+        mat.dim <- max(results.grid[ , c("u.id", "v.id")]) ## size of lookup matrix
+        temp <- matrix(NA, ncol = mat.dim, nrow = mat.dim)
+
+        ## matrix of clusters by u.id, v.id with missings
+        temp[cbind(results.grid$u.id, results.grid$v.id)] <- results.grid$cluster
+
+        ## match u.id, v.id in mydata to cluster
+        mydata$cluster <- as.factor(temp[cbind(mydata$u.id, mydata$v.id)])
+
         mydata <- mydata[ , c("date", "cluster")] ## just need date/cluster
         mydata <- merge(data.orig, mydata, by = "date")
 
