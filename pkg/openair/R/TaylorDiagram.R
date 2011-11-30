@@ -58,7 +58,7 @@
 ##' @param mod A column of model predictions. Note, \code{mod} can be
 ##' of length 2 i.e. two lots of model predictions. If two sets of
 ##' predictions are are present e.g. \code{mod = c("base",
-##' "revised")}, then arrows are shown on the Taylor Diafram which
+##' "revised")}, then arrows are shown on the Taylor Diagram which
 ##' show the change in model performance in going from the first to
 ##' the second. This is useful where, for example, there is interest
 ##' in comparing how one model run compares with another using

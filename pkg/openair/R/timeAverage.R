@@ -304,7 +304,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         }
 
         if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
-
+        ## sometimes e.g. in gbm NaN causes trouble; replace with NA
+        dailymet[] <- lapply(dailymet, function(x) {replace(x, is.nan(x), NA)})
         dailymet
 
     }
