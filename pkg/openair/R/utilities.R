@@ -322,6 +322,7 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
     my.tz <- if(use.local.tz)
 
         attr(mydata$date, "tzone") <- attr(mydata$date, "tzone") else  attr(mydata$date, "tzone") <- "GMT"
+    if (is.null(my.tz)) my.tz <- ""
 
     if (!missing(start) & !missing(end)) {
         start <- as.POSIXct(strptime(start, format = "%d/%m/%Y"), my.tz)
