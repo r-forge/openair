@@ -80,7 +80,7 @@
 ##' ?\code{brewer.pal} for the maximum useful colours in each. For
 ##' user defined the user can supply a list of colour names recognised
 ##' by R (type \code{colours()} to see the full list). An example
-##' would be \code{cols = c("yellow", "green", "blue")}
+##' would be \code{cols = c("yellow", "green", "blue")}.
 ##' @param angle.scale The wind speed scale is by default shown at a
 ##' 315 degree angle. Sometimes the placement of the scale may
 ##' interfere with an interesting feature. The user can therefore set

@@ -43,7 +43,13 @@
 ##' have four different mean values --- one for each
 ##' season. Generally, the option \code{group} is either missing (one
 ##' model being evaluated) or represents a column giving the model
-##' name.
+##' name. However, the data can be normalised using the
+##' \code{normalise} option. Normalisation is carried out on a per
+##' \code{group}/\code{type} basis making it possible to compare data
+##' on different scales e.g. \code{TaylorDiagram(mydata, group =
+##' "season", type = "model", normalise = TRUE)}. In this way it is
+##' possible to compare different pollutants, sites etc. in the same
+##' panel.
 ##'
 ##' Also note that if multiple sites are present it makes sense to use
 ##' \code{type = "site"} to ensure that each panel represents an
@@ -91,18 +97,25 @@
 ##' Note that often it will make sense to use \code{type = "site"}
 ##' when multiple sites are available. This will ensure that each
 ##' panel contains data specific to an individual site.
-##' @param normalise Should the data be normalised by dividing the standard
-##'   deviation of the observations? The statistics can be normalised (and
-##'   non-dimensionalised) by dividing both the RMS difference and the standard
-##'   deviation of the \code{mod} values by the standard deviation of the
-##'   observations (\code{obs}). In this case the "observed" point is plotted
-##'   on the x-axis at unit distance from the origin. This makes it possible to
-##'   plot statistics for different species (maybe with different units) on the
-##'   same plot.
-##' @param cols Colours to be used for plotting. Options include "default",
-##'   "increment", "heat", "spectral", "hue", "brewer1", "greyscale" and user
-##'   defined (see \code{openColours} for more details). The same line colour
-##'   can be set for all pollutant e.g. \code{cols = "black"}.
+##' @param normalise Should the data be normalised by dividing the
+##' standard deviation of the observations? The statistics can be
+##' normalised (and non-dimensionalised) by dividing both the RMS
+##' difference and the standard deviation of the \code{mod} values by
+##' the standard deviation of the observations (\code{obs}). In this
+##' case the "observed" point is plotted on the x-axis at unit
+##' distance from the origin. This makes it possible to plot
+##' statistics for different species (maybe with different units) on
+##' the same plot. The normalisation is done by each
+##' \code{group}/\code{type} combination.
+##' @param cols Colours to be used for plotting. Useful options for
+##' categorical data are avilable from \code{RColorBrewer} colours ---
+##' see the \code{openair} \code{openColours} function for more
+##' details. Useful schemes include "Accent", "Dark2", "Paired",
+##' "Pastel1", "Pastel2", "Set1", "Set2", "Set3" --- but see
+##' ?\code{brewer.pal} for the maximum useful colours in each. For
+##' user defined the user can supply a list of colour names recognised
+##' by R (type \code{colours()} to see the full list). An example
+##' would be \code{cols = c("yellow", "green", "blue")}.
 ##' @param rms.col Colour for centred-RMS lines and text.
 ##' @param cor.col Colour for correlation coefficient lines and text.
 ##' @param arrow.lwd Width of arrow used when used for comparing two model outputs.

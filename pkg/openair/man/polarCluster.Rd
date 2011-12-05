@@ -38,7 +38,7 @@
   each. For user defined the user can supply a list of
   colour names recognised by R (type \code{colours()} to
   see the full list). An example would be \code{cols =
-  c("yellow", "green", "blue")}}
+  c("yellow", "green", "blue")}.}
 
   \item{angle.scale}{The wind speed scale is by default
   shown at a 315 degree angle. Sometimes the placement of

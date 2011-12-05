@@ -3,6 +3,10 @@ Changes in openair 0.5-14 [2011-11-29]
 
 *       NEW FUNCTION polarCluster for undertaking k-means clustering
         of bivariate polar plots
+*       Remove any considerations of time zones in selectByDate. If
+        start and end are supplied, whole days based on Date format
+        are used to select. Now accepts start/end in the form
+        "YYYY-mm-dd" as well as UK format e.g. dd/mm/YYYY.
 
 Changes in openair 0.5-13 [2011-11-18]
 =====================================

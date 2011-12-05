@@ -20,7 +20,7 @@
   \code{mod} can be of length 2 i.e. two lots of model
   predictions. If two sets of predictions are are present
   e.g. \code{mod = c("base", "revised")}, then arrows are
-  shown on the Taylor Diafram which show the change in
+  shown on the Taylor Diagram which show the change in
   model performance in going from the first to the second.
   This is useful where, for example, there is interest in
   comparing how one model run compares with another using
@@ -69,14 +69,20 @@
   the "observed" point is plotted on the x-axis at unit
   distance from the origin. This makes it possible to plot
   statistics for different species (maybe with different
-  units) on the same plot.}
+  units) on the same plot. The normalisation is done by
+  each \code{group}/\code{type} combination.}
 
-  \item{cols}{Colours to be used for plotting. Options
-  include "default", "increment", "heat", "spectral",
-  "hue", "brewer1", "greyscale" and user defined (see
-  \code{openColours} for more details). The same line
-  colour can be set for all pollutant e.g. \code{cols =
-  "black"}.}
+  \item{cols}{Colours to be used for plotting. Useful
+  options for categorical data are avilable from
+  \code{RColorBrewer} colours --- see the \code{openair}
+  \code{openColours} function for more details. Useful
+  schemes include "Accent", "Dark2", "Paired", "Pastel1",
+  "Pastel2", "Set1", "Set2", "Set3" --- but see
+  ?\code{brewer.pal} for the maximum useful colours in
+  each. For user defined the user can supply a list of
+  colour names recognised by R (type \code{colours()} to
+  see the full list). An example would be \code{cols =
+  c("yellow", "green", "blue")}.}
 
   \item{rms.col}{Colour for centred-RMS lines and text.}
 
@@ -195,7 +201,15 @@
   model) will have four different mean values --- one for
   each season. Generally, the option \code{group} is either
   missing (one model being evaluated) or represents a
-  column giving the model name.
+  column giving the model name. However, the data can be
+  normalised using the \code{normalise} option.
+  Normalisation is carried out on a per
+  \code{group}/\code{type} basis making it possible to
+  compare data on different scales e.g.
+  \code{TaylorDiagram(mydata, group = "season", type =
+  "model", normalise = TRUE)}. In this way it is possible
+  to compare different pollutants, sites etc. in the same
+  panel.
 
   Also note that if multiple sites are present it makes
   sense to use \code{type = "site"} to ensure that each
