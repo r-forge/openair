@@ -4,13 +4,13 @@
 \title{Tests for trends using Theil-Sen estimates}
 \usage{
   TheilSen(mydata, pollutant = "nox", deseason = FALSE,
-  type = "default", avg.time = "month", statistic = "mean",
-  percentile = NA, data.thresh = 0, alpha = 0.05, dec.place
-  = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
-  x.relation = "same", y.relation = "same", data.col =
-  "cornflowerblue", line.col = "red", text.col =
-  "darkgreen", cols = NULL, auto.text = TRUE, autocor =
-  FALSE, slope.percent = FALSE, date.breaks = 7,...)
+    type = "default", avg.time = "month", statistic =
+    "mean", percentile = NA, data.thresh = 0, alpha = 0.05,
+    dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex
+    = 0.8, x.relation = "same", y.relation = "same",
+    data.col = "cornflowerblue", line.col = "red", text.col
+    = "darkgreen", cols = NULL, auto.text = TRUE, autocor =
+    FALSE, slope.percent = FALSE, date.breaks = 7,...)
 
   MannKendall(mydata,...)
 }
@@ -21,7 +21,7 @@
   pollutant.}
 
   \item{pollutant}{The parameter for which a trend test is
-  required. Mandatory.}
+  required.  Mandatory.}
 
   \item{deseason}{Should the data be de-deasonalized first?
   If \code{TRUE} the function \code{stl} is used (seasonal
@@ -149,7 +149,7 @@
   \item{date.breaks}{Number of major x-axis intervals to
   use. The function will try and choose a sensible number
   of dates/times as well as formatting the date/time
-  appropriately to the range being considered. This does
+  appropriately to the range being considered.  This does
   not always work as desired automatically. The user can
   therefore increase or decrease the number of intervals by
   adjusting the value of \code{date.breaks} up or down.}
@@ -159,7 +159,7 @@
   \code{TheilSen} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}. Similarly, common axis and title
+  \code{type = "season"}.  Similarly, common axis and title
   labelling options (such as \code{xlab}, \code{ylab},
   \code{main}) are passed to \code{xyplot} via
   \code{quickText} to handle routine formatting.}

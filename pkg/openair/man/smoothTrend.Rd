@@ -3,12 +3,12 @@
 \title{Calculate smoothTrends}
 \usage{
   smoothTrend(mydata, pollutant = "nox", deseason = FALSE,
-  type = "default", statistic = "mean", avg.time = "month",
-  percentile = NA, data.thresh = 0, simulate = FALSE, n =
-  200, autocor = FALSE, cols = "brewer1", xlab = "year",
-  y.relation = "same", key.columns = length(percentile), ci
-  = TRUE, alpha = 0.2, date.breaks = 7, auto.text = TRUE,
-  ...)
+    type = "default", statistic = "mean",
+    avg.time = "month", percentile = NA, data.thresh = 0,
+    simulate = FALSE, n = 200, autocor = FALSE,
+    cols = "brewer1", xlab = "year", y.relation = "same",
+    key.columns = length(percentile), ci = TRUE,
+    alpha = 0.2, date.breaks = 7, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -17,7 +17,7 @@
   pollutant.}
 
   \item{pollutant}{The parameter for which a trend test is
-  required. Mandatory.}
+  required.  Mandatory.}
 
   \item{deseason}{Should the data be de-deasonalized first?
   If \code{TRUE} the function \code{stl} is used (seasonal
@@ -115,7 +115,7 @@
   \item{date.breaks}{Number of major x-axis intervals to
   use. The function will try and choose a sensible number
   of dates/times as well as formatting the date/time
-  appropriately to the range being considered. This does
+  appropriately to the range being considered.  This does
   not always work as desired automatically. The user can
   therefore increase or decrease the number of intervals by
   adjusting the value of \code{date.breaks} up or down.}
@@ -130,7 +130,7 @@
   \code{smoothTrend} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}. Similarly, common graphical
+  \code{type = "season"}.  Similarly, common graphical
   arguments, such as \code{xlim} and \code{ylim} for
   plotting ranges and \code{pch} and \code{cex} for plot
   symbol type and size, are passed on \code{xyplot},

@@ -3,14 +3,15 @@
 \alias{trajPlot}
 \title{Trajectory plots with conditioning}
 \usage{
-  trajLevel(mydata, lon = "lon", lat = "lat", pollutant =
-  "pm10", type = "default", method = "level", smooth =
-  FALSE, map = TRUE, lon.inc = 1.5, lat.inc = 1.5, ...)
+  trajLevel(mydata, lon = "lon", lat = "lat",
+    pollutant = "pm10", type = "default", method = "level",
+    smooth = FALSE, map = TRUE, lon.inc = 1.5,
+    lat.inc = 1.5, ...)
 
-  trajPlot(mydata, lon = "lon", lat = "lat", pollutant =
-  "pm10", type = "default", method = "scatter", smooth =
-  FALSE, map = TRUE, lon.inc = 1.5, lat.inc = 1.5, group =
-  NA, ...)
+  trajPlot(mydata, lon = "lon", lat = "lat",
+    pollutant = "pm10", type = "default",
+    method = "scatter", smooth = FALSE, map = TRUE,
+    lon.inc = 1.5, lat.inc = 1.5, group = NA, ...)
 }
 \arguments{
   \item{mydata}{Data frame, the result of importing a
@@ -136,7 +137,7 @@ type = "day")
 
 # or show each day grouped by colour, with some other options set
 \dontrun{
-trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
+ trajPlot(selectByDate(lond, start = "15/4/2010", end = "21/4/2010"), plot.type = "l",
 group = "day", col = "jet", lwd = 2, key.pos = "right", key.col = 1)
 }
 # more examples to follow linking with concentration measurements...

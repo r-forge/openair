@@ -3,13 +3,14 @@
 \title{Bivariate polar plot with smoothing}
 \usage{
   polarPlot(mydata, pollutant = "nox", x = "ws", wd = "wd",
-  type = "default", statistic = "mean", resolution =
-  "normal", limits = NA, exclude.missing = TRUE,
-  uncertainty = FALSE, cols = "default", min.bin = 1, upper
-  = NA, angle.scale = 315, units = x, force.positive =
-  TRUE, k = 100, normalise = FALSE, key.header = "",
-  key.footer = pollutant, key.position = "right", key =
-  TRUE, auto.text = TRUE, ...)
+    type = "default", statistic = "mean",
+    resolution = "normal", limits = NA,
+    exclude.missing = TRUE, uncertainty = FALSE,
+    cols = "default", min.bin = 1, upper = NA,
+    angle.scale = 315, units = x, force.positive = TRUE,
+    k = 100, normalise = FALSE, key.header = "",
+    key.footer = pollutant, key.position = "right",
+    key = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -357,7 +358,7 @@ polarPlot(mydata, pollutant = "nox", min.bin = 3)
   Westmoreland, E.J., N. Carslaw, D.C. Carslaw, A. Gillah
   and E. Bates (2007).  Analysis of air quality within a
   street canyon using statistical and dispersion modelling
-  techniques.  Atmospheric Environment. Vol. 41(39), pp.
+  techniques.  Atmospheric Environment. Vol.  41(39), pp.
   9195-9205.
 
   Yu, K.N., Cheung, Y.P., Cheung, T., Henry, R.C., 2004.
