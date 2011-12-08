@@ -2,8 +2,8 @@
 \alias{calcFno2}
 \title{Estimate NO2/NOX emission ratios from monitoring data}
 \usage{
-  calcFno2(input, tau = 60, plot = TRUE, user.fno2,
-    main = "", xlab = "year", ...)
+  calcFno2(input, tau = 60, user.fno2, main = "",
+    xlab = "year", ...)
 }
 \arguments{
   \item{input}{A data frame with the following fields.
@@ -19,10 +19,6 @@
   \item{tau}{Mixing time scale. It is unlikely the user
   will need to adjust this. See details below.}
 
-  \item{plot}{Should a plot be produced? The default is
-  \code{TRUE} and will plot the trend in f-NO2 as a monthly
-  time series.}
-
   \item{user.fno2}{User-supplied f-NO2 fraction e.g. 0.1 is
   a NO2/NOX ratio of 10% by volume. \code{user.no2} will be
   applied to the whole time series and is useful for
@@ -32,7 +28,8 @@
 
   \item{xlab}{x-axis label.}
 
-  \item{\dots}{Other graphical parameters.}
+  \item{...}{Other graphical parameters send to
+  \code{scatterPlot}.}
 }
 \value{
   As well as generating the plot itself, \code{calcFno2}
