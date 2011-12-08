@@ -2,18 +2,17 @@
 \alias{timeVariation}
 \title{Diurnal, day of the week and monthly variation}
 \usage{
-  timeVariation(mydata, pollutant = "nox",
-    local.time = FALSE, normalise = FALSE,
-    xlab = c("hour", "hour", "month", "weekday"),
-    name.pol = pollutant, type = "default", group = NULL,
-    difference = FALSE, B = 500, ci = TRUE, cols = "hue",
-    key = NULL, key.columns = 1, auto.text = TRUE,
-    alpha = 0.4, ...)
+  timeVariation(mydata, pollutant = "nox", local.time =
+  FALSE, normalise = FALSE, xlab = c("hour", "hour",
+  "month", "weekday"), name.pol = pollutant, type =
+  "default", group = NULL, difference = FALSE, B = 500, ci
+  = TRUE, cols = "hue", key = NULL, key.columns = 1,
+  auto.text = TRUE, alpha = 0.4, ...)
 }
 \arguments{
   \item{mydata}{A data frame of hourly (or higher temporal
-  resolution data).  Must include a \code{date} field and
-  at least one variable to plot.}
+  resolution data). Must include a \code{date} field and at
+  least one variable to plot.}
 
   \item{pollutant}{Name of variable to plot. Two or more
   pollutants can be plotted, in which case a form like
@@ -84,7 +83,7 @@
   interval calculations by much.}
 
   \item{ci}{Should confidence intervals be shown? The
-  default is \code{TRUE}.  Setting this to \code{FALSE} can
+  default is \code{TRUE}. Setting this to \code{FALSE} can
   be useful if multiple pollutants are chosen where
   over-lapping confidence intervals can over complicate
   plots.}
@@ -95,7 +94,7 @@
   details).}
 
   \item{key}{By default \code{timeVariation} produces four
-  plots on one page.  While it is useful to see these plots
+  plots on one page. While it is useful to see these plots
   together, it is sometimes necessary just to use one for a
   report. If \code{key} is \code{TRUE}, a key is added to
   all plots allowing the extraction of a single plot
@@ -113,7 +112,7 @@
   properly e.g.  by subscripting the `2' in NO2.}
 
   \item{alpha}{The alpha transparency used for plotting
-  confidence intervals.  0 is fully transparent and 1 is
+  confidence intervals. 0 is fully transparent and 1 is
   opaque. The default is 0.4}
 
   \item{...}{Other graphical parameters passed onto
@@ -128,7 +127,7 @@
   \code{call}, the command used to generate the plot;
   \code{data}, the data used to make the four components of
   the plot (or subplots); and \code{plot}, the associated
-  subplots.  If retained, e.g.  using \code{output <-
+  subplots.  If retained, e.g. using \code{output <-
   timeVariation(mydata, "nox")}, this output can be used to
   recover the data, reproduce or rework the original plot
   or undertake further analysis.

@@ -2,9 +2,9 @@
 \alias{polarCluster}
 \title{K-means clustering of bivariate polar plots}
 \usage{
-  polarCluster(mydata, pollutant = "nox", x = "ws",
-    wd = "wd", n.clusters = 6, cols = "Set3",
-    angle.scale = 315, units = x, auto.text = TRUE, ...)
+  polarCluster(mydata, pollutant = "nox", x = "ws", wd =
+  "wd", n.clusters = 6, cols = "Set3", angle.scale = 315,
+  units = x, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing

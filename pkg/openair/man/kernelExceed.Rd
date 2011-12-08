@@ -2,11 +2,10 @@
 \alias{kernelExceed}
 \title{Kernel density plot for daily mean exceedance statistics}
 \usage{
-  kernelExceed(polar, x = "wd", y = "ws",
-    pollutant = "pm10", type = "default",
-    by = c("day", "dayhour", "all"), limit = 50,
-    data.thresh = 0, more.than = TRUE, cols = "default",
-    nbin = 256, auto.text = TRUE, ...)
+  kernelExceed(polar, x = "wd", y = "ws", pollutant =
+  "pm10", type = "default", by = c("day", "dayhour",
+  "all"), limit = 50, data.thresh = 0, more.than = TRUE,
+  cols = "default", nbin = 256, auto.text = TRUE, ...)
 }
 \arguments{
   \item{polar}{A data frame minimally containing
@@ -32,8 +31,8 @@
   ozone, split into four quantiles (approximately equal
   numbers of counts in each of the four splits). This
   offers great flexibility for understanding the variation
-  of different variables dependent on another.  See
-  function \code{cutData} for further details.}
+  of different variables dependent on another. See function
+  \code{cutData} for further details.}
 
   \item{by}{\code{by} determines how data above the
   \code{limit} are selected. \code{by = "day"} will select
@@ -79,7 +78,7 @@
   \code{kernelExceed} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}.  Similarly, common axis and title
+  \code{type = "season"}. Similarly, common axis and title
   labelling options (such as \code{xlab}, \code{ylab},
   \code{main}) are passed to \code{levelplot} via
   \code{quickText} to handle routine formatting.}

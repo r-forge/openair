@@ -2,12 +2,11 @@
 \alias{percentileRose}
 \title{Function to plot percentiles by wind direction}
 \usage{
-  percentileRose(mydata, pollutant = "nox",
-    type = "default", percentile = c(25, 50, 75, 90, 95),
-    cols = "default", fill = TRUE, intervals = NULL,
-    angle.scale = 45, auto.text = TRUE, key.header = NULL,
-    key.footer = "percentile", key.position = "bottom",
-    key = TRUE, ...)
+  percentileRose(mydata, pollutant = "nox", type =
+  "default", percentile = c(25, 50, 75, 90, 95), cols =
+  "default", fill = TRUE, intervals = NULL, angle.scale =
+  45, auto.text = TRUE, key.header = NULL, key.footer =
+  "percentile", key.position = "bottom", key = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing \code{wd}
@@ -72,7 +71,7 @@
   properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
   \item{key.header}{Adds additional text/labels to the
-  scale key.  For example, passing options \code{key.header
+  scale key. For example, passing options \code{key.header
   = "header", key.footer = "footer"} adds addition text
   above and below the scale key. These arguments are passed
   to \code{drawOpenKey} via \code{quickText}, applying the
@@ -94,7 +93,7 @@
   \code{percentileRose} passes the option \code{hemisphere
   = "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}.  Similarly, common graphical
+  \code{type = "season"}. Similarly, common graphical
   arguments, such as \code{xlim} and \code{ylim} for
   plotting ranges and \code{lwd} for line thickness when
   using \code{fill = FALSE}, are passed on \code{xyplot},
