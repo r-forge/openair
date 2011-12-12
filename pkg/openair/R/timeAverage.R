@@ -133,8 +133,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     calc.mean <- function(mydata, start.date) { ## function to calculate means
 
         ## pad out missing data
-        mydata <- openair:::date.pad(mydata)
-
+     #   mydata <- date.pad(mydata)
+       # mydata <- date.pad2(mydata, interval = avg.time)
         ## time diff in seconds of orginal data
         timeDiff <-  as.numeric(strsplit(openair:::find.time.interval(mydata$date),
                                          " ")[[1]][1])
@@ -152,8 +152,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (units == "hour") int <- 3600
         if (units == "day") int <- 3600 * 24
         if (units == "week") int <- 3600 * 24 * 7
-        if (units == "month") int <- 3600 * 24 * 30 ## approx
-        if (units == "quarter" || units == "season") int <- 3600 * 24 * 30 * 3 ## approx
+        if (units == "month") int <- 3600 * 24 * 31 ## approx
+        if (units == "quarter" || units == "season") int <- 3600 * 24 * 31 * 3 ## approx
         if (units == "year") int <- 3600 * 8760 ## approx
 
         seconds <- seconds * int ## interval in seconds
@@ -166,7 +166,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             theDates <- mydata$date
 
             ## need to add a date to the end when expanding times
-            interval <- find.time.interval(mydata$date)
+            interval <- openair:::find.time.interval(mydata$date)
             allDates <- seq(min(mydata$date), max(mydata$date), by = interval)
             allDates <- c(allDates, max(allDates) + timeDiff)
 
@@ -202,7 +202,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             firstLine <- data.frame(date = as.POSIXct(start.date))
 
             mydata <- rbind.fill(firstLine, mydata)
-            mydata <- date.pad(mydata)
+        #    mydata <- date.pad2(mydata)
             ## for cutting data must ensure it is in GMT because combining
             ## data frames when system is not GMT puts it in local time!...
             ## and then cut makes a string/factor levels with tz lost...
@@ -211,7 +211,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         }
 
-        if (all(c("wd", "ws") %in% names(mydata))) {
+        if (all(c("ws", "wd") %in% names(mydata))) {
             if (is.numeric(mydata$wd)) {
                 mydata$u <- mydata$ws * sin(2 * pi * mydata$wd / 360)
                 mydata$v <- mydata$ws * cos(2 * pi * mydata$wd / 360)
@@ -304,8 +304,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         }
 
         if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
-        ## sometimes e.g. in gbm NaN causes trouble; replace with NA
-        dailymet[] <- lapply(dailymet, function(x) {replace(x, is.nan(x), NA)})
+
+        ## fill missing gaps
+        dailymet <- openair:::date.pad2(dailymet, interval = avg.time)
         dailymet
 
     }

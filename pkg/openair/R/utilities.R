@@ -42,7 +42,36 @@ find.time.interval <- function(dates) {
 }
 
 ###############################################################################
+## when interval is known
+date.pad2 <- function(mydata, type = "default", interval = "month") {
 
+    date.pad.site <- function(mydata, type = type, interval = interval) {
+        ## function to fill missing data gaps
+        ## assume no missing data to begin with
+        if (type == "site" ) site <- mydata$site[1]
+
+        ## pad out missing data for better looking plot
+        start.date <- min(mydata$date, na.rm = TRUE)
+        end.date <- max(mydata$date, na.rm = TRUE)
+
+        all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
+        mydata <- merge(mydata, all.dates, all = TRUE)
+
+
+        if (type == "site") mydata$site <- site
+        mydata
+    }
+
+    if (type == "site") {
+        mydata <- split(mydata, mydata$site)
+        mydata <- lapply(mydata, date.pad.site, type, interval)
+        mydata <- do.call(rbind, mydata)
+    } else {
+        mydata <- date.pad.site(mydata, type, interval
+                                )
+    }
+    mydata
+}
 #############################################################################################
 ## Function to pad out missing time data, optionally dealing with conditioning variable "site"
 date.pad <- function(mydata, type = "default") {
@@ -60,11 +89,16 @@ date.pad <- function(mydata, type = "default") {
         if (class(mydata$date)[1] == "Date") {
             interval <- "day"
         } else {
-            interval <- find.time.interval(mydata$date)
+            interval <- openair:::find.time.interval(mydata$date)
         }
 
-        all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
-        mydata <- merge(mydata, all.dates, all = TRUE)
+        ## only pad if there are missing data
+        if (length(unique((diff(mydata$date)))) != 1L) {
+
+            all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
+            mydata <- merge(mydata, all.dates, all = TRUE)
+
+        }
         if (type == "site") mydata$site <- site
         mydata
     }
@@ -80,6 +114,36 @@ date.pad <- function(mydata, type = "default") {
 }
 #############################################################################################
 
+## Function to pad out missing time data, optionally dealing with conditioning variable "site"
+## version where interval is given
+date.pad2 <- function(mydata, type = "default", interval = "month") {
+
+    date.pad.site <- function(mydata) {
+        ## function to fill missing data gaps
+        ## assume no missing data to begin with
+        if (type == "site" ) site <- mydata$site[1]
+
+        ## pad out missing data for better looking plot
+        start.date <- min(mydata$date, na.rm = TRUE)
+        end.date <- max(mydata$date, na.rm = TRUE)
+
+        all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
+        mydata <- merge(mydata, all.dates, all = TRUE)
+
+
+        if (type == "site") mydata$site <- site
+        mydata
+    }
+
+    if (type == "site") {
+        mydata <- split(mydata, mydata$site)
+        mydata <- lapply(mydata, date.pad.site)
+        mydata <- do.call(rbind, mydata)
+    } else {
+        mydata <- date.pad.site(mydata)
+    }
+    mydata
+}
 
 
 
