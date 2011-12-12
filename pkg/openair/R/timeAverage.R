@@ -260,6 +260,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                 res
             }
 
+            ## need to make sure all data are present..
+            mydata <- openair:::date.pad(mydata)
+
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                          drop = FALSE], list(date = mydata$cuts), newMethod,
                                   na.rm = TRUE,  data.thresh = data.thresh)
