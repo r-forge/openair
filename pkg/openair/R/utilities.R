@@ -22,13 +22,17 @@ dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthye
 ## can't think of better way unless user specifies what the time interval is meant to be
 
 find.time.interval <- function(dates) {
-    ## assumes date is ordered before we get here
 
     ## could have several sites, dates may be unordered
     ## find the most common time gap in all the data
     dates <- unique(dates)  ## make sure they are unique
 
-    id <- which.max(table(diff(as.numeric(dates[order(dates)]))))
+    len <- length(dates)
+
+    ## sample only 100 rather than everything
+    len <- min(c(100, len))
+
+    id <- which.max(table(diff(as.numeric(dates[order(dates[1 : len])]))))
     seconds <- as.numeric(names(id))
 
     if ("POSIXt" %in% class(dates)) seconds <- paste(seconds, "sec")
