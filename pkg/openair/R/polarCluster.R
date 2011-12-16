@@ -124,7 +124,7 @@
 ##'
 ##' Carslaw, D.C. and S.D. Beevers (2012). Characterising and
 ##' understanding emission sources using bivariate polar plots and
-##' k-means clustering. Atmospheric Environment. Submitted.
+##' k-means clustering. Environmental Modelling & Software. Submitted.
 ##' @keywords methods
 ##' @examples
 ##'
@@ -135,7 +135,8 @@
 ##' # basic plot with 6 clusters
 ##' results <- polarCluster(mydata, pollutant = "nox", n.clusters = 6)
 ##'
-##' ## get results
+##' ## get results, could read into a new data frame to make it easier to refer to
+##' ## e.g. results <- results$data...
 ##' head(results$data)
 ##'
 ##' ## how many points are there in each cluster?

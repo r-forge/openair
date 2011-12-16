@@ -153,7 +153,8 @@ data(mydata)
 # basic plot with 6 clusters
 results <- polarCluster(mydata, pollutant = "nox", n.clusters = 6)
 
-## get results
+## get results, could read into a new data frame to make it easier to refer to
+## e.g. results <- results$data...
 head(results$data)
 
 ## how many points are there in each cluster?
@@ -177,8 +178,8 @@ group = "cluster", col = openColours("Set3", 6)[c(3, 4)])
 
   Carslaw, D.C. and S.D. Beevers (2012). Characterising and
   understanding emission sources using bivariate polar
-  plots and k-means clustering. Atmospheric Environment.
-  Submitted.
+  plots and k-means clustering. Environmental Modelling &
+  Software. Submitted.
 }
 \seealso{
   \code{\link{polarPlot}}
