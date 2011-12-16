@@ -309,7 +309,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
 
         ## fill missing gaps
-        dailymet <- openair:::date.pad2(dailymet, interval = avg.time)
+        if (avg.time != "season") {
+            dailymet <- openair:::date.pad2(dailymet, interval = avg.time)
+        }
         dailymet
 
     }
