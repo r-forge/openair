@@ -240,7 +240,7 @@ calcFno2 <- function(input,
         hourly <- rbind(hourly, gaps)
         hourly <- hourly[order(hourly$date), ]
 
-        if (plot) plot.fno2(results,...)
+        plot.fno2(results,...)
         results <- list(results = results, hourly = hourly)
 
     #################
@@ -266,7 +266,7 @@ calcFno2 <- function(input,
 
         res <- rbind(res, gaps)
         res <- res[order(res$date), ]
-       if (plot)  plot.no2(input.all, res,...)
+       plot.no2(input.all, res,...)
 
     #################
     #output
