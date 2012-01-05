@@ -132,6 +132,11 @@
 ##' # load example data from package
 ##' data(mydata)
 ##'
+##' ## plot 2-8 clusters. Warning! This can take several minutes...
+##' \dontrun{
+##' polarCluster(mydata, pollutant = "nox", n.clusters = 2:8)
+##' }
+##'
 ##' # basic plot with 6 clusters
 ##' results <- polarCluster(mydata, pollutant = "nox", n.clusters = 6)
 ##'
@@ -145,7 +150,7 @@
 ##' ## plot clusters 3 and 4 as a timeVariation plot using SAME colours as in
 ##' ## cluster plot
 ##' timeVariation(subset(results$data, cluster %in% c("3", "4")), pollutant = "nox",
-##' group = "cluster", col = openColours("Set3", 6)[c(3, 4)])
+##' group = "cluster", col = openColours("Paired", 6)[c(3, 4)])
 ##' }
 ##'
 polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clusters = 6,
@@ -211,7 +216,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
     myform <- formula("cluster ~ u * v | nclust")
 
     ## find ids of u and v if only one cluster used
-    if (length(n.clusters) == 1) {
+    if (length(n.clusters) == 1L) {
 
         ## find indices in u-v space
         results.grid$u.id <- findInterval(results.grid$u, uv.id)
@@ -314,7 +319,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
 
     ## output ################################################################
 
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
+    if (length(type) == 1L) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
 
 
     output <- list(plot = plt, data = mydata, call = match.call())

@@ -312,7 +312,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                                            quickText(pollutant[x], auto.text))
 
 
-    if (difference && !missing(name.pol)) name.pol <- c(name.pol, paste(pollutant[2], "-", pollutant[1]))
+  #  if (difference && !missing(name.pol)) name.pol <- c(name.pol, paste(pollutant[2], "-", pollutant[1]))
 
     if (!missing(name.pol)) mylab <- sapply(seq_along(name.pol), function(x)
                                             quickText(name.pol[x], auto.text))

@@ -3,7 +3,7 @@
 \title{K-means clustering of bivariate polar plots}
 \usage{
   polarCluster(mydata, pollutant = "nox", x = "ws",
-    wd = "wd", n.clusters = 6, cols = "Set3",
+    wd = "wd", n.clusters = 6, cols = "Paired",
     angle.scale = 315, units = x, auto.text = TRUE, ...)
 }
 \arguments{
@@ -150,6 +150,11 @@
 # load example data from package
 data(mydata)
 
+## plot 2-8 clusters. Warning! This can take several minutes...
+\dontrun{
+polarCluster(mydata, pollutant = "nox", n.clusters = 2:8)
+}
+
 # basic plot with 6 clusters
 results <- polarCluster(mydata, pollutant = "nox", n.clusters = 6)
 
@@ -163,7 +168,7 @@ table(results$data$cluster)
 ## plot clusters 3 and 4 as a timeVariation plot using SAME colours as in
 ## cluster plot
 timeVariation(subset(results$data, cluster \%in\% c("3", "4")), pollutant = "nox",
-group = "cluster", col = openColours("Set3", 6)[c(3, 4)])
+group = "cluster", col = openColours("Paired", 6)[c(3, 4)])
 }
 }
 \author{
