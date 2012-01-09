@@ -1,6 +1,11 @@
 Changes in openair 0.5-15 [2011-12-08]
 =====================================
 
+*	Update imports etc.
+
+Changes in openair 0.5-15 [2011-12-08]
+=====================================
+
 *       Update to [IN DEVELOPMENT] GoogleMapsPlot.
 *	Tidy up calcFno2 plotting.
 *	Improve speed of timeAverage by removing date.pad.
