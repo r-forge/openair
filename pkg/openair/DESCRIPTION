@@ -7,7 +7,6 @@ ByteCompile: true
 Author: David Carslaw and Karl Ropkins
 Depends:
     R (>= 2.13.0),
-Imports:
     proto,
     Matrix,
     utils,
@@ -18,7 +17,8 @@ Imports:
     zoo,
     lattice,
     cluster,
-    boot,RColorBrewer
+    boot,
+    RColorBrewer
 Suggests:
     latticeExtra,
     hexbin,
@@ -77,10 +77,10 @@ Collate:
     'trendLevel.R'
     'utilities.R'
     'windRose.R'
-    'zzz.R'
     'trajPlot.R'
     'importTraj.R'
     'getMeta.R'
     'senTheil.R'
     'TheilSen.R'
     'polarCluster.R'
+    'zzz.R'
