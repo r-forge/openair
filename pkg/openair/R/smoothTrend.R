@@ -113,6 +113,7 @@
 ##'   \code{statistic = "percentile"} and a vector of \code{percentile} values,
 ##'   see examples below.
 ##' @export
+##' @import zoo
 ##' @return As well as generating the plot itself, \code{smoothTrend} also
 ##'   returns an object of class ``openair''. The object includes three main
 ##'   components: \code{call}, the command used to generate the plot;

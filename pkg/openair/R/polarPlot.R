@@ -225,6 +225,8 @@
 ##' \code{levelplot} via \code{quickText} to handle routine
 ##' formatting.
 ##' @export
+##' @import lattice
+##' @import mgcv
 ##' @return As well as generating the plot itself, \code{polarPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
 ##'   components: \code{call}, the command used to generate the plot;

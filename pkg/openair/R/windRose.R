@@ -155,6 +155,7 @@ pollutionRose <- function(mydata,
 ##' \code{quickText} to handle routine formatting.
 ##'
 ##' @export windRose pollutionRose
+##' @import plyr
 ##' @return As well as generating the plot itself, \code{windRose} and
 ##'   \code{pollutionRose} also return an object of class ``openair''. The
 ##'   object includes three main components: \code{call}, the command used to

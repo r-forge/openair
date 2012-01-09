@@ -98,6 +98,7 @@
 ##' \code{xlab}, \code{ylab}, \code{main}) are passed via
 ##' \code{quickText} to handle routine formatting.
 ##' @export
+##' @import cluster
 ##' @return As well as generating the plot itself, \code{polarCluster}
 ##' also returns an object of class ``openair''. The object includes
 ##' three main components: \code{call}, the command used to generate
