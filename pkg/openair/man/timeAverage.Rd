@@ -3,8 +3,8 @@
 \title{Function to calculate timeAverages for data frames}
 \usage{
   timeAverage(mydata, avg.time = "day", data.thresh = 0,
-    statistic = "mean", percentile = NA, start.date = NA,
-    vector.ws = FALSE)
+  statistic = "mean", percentile = NA, start.date = NA,
+  vector.ws = FALSE)
 }
 \arguments{
   \item{mydata}{A data frame containing a \code{date} field
@@ -44,7 +44,7 @@
   "max", "min", "median", "sum", "frequency", "sd",
   "percentile". Note that "sd" is the standard deviation
   and "frequency" is the number (frequency) of valid
-  records in the period.  "percentile" is the percentile
+  records in the period. "percentile" is the percentile
   level (%) between 0-100, which can be set using the
   "percentile" option - see below.}
 
