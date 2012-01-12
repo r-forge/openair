@@ -2,12 +2,12 @@
 \alias{TaylorDiagram}
 \title{Taylor Diagram for model evaluation with conditioning}
 \usage{
-  TaylorDiagram(mydata, obs = "obs", mod = "mod", group =
-  NULL, type = "default", normalise = FALSE, cols =
-  "brewer1", rms.col = "darkgoldenrod", cor.col = "black",
-  arrow.lwd = 3, key = TRUE, key.title = group, key.columns
-  = 1, key.pos = "right", strip = TRUE, auto.text = TRUE,
-  ...)
+  TaylorDiagram(mydata, obs = "obs", mod = "mod",
+    group = NULL, type = "default", normalise = FALSE,
+    cols = "brewer1", rms.col = "darkgoldenrod",
+    cor.col = "black", arrow.lwd = 3, key = TRUE,
+    key.title = group, key.columns = 1, key.pos = "right",
+    strip = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing a column
@@ -118,7 +118,7 @@
   \code{TaylorDiagram} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}. Similarly, common graphical
+  \code{type = "season"}.  Similarly, common graphical
   parameters, such as \code{layout} for panel arrangement
   and \code{pch} and \code{cex} for plot symbol type and
   size, are passed on to \code{xyplot}. Most are passed
@@ -285,7 +285,7 @@ type = "season")
   Report of the Intergovernmental Panel on Climate Change
   [Houghton, J.T., Y. Ding, D.J. Griggs, M. Noguer, P.J.
   van der Linden, X. Dai, K. Maskell, and C.A.  Johnson
-  (eds.)]. Cambridge University Press, Cambridge, United
+  (eds.)].  Cambridge University Press, Cambridge, United
   Kingdom and New York, NY, USA, 881 pp. (see
   \url{http://www.grida.no/climate/ipcc_tar/wg1/317.htm#fig84})
 }

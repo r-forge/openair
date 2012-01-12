@@ -2,9 +2,9 @@
 \alias{selectByDate}
 \title{Subset a data frame based on date}
 \usage{
-  selectByDate(mydata, start = "1/1/2008", end =
-  "31/12/2008", year = 2008, month = 1, day = "weekday",
-  hour = 1)
+  selectByDate(mydata, start = "1/1/2008",
+    end = "31/12/2008", year = 2008, month = 1,
+    day = "weekday", hour = 1)
 }
 \arguments{
   \item{mydata}{A data frame containing a \code{date} field
@@ -21,7 +21,7 @@
   c(1998, 2004)} to select 1998 and 2004.}
 
   \item{month}{A month or months to select. Can either be
-  numeric e.g. \code{month = 1:6} to select months 1-6
+  numeric e.g.  \code{month = 1:6} to select months 1-6
   (January to June), or by name e.g. \code{month =
   c("January", "December")}. Names can be abbreviated to 3
   letters and be in lower or upper case.}

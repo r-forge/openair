@@ -2,8 +2,8 @@
 \alias{calcFno2}
 \title{Estimate NO2/NOX emission ratios from monitoring data}
 \usage{
-  calcFno2(input, tau = 60, user.fno2, main = "", xlab =
-  "year", ...)
+  calcFno2(input, tau = 60, user.fno2, main = "",
+    xlab = "year", ...)
 }
 \arguments{
   \item{input}{A data frame with the following fields.
@@ -87,7 +87,7 @@
 \references{
   Clapp, L.J., Jenkin, M.E., 2001. Analysis of the
   relationship between ambient levels of O3, NO2 and NO as
-  a function of NOX in the UK. Atmospheric Environment 35
+  a function of NOX in the UK.  Atmospheric Environment 35
   (36), 6391-6405.
 
   Carslaw, D.C. and N Carslaw (2007).  Detecting and
@@ -112,7 +112,7 @@
 
   Carslaw, D.C. and Beevers, S.D. (2005c). Estimations of
   road vehicle primary NO2 exhaust emission fractions using
-  monitoring data in London. Atmospheric Environment,
+  monitoring data in London.  Atmospheric Environment,
   39(1): 167-177.
 
   Carslaw, D. C. and S. D. Beevers (2004). Investigating
