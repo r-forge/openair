@@ -62,14 +62,18 @@
 ##' }
 ##' @param site Site code of the network site to import
 ##' e.g. "london". Only one site can be imported at a time. The
-##' following sites are available from 1988-2010:
+##' following sites are typically available from 2000-2011, although
+##' some UK ozone sites go back to 1988:
+##'
 ##' \tabular{llrr}{
 ##' SITE CODE \tab SITE NAME        \tab LATITUDE \tab LONGITUDE\cr
+##' berlin    \tab Berlin, Germany \tab 52.52     \tab 13.4\cr
 ##' birm      \tab Birmigham Centre \tab 52.47972 \tab -1.908078\cr
 ##' ed        \tab Edinburgh        \tab 55.95197 \tab -3.195775\cr
 ##' london    \tab Central London   \tab 51.5     \tab -0.1     \cr
 ##' lh        \tab Lullington Heath \tab 50.7937  \tab 0.18125  \cr
 ##' mh        \tab Mace Head        \tab 53.33    \tab -9.9     \cr
+##' paris     \tab Paris, France  \tab 48.862 \tab 2.339\cr
 ##' sv        \tab Strath Vaich     \tab 57.73446 \tab -4.776583\cr
 ##' yw        \tab Yarner Wood      \tab 50.5976  \tab -3.71651
 ##' }
