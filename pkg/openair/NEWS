@@ -1,6 +1,7 @@
 
 Changes in openair 0.5-18 [2012-01-16]
 *	Update trajectory files to 2011 and add Berlin, Paris
+*	Add option seg to pollutionRose to control the width of the segments
 
 Changes in openair 0.5-17 [2012-01-12]
 =====================================
