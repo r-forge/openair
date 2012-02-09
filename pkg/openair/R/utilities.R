@@ -184,43 +184,25 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
 rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
                          data.thresh = 75){
     ## function to calculate rolling means
-    ## as fast as rollapply (zoo) but can handle wide "windows" e.g. annual means
+    ## uses C++ code
+
 
     if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
 
     calc.rolling <- function(mydata, pollutant, hours, new.name, data.thresh) {
 
         ## pad missing hours
-        mydata <- date.pad(mydata)
+        mydata <- openair:::date.pad(mydata)
 
-        roll <- function(x, i, hours, new.name, data.thresh) {
-            dat <- x[i:(i + hours - 1)]
-
-            if (length(na.omit(dat)) >= round(hours * data.thresh / 100)) {
-                res <- mean(dat, na.rm = TRUE)
-            } else {
-                res <- NA
-            }
-            res
-        }
-
-        res <- sapply(1:(nrow(mydata) - hours + 1), function(i) roll(mydata[ , pollutant], i,
-                                                                     hours, new.name, data.thresh))
-
-        res <- c(rep(NA, (hours - 1)), res) ## pad missing data
-        mydata <- cbind(mydata, res)
-        names(mydata)[ncol(mydata)] <- new.name
+        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh)
         mydata
     }
 
     ## split if several sites
     if ("site" %in% names(mydata)) { ## split by site
-        mydata$site <- factor(mydata$site)
-        mydata <- split(mydata, mydata$site)
-        mydata <- lapply(mydata, function(x) calc.rolling(x, pollutant, hours,
-                                                          new.name, data.thresh))
 
-        mydata <- do.call(rbind, mydata)
+        mydata <- ddply(mydata, .(site), function(x) calc.rolling(x, pollutant, hours,
+                                                           new.name, data.thresh))
         mydata
     } else {
         mydata <- calc.rolling(mydata, pollutant, hours, new.name, data.thresh)
@@ -694,7 +676,7 @@ bootMean <- function (x, conf.int = 0.95, B = 1000, na.rm = TRUE, reps = FALSE)
     if (n < 2)
         return(c(Mean = xbar, Lower = NA, Upper = NA))
     z <- unlist(lapply(1:B, function(i, x, N)
-                       sum(x[.Internal(sample(N, N, TRUE, NULL))]), x = x, N = n)) / n
+                       sum(x[(sample.int(N, N, TRUE, NULL))]), x = x, N = n)) / n
     quant <- quantile(z, c((1 - conf.int) / 2, (1 + conf.int) / 2))
     names(quant) <- NULL
     res <- c(Mean = xbar, Lower = quant[1], Upper = quant[2])

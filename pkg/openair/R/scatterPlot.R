@@ -392,6 +392,7 @@ scatterPlot <- function(mydata,
 
         ## can't have a type or group that is date-based
         if (group %in% openair:::dateTypes | type  %in% openair:::dateTypes) stop ("Can't have an averging period set and a time-based 'type' or 'group'.")
+        if ("default" %in% types) mydata$default <- 0 ## FIX ME
 
         mydata <- ddply(mydata, types, timeAverage, avg.time = avg.time,
                         statistic = statistic, percentile = percentile,
