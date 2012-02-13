@@ -985,6 +985,8 @@ panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..
                           subscripts, group.number, group.value, type, col.line,
                           col.symbol, fill, pch, cex, font, fontface, fontfamily)
 {
+    ## get rid of R check annoyances
+    plot.line = NULL
 
 
     thedata <- data.frame(x = x, y = y)

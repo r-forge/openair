@@ -1,8 +1,8 @@
 Package: openair
 Type: Package
 Title: Tools for the analysis of air pollution data
-Version: 0.5-19
-Date: 2012-02-09
+Version: 0.5-20
+Date: 2012-02-13
 ByteCompile: true
 Author: David Carslaw and Karl Ropkins
 Depends:
@@ -85,3 +85,5 @@ Collate:
     'TheilSen.R'
     'polarCluster.R'
     'zzz.R'
+    'mydata.R'
+    'trajCluster.R'

@@ -1,5 +1,8 @@
-Changes in openair 0.5-18 [2012-01-16]
-*	Use C++ code for rolling mean calcs. Much faster, more to follow
+
+Changes in openair 0.5-20 [2012-02-13]
+*	Use C++ code for rolling mean calcs. Much faster, more to
+	follow
+*	NEW function trajCluster to carry out cluster analysis on back trajectories
 Changes in openair 0.5-18 [2012-01-16]
 *	Update trajectory files to 2011 and add Berlin, Paris
 *	Add option seg to pollutionRose to control the width of the

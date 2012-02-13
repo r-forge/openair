@@ -186,6 +186,9 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
     ## function to calculate rolling means
     ## uses C++ code
 
+    ## get rid of R check annoyances
+    site = NULL
+
 
     if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
 
@@ -194,7 +197,8 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         ## pad missing hours
         mydata <- openair:::date.pad(mydata)
 
-        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh)
+        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh,
+                                    PACKAGE = "openair")
         mydata
     }
 
@@ -518,6 +522,9 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
     ## Optionally can plot 95% confidence intervals and run bootstrap simulations
     ## to estimate uncertainties. Simple block bootstrap is also available for correlated data
 
+    ## get rid of R check annoyances#
+    plot.line = NULL
+
     thedata <- data.frame(x = x, y = y)
     tryCatch({
 
@@ -600,51 +607,6 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
 
 
 
-
-panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ..., se = TRUE,
-                          level = 0.95, n = 100, col = plot.line$col, col.se = col,
-                          lty = plot.line$lty, lwd = plot.line$lwd, alpha = plot.line$alpha,
-                          alpha.se = 0.25, border = NA, subscripts, group.number, group.value,
-                          type, col.line, col.symbol, fill, pch, cex, font, fontface,
-                          fontfamily)
-{
-
-
-    thedata <- data.frame(x = x, y = y)
-    tryCatch({mod <- lm(y ~ x, data = thedata)
-
-              lims <- current.panel.limits()
-              xrange <- c(max(min(lims$x), min(x)), min(max(lims$x), max(x)))
-              xseq <- seq(xrange[1], xrange[2], length = n)
-
-              pred <- predict(mod, data.frame(x = xseq), interval = "confidence")
-
-              if (se) {
-                  ## predicts 95% CI by default
-                  panel.polygon(x = c(xseq, rev(xseq)), y = c(pred[, 2], rev(pred[, 3])), col = col.se,
-                                alpha = alpha.se, border = border)
-              }
-
-              pred <- pred[, 1]
-
-              panel.lines(xseq, pred, col = col, alpha = alpha, lty = lty,
-                          lwd = lwd)
-
-              x <- current.panel.limits()$xlim[1]
-
-              y <- 0.95 * current.panel.limits()$ylim[2]
-
-              r.sq <- summary(mod)$r.squared
-              slope <- coef(mod)[2]
-              intercept <- coef(mod)[1]
-
-              panel.text(x, y, quickText(paste(y.nam, "=", format(slope, digits = 2), "[", x.nam, "]", "+",
-                                                format(intercept, digits = 2),
-                                                " R2=",  format(r.sq, digits = 2),
-                                                sep = "")), cex = 0.7, pos = 4)
-
-          }, error = function(x) return)
-}
 
 #########################################################################################################
 

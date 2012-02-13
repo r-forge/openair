@@ -300,6 +300,9 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                       key.header = "", key.footer = pollutant, key.position = "right",
                       key = TRUE, auto.text = TRUE, ...) {
 
+    ## get rid of R check annoyances
+    z = NULL
+
 
     ## initial checks ##########################################################################################
     if (length(type) > 2) {stop("Maximum number of types is 2.")}

@@ -263,6 +263,13 @@ corPlot <- function(mydata, pollutants = NULL, type = "default", cluster = TRUE,
 
 panel.corrgram <- function(x, y, z, subscripts, at, level = 0.9, text.col, r.thresh = r.thres,
                            label = FALSE, ...) {
+
+     ## get rid of R check annoyances
+    r.thres = NULL
+
+    ## get rid of R check annoyances
+    r.thresh = NULL
+
     require(ellipse)
     x <- as.numeric(x)[subscripts]
     y <- as.numeric(y)[subscripts]
