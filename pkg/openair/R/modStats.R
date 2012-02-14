@@ -55,6 +55,21 @@
 ##'
 ##' More than one type can be considered e.g. \code{type = c("season",
 ##'   "weekday")} will produce statistics split by season and day of the week.
+##' @param rank.name Simple model ranking can be carried out if
+##' \code{rank.name} is supplied. \code{rank.name} will generally
+##' refer to a column representing a model name, which is to
+##' ranked. The ranking is based on a simple scoring system based on
+##' the performance of four model evaluation statistics: FAC2
+##' (fraction within a factor of two), NMB (normalised mean bias), r
+##' (correlation coefficient) and RMSE (root mean squared error). For
+##' each one of these statistics the models are ranked from best to
+##' worst and given a score. For example, for 6 models the best model
+##' will be given a score of 6 and the second model 5 and so on. The
+##' scoring is carried out for individual statistics.
+##'
+##' A new column 'score' is added to the results and the order of the
+##' results places the best performing model first.
+##'
 ##' @param ... Other aruments to be passed to \code{cutData} e.g.
 ##'   \code{hemisphere = "southern"}
 ##' @export
@@ -73,7 +88,7 @@
 ##' modStats(mydata, mod = "no2", obs = "nox", type = "season")
 ##'
 ##'
-modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", ...) {
+modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", rank.name = NULL, ...) {
     ## function to calculate model evaluation statistics
     ## the default is to use the entire data set.
     ## Requires a field "date" and optional conditioning variables representing measured and modelled values
@@ -173,6 +188,20 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", ...) {
 
     results <- sortDataFrame(results, key = type)
 
+    ## simple ranking of models?
+    if (!is.null(rank.name)) {
+
+        types <- setdiff(type, rank.name)
+
+        if (length(types) == 0) {
+            results <- rankModels(results, rank.name)
+        } else {
+
+            results <- ddply(results, types, rankModels, rank.name = rank.name)
+        }
+
+    }
+
     results
 
 }
@@ -190,4 +219,75 @@ sortDataFrame <- function(x, key, ...) {
         x[do.call("order", c(x[key], ...)), , drop = FALSE]
     }
 }
+
+rankModels <- function(mydata, rank.name = "group"){
+## function to rank models in a simple way
+
+    ## define variables
+    site = group = type = NULL
+
+    if ("site" %in% names(mydata)) vars <- c(rank.name, "site") else mydata$site = "sample"
+
+    modelRanks <- function(mydata, key = "r"){
+
+        ## sort the data
+        mydata <- sortDataFrame(mydata, key)
+        ## assign rank number
+        results <- data.frame(group = mydata[, rank.name], rank.r = 1:nrow(mydata))
+
+        if (key == "r") { ## reverse order
+             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
+             ## assign rank number
+             results <- data.frame(group = mydata[, rank.name], rank.r = 1:nrow(mydata))
+        }
+
+        if (key == "RMSE") { ## reverse order
+             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
+             ## assign rank number
+             results <- data.frame(group = mydata[, rank.name], rank.RMSE = 1:nrow(mydata))
+        }
+
+        if (key == "NMB") { ## reverse order
+            mydata$NMB <- abs(mydata$NMB)
+             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
+             ## assign rank number
+             results <- data.frame(group = mydata[, rank.name], rank.NMB = 1:nrow(mydata))
+        }
+
+        if (key == "FAC2") { ## reverse order
+
+             mydata <- sortDataFrame(mydata, key)
+             ## assign rank number
+             results <- data.frame(group = mydata[, rank.name], rank.FAC2 = 1:nrow(mydata))
+        }
+        results
+
+    }
+
+    mydata <- na.omit(mydata)
+    results <- ddply(mydata, .(site), modelRanks, key = "r")
+    rank.r <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.r")
+
+    results <- ddply(mydata, .(site), modelRanks, key = "RMSE")
+    rank.RMSE <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.RMSE")
+
+    results <- ddply(mydata, .(site), modelRanks, key = "NMB")
+    rank.NMB <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.NMB")
+
+    results <- ddply(mydata, .(site), modelRanks, key = "FAC2")
+    rank.FAC2 <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.FAC2")
+
+     ## merge them all into one data frame
+    results <- list(rank.r, rank.RMSE, rank.NMB, rank.FAC2)
+    results <- Reduce(function(x, y, by = type) merge(x, y, by = "group", all = TRUE), results)
+
+    results$TOTAL <- apply(subset(results, select = -group), MARGIN = 1, FUN = sum)
+    mydata$score <-  results$TOTAL
+
+    mydata <- sortDataFrame(mydata, key = "score", decreasing = TRUE)
+
+    mydata
+
+}
+
 

@@ -3,7 +3,7 @@
 \title{Calculate common model evaluation statistics}
 \usage{
   modStats(mydata, mod = "mod", obs = "obs",
-    type = "default", ...)
+    type = "default", rank.name = NULL, ...)
 }
 \arguments{
   \item{mydata}{A data frame.}
@@ -34,6 +34,24 @@
   More than one type can be considered e.g. \code{type =
   c("season", "weekday")} will produce statistics split by
   season and day of the week.}
+
+  \item{rank.name}{Simple model ranking can be carried out
+  if \code{rank.name} is supplied. \code{rank.name} will
+  generally refer to a column representing a model name,
+  which is to ranked. The ranking is based on a simple
+  scoring system based on the performance of four model
+  evaluation statistics: FAC2 (fraction within a factor of
+  two), NMB (normalised mean bias), r (correlation
+  coefficient) and RMSE (root mean squared error). For each
+  one of these statistics the models are ranked from best
+  to worst and given a score. For example, for 6 models the
+  best model will be given a score of 6 and the second
+  model 5 and so on. The scoring is carried out for
+  individual statistics.
+
+  A new column 'score' is added to the results and the
+  order of the results places the best performing model
+  first.}
 
   \item{...}{Other aruments to be passed to \code{cutData}
   e.g.  \code{hemisphere = "southern"}}
