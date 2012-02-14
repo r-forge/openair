@@ -76,19 +76,16 @@
 trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, type = "default",
                         cols = "Set1", split.after = FALSE, ...) {
 
-    if (tolower(method) == "euclid") {
-        method <- "distEuclid"
-    } else {
-        method <- "distAngle"
-    }
+    if (tolower(method) == "euclid")  method <- "distEuclid" else method <- "distAngle"
+
 
     extra.args <- list(...)
 
     ## label controls
-    extra.args$plot.type <- if (!"plot.type" %in% names(extra.args))
-       extra.args$plot.type <- extra.args$lwd else extra.args$lwd <- "l"
+    extra.args$plot.type <- if ("plot.type" %in% names(extra.args))
+        extra.args$plot.type else extra.args$plot.type <- "l"
     extra.args$lwd <- if ("lwd" %in% names(extra.args))
-       extra.args$lwd <- extra.args$lwd else extra.args$lwd <- 4
+       extra.args$lwd else extra.args$lwd <- 4
 
 
 
@@ -143,7 +140,7 @@ trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, typ
         class(agg$date) = class(traj$date)
         attr(agg$date, "tzone") <- "GMT"
 
-        plot.args <- list(agg, x = "lon", y ="lat", group = "cluster", plot.type = "l", lwd = 4,
+        plot.args <- list(agg, x = "lon", y ="lat", group = "cluster",
                     col = cols, type = type, map = TRUE)
 
          ## reset for extra.args
