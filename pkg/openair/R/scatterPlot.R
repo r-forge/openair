@@ -685,7 +685,8 @@ scatterPlot <- function(mydata,
                       }
 
 
-                      if (mod.line) {
+                      if (mod.line && group.number == 1) {
+
                           panel.abline(a = c(0, 0.5), lty = 5)
                           panel.abline(a = c(0, 2), lty = 5)
                           panel.abline(a = c(0, 1), lty = 1)

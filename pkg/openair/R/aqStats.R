@@ -28,6 +28,11 @@
 ##' \bold{hours.gt.200} --- number of hours NO2 is more than 200 ug/m3.  \item
 ##' \bold{days.gt.50} --- number of days PM10 is more than 50 ug/m3. }
 ##'
+##' There can be small discrepancies with the AURN due to the
+##' treatment of rounding data. The \code{aqStats} function does not
+##' round, whereas AURN data can be rounded at several stages during
+##' the calculations.
+##'
 ##' @param mydata A data frame containing a \code{date} field of hourly data.
 ##' @param pollutant The name of a pollutant e.g. \code{pollutant = c("o3",
 ##'   "pm10")}.

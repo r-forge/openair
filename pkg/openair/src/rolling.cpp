@@ -7,14 +7,14 @@ using namespace Rcpp;
 
 RcppExport SEXP rollingMean(SEXP x, SEXP len, SEXP cap) {
   NumericVector A(x); // the data
-  double capr = as<int>(cap); // data capture %
+  double capr = as<double>(cap); // data capture %
   int lenr = as<int>(len); // window size %
-  NumericVector res(x); // for results
+  NumericVector res(A.size()); // for results
   LogicalVector NA(x); // for missings
   NumericVector missing(1);
   int n = A.size(); // length of data
   double sum = 0.0;
-  double sumNA = 0; // number of missings
+  int sumNA = 0; // number of missings
   NA = is_na(A) ; // logical vector of missings
   missing[0] = NA_REAL;
 
@@ -52,3 +52,4 @@ RcppExport SEXP rollingMean(SEXP x, SEXP len, SEXP cap) {
   }
   return res;
 }
+

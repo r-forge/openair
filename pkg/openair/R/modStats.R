@@ -24,7 +24,21 @@
 ##'
 ##' \item \eqn{r}, the Pearson correlation coefficient.
 ##'
-##' \item \eqn{IOA}, the Index of Agreement.
+##' \item \eqn{IOA}, the Index of Agreement based on Willmott et
+##' al. (2011), which spans between -1 and +1 with values approaching
+##' +1 representing better model performance.
+##'
+##' An IOA of 0.5, for example, indicates that the sum of the
+##' error-magnitudes is one half of the sum of the observed-deviation
+##' magnitudes.  When IOA = 0.0, it signifies that the sum of the
+##' magnitudes of the errors and the sum of the observed-deviation
+##' magnitudes are equivalent. When IOA = -0.5, it indicates that the
+##' sum of the error-magnitudes is twice the sum of the perfect
+##' model-deviation and observed-deviation magnitudes. Values of IOA
+##' near -1.0 can mean that the model-estimated deviations about O are
+##' poor estimates of the observed deviations; but, they also can mean
+##' that there simply is little observed variability - so some caution
+##' is needed when the IOA approaches -1.
 ##'
 ##' }
 ##'
@@ -58,23 +72,20 @@
 ##' @param rank.name Simple model ranking can be carried out if
 ##' \code{rank.name} is supplied. \code{rank.name} will generally
 ##' refer to a column representing a model name, which is to
-##' ranked. The ranking is based on a simple scoring system based on
-##' the performance of four model evaluation statistics: FAC2
-##' (fraction within a factor of two), NMB (normalised mean bias), r
-##' (correlation coefficient) and RMSE (root mean squared error). For
-##' each one of these statistics the models are ranked from best to
-##' worst and given a score. For example, for 6 models the best model
-##' will be given a score of 6 and the second model 5 and so on. The
-##' scoring is carried out for individual statistics.
+##' ranked. The ranking is based the Index of Agreement performance,
+##' as that indicator is arguably the best single model performance
+##' indicator available.
 ##'
-##' A new column 'score' is added to the results and the order of the
-##' results places the best performing model first.
 ##'
 ##' @param ... Other aruments to be passed to \code{cutData} e.g.
 ##'   \code{hemisphere = "southern"}
 ##' @export
 ##' @return Returns a data frame with model evaluation statistics.
 ##' @author David Carslaw
+##' @references
+##' Willmott, C.J., Robeson, S.M., Matsuura, K., 2011. A
+##' refined index of model performance. International Journal of
+##' Climatology.
 ##' @keywords methods
 ##' @examples
 ##'
@@ -163,8 +174,11 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", rank.n
      ##  Index of Agreement
     IOA <- function(x, mod = "mod", obs = "obs") {
         x <- na.omit(x[ , c(mod, obs)])
-        res <- 1 - sum((x[ , obs] - x[ , mod]) ^ 2 )  /
-                    sum((abs(x[ , mod] - mean(x[ , obs])) + abs(x[ , obs] - mean(x[ , obs]))) ^ 2)
+
+        LHS <- sum(abs(x[, mod] - x[, obs]))
+        RHS <- 2 * sum(abs(x[, obs] - mean(x[, obs])))
+
+        if (LHS <= RHS) res <- 1 - LHS / RHS else res <- RHS / LHS - 1
 
         data.frame(IOA = res)
     }
@@ -220,74 +234,9 @@ sortDataFrame <- function(x, key, ...) {
     }
 }
 
-rankModels <- function(mydata, rank.name = "group"){
-## function to rank models in a simple way
 
-    ## define variables
-    site = group = type = NULL
+rankModels <- function(mydata, rank.name = "group") {
 
-    if ("site" %in% names(mydata)) vars <- c(rank.name, "site") else mydata$site = "sample"
-
-    modelRanks <- function(mydata, key = "r"){
-
-        ## sort the data
-        mydata <- sortDataFrame(mydata, key)
-        ## assign rank number
-        results <- data.frame(group = mydata[, rank.name], rank.r = 1:nrow(mydata))
-
-        if (key == "r") { ## reverse order
-             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
-             ## assign rank number
-             results <- data.frame(group = mydata[, rank.name], rank.r = 1:nrow(mydata))
-        }
-
-        if (key == "RMSE") { ## reverse order
-             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
-             ## assign rank number
-             results <- data.frame(group = mydata[, rank.name], rank.RMSE = 1:nrow(mydata))
-        }
-
-        if (key == "NMB") { ## reverse order
-            mydata$NMB <- abs(mydata$NMB)
-             mydata <- sortDataFrame(mydata, key, decreasing = TRUE)
-             ## assign rank number
-             results <- data.frame(group = mydata[, rank.name], rank.NMB = 1:nrow(mydata))
-        }
-
-        if (key == "FAC2") { ## reverse order
-
-             mydata <- sortDataFrame(mydata, key)
-             ## assign rank number
-             results <- data.frame(group = mydata[, rank.name], rank.FAC2 = 1:nrow(mydata))
-        }
-        results
-
-    }
-
-    mydata <- na.omit(mydata)
-    results <- ddply(mydata, .(site), modelRanks, key = "r")
-    rank.r <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.r")
-
-    results <- ddply(mydata, .(site), modelRanks, key = "RMSE")
-    rank.RMSE <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.RMSE")
-
-    results <- ddply(mydata, .(site), modelRanks, key = "NMB")
-    rank.NMB <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.NMB")
-
-    results <- ddply(mydata, .(site), modelRanks, key = "FAC2")
-    rank.FAC2 <- sortDataFrame(ddply(results, .(group), numcolwise(sum)), "rank.FAC2")
-
-     ## merge them all into one data frame
-    results <- list(rank.r, rank.RMSE, rank.NMB, rank.FAC2)
-    results <- Reduce(function(x, y, by = type) merge(x, y, by = "group", all = TRUE), results)
-
-    results$TOTAL <- apply(subset(results, select = -group), MARGIN = 1, FUN = sum)
-    mydata$score <-  results$TOTAL
-
-    mydata <- sortDataFrame(mydata, key = "score", decreasing = TRUE)
-
-    mydata
-
+    ## sort by IOA
+    mydata <- sortDataFrame(mydata, "IOA", decreasing = TRUE)
 }
-
-
