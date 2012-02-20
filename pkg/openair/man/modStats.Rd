@@ -38,20 +38,9 @@
   \item{rank.name}{Simple model ranking can be carried out
   if \code{rank.name} is supplied. \code{rank.name} will
   generally refer to a column representing a model name,
-  which is to ranked. The ranking is based on a simple
-  scoring system based on the performance of four model
-  evaluation statistics: FAC2 (fraction within a factor of
-  two), NMB (normalised mean bias), r (correlation
-  coefficient) and RMSE (root mean squared error). For each
-  one of these statistics the models are ranked from best
-  to worst and given a score. For example, for 6 models the
-  best model will be given a score of 6 and the second
-  model 5 and so on. The scoring is carried out for
-  individual statistics.
-
-  A new column 'score' is added to the results and the
-  order of the results places the best performing model
-  first.}
+  which is to ranked. The ranking is based the Index of
+  Agreement performance, as that indicator is arguably the
+  best single model performance indicator available.}
 
   \item{...}{Other aruments to be passed to \code{cutData}
   e.g.  \code{hemisphere = "southern"}}
@@ -87,7 +76,23 @@
 
   \item \eqn{r}, the Pearson correlation coefficient.
 
-  \item \eqn{IOA}, the Index of Agreement.
+  \item \eqn{IOA}, the Index of Agreement based on Willmott
+  et al. (2011), which spans between -1 and +1 with values
+  approaching +1 representing better model performance.
+
+  An IOA of 0.5, for example, indicates that the sum of the
+  error-magnitudes is one half of the sum of the
+  observed-deviation magnitudes.  When IOA = 0.0, it
+  signifies that the sum of the magnitudes of the errors
+  and the sum of the observed-deviation magnitudes are
+  equivalent. When IOA = -0.5, it indicates that the sum of
+  the error-magnitudes is twice the sum of the perfect
+  model-deviation and observed-deviation magnitudes. Values
+  of IOA near -1.0 can mean that the model-estimated
+  deviations about O are poor estimates of the observed
+  deviations; but, they also can mean that there simply is
+  little observed variability - so some caution is needed
+  when the IOA approaches -1.
 
   }
 
@@ -108,6 +113,11 @@ modStats(mydata, mod = "no2", obs = "nox", type = "season")
 }
 \author{
   David Carslaw
+}
+\references{
+  Willmott, C.J., Robeson, S.M., Matsuura, K., 2011. A
+  refined index of model performance. International Journal
+  of Climatology.
 }
 \keyword{methods}
 
