@@ -456,7 +456,7 @@ GoogleMapsPlot <- function(mydata,
         }
         col.range <- col2rgb(col.range)
         col.range <- rgb(col.range[1,], col.range[2,], col.range[3,],
-                      alpha = plot.transparent * 255, max = 255)
+                      alpha = plot.transparent * 255, maxColorValue = 255)
     }
 
     if(missing(limits)){

@@ -529,7 +529,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
     tryCatch({
 
         if (!simulate) {
-            mod <- gam(y ~ s(x), se = TRUE, data = thedata)
+            mod <- gam(y ~ s(x), select = TRUE, data = thedata)
 
 
             lims <- current.panel.limits()
