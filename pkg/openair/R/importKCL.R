@@ -466,7 +466,7 @@
 importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE, units = "mass") {
 
     ## get rid of R check annoyances
-    sites = site = NULL
+    sites  = NULL
 
     site <- toupper(site)
 
