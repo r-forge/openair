@@ -347,7 +347,7 @@ timePlot <- function(mydata,
 
     theStrip <- strip
 
-    if (date.pad) mydata <- date.pad(mydata, type)
+    if (date.pad) mydata <- date.pad(mydata)
 
     mydata <- cutData(mydata, type, ...)
 

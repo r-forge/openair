@@ -3,6 +3,8 @@ Changes in openair 0.5-17 [2012-01-12]
 *	Fix scaling bug that could sometime affect polarPlot grid
 	lines
 *	Fix regression in importKCL that was intruduced in 0.5-21
+*	Make sure wd data are rounded to 10 degrees in polarFreq
+*	Fix date padding issue in smoothTrend when type = "site"
 
 Changes in openair 0.5-21 [2012-02-21]
 *	Use C++ code for rolling mean calcs. Much faster, more to
