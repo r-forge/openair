@@ -16,14 +16,12 @@ Imports:
     mgcv,
     lattice,
     cluster,
-    boot,
     Rcpp,
     RColorBrewer
 Suggests:
     latticeExtra,
     hexbin,
     RgoogleMaps,
-    ellipse,
     maps
 LinkingTo: Rcpp
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
