@@ -6,6 +6,8 @@ Changes in openair 0.5-17 [2012-01-12]
 *	Make sure wd data are rounded to 10 degrees in polarFreq
 *	Fix date padding issue in smoothTrend when type = "site"
 *	windRose now gives mean ws in each panel rather than count
+*	add otion date.format to timePlot for more control over date
+	format on axis
 
 Changes in openair 0.5-21 [2012-02-21]
 *	Use C++ code for rolling mean calcs. Much faster, more to
