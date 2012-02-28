@@ -220,6 +220,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
                       ...)
 {
 
+    if (is.null(seg)) seg <- 0.9
+
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
         ## strip
@@ -441,7 +443,6 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     #format
     results.grid$calm <- stat.labcalm(results.grid$calm)
-
     ## proper names of labelling ##############################################################################
     pol.name <- sapply(levels(results.grid[ , type[1]]),
                        function(x) quickText(x, auto.text))
@@ -513,6 +514,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
                                                 col = "grey85", lwd = 1))
 
                       subdata <- results.grid[subscripts, ]
+
                       for (i in 1:nrow(subdata)) {
                           with(subdata, {
                               for (j in 1:length(theLabels)) {
@@ -528,11 +530,13 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
                               }
                           })
                       }
+
                   ltext(seq((myby + off.set), mymax,
                       myby) * sin(pi/4), seq((myby +
                       off.set), mymax, myby) * cos(pi / 4),
                       paste(seq(myby, mymax, by = myby), stat.unit,
                       sep = ""), cex = 0.7)
+
                   if (annotate)
                       ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
                           subdata$panel.fun[1], "\ncalm = ", subdata$calm[1], stat.unit,
