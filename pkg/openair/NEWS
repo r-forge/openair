@@ -1,4 +1,8 @@
-Changes in openair 0.5-17 [2012-01-12]
+Changes in openair 0.5-23 [2012-02-28]
+=====================================
+*	Fix bug in windRose when paddle = FALSE
+
+Changes in openair 0.5-22 [2012-01-12]
 =====================================
 *	Fix scaling bug that could sometime affect polarPlot grid
 	lines
