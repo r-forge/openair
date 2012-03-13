@@ -573,6 +573,8 @@ panel.taylor <- function(x, y, subscripts, results, results.new, maxsd, cor.col,
                          rms.col, combine, col.symbol, myColors, group.number,
                          type, arrow.lwd, ...) {
 
+    R <- NULL; sd.mod <- NULL ## avoid R NOTEs
+
     ## Plot actual results by type and group if given
     results <- transform(results, x = sd.mod * R, y = sd.mod * sin(acos(R)))
 

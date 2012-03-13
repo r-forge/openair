@@ -320,6 +320,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     myform <- formula(paste(" ~ frcst.cut | ", temp, sep = ""))
     bins <- seq(floor(lo), ceiling(hi), length = bins)
 
+    frcst.cut <- NULL ## avoid R NOTES
+
     histo <- histogram(myform, data = hist.results, breaks = bins, type = "count",
                        as.table = TRUE,
                        strip = strip,
