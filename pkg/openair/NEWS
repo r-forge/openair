@@ -1,6 +1,7 @@
 Changes in openair 0.5-24 [2012-03-08]
 *	Fix bug when type = "wd" - would add missing data to north
 	sector
+*	Add observed histogram to conditionalQuantile
 
 Changes in openair 0.5-23 [2012-02-28]
 =====================================

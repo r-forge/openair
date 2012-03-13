@@ -179,7 +179,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     mydata <- cutData(mydata, type)
 
     procData <- function(mydata){
-        mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"), drop = FALSE]
+        mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                         drop = FALSE]
 
         obs <- mydata[ , obs]
         pred <- mydata[ , mod]
@@ -213,7 +214,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
         results <- data.frame(x = med$med, lng = lng$x, med = med$x, q1 = q1$x, q2 = q2$x,
                               q3 = q3$x, q4 = q4$x)
-        results.cut <- data.frame(frcst.cut = frcst.cut)
+        results.cut <- data.frame(frcst.cut = frcst.cut, obs.cut = obs)
 
         ## range taken by observations
         results.obs <- data.frame(min = min(obs), max = max(obs))
@@ -303,7 +304,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
                           panel.lines(c(theSubset$min, theSubset$max), c(theSubset$min,
                                                                          theSubset$max),
-                                      col = ideal.col, lwd = 1)
+                                      col = ideal.col, lwd = 1.5)
                           panel.lines(results$x[subscripts], results$med[subscripts],
                                       col = col.5, lwd = 2)
 
@@ -325,7 +326,19 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                        strip.left = strip.left,
                        col = "black", alpha = 0.1, border = NA,
                        par.strip.text = list(cex = 0.8),
-                       ylab = "sample size")
+                       ylab = "sample size for histograms",
+                       panel = function (x = frcst.cut, col = "black", border = NA,
+                       alpha = 0.2,
+                       subscripts, ...) {
+                           ## histogram of observations
+                           panel.histogram(x = hist.results[subscripts, "obs.cut"],
+                                           col = NA, alpha = 0.5, lwd = 0.5,
+                                           border = ideal.col, ...)
+                           ## histogram of modelled values
+                           panel.histogram(x = x, col = "black", border, alpha = 0.2, ...)
+
+                       }
+                       )
 
     thePlot <- doubleYScale(scatter, histo, add.ylab2 = TRUE)
     thePlot <- update(thePlot, par.settings = simpleTheme(col = c("black", "black")))
