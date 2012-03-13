@@ -83,12 +83,12 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels etc. will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param \dots Other graphical parameters passed onto \code{cutData} and 
-##'   \code{lattice:xyplot}. For example, \code{conditionalQuantile} passes the option 
-##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern 
+##' @param \dots Other graphical parameters passed onto \code{cutData} and
+##'   \code{lattice:xyplot}. For example, \code{conditionalQuantile} passes the option
+##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
-##'   Similarly, common axis and title labelling options (such as \code{xlab}, 
-##'   \code{ylab}, \code{main}) are passed to \code{xyplot} via \code{quickText} 
+##'   Similarly, common axis and title labelling options (such as \code{xlab},
+##'   \code{ylab}, \code{main}) are passed to \code{xyplot} via \code{quickText}
 ##'   to handle routine formatting.
 ##' @export
 ##' @author David Carslaw
@@ -171,10 +171,10 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     vars <- c(mod, obs)
 
-    if (any(type %in%  dateTypes)) vars <- c("date", vars)
+    if (any(type %in%  openair:::dateTypes)) vars <- c("date", vars)
 
     ## check the data
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
     mydata <- na.omit(mydata)
     mydata <- cutData(mydata, type)
 
@@ -276,7 +276,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                                                                "perfect model")),
                       space = key.position,
                       columns = key.columns),
-                      par.strip.text = list(cex = 0.8), 
+                      par.strip.text = list(cex = 0.8),
                       panel = function(x, subscripts,  ...){
                           panel.grid (-1, -1, col = "grey95")
 
@@ -310,7 +310,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                       })
 
     #reset for extra.args
-    xyplot.args<- listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     #plot
     scatter <- do.call(xyplot, xyplot.args)
@@ -339,5 +339,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     invisible(trellis.last.object())
 
+    output <- list(plot = thePlot, data = results, call = match.call())
+    class(output) <- "openair"
+    invisible(output)
 }
 

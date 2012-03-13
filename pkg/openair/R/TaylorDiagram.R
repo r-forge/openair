@@ -347,7 +347,7 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
 
     results <- ddply(mydata, c(group, type), calcStats, obs = obs, mod = mod[1])
 
-
+    results.new <- NULL
     if (combine) results.new <- ddply(mydata, c(group, type), calcStats,
                                       obs = obs, mod = mod[2])
 
@@ -453,17 +453,18 @@ TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type =
                         panel =  function(x, y, ...) {
 
                             ## annotate each panel but don't need to do this for each grouping value
-                            panel.taylor.setup(x, y, results = results, maxsd = maxsd, cor.col = cor.col,
-                                               rms.col = rms.col, ...)
+                            panel.taylor.setup(x, y, results = results, maxsd = maxsd,
+                                               cor.col = cor.col, rms.col = rms.col, ...)
 
                             ## plot data in each panel
-                            panel.superpose(x, y, panel.groups = 'panel.taylor', ...,
+                            panel.superpose(x, y, panel.groups = panel.taylor, ...,
                                             results = results, results.new = results.new,
-                                            combine = combine, myColors = myColors, arrow.lwd = arrow.lwd)
+                                            combine = combine, myColors = myColors,
+                                            arrow.lwd = arrow.lwd)
                         })
 
     ## reset for extra.args
-    xyplot.args<- openair:::listUpdate(xyplot.args, extra.args)
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
     ## plot
     plt <- do.call(xyplot, xyplot.args)
@@ -568,8 +569,9 @@ panel.taylor.setup <- function(x, y, subscripts, results, maxsd, cor.col, rms.co
 }
 
 
-panel.taylor <- function(x, y, subscripts, results, results.new, maxsd, cor.col, rms.col, combine,
-                         col.symbol, myColors, group.number, type, arrow.lwd, ...) {
+panel.taylor <- function(x, y, subscripts, results, results.new, maxsd, cor.col,
+                         rms.col, combine, col.symbol, myColors, group.number,
+                         type, arrow.lwd, ...) {
 
     ## Plot actual results by type and group if given
     results <- transform(results, x = sd.mod * R, y = sd.mod * sin(acos(R)))
