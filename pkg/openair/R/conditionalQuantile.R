@@ -1,4 +1,17 @@
-sely the median value of the predictions
+##' Conditional quantile estimates for model evaluation
+##'
+##' Function to calculate conditional quantiles with flexible conditioning. The
+##' function is for use in model evaluation and more generally to help better
+##' understand forecast predictions and how well they agree with observations.
+##'
+##' Conditional quantiles are a very useful way of considering model
+##' performance against observations for continuous measurements (Wilks, 2005).
+##' The conditional quantile plot splits the data into evenly spaced bins. For
+##' each predicted value bin e.g. from 0 to 10~ppb the \emph{corresponding}
+##' values of the observations are identified and the median, 25/75th and 10/90
+##' percentile (quantile) calculated for that bin. The data are plotted to show
+##' how these values vary across all bins. For a time series of observations
+##' and predictions that agree precisely the median value of the predictions
 ##' will equal that for the observations for each bin.
 ##'
 ##' The conditional quantile plot differs from the quantile-quantile plot (Q-Q
