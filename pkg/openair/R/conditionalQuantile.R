@@ -1,17 +1,4 @@
-##' Conditional quantile estimates for model evaluation
-##'
-##' Function to calculate conditional quantiles with flexible conditioning. The
-##' function is for use in model evaluation and more generally to help better
-##' understand forecast predictions and how well they agree with observations.
-##'
-##' Conditional quantiles are a very useful way of considering model
-##' performance against observations for continuous measurements (Wilks, 2005).
-##' The conditional quantile plot splits the data into evenly spaced bins. For
-##' each predicted value bin e.g. from 0 to 10~ppb the \emph{corresponding}
-##' values of the observations are identified and the median, 25/75th and 10/90
-##' percentile (quantile) calculated for that bin. The data are plotted to show
-##' how these values vary across all bins. For a time series of observations
-##' and predictions that agree precisely the median value of the predictions
+sely the median value of the predictions
 ##' will equal that for the observations for each bin.
 ##'
 ##' The conditional quantile plot differs from the quantile-quantile plot (Q-Q
@@ -196,25 +183,23 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                        labels = labs)
         obs.cut[is.na(obs.cut)] <- labs[1]
         obs.cut <- as.numeric(as.character(obs.cut))
-        frcst.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
+        pred.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
                          labels = labs)
-        frcst.cut[is.na(frcst.cut)] <- labs[1]
-        frcst.cut <- as.numeric(as.character(frcst.cut))
+        pred.cut[is.na(pred.cut)] <- labs[1]
+        pred.cut <- as.numeric(as.character(pred.cut))
         n <- length(labs)
-        lng <- aggregate(obs, by = list(length = frcst.cut), length)
-        med <- aggregate(obs, by = list(med = frcst.cut), median)
-        q1 <- aggregate(obs, by = list(q1 = frcst.cut), quantile, 0.25)
-        q2 <- aggregate(obs, by = list(q2 = frcst.cut), quantile, 0.75)
-        q1$x[lng$x <= min.bin[1]] <- NA
-        q2$x[lng$x <= min.bin[1]] <- NA
-        q3 <- aggregate(obs, by = list(q3 = frcst.cut), quantile, 0.1)
-        q4 <- aggregate(obs, by = list(q4 = frcst.cut), quantile, 0.9)
-        q3$x[lng$x <= min.bin[2]] <- NA
-        q4$x[lng$x <= min.bin[2]] <- NA
-
-        results <- data.frame(x = med$med, lng = lng$x, med = med$x, q1 = q1$x, q2 = q2$x,
-                              q3 = q3$x, q4 = q4$x)
-        results.cut <- data.frame(frcst.cut = frcst.cut, obs.cut = obs)
+        lng <- tapply(obs, pred.cut, length)
+        med <- tapply(obs, pred.cut, median)
+        q1 <- tapply(obs, pred.cut, quantile, probs = 0.25)
+        q2 <- tapply(obs, pred.cut, quantile, probs = 0.75)
+        q1[lng <= min.bin[1]] <- NA
+        q2[lng <= min.bin[1]] <- NA
+        q3 <- tapply(obs, pred.cut, quantile, probs = 0.1)
+        q4 <- tapply(obs, pred.cut, quantile, probs = 0.9)
+        q3[lng <= min.bin[2]] <- NA
+        q4[lng <= min.bin[2]] <- NA
+        results <- data.frame(x = sort(unique(pred.cut)), lng, med, q1, q2, q3, q4)
+        results.cut <- data.frame(pred.cut = pred.cut, obs.cut = obs)
 
         ## range taken by observations
         results.obs <- data.frame(min = min(obs), max = max(obs))
@@ -317,10 +302,10 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     scatter <- do.call(xyplot, xyplot.args)
 
     temp <- paste(type, collapse = "+")
-    myform <- formula(paste(" ~ frcst.cut | ", temp, sep = ""))
+    myform <- formula(paste(" ~ pred.cut | ", temp, sep = ""))
     bins <- seq(floor(lo), ceiling(hi), length = bins)
 
-    frcst.cut <- NULL ## avoid R NOTES
+    pred.cut <- NULL ## avoid R NOTES
 
     histo <- histogram(myform, data = hist.results, breaks = bins, type = "count",
                        as.table = TRUE,
@@ -329,7 +314,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                        col = "black", alpha = 0.1, border = NA,
                        par.strip.text = list(cex = 0.8),
                        ylab = "sample size for histograms",
-                       panel = function (x = frcst.cut, col = "black", border = NA,
+                       panel = function (x = pred.cut, col = "black", border = NA,
                        alpha = 0.2,
                        subscripts, ...) {
                            ## histogram of observations
