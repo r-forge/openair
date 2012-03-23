@@ -119,6 +119,10 @@
 ##'   \code{FALSE}.
 ##' @param ci If a smooth fit line is applied, then \code{ci} determines
 ##'   whether the 95\% confidence intervals aer shown.
+##' @param y.relation This determines how the y-axis scale is plotted. "same"
+##'   ensures all panels use the same scale and "free" will use panel-specfic
+##'   scales. The latter is a useful setting when plotting data with very
+##'   different values.
 ##' @param ref.x Add a vertical dashed reference line at this value.
 ##' @param ref.y Add a horizontal dashed reference line at this value.
 ##' @param key.columns Number of columns to be used in the key. With many
@@ -236,6 +240,7 @@ timePlot <- function(mydata,
                      log = FALSE,
                      smooth = FALSE,
                      ci = TRUE,
+                     y.relation = "same",
                      ref.x = NULL,
                      ref.y = NULL,
                      key.columns = 1,
@@ -479,7 +484,8 @@ timePlot <- function(mydata,
         formats <- date.format
     }
 
-    scales <- list(x = list(at = dates, format = formats), y = list(log = nlog))
+    scales <- list(x = list(at = dates, format = formats), y = list(log = nlog, relation = y.relation,
+                                                           rot = 0))
 
     ## layout changes depening on plot type
 

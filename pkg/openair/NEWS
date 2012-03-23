@@ -1,3 +1,7 @@
+Changes in openair 0.5-26 [2012-03-23]
+=====================================
+*	Add y.relation option to timePlot
+
 Changes in openair 0.5-25 [2012-03-16]
 =====================================
 *	Fix bug when type = "wd" - would add missing data to north
