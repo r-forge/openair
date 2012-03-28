@@ -162,6 +162,8 @@ ans <- gsub("ch4","' 'CH' [4] * '", ans)
         ans <- gsub("km/h/s", "km hr' ^-1 * ' s' ^-1 *'", ans)
 	ans <- gsub("km/hour/s", "' 'km hr' ^-1 ' s' ^-1 *'", ans)
 
+        ## area
+        ans <- gsub("km2", "' 'km' ^2 *'", ans)
 # R2
 	ans <- gsub("r2", "R' ^2 *'", ans)
 	ans <- gsub("R2", "R' ^2 *'", ans)
