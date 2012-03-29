@@ -1,6 +1,7 @@
 Changes in openair 0.5-26 [2012-03-23]
 =====================================
 *	Add y.relation option to timePlot
+*	Fix interpolation bug in calcFno2 and names in documentation.
 
 Changes in openair 0.5-25 [2012-03-16]
 =====================================
