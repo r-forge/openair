@@ -259,8 +259,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     myform <- formula(paste("x ~ med | ", temp, sep = ""))
 
     xyplot.args <- list(x = myform, data = results,
-                      xlim = c(lo, hi),
-                      ylim = c(lo, hi),
+                      xlim = c(lo, hi * 1.05),
+                      ylim = c(lo, hi * 1.05),
                       ylab = quickText(ylab, auto.text),
                       xlab = quickText(xlab, auto.text),
                       as.table = TRUE,

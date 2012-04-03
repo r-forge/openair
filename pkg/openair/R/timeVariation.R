@@ -319,8 +319,6 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                                            quickText(pollutant[x], auto.text))
 
 
-  #  if (difference && !missing(name.pol)) name.pol <- c(name.pol, paste(pollutant[2], "-", pollutant[1]))
-
     if (!missing(name.pol)) mylab <- sapply(seq_along(name.pol), function(x)
                                             quickText(name.pol[x], auto.text))
 
@@ -415,8 +413,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
 
     ## for individual plot keys - useful if only one of the plots is extracted after printing
     if (!is.null(key)) {
-        key <- list(rectangles = list(col = myColors[1:npol], border = NA),
-                    text = list(lab = mylab),  space = "bottom", columns = key.columns)
+        key <- list(rectangles = list(col = myColors[1:npol], border = NA), title = "",
+                    text = list(lab = mylab),  space = "bottom", columns = key.columns, lines.title = 1)
 
         extra.args$main <- overall.main
     }
