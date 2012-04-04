@@ -473,7 +473,7 @@
 importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE, units = "mass") {
 
     ## get rid of R check annoyances
-    sites  = NULL
+    sites <- NULL; v10 <- NULL; v2.5 <- NULL
 
     site <- toupper(site)
 
@@ -539,18 +539,18 @@ importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE,
 
     ## rename PM volatile/non volatile components if present
 
-    if ("PMFR" %in% names(thedata)) {
-        thedata <- rename(thedata, c(PMFR = "v10"))
+    if ("pmfr" %in% names(thedata)) {
+        thedata <- rename(thedata, c(pmfr = "v10"))
         thedata <- transform(thedata, v10 = -1 * v10)
     }
 
-    if ("P2FR" %in% names(thedata)) {
-        thedata <- rename(thedata, c(P2FR = "v2.5"))
+    if ("p2fr" %in% names(thedata)) {
+        thedata <- rename(thedata, c(p2fr = "v2.5"))
         thedata <- transform(thedata, v2.5 = -1 * v2.5)
     }
 
-    if ("PMFB" %in% names(thedata)) thedata <- rename(thedata, c(PMFB = "nv10"))
-    if ("P2FB" %in% names(thedata)) thedata <- rename(thedata, c(P2FB = "nv2.5"))
+    if ("pmfb" %in% names(thedata)) thedata <- rename(thedata, c(pmfb = "nv10"))
+    if ("p2fb" %in% names(thedata)) thedata <- rename(thedata, c(p2fb = "nv2.5"))
 
 
     if (units != "mass")  {
