@@ -199,7 +199,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
         pred.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
                          labels = labs)
         pred.cut[is.na(pred.cut)] <- labs[1]
-        pred.cut <- as.numeric(as.character(pred.cut))
+
         n <- length(labs)
         lng <- tapply(obs, pred.cut, length)
         med <- tapply(obs, pred.cut, median)
@@ -211,8 +211,10 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
         q4 <- tapply(obs, pred.cut, quantile, probs = 0.9)
         q3[lng <= min.bin[2]] <- NA
         q4[lng <= min.bin[2]] <- NA
-        results <- data.frame(x = sort(unique(pred.cut)), lng, med, q1, q2, q3, q4)
-        results.cut <- data.frame(pred.cut = pred.cut, obs.cut = obs)
+
+        results <- data.frame(x = as.numeric(levels(pred.cut)), lng, med, q1, q2, q3, q4)
+
+        results.cut <- data.frame(pred.cut = as.numeric(as.character(pred.cut)), obs.cut = obs)
 
         ## range taken by observations
         results.obs <- data.frame(min = min(obs), max = max(obs))
