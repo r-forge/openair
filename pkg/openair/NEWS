@@ -5,6 +5,8 @@ Changes in openair 0.5-26 [2012-03-23]
 *	Refine conditionalQuantile scales
 *	Provide volatile and non-volatile components for FDMS PM10 and
 	PM2.5 in importKCL - now consistent with importAEA
+*	NEW FUNCTION conditionalEval for model evaluation - allows
+	other variable performance to be assessed.
 
 Changes in openair 0.5-25 [2012-03-16]
 =====================================

@@ -85,3 +85,4 @@ Collate:
     'zzz.R'
     'mydata.R'
     'trajCluster.R'
+    'conditionalEval.R'

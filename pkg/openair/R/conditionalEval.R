@@ -1,0 +1,420 @@
+##' Conditional quantile estimates with additional variables for model evaluation
+##'
+##' This function enhances \code{\link{conditionalQuantile}} by also
+##' considering how other variables vary over the same
+##' intervals. Conditional quantiles are very useful on their own for
+##' model evaluation, but provide no direct information on how other
+##' variables change at the same time. For example, a conditional
+##' quantile plot of ozone concentrations may show that low
+##' concentrations of ozone tend to be under-predicted. However, the
+##' cause of the under-prediction can be difficult to determine.
+##'
+##' The \code{conditionalEval} function simultaneously plots the model
+##' performance of other observed/predicted variables pairs according
+##' to different model evaluation statistics. These statistics derive
+##' from the \code{\link{modStats}} function and include "MB", "NMB",
+##' "r", "IOA", "MGE", "NMGE", "RMSE" and "FAC2". More than one
+##' statistic can be supplied. Bootstrap samples are taken from the
+##' corresponding values of other variables to be plotted and their
+##' statistics calculated. For example, a model may also provide
+##' predictions of NOx and wind speed (for which there are also
+##' observations available). The \code{conditionalEval} function will
+##' show how well these other variables are predicted for the same
+##' intervals of the main variables assessed in the conditional
+##' quantile. The analysis could show for example, when ozone
+##' concentrations are under-predicted, the model may also be shown to
+##' over-predict concentrations of NOx at the same time, or
+##' under-predict wind speeds. Such information can thus help identify
+##' the underlying causes of poor model performance. One or more
+##' additional variables can be plotted.
+##'
+##' A special case is \code{statistic = "cluster"}. In this case a
+##' data frame is provided that contains the cluster calculated by
+##' \code{\link{trajCluster}} and
+##' \code{\link{importTraj}}. Alternatively users could supply their
+##' own calculated clusters. These calculations can be very useful in
+##' showing whether certain back trajectory clusters are associated
+##' with poor (or good) model performance. Note that in the case of
+##' \code{statistic = "cluster"} there will be fewer data points used
+##' in the analysis compared with the ordinary statistics above
+##' because the trajectories are available for every three hours. Also
+##' note that \code{statistic = "cluster"} cannot be used together
+##' with the ordinary model evaluation statistics such as MB.
+##'
+##' Far more insight can be gained into model performance through conditioning
+##' using \code{type}. For example, \code{type = "season"} will plot
+##' conditional quantiles by each season. \code{type} can also be a factor or
+##' character field e.g. representing different models used.
+##'
+##' See Wilks (2005) for more details and the examples below.
+##'
+##' @param mydata A data frame containing the field \code{obs} and \code{mod}
+##'   representing observed and modelled values.
+##' @param obs The name of the observations in \code{mydata}.
+##' @param mod The name of the predictions (modelled values) in \code{mydata}.
+##' @param var.obs Other variable observations for which statistics
+##' should be calculated. Can be more than length one
+##' e.g. \code{var.obs = c("nox.obs", "ws.obs")}.
+##' @param var.mod Other variable predictions for which statistics
+##' should be calculated. Can be more than length one
+##' e.g. \code{var.obs = c("nox.obs", "ws.obs")}.
+##' @param type \code{type} determines how the data are split
+##' i.e. conditioned, and then plotted. The default is will produce a
+##' single plot using the entire data. Type can be one of the built-in
+##' types as detailed in \code{cutData} e.g. "season", "year",
+##' "weekday" and so on. For example, \code{type = "season"} will
+##' produce four plots --- one for each season.
+##'
+##' It is also possible to choose \code{type} as another variable in
+##' the data frame. If that variable is numeric, then the data will be
+##' split into four quantiles (if possible) and labelled
+##' accordingly. If type is an existing character or factor variable,
+##' then those categories/levels will be used directly. This offers
+##' great flexibility for understanding the variation of different
+##' variables and how they depend on one another.
+##' @param bins Number of bisn used in \code{conditionalQuantile}.
+##' @param statistic Statistic(s) to be plotted. Can be "MB", "NMB",
+##' "r", "IOA", "MGE", "NMGE", "RMSE", "FAC2", as described in
+##' \code{modStats}. Can also be "cluster" if clusters have been
+##' calculated using \code{trajCluster}.
+##' @param xlab label for the x-axis, by default \code{"predicted value"}.
+##' @param ylab label for the y-axis, by default \code{"observed value"}.
+##' @param col Colours to be used for plotting the uncertainty bands and median
+##'   line. Must be of length 5 or more.
+##' @param col.var Colours for the additional variables to be
+##' compared. See \code{openColours} for more details.
+##' @param var.names Variable names to be shown on plot for plotting
+##' \code{var.obs} and \code{var.mod}.
+##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
+##'   \code{TRUE} titles and axis labels etc. will automatically try and format
+##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
+##' @param ... Other graphical parameters passed onto
+##' \code{conditionalQuantile} and \code{cutData}. For example,
+##' \code{conditionalQuantile} passes the option \code{hemisphere =
+##' "southern"} on to \code{cutData} to provide southern (rather than
+##' default northern) hemisphere handling of \code{type = "season"}.
+##' Similarly, common axis and title labelling options (such as
+##' \code{xlab}, \code{ylab}, \code{main}) are passed to \code{xyplot}
+##' via \code{quickText} to handle routine formatting.
+##' @export
+##' @author David Carslaw
+##' @seealso See \code{\link{conditionalQuantile}} for information on conditional
+##' quantiles, \code{\link{modStats}} for model evaluation statistics
+##' and the package \code{verification} for comprehensive functions
+##' for forecast verification.
+##' @references Wilks, D. S., 2005. Statistical Methods in the Atmospheric
+##'   Sciences, Volume 91, Second Edition (International Geophysics), 2nd
+##'   Edition. Academic Press.
+##' @keywords methods
+##' @examples
+##'
+##'
+##' ## Examples to follow, or will be shown in the openair manual
+##'
+conditionalEval <- function(mydata, obs = "obs", mod = "mod",
+                            var.obs = "var.obs", var.mod = "var.mod",
+                            type = "default",
+                            bins = 31,
+                            statistic = "MB",
+                            xlab = "predicted value",
+                            ylab = "statistic",
+                            col = brewer.pal(5, "YlOrRd"),
+                            col.var = "Set1",
+                            var.names = NULL,
+                            auto.text = TRUE, ...) {
+
+    Var1 <- NULL; current.strip <- NULL ## keep CRAN check happy
+
+    require(latticeExtra)
+
+    ## various checks
+    if (length(var.obs) == 0 | length(var.mod) == 0) stop ("No variables chosen to analyse")
+    if (length(var.obs) != length(var.mod)) stop ("Number of var.obs does not equal number of var.mod variables")
+    if (length(type) > 1) stop("Only one type can be used with this function")
+
+    ## extra.args setup
+    extra.args <- list(...)
+
+    ## allowable ordinary model evaluation statistics
+    the.stats <- c("MB", "NMB", "r", "IOA", "MGE", "NMGE", "RMSE", "FAC2")
+
+    ## label controls
+    ## (xlab and ylab handled in formals because unique action)
+    extra.args$main <- if("main" %in% names(extra.args))
+        quickText(extra.args$main, auto.text) else quickText("", auto.text)
+    trellis.par.set(list(strip.background = list(col = "white")))
+
+    ## variables needed
+    vars <- c(mod, obs, var.obs, var.mod)
+
+    cluster <- FALSE
+    ## if cluster is in data frame then remove any data duplicates
+    if ("cluster" %in% statistic) {
+        mydata <- subset(mydata, hour.inc == -96)
+        vars <- c(vars, "cluster")
+        cluster <- TRUE
+    }
+
+    ## ordinary conditional quantile plot
+    pltCondQ <- conditionalQuantile(mydata, obs = obs, mod = mod, type = type, bins = bins,
+                                    key.position = "left", key.columns = 1, layout = c(1, NA), ...)
+
+    if (any(type %in% openair:::dateTypes)) vars <- c("date", vars)
+
+    ## check the data
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+
+    mydata <- na.omit(mydata)
+
+    ## for plot limits
+    lo <- min(mydata[ , c(mod, obs)])
+    hi <- max(mydata[ , c(mod, obs)])
+
+    mydata <- cutData(mydata, type)
+
+    ## function to process ordinary statistics using bootstrap confidence intervals
+
+    procData <- function(mydata, statistic = statistic, var.obs = var.obs, var.mod = var.mod, ...) {
+        mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                         drop = FALSE]
+
+        obs <- mydata[ , obs]
+        pred <- mydata[ , mod]
+        min.d <- min(c(obs, pred))
+        max.d <- max(c(obs, pred))
+        bins <- seq(floor(min.d), ceiling(max.d), length = bins)
+
+        b <- bins[-length(bins)]
+        labs <- b + 0.5 * diff(bins)
+
+        pred.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
+                        labels = labs)
+        pred.cut[is.na(pred.cut)] <- labs[1]
+
+        ## split by predicted intervals
+
+        res <- split(mydata, pred.cut)
+
+        statFun <- function(x, ...) {
+            x <- as.matrix(x)
+
+            tmpFun <- function(i, x, ...) {
+                x <- x[sample(1:nrow(x), nrow(x), replace = TRUE), ]
+                get(statistic)(x, obs = var.obs, mod = var.mod)
+            }
+
+            if (nrow(x) > 4) {
+                res <- ldply(1:200, tmpFun, x, ...)
+
+                data.frame(statistic = statistic, group = var.obs, mean = mean(res[[statistic]]),
+                           lower = quantile(res[[statistic]], probs = 0.025, na.rm = TRUE),
+                           upper = quantile(res[[statistic]], probs = 0.975, na.rm = TRUE))
+            }
+        }
+
+        res <- ldply(res, statFun, statistic = statistic)
+
+        res
+    }
+
+    ## function to process clusters if available
+    procClust <- function(mydata, ...) {
+
+        .id <- NULL; Freq <- NULL ## avoid check notes
+
+        obs <- mydata[ , obs]
+        pred <- mydata[ , mod]
+        min.d <- min(c(obs, pred))
+        max.d <- max(c(obs, pred))
+        bins <- seq(floor(min.d), ceiling(max.d), length = bins)
+
+        b <- bins[-length(bins)]
+        labs <- b + 0.5 * diff(bins)
+
+        pred.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
+                        labels = labs)
+        pred.cut[is.na(pred.cut)] <- labs[1]
+
+        ## split by predicted intervals
+
+        res <- split(mydata, pred.cut)
+
+        res <- ldply(res, function (x) as.data.frame(table(x$cluster)))
+
+        ## calculate proportions by interval
+        res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = "cluster")
+
+        res
+    }
+
+    ## treat clusters specfically if present ###############################################
+
+    if ("cluster" %in% statistic) {
+        clust.results <- ddply(mydata, type, procClust)
+        clust.results$.id <- as.numeric(clust.results$.id)
+
+        pol.name <- sapply(levels(clust.results[ , "statistic"]), function(x) quickText(x, auto.text))
+        strip <- strip.custom(factor.levels = pol.name)
+
+        if (type == "default") {
+
+            strip.left <- FALSE
+
+        } else { ## two conditioning variables
+
+            pol.name <- sapply(levels(clust.results[ , type[1]]), function(x) quickText(x, auto.text))
+            strip.left <- strip.custom(factor.levels = pol.name)
+        }
+        ## #####################################################################################
+
+        cols <-  openColours(col.var, length(unique(clust.results$Var1)))
+        temp <- "statistic"
+        if (type != "default") temp <- paste(c("statistic", type), collapse = "+")
+        myform <- formula(paste("Freq ~ .id | ", temp, sep = ""))
+
+        clust.plt <- xyplot(myform , data = clust.results,
+                            xlim = c(lo, hi * 1.05),
+                            ylim = c(0, 1),
+                            ylab = "proportion",
+                            xlab = quickText(xlab, auto.text),
+                            as.table = TRUE,
+                            strip = strip,
+                            strip.left = strip.left,
+                            groups = Var1,
+                            stack = TRUE,
+                            col = cols,
+                            border = NA,
+                            drop.unused.levels = FALSE,
+                            horizontal = FALSE,
+                            key = list(rectangles = list(col = cols, border = NA),
+                            text = list(levels(clust.results$Var1)), space = "right",
+                            title = "cluster", cex.title = 1),
+                            par.strip.text = list(cex = 0.8),
+
+                            panel = function (x, ...) {
+                                ## set width of boxes depending on x-scale
+                                box.width = diff(sort(unique(x)))[1]
+                                panel.grid(-1, -1)
+                                panel.barchart(x, box.width = box.width, ...)
+                            })
+    }
+
+    ## go through list of ordinary statistics ##################################################
+    statistic <- statistic[which(statistic %in% the.stats)]
+
+    if (length(statistic > 0)) {
+
+        ## go through vars, then statistics
+        results <- ldply(seq_along(var.obs), function (x) {
+            ldply(statistic, function (y) ddply(mydata, type, procData, statistic = y,
+                                                var.obs = var.obs[x], var.mod = var.mod[x]))})
+        results$.id <- as.numeric(results$.id)
+
+        ## make sure all infinite values are set to NA
+        results[] <- lapply(results, function(x) {replace(x, x == Inf | x == -Inf, NA)})
+
+        ## proper names of labelling #####################################################
+
+        pol.name <- sapply(levels(results[ , "statistic"]), function(x) quickText(x, auto.text))
+        strip <- strip.custom(factor.levels = pol.name)
+
+
+        if (type == "default") {
+
+            strip.left <- FALSE
+
+
+        } else { ## two conditioning variables
+
+            pol.name <- sapply(levels(results[ , type[1]]), function(x) quickText(x, auto.text))
+            strip.left <- strip.custom(factor.levels = pol.name)
+        }
+        ## #####################################################################################
+
+
+        ## set up colours
+        myColors <- openColours(col.var, length(var.obs))
+
+        if (is.null(var.names)) var.names <- var.obs
+
+        key <- list(lines = list(col = myColors[1:length(var.obs)], lty = extra.args$lty, lwd = 2),
+                    text = list(lab = sapply(var.names, function(x) quickText(x, auto.text)), cex = 1),
+                    space = "right", columns = 1,
+                    title = quickText("variable", auto.text), cex.title = 1)
+
+        temp <- "statistic"
+        if (type != "default") temp <- paste(c("statistic", type), collapse = "+")
+
+        myform <- formula(paste("mean ~ .id | ", temp, sep = ""))
+
+        xyplot.args <- list(x = myform, data = results, groups = results$group,
+                            ylim = c(min(results$lower, na.rm = TRUE), max(results$upper, na.rm = TRUE)),
+                            xlim = c(lo, hi * 1.05),
+                            ylab = quickText(ylab, auto.text),
+                            xlab = quickText(xlab, auto.text),
+                            as.table = TRUE,
+                            key = key,
+                            aspect = 1,
+                            strip = strip,
+                            strip.left = strip.left,
+                            scales = list(y = list(relation = "free", rot = 0)),
+
+                            par.strip.text = list(cex = 0.8),
+                            panel = panel.superpose, ...,
+                            panel.groups = function(x, y, group.number, subscripts, ...)
+                        {
+                            if (group.number == 1) {
+
+                                panel.grid (-1, -1, col = "grey95")
+                                if (results$statistic[subscripts][1] %in% c("r", "IOA"))
+                                    panel.abline(h = 1, lty = 5)
+                                if (results$statistic[subscripts][1] %in% c("MB", "NMB"))
+                                    panel.abline(h = 0, lty = 5)
+                            }
+
+                            if (results$statistic[subscripts][1] == "IOA")  panel.abline(h = 1, lty = 5)
+
+                            openair:::poly.na(x, results$lower[subscripts], x,
+                                    results$upper[subscripts], group.number, myColors)
+
+                            panel.lines(results$.id[subscripts], results$mean[subscripts],
+                                        col.line = myColors[group.number], lwd = 2)
+
+                        })
+
+        ## reset for extra.args
+        xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+
+    }
+
+    if (cluster) {
+        thePlot <- clust.plt
+    } else {
+        thePlot <- do.call(xyplot, xyplot.args)
+    }
+
+    ## how wide to set plots,  base is "2" units
+    width <- 1.2 / (1.2 + max(length(statistic), 1))
+    print(pltCondQ, position = c(0, 0, width, 1), more = TRUE)
+
+    if (type == "default") {
+        print(thePlot, position = c(width, 0, 1, 1), more = FALSE)
+    } else {
+        print(useOuterStrips(thePlot, strip = strip,
+                             strip.left = strip.left), position = c(width, 0, 1, 1), more = FALSE)
+    }
+
+
+    ## reset if greyscale
+    if (length(col) == 1 && col == "greyscale")
+        trellis.par.set("strip.background", current.strip)
+
+    invisible(trellis.last.object())
+
+    if ("cluster" %in% statistic) results <- results.clust
+
+    output <- list(plot = thePlot, data = results, call = match.call())
+    class(output) <- "openair"
+    invisible(output)
+}
+

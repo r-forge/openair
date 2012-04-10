@@ -368,14 +368,6 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
         month <- as.numeric(format(date, "%m"))}
                      )
 
-    ## polygon that can deal with missing data
-    poly.na <- function(x1, y1, x2, y2, group.number) {
-        for(i in seq(2, length(x1)))
-            if (!any(is.na(y2[c(i - 1, i)])))
-                lpolygon(c(x1[i - 1], x1[i], x2[i], x2[i - 1]),
-                         c(y1[i - 1], y1[i], y2[i], y2[i - 1]),
-                         col = myColors[group.number], border = NA, alpha = alpha)
-    }
 
     ## y range taking account of expanded uncertainties
     rng <- function(x) {
@@ -470,8 +462,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
 
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
-                            if (ci) {poly.na(x, data.hour$Lower[subscripts], x,
-                                             data.hour$Upper[subscripts], group.number)}
+                            if (ci) {openair:::poly.na(x, data.hour$Lower[subscripts], x,
+                                             data.hour$Upper[subscripts], group.number, myColors)}
 
                         })
 
@@ -667,8 +659,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
 
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
-                            if (ci) {poly.na(x, data.day.hour$Lower[subscripts], x,
-                                             data.day.hour$Upper[subscripts], group.number)}
+                            if (ci) {openair:::poly.na(x, data.day.hour$Lower[subscripts], x,
+                                             data.day.hour$Upper[subscripts], group.number, myColors)}
                         })
 
     ## reset for extra.args
