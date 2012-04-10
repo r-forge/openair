@@ -45,7 +45,7 @@
   great flexibility for understanding the variation of
   different variables and how they depend on one another.}
 
-  \item{bins}{Number of bisn used in
+  \item{bins}{Number of bins used in
   \code{conditionalQuantile}.}
 
   \item{statistic}{Statistic(s) to be plotted. Can be "MB",
@@ -94,39 +94,58 @@
   time. For example, a conditional quantile plot of ozone
   concentrations may show that low concentrations of ozone
   tend to be under-predicted. However, the cause of the
-  under-prediction can be difficult to determine.
+  under-prediction can be difficult to determine. However,
+  by considering how well the model predicts other
+  variables over the same intervals, more insight can be
+  gained into the underlying reasons why model performance
+  is poor.
 }
 \details{
   The \code{conditionalEval} function simultaneously plots
   the model performance of other observed/predicted
-  variables pairs according to different model evaluation
+  variable pairs according to different model evaluation
   statistics. These statistics derive from the
   \code{\link{modStats}} function and include "MB", "NMB",
   "r", "IOA", "MGE", "NMGE", "RMSE" and "FAC2". More than
-  one statistic can be supplied. Bootstrap samples are
-  taken from the corresponding values of other variables to
-  be plotted and their statistics calculated. For example,
-  a model may also provide predictions of NOx and wind
-  speed (for which there are also observations available).
-  The \code{conditionalEval} function will show how well
-  these other variables are predicted for the same
+  one statistic can be supplied e.g. \code{statistic =
+  c("NMB", "IOA")}. Bootstrap samples are taken from the
+  corresponding values of other variables to be plotted and
+  their statistics with 95\% confidence intervals
+  calculated.
+
+  For example, a model may also provide predictions of NOx
+  and wind speed (for which there are also observations
+  available). The \code{conditionalEval} function will show
+  how well these other variables are predicted for the same
   intervals of the main variables assessed in the
-  conditional quantile. The analysis could show for
-  example, when ozone concentrations are under-predicted,
-  the model may also be shown to over-predict
-  concentrations of NOx at the same time, or under-predict
-  wind speeds. Such information can thus help identify the
-  underlying causes of poor model performance. One or more
+  conditional quantile e.g. ozone. In this case, values are
+  supplied to \code{var.obs} (observed values for other
+  variables) and \code{var.mod} (modelled values for other
+  variables). For example, to consider how well the model
+  predicts NOx and wind speed \code{var.obs = c("nox.obs",
+  "ws.obs")} and \code{var.obs = c("nox.mod", "ws.mod")}
+  would be supplied (assuming \code{nox.obs, nox.mod,
+  ws.obs, ws.mod} are present in the data frame). The
+  analysis could show for example, when ozone
+  concentrations are under-predicted, the model may also be
+  shown to over-predict concentrations of NOx at the same
+  time, or under-predict wind speeds. Such information can
+  thus help identify the underlying causes of poor model
+  performance. For example, an under-prediction in wind
+  speed could result in higher surface NOx concentrations
+  and lower ozone concentrations. Similarly if wind speed
+  predictions were good and NOx was over predicted it might
+  suggest an over-estimate of NOx emissions. One or more
   additional variables can be plotted.
 
   A special case is \code{statistic = "cluster"}. In this
   case a data frame is provided that contains the cluster
   calculated by \code{\link{trajCluster}} and
   \code{\link{importTraj}}. Alternatively users could
-  supply their own calculated clusters. These calculations
-  can be very useful in showing whether certain back
-  trajectory clusters are associated with poor (or good)
-  model performance. Note that in the case of
+  supply their own pre-calculated clusters. These
+  calculations can be very useful in showing whether
+  certain back trajectory clusters are associated with poor
+  (or good) model performance. Note that in the case of
   \code{statistic = "cluster"} there will be fewer data
   points used in the analysis compared with the ordinary
   statistics above because the trajectories are available
@@ -136,11 +155,14 @@
 
   Far more insight can be gained into model performance
   through conditioning using \code{type}. For example,
-  \code{type = "season"} will plot conditional quantiles by
-  each season. \code{type} can also be a factor or
-  character field e.g. representing different models used.
+  \code{type = "season"} will plot conditional quantiles
+  and the associated model performance statistics of other
+  variables by each season. \code{type} can also be a
+  factor or character field e.g. representing different
+  models used.
 
-  See Wilks (2005) for more details and the examples below.
+  See Wilks (2005) for more details of conditional quantile
+  plots.
 }
 \examples{
 ## Examples to follow, or will be shown in the openair manual
