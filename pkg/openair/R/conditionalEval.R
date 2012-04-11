@@ -146,9 +146,15 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     require(latticeExtra)
 
     ## various checks
-    if (length(var.obs) == 0 | length(var.mod) == 0) stop ("No variables chosen to analyse")
-    if (length(var.obs) != length(var.mod)) stop ("Number of var.obs does not equal number of var.mod variables")
-    if (length(type) > 1) stop("Only one type can be used with this function")
+    if (length(var.obs) == 0 | length(var.mod) == 0 & !"cluster" %in% statistic)
+        stop ("No variables chosen to analyse")
+    if (length(var.obs) != length(var.mod))
+        stop ("Number of var.obs does not equal number of var.mod variables")
+    if (length(type) > 1)
+        stop("Only one type can be used with this function")
+
+    ## don't need var.obs or var.mod if statistic = "cluster"
+    if ("cluster" %in% statistic) var.obs <- NULL; var.mod <- NULL
 
     ## extra.args setup
     extra.args <- list(...)
@@ -169,7 +175,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     ## if cluster is in data frame then remove any data duplicates
     if ("cluster" %in% statistic) {
         hour.inc <- NULL
-        if ("hour.inc" %in% names(mydata)) mydata <- subset(mydata, hour.inc == -96)
+        if ("hour.inc" %in% names(mydata)) mydata <- subset(mydata, hour.inc == 0)
         vars <- c(vars, "cluster")
         cluster <- TRUE
     }
