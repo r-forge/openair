@@ -337,7 +337,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                                            col = NA, alpha = 0.5, lwd = 0.5,
                                            border = ideal.col, ...)
                            ## histogram of modelled values
-                           panel.histogram(x = x, col = "black", border, alpha = 0.2, ...)
+                           panel.histogram(x = x, col = "black", border, alpha = 0.15, ...)
 
                        }
                        )

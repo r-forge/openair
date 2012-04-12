@@ -7,6 +7,8 @@ Changes in openair 0.6-0 [2012-04-10]
 	PM2.5 in importKCL - now consistent with importAEA
 *	NEW FUNCTION conditionalEval for model evaluation - allows
 	other variable performance to be assessed.
+*	Make lattice strips white by default for cleaner look on
+	complicated plots
 
 Changes in openair 0.5-25 [2012-03-16]
 =====================================

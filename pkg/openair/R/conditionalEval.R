@@ -141,7 +141,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             var.names = NULL,
                             auto.text = TRUE, ...) {
 
-    Var1 <- NULL; current.strip <- NULL ## keep CRAN check happy
+    Var1 <- NULL; current.strip <- NULL; hour.inc <- NULL ## keep CRAN check happy
 
     require(latticeExtra)
 
@@ -154,7 +154,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
         stop("Only one type can be used with this function")
 
     ## don't need var.obs or var.mod if statistic = "cluster"
-    if ("cluster" %in% statistic) var.obs <- NULL; var.mod <- NULL
+    if ("cluster" %in% statistic) {var.obs <- NULL; var.mod <- NULL}
 
     ## extra.args setup
     extra.args <- list(...)
@@ -166,15 +166,13 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     ## (xlab and ylab handled in formals because unique action)
     extra.args$main <- if("main" %in% names(extra.args))
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
-    trellis.par.set(list(strip.background = list(col = "white")))
 
-    ## variables needed
+     ## variables needed
     vars <- c(mod, obs, var.obs, var.mod)
 
     cluster <- FALSE
     ## if cluster is in data frame then remove any data duplicates
     if ("cluster" %in% statistic) {
-        hour.inc <- NULL
         if ("hour.inc" %in% names(mydata)) mydata <- subset(mydata, hour.inc == 0)
         vars <- c(vars, "cluster")
         cluster <- TRUE
