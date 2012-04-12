@@ -141,7 +141,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             var.names = NULL,
                             auto.text = TRUE, ...) {
 
-    Var1 <- NULL; current.strip <- NULL; hour.inc <- NULL ## keep CRAN check happy
+    Var1 <- NULL; current.strip <- NULL; hour.inc <- NULL; .id <- NULL; Freq <- NULL ## keep CRAN check happy
 
     require(latticeExtra)
 
@@ -167,7 +167,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     extra.args$main <- if("main" %in% names(extra.args))
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
-     ## variables needed
+    ## variables needed
     vars <- c(mod, obs, var.obs, var.mod)
 
     cluster <- FALSE
@@ -198,8 +198,9 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     ## function to process ordinary statistics using bootstrap confidence intervals
 
     procData <- function(mydata, statistic = statistic, var.obs = var.obs, var.mod = var.mod, ...) {
-        mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                         drop = FALSE]
+        ## only numerics if not clustering
+        if (!cluster) mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+                                       drop = FALSE]
 
         obs <- mydata[ , obs]
         pred <- mydata[ , mod]
@@ -215,10 +216,10 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
         pred.cut[is.na(pred.cut)] <- labs[1]
 
         ## split by predicted intervals
-
         res <- split(mydata, pred.cut)
 
         statFun <- function(x, ...) {
+
             x <- as.matrix(x)
 
             tmpFun <- function(i, x, ...) {
@@ -235,37 +236,18 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
             }
         }
 
-        res <- ldply(res, statFun, statistic = statistic)
+        if (cluster) {
 
-        res
-    }
+            res <- ldply(res, function (x) as.data.frame(table(x$cluster)))
 
-    ## function to process clusters if available
-    procClust <- function(mydata, ...) {
+            ## calculate proportions by interval
+            res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = "cluster")
 
-        .id <- NULL; Freq <- NULL ## avoid check notes
+        } else {
 
-        obs <- mydata[ , obs]
-        pred <- mydata[ , mod]
-        min.d <- min(c(obs, pred))
-        max.d <- max(c(obs, pred))
-        bins <- seq(floor(min.d), ceiling(max.d), length = bins)
+            res <- ldply(res, statFun, statistic = statistic)
 
-        b <- bins[-length(bins)]
-        labs <- b + 0.5 * diff(bins)
-
-        pred.cut <- cut(pred, breaks = bins, include.lowest = TRUE,
-                        labels = labs)
-        pred.cut[is.na(pred.cut)] <- labs[1]
-
-        ## split by predicted intervals
-
-        res <- split(mydata, pred.cut)
-
-        res <- ldply(res, function (x) as.data.frame(table(x$cluster)))
-
-        ## calculate proportions by interval
-        res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = "cluster")
+        }
 
         res
     }
@@ -273,7 +255,9 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     ## treat clusters specfically if present ###############################################
 
     if (cluster) {
-        clust.results <- ddply(mydata, type, procClust)
+
+        clust.results <- ddply(mydata, type, procData, cluster)
+
         clust.results$.id <- as.numeric(clust.results$.id)
 
         pol.name <- sapply(levels(clust.results[ , "statistic"]), function(x) quickText(x, auto.text))
@@ -341,11 +325,9 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
         pol.name <- sapply(levels(results[ , "statistic"]), function(x) quickText(x, auto.text))
         strip <- strip.custom(factor.levels = pol.name)
 
-
         if (type == "default") {
 
             strip.left <- FALSE
-
 
         } else { ## two conditioning variables
 
@@ -353,7 +335,6 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
             strip.left <- strip.custom(factor.levels = pol.name)
         }
         ## #####################################################################################
-
 
         ## set up colours
         myColors <- openColours(col.var, length(var.obs))
@@ -389,7 +370,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             if (group.number == 1) {
 
                                 panel.grid (-1, -1, col = "grey95")
-                                if (results$statistic[subscripts][1] %in% c("r", "IOA"))
+                                if (results$statistic[subscripts][1] %in% c("r", "IOA", "FAC2"))
                                     panel.abline(h = 1, lty = 5)
                                 if (results$statistic[subscripts][1] %in% c("MB", "NMB"))
                                     panel.abline(h = 0, lty = 5)
@@ -398,7 +379,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             if (results$statistic[subscripts][1] == "IOA")  panel.abline(h = 1, lty = 5)
 
                             openair:::poly.na(x, results$lower[subscripts], x,
-                                    results$upper[subscripts], group.number, myColors)
+                                              results$upper[subscripts], group.number, myColors)
 
                             panel.lines(results$.id[subscripts], results$mean[subscripts],
                                         col.line = myColors[group.number], lwd = 2)
@@ -426,7 +407,6 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
         print(useOuterStrips(thePlot, strip = strip,
                              strip.left = strip.left), position = c(width, 0, 1, 1), more = FALSE)
     }
-
 
     ## reset if greyscale
     if (length(col) == 1 && col == "greyscale")
