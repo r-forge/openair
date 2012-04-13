@@ -376,7 +376,8 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                                     panel.abline(h = 0, lty = 5)
                             }
 
-                            if (results$statistic[subscripts][1] == "IOA")  panel.abline(h = 1, lty = 5)
+                            if (results$statistic[subscripts][1] == "IOA")
+                                panel.abline(h = 1, lty = 5)
 
                             openair:::poly.na(x, results$lower[subscripts], x,
                                               results$upper[subscripts], group.number, myColors)

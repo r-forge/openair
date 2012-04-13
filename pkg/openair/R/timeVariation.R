@@ -517,7 +517,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                             if (difference) panel.abline(h = 0, lty = 5)
 
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
-                            panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
+                         #   panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
 
                             if (ci) {panel.rect(x - 0.3, data.weekday$Lower[subscripts], x + 0.3,
                                                 data.weekday$Upper[subscripts],
@@ -571,7 +571,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.time = FALSE, normali
                             }
                             if (difference) panel.abline(h = 0, lty = 5)
 
-                            panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
+                       #     panel.xyplot(x, y, type = "p", col.point = myColors[group.number],...)
 
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
