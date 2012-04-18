@@ -318,7 +318,7 @@ timePlot <- function(mydata,
     if(!"lwd" %in% names(extra.args))
         extra.args$lwd <- 1
     if(!"lty" %in% names(extra.args))
-        extra.args$lwd <- NULL
+        extra.args$lty <- NULL
 
     #layout
     #(type and group handling in code body)
