@@ -9,6 +9,8 @@ Changes in openair 0.6-0 [2012-04-10]
 	other variable performance to be assessed.
 *	Make lattice strips white by default for cleaner look on
 	complicated plots
+*	Complete re-write of import to simplify - changes are NOT
+	backward compatible but will allow more developments
 
 Changes in openair 0.5-25 [2012-03-16]
 =====================================

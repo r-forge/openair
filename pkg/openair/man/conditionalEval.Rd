@@ -50,8 +50,21 @@
 
   \item{statistic}{Statistic(s) to be plotted. Can be "MB",
   "NMB", "r", "IOA", "MGE", "NMGE", "RMSE", "FAC2", as
-  described in \code{modStats}. Can also be "cluster" if
-  clusters have been calculated using \code{trajCluster}.}
+  described in \code{modStats}. When these statistics are
+  chosen, they are calculated from \code{var.mod} and
+  \code{var.mod}.
+
+  \code{statistic} can also be a value that can be supplied
+  to \code{cutData}. For example, \code{statistic =
+  "season"} will show how model performance varies by
+  season across the distribution of predictions which might
+  highlight that at high concentrations of NOx the model
+  tends to underestimate concentrations and that these
+  periods mostly occur in winter. \code{statistic} can also
+  be another variable in the data frame --- see
+  \code{cutData} for more information. A special case is
+  \code{statistic = "cluster"} if clusters have been
+  calculated using \code{trajCluster}.}
 
   \item{xlab}{label for the x-axis, by default
   \code{"predicted value"}.}

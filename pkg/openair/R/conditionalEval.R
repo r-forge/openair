@@ -93,8 +93,18 @@
 ##' @param bins Number of bins used in \code{conditionalQuantile}.
 ##' @param statistic Statistic(s) to be plotted. Can be "MB", "NMB",
 ##' "r", "IOA", "MGE", "NMGE", "RMSE", "FAC2", as described in
-##' \code{modStats}. Can also be "cluster" if clusters have been
-##' calculated using \code{trajCluster}.
+##' \code{modStats}. When these statistics are chosen, they are
+##' calculated from \code{var.mod} and \code{var.mod}.
+##'
+##' \code{statistic} can also be a value that can be supplied to
+##' \code{cutData}. For example, \code{statistic = "season"} will show
+##' how model performance varies by season across the distribution of
+##' predictions which might highlight that at high concentrations of
+##' NOx the model tends to underestimate concentrations and that these
+##' periods mostly occur in winter. \code{statistic} can also be
+##' another variable in the data frame --- see \code{cutData} for more
+##' information. A special case is \code{statistic = "cluster"} if
+##' clusters have been calculated using \code{trajCluster}.
 ##' @param xlab label for the x-axis, by default \code{"predicted value"}.
 ##' @param ylab label for the y-axis, by default \code{"observed value"}.
 ##' @param col Colours to be used for plotting the uncertainty bands and median
@@ -145,6 +155,35 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
     require(latticeExtra)
 
+    ## statistic can be predefined one in modStats, cluster, date-based e.g. "season" or
+    ## another field in the data frame
+    vars <- NULL
+    other <- FALSE ## statistic other than var.obs/var.mod
+
+    ## statistic is date-based
+    if (any(statistic %in% openair:::dateTypes)) {
+        ## choose only one statistic
+        statistic <- statistic[which(statistic %in% openair:::dateTypes)][1]
+        mydata <- cutData(mydata, type = statistic)
+        vars <- c(vars, statistic)
+        other <- TRUE ## i.e. statistic other than var.obs/var.mod is present
+    }
+
+    ## statistic is based on varible in data frame
+    if (any(statistic %in% names(mydata)))  {
+        if (!other) {
+            statistic <- statistic[which(statistic %in% names(mydata))][1]
+            mydata <- cutData(mydata, type = statistic)
+            vars <- c(vars, statistic) ## use this statistic
+            other <- TRUE
+        }
+    }
+
+    if ("cluster" %in% statistic) {
+        other <- TRUE
+        statistic <- "cluster"
+    }
+
     ## various checks
     if (length(var.obs) == 0 | length(var.mod) == 0 & !"cluster" %in% statistic)
         stop ("No variables chosen to analyse")
@@ -153,8 +192,8 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     if (length(type) > 1)
         stop("Only one type can be used with this function")
 
-    ## don't need var.obs or var.mod if statistic = "cluster"
-    if ("cluster" %in% statistic) {var.obs <- NULL; var.mod <- NULL}
+    ## don't need var.obs or var.mod if statistic is "other"
+    if (other) {var.obs <- NULL; var.mod <- NULL}
 
     ## extra.args setup
     extra.args <- list(...)
@@ -168,11 +207,11 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
     ## variables needed
-    vars <- c(mod, obs, var.obs, var.mod)
+    vars <- c(vars, mod, obs, var.obs, var.mod)
 
     cluster <- FALSE
     ## if cluster is in data frame then remove any data duplicates
-    if ("cluster" %in% statistic) {
+    if (statistic == "cluster") {
         if ("hour.inc" %in% names(mydata)) mydata <- subset(mydata, hour.inc == 0)
         vars <- c(vars, "cluster")
         cluster <- TRUE
@@ -199,7 +238,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
     procData <- function(mydata, statistic = statistic, var.obs = var.obs, var.mod = var.mod, ...) {
         ## only numerics if not clustering
-        if (!cluster) mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
+        if (!other) mydata <- mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                        drop = FALSE]
 
         obs <- mydata[ , obs]
@@ -236,12 +275,12 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
             }
         }
 
-        if (cluster) {
+        if (other) {
 
-            res <- ldply(res, function (x) as.data.frame(table(x$cluster)))
+             res <- ldply(res, function (x) as.data.frame(table(x[, statistic])))
 
             ## calculate proportions by interval
-            res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = "cluster")
+             res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = statistic)
 
         } else {
 
@@ -254,9 +293,9 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
     ## treat clusters specfically if present ###############################################
 
-    if (cluster) {
+    if (other) {
 
-        clust.results <- ddply(mydata, type, procData, cluster)
+        clust.results <- ddply(mydata, type, procData, other = other, statistic = statistic)
 
         clust.results$.id <- as.numeric(clust.results$.id)
 
@@ -295,7 +334,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             horizontal = FALSE,
                             key = list(rectangles = list(col = cols, border = NA),
                             text = list(levels(clust.results$Var1)), space = "right",
-                            title = "cluster", cex.title = 1),
+                            title = statistic, cex.title = 1),
                             par.strip.text = list(cex = 0.8),
 
                             panel = function (x, ...) {
@@ -309,7 +348,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     ## go through list of ordinary statistics ##################################################
     statistic <- statistic[which(statistic %in% the.stats)]
 
-    if (length(statistic > 0)) {
+    if (length(statistic) > 0) {
 
         ## go through vars, then statistics
         results <- ldply(seq_along(var.obs), function (x) {
@@ -392,7 +431,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
     }
 
-    if (cluster) {
+    if (other) {
         thePlot <- clust.plt
     } else {
         thePlot <- do.call(xyplot, xyplot.args)
@@ -415,7 +454,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
     invisible(trellis.last.object())
 
-    if (cluster) results <- clust.results
+    if (other) results <- clust.results
 
     output <- list(plot = list(pltCondQ, trellis.last.object()), data = results, call = match.call())
     class(output) <- "openair"
