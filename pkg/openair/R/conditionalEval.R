@@ -280,7 +280,8 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
              res <- ldply(res, function (x) as.data.frame(table(x[, statistic])))
 
             ## calculate proportions by interval
-             res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq), statistic = statistic)
+             res <- ddply(res, .(.id), transform, Freq = Freq / sum(Freq))
+             res$statistic <- factor(statistic)
 
         } else {
 

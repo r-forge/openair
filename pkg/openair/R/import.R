@@ -154,6 +154,9 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
                 length(ids), "lines"), call. = FALSE)
         }
 
+    ## print data types - helps with debugging
+    print(unlist(sapply(thedata, class)))
+
     thedata
 }
 
