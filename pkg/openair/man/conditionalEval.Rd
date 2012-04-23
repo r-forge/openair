@@ -114,20 +114,46 @@
   is poor.
 }
 \details{
-  The \code{conditionalEval} function simultaneously plots
+  The \code{conditionalEval} function provides information
+  on how other variables vary across the same intervals as
+  shown on the conditional quantile plot. There are two
+  types of variable that can be considered by setting the
+  value of \code{statistic}. First, \code{statistic} can be
+  another variable in the data frame. In this case the plot
+  will show the different proportions of \code{statistic}
+  across the range of predictions. For example
+  \code{statistic = "season"} will show for each interval
+  of \code{mod} the proportion of predictions that were
+  spring, summer, autumn or winter. This is useful because
+  if model performance is worse for example at high
+  concentrations of \code{mod} then knowing that these tend
+  to occur during a particular season etc. can be very
+  helpful when trying to understand \emph{why} a model
+  fails. See \code{\link{cutData}} for more details on the
+  types of variable that can be \code{statistic}. Another
+  example would be \code{statistic = "ws"} (if wind speed
+  were available in the data frame), which would then split
+  wind speed into four quantiles and plot the proportions
+  of each.
+
+  Second, \code{conditionalEval} can simultaneously plot
   the model performance of other observed/predicted
-  variable pairs according to different model evaluation
-  statistics. These statistics derive from the
+  variable \bold{pairs} according to different model
+  evaluation statistics. These statistics derive from the
   \code{\link{modStats}} function and include "MB", "NMB",
   "r", "IOA", "MGE", "NMGE", "RMSE" and "FAC2". More than
   one statistic can be supplied e.g. \code{statistic =
   c("NMB", "IOA")}. Bootstrap samples are taken from the
   corresponding values of other variables to be plotted and
   their statistics with 95\% confidence intervals
-  calculated.
+  calculated. In this case, the model \emph{performance} of
+  other variables is shown across the same intervals of
+  \code{mod}, rather than just the values of single
+  variables. In this second case the model would need to
+  provide observed/predicted pairs of other variables.
 
-  For example, a model may also provide predictions of NOx
-  and wind speed (for which there are also observations
+  For example, a model may provide predictions of NOx and
+  wind speed (for which there are also observations
   available). The \code{conditionalEval} function will show
   how well these other variables are predicted for the same
   intervals of the main variables assessed in the
@@ -164,7 +190,9 @@
   statistics above because the trajectories are available
   for every three hours. Also note that \code{statistic =
   "cluster"} cannot be used together with the ordinary
-  model evaluation statistics such as MB.
+  model evaluation statistics such as MB. The output will
+  be a bar chart showing the proportion of each interval of
+  \code{mod} by cluster number.
 
   Far more insight can be gained into model performance
   through conditioning using \code{type}. For example,

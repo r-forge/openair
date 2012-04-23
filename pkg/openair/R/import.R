@@ -149,6 +149,9 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
         thedata$date <- as.POSIXct(strptime(paste(thedata$date, thedata[, time]),
                                             format = paste(date.format, time.format),
                                             tz = tz.in))
+
+        ## if all dates are NA, there is a problem...
+        if (all(is.na(thedata$date))) stop ("Date conversion problems, check that date.format and/or time.format is correct")
     }
 
     if (!is.null(correct.time)) thedata$date <- thedata$date + correct.time
