@@ -30,8 +30,7 @@
   \item{data.at}{The file row to start reading data from.
   When generating the data frame, the function will ignore
   all information before this row, and attempt to include
-  all data from this row onwards unless eof.report
-  enabled.}
+  all data from this row onwards.}
 
   \item{date}{Name of the field containing the date. This
   can be a date e.g. 10/12/2012 or a date-time format e.g.
@@ -58,7 +57,7 @@
   of the time this field can be ignored. However, one
   situation where it is useful to supply \code{tz.in} is if
   the original data considered daylight saving time i.e.
-  there is an hou missing in spring and duplicated in
+  there is an hour missing in spring and duplicated in
   autumn. An example for UK data would be \code{tz.in =
   "Europe/London"}.}
 
@@ -67,8 +66,7 @@
 
   \item{na.strings}{Strings of any terms that are to be
   interpreted as missing (\code{NA}). For example, this
-  might be "-999", or "n/a" and can be of several items.
-  values within the file.}
+  might be "-999", or "n/a" and can be of several items.}
 
   \item{quote}{String of characters (or character
   equivalents) the imported file may use to represent a

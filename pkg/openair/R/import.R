@@ -27,8 +27,7 @@
 ##'   no header to be used.
 ##' @param data.at The file row to start reading data from. When generating the
 ##'   data frame, the function will ignore all information before this row, and
-##'   attempt to include all data from this row onwards unless eof.report
-##'   enabled.
+##'   attempt to include all data from this row onwards.
 ##' @param date Name of the field containing the date. This can be a
 ##' date e.g. 10/12/2012 or a date-time format e.g. 10/12/2012 01:00.
 ##' @param date.format The format of the date. This is given in 'R'
@@ -46,14 +45,14 @@
 ##' @param tz.in The time zone of the data being read. Most of the
 ##' time this field can be ignored. However, one situation where it is
 ##' useful to supply \code{tz.in} is if the original data considered
-##' daylight saving time i.e. there is an hou missing in spring and
+##' daylight saving time i.e. there is an hour missing in spring and
 ##' duplicated in autumn. An example for UK data would be \code{tz.in
 ##' = "Europe/London"}.
 ##' @param tz.out The time zone of the output to be used by
 ##' \code{openair} functions.
 ##' @param na.strings Strings of any terms that are to be interpreted
 ##' as missing (\code{NA}). For example, this might be "-999", or
-##' "n/a" and can be of several items.  values within the file.
+##' "n/a" and can be of several items.
 ##' @param quote String of characters (or character equivalents) the imported
 ##'   file may use to represent a character field.
 ##' @param ws Name of wind speed field if present if different from
@@ -104,9 +103,17 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
     if (!missing(sep)) sep <- sep
 
     ## read header
-    if (header.at > 0 )
+    if (header.at > 0 ) {
         Names <- read.table(file, nrows = 1, skip = (header.at - 1), sep = sep,
-                            colClasses = "character")
+                            colClasses = "character", na.strings = "")
+
+        ## deal with header columns that are left blank
+        if (any(is.na(Names))) {
+            id <- which(is.na(Names))
+            Names[id] <- colnames(Names)[id]
+
+        }
+    }
 
     ## read data
     thedata <- read.table(file, skip = (data.at - 1), sep = sep, na.strings = na.strings, quote = quote, ...)
@@ -114,9 +121,8 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
     names(thedata) <- Names
 
     ## rename date field
-
-    names(thedata)[which(Names == date)] <- "date"
     if (!date %in% Names) stop (paste("Can't find variable", date))
+    names(thedata)[which(Names == date)] <- "date"
 
     if (!is.null(ws)) {
         if (!ws %in% Names) stop (paste("Can't find variable", ws))
@@ -131,7 +137,11 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
 
     ## set date format - if no time column use date format directly
     if (is.null(time)) {
+
         thedata$date <- as.POSIXct(strptime(thedata$date, format = date.format, tz = tz.in))
+
+        ## if all dates are NA, there is a problem...
+        if (all(is.na(thedata$date))) stop ("Date conversion problems, check that date.format is correct")
 
     } else {
 
