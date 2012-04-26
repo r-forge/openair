@@ -165,7 +165,7 @@ summaryPlot <- function(mydata,
     xlab <- if("xlab" %in% names(extra.args))
                 extra.args$xlab else NULL
     ylab <- if("ylab" %in% names(extra.args))
-                extra.args$xlab else NULL
+                extra.args$ylab else NULL
     main <- if("main" %in% names(extra.args))
                 extra.args$main else ""
 
@@ -399,18 +399,18 @@ summaryPlot <- function(mydata,
         row.names(mydata) <- NULL
     }
 
-    #xlab, ylab handling for plt2
+                                        #xlab, ylab handling for plt2
     #(so user inputs go through quicktext)
     #(and unique histogram/density naming is handled)
-    my.ylab <- if(is.null(ylab[2]) || is.na(ylab[2]))
+    my.ylab <- if (is.null(ylab[2]) || is.na(ylab[2]))
                    "" else ylab[2]
-    if(my.ylab == ""){
+    if (my.ylab == "") {
 
         if(type == "histogram") my.ylab <- "Percent of Total"
         if(type == "density") my.ylab <- "Density"
 
     } else {
-        my.lab <- quickText(my.lab, auto.text)
+        my.ylab <- quickText(my.ylab, auto.text)
     }
 
     my.xlab <- if(is.null(xlab[2]) || is.na(xlab[2]))
