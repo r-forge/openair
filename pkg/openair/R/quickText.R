@@ -52,9 +52,9 @@ quickText <- function(text, auto.text = TRUE){
 #nox variants
 	ans <- gsub("NO2","' 'NO' [2] * '", ans)
 	ans <- gsub("no2","' 'NO' [2] * '", ans)
-	ans <- gsub("NOX","' 'NO' [X] * '", ans)
-	ans <- gsub("nox","' 'NO' [X] * '", ans)
-	ans <- gsub("NOx","' 'NO' [X] * '", ans)
+	ans <- gsub("NOX","' 'NO' [x] * '", ans)
+	ans <- gsub("nox","' 'NO' [x] * '", ans)
+	ans <- gsub("NOx","' 'NO' [x] * '", ans)
 
 # to CAPS
 	ans <- gsub("co ","' 'CO ' '", ans)

@@ -116,7 +116,8 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
     }
 
     ## read data
-    thedata <- read.table(file, skip = (data.at - 1), sep = sep, na.strings = na.strings, quote = quote, ...)
+    thedata <- read.table(file, skip = (data.at - 1), sep = sep, na.strings = na.strings,
+                          quote = quote, stringsAsFactors = FALSE, ...)
 
     names(thedata) <- Names
 
