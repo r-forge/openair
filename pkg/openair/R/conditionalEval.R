@@ -186,6 +186,16 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     vars <- NULL
     other <- FALSE ## statistic other than var.obs/var.mod
 
+    ## greyscale handling
+    if (length(cols) == 1 && cols == "greyscale") {
+
+        trellis.par.set(list(strip.background = list(col = "white")))
+    }
+
+    ## reset strip color on exit
+    current.strip <- trellis.par.get("strip.background")
+    on.exit(trellis.par.set("strip.background", current.strip))
+
     ## statistic is date-based
     if (any(statistic %in% openair:::dateTypes)) {
         ## choose only one statistic
@@ -475,9 +485,6 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                              strip.left = strip.left), position = c(width, 0, 1, 1), more = FALSE)
     }
 
-    ## reset if greyscale
-    if (length(col) == 1 && col == "greyscale")
-        trellis.par.set("strip.background", current.strip)
 
     invisible(trellis.last.object())
 

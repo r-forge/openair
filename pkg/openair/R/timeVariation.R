@@ -226,14 +226,15 @@ alpha = 0.4, ...)  {
      ## get rid of R check annoyances
     variable = NULL
 
-
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
-                                        #strip only
-        current.strip <- trellis.par.get("strip.background")
+
         trellis.par.set(list(strip.background = list(col = "white")))
     }
 
+    ## reset strip color on exit
+    current.strip <- trellis.par.get("strip.background")
+    on.exit(trellis.par.set("strip.background", current.strip))
 
     ## extra.args setup
     extra.args <- list(...)
@@ -708,10 +709,6 @@ alpha = 0.4, ...)  {
     names(output$data)[1:4] <- subsets
     names(output$plot)[1:4] <- subsets
     class(output) <- "openair"
-
-                                        #reset if greyscale
-    if (length(cols) == 1 && cols == "greyscale")
-        trellis.par.set("strip.background", current.strip)
 
     invisible(output)
 }

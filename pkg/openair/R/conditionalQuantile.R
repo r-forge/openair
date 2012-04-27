@@ -157,10 +157,13 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
-    #greyscale handling
+    ## greyscale handling
+    ## reset strip color on exit
+    current.strip <- trellis.par.get("strip.background")
+    on.exit(trellis.par.set("strip.background", current.strip))
+
     if (length(col) == 1 && col == "greyscale") {
-        #strip
-        current.strip <- trellis.par.get("strip.background")
+
         trellis.par.set(list(strip.background = list(col = "white")))
         #other local colours
         ideal.col <- "black"
@@ -353,10 +356,6 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     if (length(type) == 1) plot(thePlot) else plot(useOuterStrips(thePlot, strip = strip,
               strip.left = strip.left))
-
-    #reset if greyscale
-    if (length(col) == 1 && col == "greyscale")
-        trellis.par.set("strip.background", current.strip)
 
     invisible(trellis.last.object())
 
