@@ -187,7 +187,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     other <- FALSE ## statistic other than var.obs/var.mod
 
     ## greyscale handling
-    if (length(cols) == 1 && cols == "greyscale") {
+    if (length(col.var) == 1 && col.var == "greyscale") {
 
         trellis.par.set(list(strip.background = list(col = "white")))
     }
