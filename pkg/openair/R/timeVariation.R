@@ -673,24 +673,28 @@ alpha = 0.4, ...)  {
 
     subsets = c("day.hour", "hour", "day", "month")
 
+    ## this adjusts the space for the title to 2 lines (approx) if \n in title
+    if (length(grep("atop", overall.main) == 1)) y.upp <- 0.95 else y.upp <- 0.975
+
     main.plot <- function(...) {
         if (type == "default") {
             print(update(day.hour, key = list(rectangles = list(col = myColors[1:npol], border = NA),
                                    text = list(lab = mylab), space = "bottom", columns = key.columns,
                                    title = "", lines.title = 1)
-                         ), position = c(0, 0.5, 1, 1), more = TRUE)
+                         ), position = c(0, 0.5, 1, y.upp), more = TRUE)
         } else {
             print(update(useOuterStrips(day.hour, strip = strip, strip.left = strip.left),
                          key = list(rectangles = list(col = myColors[1:npol], border = NA),
                          text = list(lab = mylab), space = "bottom", columns = key.columns,
                          title = "", lines.title = 1)
-                         ), position = c(0, 0.5, 1, 1), more = TRUE)
+                         ), position = c(0, 0.5, 1, y.upp), more = TRUE)
         }
         print(hour, position = c(0, 0, 0.33, 0.53), more = TRUE)
         print(month, position = c(0.33, 0, 0.66, 0.53), more = TRUE)
         print(day, position = c(0.66, 0, 1, 0.53))
         ## use grid to add an overall title
-        grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
+      #  grid.text(overall.main, 0.5, 0.975, gp = gpar(fontsize = 14))
+        grid.text(overall.main, 0.5, y.upp, gp = gpar(fontsize = 14))
     }
 
     ind.plot = function(x, ...){
