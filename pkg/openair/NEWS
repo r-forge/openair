@@ -13,6 +13,9 @@ Changes in openair 0.6-0 [2012-04-10]
 	backward compatible but will allow more developments
 *	Allow line breaks in titles using \n to work woth quickText
 	- thanks to Karl
+*	Allow better annotation of calendarPlot - highlight values
+	above/below a certain threshold.
+
 
 Changes in openair 0.5-25 [2012-03-16]
 =====================================
