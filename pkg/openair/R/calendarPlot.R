@@ -324,6 +324,13 @@ calendarPlot <- function(mydata,
                                }
 
                                if (annotate == "value") {
+                                   ## add some dates for navigation
+                                   date.col <- as.character(mydata$dateColour[subscripts])
+                                   ids <- which(date.col == "black")
+                                   date.col[ids] <- "transparent"
+                                   ltext(x, y, labels = mydata$date.mat[subscripts], cex = 0.6,
+                                         col = date.col)
+
                                    concs <- mydata$conc.mat[subscripts]
 
                                    ## deal with values above/below threshold
