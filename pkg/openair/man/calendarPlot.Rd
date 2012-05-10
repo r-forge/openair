@@ -7,9 +7,10 @@
     statistic = "mean", cols = "heat", limits = c(0, 100),
     lim = NULL, col.lim = c("grey30", "black"),
     font.lim = c(1, 2), cex.lim = c(0.6, 1), digits = 0,
-    main = paste(pollutant, "in", year), key.header = "",
-    key.footer = "", key.position = "right", key = TRUE,
-    auto.text = TRUE, ...)
+    data.thresh = 0, main = paste(pollutant, "in", year),
+    key.header = "", key.footer = "",
+    key.position = "right", key = TRUE, auto.text = TRUE,
+    ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -32,8 +33,7 @@
   wind speed. Finally it can be "value" which shows the
   daily mean value.}
 
-  \item{statistic}{Not currently implemented - only mean is
-  currently calculated.}
+  \item{statistic}{Statistic passed to \code{timeAverage}.}
 
   \item{cols}{Colours to be used for plotting. Options
   include "default", "increment", "heat", "jet" and user
@@ -74,6 +74,12 @@
 
   \item{digits}{The number of digits used to display
   concentration values when \code{annotate = "value"}.}
+
+  \item{data.thresh}{Data capture threshold passed to
+  \code{timeAverage}. For example, \code{data.thresh = 75}
+  means that at least 75\% of the data must be available in
+  a day for the value to be calculate, else the data is
+  removed.}
 
   \item{main}{The plot title; default is pollutant and
   year.}
