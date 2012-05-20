@@ -118,8 +118,6 @@ quickText <- function(text, auto.text = TRUE){
     ans <- gsub("km/hour/s", "' 'km hr' ^-1 ' s' ^-1 *'", ans)
     ans <- gsub("r2", "R' ^2 *'", ans)
     ans <- gsub("R2", "R' ^2 *'", ans)
-    ans <- gsub("Delta", "' * Delta *'", ans)
-    ans <- gsub("delta", "' * Delta *'", ans)
 
     ans <- paste(ans, "'))", sep = "")
     if (substr(ans, 21, 21) == "*") {
