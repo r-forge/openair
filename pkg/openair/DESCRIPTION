@@ -1,8 +1,8 @@
 Package: openair
 Type: Package
 Title: Tools for the analysis of air pollution data
-Version: 0.6-0
-Date: 2012-04-10
+Version: 0.6-1
+Date: 2012-05-30
 ByteCompile: true
 Author: David Carslaw and Karl Ropkins
 Depends:

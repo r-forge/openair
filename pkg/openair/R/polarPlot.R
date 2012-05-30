@@ -371,7 +371,12 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         mydata <- melt(mydata, measure.vars = pollutant)
         ## now set pollutant to "value"
         pollutant <- "value"
-        type <- c(type, "variable")
+
+        if (type == "default") {
+            type <- "variable"
+        } else {
+            type <- c(type, "variable")
+        }
     }
 
     ## ##########################################################################################################

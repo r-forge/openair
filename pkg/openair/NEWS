@@ -1,3 +1,8 @@
+Changes in openair 0.6-1 [2012-05-30]
+=====================================
+*	Allow more flexible layout when two or more pollutants
+	are used with polarPlot and type is default
+
 Changes in openair 0.6-0 [2012-04-10]
 =====================================
 *	Add y.relation option to timePlot
