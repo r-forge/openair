@@ -45,13 +45,17 @@
 ##' values are calculated with spring defined as March, April, May and
 ##' so on.
 ##'
-##' Note that \code{avg.time} can be \emph{less} than the time interval of the
-##'   original series, in which case the series is expanded to the new time
-##'   interval. This is useful, for example, for calculating a 15-minute time
-##'   series from an hourly one where an hourly value is repeated for each new
-##'   15-minute period. Note that when expanding data in this way it is
-##'   necessary to ensure that the time interval of the original series is an
-##'   exact multiple of \code{avg.time} e.g. hour to 10 minutes, day to hour.
+##' Note that \code{avg.time} can be \emph{less} than the time
+##' interval of the original series, in which case the series is
+##' expanded to the new time interval. This is useful, for example,
+##' for calculating a 15-minute time series from an hourly one where
+##' an hourly value is repeated for each new 15-minute period. Note
+##' that when expanding data in this way it is necessary to ensure
+##' that the time interval of the original series is an exact multiple
+##' of \code{avg.time} e.g. hour to 10 minutes, day to hour. Also, the
+##' input time series must have consistent time gaps between successive
+##' intervals so that \code{timeAverage} can work out how much
+##' 'padding' to apply.
 ##' @param data.thresh The data capture threshold to use (%). A value of zero
 ##'   means that all available data will be used in a particular period
 ##'   regardless if of the number of values available. Conversely, a value of
@@ -146,9 +150,6 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
     calc.mean <- function(mydata, start.date) { ## function to calculate means
 
-        ## pad out missing data
-    #   mydata <- date.pad(mydata)
-       # mydata <- date.pad2(mydata, interval = avg.time)
         ## time diff in seconds of orginal data
         timeDiff <-  as.numeric(strsplit(openair:::find.time.interval(mydata$date),
                                          " ")[[1]][1])
@@ -192,7 +193,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
             ## number of additional lines to fill
             inflateFac <-  timeDiff / seconds
-            if (timeDiff %% seconds != 0) stop("Non-regular time expansion selected.")
+            if (timeDiff %% seconds != 0) stop("Non-regular time expansion selected, or non-regular input time series.")
 
             ## ids of orginal dates in new dates
             ids <- which(mydata$date %in% theDates)
@@ -216,7 +217,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             firstLine <- data.frame(date = as.POSIXct(start.date))
 
             mydata <- rbind.fill(firstLine, mydata)
-        #    mydata <- date.pad2(mydata)
+
             ## for cutting data must ensure it is in GMT because combining
             ## data frames when system is not GMT puts it in local time!...
             ## and then cut makes a string/factor levels with tz lost...

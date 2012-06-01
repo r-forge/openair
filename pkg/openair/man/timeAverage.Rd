@@ -30,7 +30,10 @@
   expanding data in this way it is necessary to ensure that
   the time interval of the original series is an exact
   multiple of \code{avg.time} e.g. hour to 10 minutes, day
-  to hour.}
+  to hour. Also, the input time series must have consistent
+  time gaps between successive intervals so that
+  \code{timeAverage} can work out how much 'padding' to
+  apply.}
 
   \item{data.thresh}{The data capture threshold to use (%).
   A value of zero means that all available data will be

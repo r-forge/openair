@@ -1,7 +1,8 @@
-Changes in openair 0.6-1 [2012-05-30]
+Changes in openair 0.7-0 [2012-05-30]
 =====================================
 *	Allow more flexible layout when two or more pollutants
 	are used with polarPlot and type is default
+*	Fix colour scale problem for windRose when interval does not exist
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================

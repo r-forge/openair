@@ -43,7 +43,7 @@
 ##' @param resolution Two plot resolutions can be set: \code{"normal"} and
 ##'   \code{"fine"} (the default).
 ##' @param local.time Should the results be calculated in local time? The
-##'   default is \code{TRUE}. Emissions activity tends to occur at local time
+##'   default is \code{FALSE}. Emissions activity tends to occur at local time
 ##'   e.g. rush hour is at 8 am every day. When the clocks go forward in
 ##'   spring, the emissions are effectively released into the atmosphere at BST
 ##'   - 1 hour during the summer. When plotting diurnal profiles, this has the

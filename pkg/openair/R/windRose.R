@@ -250,21 +250,21 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
     ##extra.args setup
     extra.args <- list(...)
 
-    #label controls
+                                        #label controls
     extra.args$xlab <- if("xlab" %in% names(extra.args))
-                           quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
+        quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
     extra.args$ylab <- if("ylab" %in% names(extra.args))
-                           quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
+        quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
-                           quickText(extra.args$main, auto.text) else quickText("", auto.text)
+        quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
-    ## statistics setup
+    ## preset statitistics
 
-    # preset statitistics
-    if(is.character(statistic)){
-        #allowed cases
-        allowed.statistics <- c("prop.count", "prop.mean", "abs.count", "frequency")
-        if (!is.character(statistic) || !statistic[1] %in% allowed.statistics) {
+    if (is.character(statistic)) {
+        ## allowed cases
+        ok.stat <- c("prop.count", "prop.mean", "abs.count", "frequency")
+
+        if (!is.character(statistic) || !statistic[1] %in% ok.stat) {
             warning("In windRose(...):\n  statistic unrecognised",
                     "\n  enforcing statistic = 'prop.count'", call. = FALSE)
             statistic <- "prop.count"
@@ -302,15 +302,16 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     }
 
-    if(is.list(statistic)) {
+    if (is.list(statistic)) {
 
-    #IN DEVELOPMENT
+        ## IN DEVELOPMENT
 
-    #this section has no testing/protection
-    #but allows users to supply a function
-    #scale it by total data or panel
-    #convert proportions to percentage
-    #label it
+        ## this section has no testing/protection
+        ## but allows users to supply a function
+        ## scale it by total data or panel
+        ## convert proportions to percentage
+        ## label it
+
         stat.fun <- statistic$fun
         stat.unit <- statistic$unit
         stat.scale <- statistic$scale
@@ -320,20 +321,19 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
         stat.labcalm <- statistic$labcalm
     }
 
-
+    ## variables we need
     vars <- c(wd, ws)
-    if (any(type %in%  openair:::dateTypes)) vars <- c(vars, "date")
+    if (any(type %in% openair:::dateTypes)) vars <- c(vars, "date")
 
-    if (!is.null(pollutant)) {
-        vars <- c(vars, pollutant)
-    }
+    if (!is.null(pollutant)) vars <- c(vars, pollutant)
+
     mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     mydata <- na.omit(mydata)
 
-    if (is.null(pollutant))
-        pollutant <- ws
-    mydata$.z.poll <- mydata[, pollutant]
+    if (is.null(pollutant)) pollutant <- ws
+
+    mydata$x <- mydata[, pollutant]
 
     ## if (type == "ws")  type <- "ws.1"
 
@@ -346,50 +346,49 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     if (length(breaks) == 1) breaks <- 0:(breaks - 1) * ws.int
 
-    if (max(breaks) < max(mydata$.z.poll, na.rm = TRUE)) breaks <- c(breaks, max(mydata$.z.poll, na.rm = TRUE))
+    if (max(breaks) < max(mydata$x, na.rm = TRUE)) breaks <- c(breaks, max(mydata$x, na.rm = TRUE))
 
-    if (min(breaks) > min(mydata$.z.poll, na.rm = TRUE)) breaks <- c(min(mydata$.z.poll, na.rm = TRUE), breaks)
+    if (min(breaks) > min(mydata$x, na.rm = TRUE)) breaks <- c(min(mydata$x, na.rm = TRUE), breaks)
 
     breaks <- unique(breaks)
-    mydata$.z.poll <- cut(mydata$.z.poll, breaks = breaks, include.lowest = FALSE,
-                          dig.lab = dig.lab)
+    mydata$x <- cut(mydata$x, breaks = breaks, include.lowest = FALSE,
+                    dig.lab = dig.lab)
 
-    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$.z.poll))
+    ## clean up cut intervals
+    theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$x))
     theLabels <- gsub("[,]", "-", theLabels)
 
-    ######################
     ## statistic handling
-    #####################
 
     prepare.grid <- function(mydata) {
 
-        levels(mydata$.z.poll) <- c(paste(".z.poll", 1:length(theLabels),
-                                          sep = ""))
+        levels(mydata$x) <- c(paste("x", 1:length(theLabels), sep = ""))
 
         all <- stat.fun(mydata[ , wd])
         calm <- mydata[mydata[ , wd] == -999, ][, pollutant]
         mydata <- mydata[mydata[ , wd] != -999, ]
-        mydata <- na.omit(mydata) # needed?
 
         calm <- stat.fun(calm)
-        weights <- tapply(mydata[, pollutant], list(mydata[ , wd], mydata$.z.poll),
-                              stat.fun)
 
-        #scaling
-        if (stat.scale == "all"){
-              calm <- calm / all
-              weights <- weights / all
+        weights <- tapply(mydata[, pollutant], list(mydata[ , wd], mydata$x),
+                          stat.fun)
+
+        ## scaling
+        if (stat.scale == "all") {
+            calm <- calm / all
+            weights <- weights / all
         }
-        if (stat.scale == "panel"){
-              temp <- stat.fun(stat.fun(weights)) + calm
-              calm <- calm / temp
-              weights <- weights / temp
+
+        if (stat.scale == "panel") {
+            temp <- stat.fun(stat.fun(weights)) + calm
+            calm <- calm / temp
+            weights <- weights / temp
         }
 
         weights[is.na(weights)] <- 0
         weights <- t(apply(weights, 1, cumsum))
 
-        if (stat.scale=="all" | stat.scale=="panel"){
+        if (stat.scale == "all" | stat.scale == "panel"){
             weights <- weights * 100
             calm <- calm * 100
         }
@@ -403,8 +402,9 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
     }
 
     if (paddle) {
-        poly <- function(wd, len1, len2, width, colour, x.off = 0,
-                         y.off = 0) {
+
+        poly <- function(wd, len1, len2, width, colour, x.off = 0, y.off = 0) {
+
             theta <- wd * pi / 180
             len1 <- len1 + off.set
             len2 <- len2 + off.set
@@ -419,8 +419,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
             lpolygon(c(x1, x2, x4, x3), c(y1, y2, y4, y3), col = colour,
                      border = NA)
         }
-    } else {
 
+    } else {
 
         poly <- function(wd, len1, len2, width, colour, x.off = 0,
                          y.off = 0) {
@@ -431,7 +431,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
             theta <- seq((wd - seg * angle / 2), (wd + seg * angle / 2),
                          length.out = (angle - 2) * 10)
             theta <- ifelse(theta < 1, 360 - theta, theta)
-            theta <- theta * pi/180
+            theta <- theta * pi / 180
             x1 <- len1 * sin(theta) + x.off
             x2 <- rev(len2 * sin(theta) + x.off)
             y1 <- len1 * cos(theta) + x.off
@@ -444,9 +444,10 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     results.grid <- ddply(mydata, type, prepare.grid)
 
-    #format
+    ## format
     results.grid$calm <- stat.labcalm(results.grid$calm)
-    ## proper names of labelling ##############################################################################
+
+    ## proper names of labelling ###################################################
     pol.name <- sapply(levels(results.grid[ , type[1]]),
                        function(x) quickText(x, auto.text))
     strip <- strip.custom(factor.levels = pol.name)
@@ -463,93 +464,100 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
     }
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
 
-###############################################################################
+    ## #############################################################################
 
-    col <- openColours(cols, length(theLabels))
+    if (length(theLabels) < length(cols)) {
+        col <- cols[1:length(theLabels)]
+    } else {
+        col <- openColours(cols, length(theLabels))
+    }
+
     max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) +
                                                          length(type))], na.rm = TRUE)
     off.set <- max.freq * (offset / 100)
     box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25, length.out = length(theLabels)) ^ 4
     box.widths <- box.widths * max.freq * angle / 5
 
-    #key, colorkey, legend
+    ## key, colorkey, legend
     legend <- list(col = col, space = key.position, auto.text = auto.text,
                    labels = theLabels, footer = key.footer, header = key.header,
                    height = 0.60, width = 1.5, fit = "scale",
-                   plot.style = if(paddle) "paddle"  else "other")
+                   plot.style = if (paddle) "paddle" else "other")
     legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
 
 
     temp <- paste(type, collapse = "+")
-    myform <- formula(paste(".z.poll1 ~ wd | ", temp, sep = ""))
+    myform <- formula(paste("x1 ~ wd | ", temp, sep = ""))
 
     mymax <- 2 * max.freq
-    myby <- if(is.null(grid.line))
-                 pretty(c(0, mymax), 10)[2] else grid.line
+    myby <- if (is.null(grid.line)) pretty(c(0, mymax), 10)[2] else grid.line
 
-    ###########
-    #rethink next bit?
-    #error catcher for users setting too big grid.line
-    ##########
-    if(myby / mymax > 0.9)
-          myby <- mymax * 0.9
+    if (myby / mymax > 0.9) myby <- mymax * 0.9
 
-
-    #xyplot handling
     xyplot.args <- list(x = myform,
-                  xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
-                  ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
-                  data = results.grid,
-                  type = "n",
-                  sub = stat.lab,
-                  strip = strip,
-                  strip.left = strip.left,
-                  as.table = TRUE,
-                  aspect = 1,
-                  par.strip.text = list(cex = 0.8),
-                  scales = list(draw = FALSE),
+                        xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
+                        ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
+                        data = results.grid,
+                        type = "n",
+                        sub = stat.lab,
+                        strip = strip,
+                        strip.left = strip.left,
+                        as.table = TRUE,
+                        aspect = 1,
+                        par.strip.text = list(cex = 0.8),
+                        scales = list(draw = FALSE),
 
-                  panel = function(x, y, subscripts, ...) {
-                      panel.xyplot(x, y, ...)
-                      angles <- seq(0, 2 * pi, length = 360)
-                      sapply(seq(off.set, mymax, by = myby),
-                             function(x) llines(x * sin(angles), x * cos(angles),
-                                                col = "grey85", lwd = 1))
+                        panel = function(x, y, subscripts, ...) {
+                            panel.xyplot(x, y, ...)
+                            angles <- seq(0, 2 * pi, length = 360)
+                            sapply(seq(off.set, mymax, by = myby),
+                                   function(x) llines(x * sin(angles), x * cos(angles),
+                                                      col = "grey85", lwd = 1))
 
-                      subdata <- results.grid[subscripts, ]
+                            subdata <- results.grid[subscripts, ]
 
-                      for (i in 1:nrow(subdata)) {
-                          with(subdata, {
-                              for (j in 1:length(theLabels)) {
-                                  if (j == 1) {
-                                      temp <- "poly(wd[i], 0, .z.poll1[i], width * box.widths[1], col[1])"
-                                  }
-                                  else {
-                                      temp <- paste("poly(wd[i], .z.poll", j -
-                                                    1, "[i], .z.poll", j, "[i], width * box.widths[",
-                                                    j, "], col[", j, "])", sep = "")
-                                  }
-                                  eval(parse(text = temp))
-                              }
-                          })
-                      }
+                            for (i in 1:nrow(subdata)) { ## go through wind angles 30, 60, ...
+                                with(subdata, {
+                                    for (j in 1:length(theLabels)) { ## go through paddles x1, x2, ...
+                                        if (j == 1) {
 
-                  ltext(seq((myby + off.set), mymax,
-                      myby) * sin(pi/4), seq((myby +
-                      off.set), mymax, myby) * cos(pi / 4),
-                      paste(seq(myby, mymax, by = myby), stat.unit,
-                      sep = ""), cex = 0.7)
+                                            temp <- "poly(wd[i], 0, x1[i], width * box.widths[1], col[1])"
 
-                  if (annotate)
-                      ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
-                          subdata$panel.fun[1], "\ncalm = ", subdata$calm[1], stat.unit,
-                          sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
-                  }, legend = legend)
+                                        } else {
 
-    #reset for extra.args
+                                            temp <- paste("poly(wd[i], x", j - 1,
+                                                          "[i], x", j, "[i], width * box.widths[",
+                                                          j, "], col[", j, "])", sep = "")
+
+                                        }
+                                        eval(parse(text = temp))
+                                    }
+                                })
+                            }
+
+                            ltext(seq((myby + off.set), mymax, myby) * sin(pi / 4),
+                                  seq((myby + off.set), mymax, myby) * cos(pi / 4),
+                                  paste(seq(myby, mymax, by = myby), stat.unit,  sep = ""), cex = 0.7)
+
+                            if (annotate) ## don't add calms for prop.mean for now...
+                                if (statistic != "prop.mean") {
+                                    ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
+                                                               subdata$panel.fun[1], "\ncalm = ",
+                                                               subdata$calm[1], stat.unit,
+                                                               sep = ""), adj = c(1, 0), cex = 0.7,
+                                          col = calm.col)
+                                } else {
+                                    ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
+                                                               subdata$panel.fun[1], stat.unit,
+                                                               sep = ""), adj = c(1, 0), cex = 0.7,
+                                          col = calm.col)
+                                }
+                        }, legend = legend)
+
+    ## reset for extra.args
     xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
 
-    #plot
+    ## plot
     plt <- do.call(xyplot, xyplot.args)
 
 
