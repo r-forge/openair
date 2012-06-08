@@ -10,7 +10,7 @@
     limits = c(0, 100), cex = pollutant, pch = NULL,
     cex.range = c(2, 10), xlab = longitude,
     ylab = latitude, main = "", axes = TRUE, map = NULL,
-    map.raster = TRUE, map.cols = NULL, aspect = 1,
+    map.raster = TRUE, map.cols = NULL, aspect = NULL,
     as.table = TRUE, plot.type = "xy",
     plot.transparent = FALSE, key = NULL,
     key.position = "right", key.header = "",
