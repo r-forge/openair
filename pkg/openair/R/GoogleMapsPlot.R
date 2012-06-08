@@ -777,6 +777,19 @@ mydata[, latitude] <- temp$newY
 
 openairMapManager <- function(map){
 
+    #######################
+    #native raster handler
+    #######################
+
+    if("nativeRaster" %in% class(map$myTile) & require(png)){
+        
+        #do to png native output
+        writePNG(map$myTile, "XtempX.png")
+        map$myTile <- readPNG("XtempX.png", native = FALSE)
+        attr(map$myTile, "type") <- "rgb"
+        
+    }
+
     #set up
     ra <- dim(map$myTile)
 
@@ -824,6 +837,17 @@ openairMapManager <- function(map){
 
         if(ra[3] == 1 & attr(map$myTile, "type") == "grey"){
             map$myTile <- grey(map$myTile[, , 1])
+            dim(map$myTile) <- ra[1:2]
+            attr(map$myTile, "type") <- "openair"
+            return(map)
+        }
+    }
+
+
+    if(length(ra) == 2){
+
+        if(is.character(attr(map$myTile, "type")) && attr(map$myTile, "type") == "grey"){
+            map$myTile <- grey(map$myTile[,])
             dim(map$myTile) <- ra[1:2]
             attr(map$myTile, "type") <- "openair"
             return(map)
