@@ -1,6 +1,7 @@
 Changes in openair 0.7-1 [2012-06-08]
 =====================================
-*	added 'nativeRaster' class handler for GoogleMapsPlots
+*	Added 'nativeRaster' class handler for GoogleMapsPlots
+*	(test) Fix for GoogleMapsPlot xlim, ylim 
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
