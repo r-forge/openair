@@ -22,6 +22,7 @@ Suggests:
     latticeExtra,
     hexbin,
     RgoogleMaps,
+    png,
     maps
 LinkingTo: Rcpp
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
