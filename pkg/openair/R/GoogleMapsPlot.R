@@ -558,7 +558,16 @@ my.size <- if(my.y > my.x)
         #override some RgoogleMaps defaults
         map <- list(lon = temp2$lonR, lat = temp2$latR, destfile = "XtempX.png",
                      maptype = "terrain", size = my.size)
-        if(length(temp.y)==1) map$zoom <- 15
+
+        #catch all missing x/y dimensions
+        if(my.x==0 | my.y==0){
+            if(is.null(map$zoom))
+                map$zoom <- 15
+            map$size <- c(640,640)
+        }
+        if(any(is.na(map$size)))
+            map$size[is.na(map$size)] <- 64
+        map$size[map$size < 1] <- 64
 
         ##update my defaults with relevant ones in call
         map <- listUpdate(map, extra.args, subset.b = temp)
