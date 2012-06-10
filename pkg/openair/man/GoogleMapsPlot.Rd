@@ -47,9 +47,9 @@
   \item{xlim,ylim}{The x-axis and y-axis size ranges. By
   default these sized on the basis of \code{latitude} and
   \code{longitude}, but can be forced as part of the plot
-  call [NOTE: This IN DEVELOPMENT option is currently
-  restricted and requested ranges are forced square to
-  maintain map aspect ratio.].}
+  call. (NOTE: This are in-development and should be used
+  with care. The RgoogleMaps argument \code{size = c(640,
+  640)} can be use to force map dimensions to square.)}
 
   \item{pollutant}{If supplied, the name of a pollutant or
   variable in \code{mydata} that is to be evaluated at the
@@ -135,7 +135,10 @@
   (NOTE: If set, this will override \code{cols =
   "greyscale"}.)}
 
-  \item{aspect}{The aspect ratio of the plot.}
+  \item{aspect}{The aspect ratio of the plot. If
+  \code{NULL} (default), this is calculated by the function
+  based on the data and \code{xlim} and \code{ylim}
+  ranges.}
 
   \item{as.table}{\code{as.table} is a \code{lattice}
   option that controls the order in which multiple panels
