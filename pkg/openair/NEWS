@@ -1,13 +1,12 @@
-Changes in openair 0.7-1 [2012-06-08]
-=====================================
-*	Added 'nativeRaster' class handler for GoogleMapsPlots
-*	(test) Fix for GoogleMapsPlot xlim, ylim 
-
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
 *	Allow more flexible layout when two or more pollutants
 	are used with polarPlot and type is default
-*	Fix colour scale problem for windRose when interval does not exist
+*	Fix colour scale problem for windRose when interval does not
+	exist
+*	Added 'nativeRaster' class handler for GoogleMapsPlots
+*	(test) Fix for GoogleMapsPlot xlim, ylim
+*	Do not remove missing data from timeVariation
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================

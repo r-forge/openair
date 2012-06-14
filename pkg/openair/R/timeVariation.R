@@ -305,8 +305,6 @@ alpha = 0.4, ...)  {
     if (!missing(group))  mydata <- cutData(mydata, group, ...)
     mydata <- cutData(mydata, type, ...)
 
-    mydata <- na.omit(mydata)
-
     ## title for overall and individual plots
     overall.main <- extra.args$main
     extra.args$main <- ""
