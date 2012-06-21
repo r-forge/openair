@@ -34,18 +34,21 @@
 ##' @param pollutant Mandatory. A pollutant name corresponding to a variable in
 ##'   a data frame should be supplied e.g. \code{pollutant = "nox"}
 ##' @param statistic The statistic that should be applied to each wind
-##'   speed/direction bin. Can be "frequency", "mean", "median", "max"
-##'   (maximum), "stdev" (standard deviation) or "weighted.mean". The option
-##'   "frequency" (the default) is the simplest and plots the frequency of wind
-##'   speed/direction in different bins. The scale therefore shows the counts
-##'   in each bin. The option "mean" will plot the mean concentration of a
-##'   pollutant (see next point) in wind speed/direction bins, and so on.
-##'   Finally, "weighted.mean" will plot the concentration of a pollutant
-##'   weighted by wind speed/direction. Each segment therefore provides the
-##'   percentage overall contribution to the total concentration.  More
-##'   information is given in the examples. Note that for options other than
-##'   "frequency", it is necessary to also provide the name of a pollutant. See
-##'   function \code{cutData} for further details.
+##' speed/direction bin. Can be \dQuote{frequency}, \dQuote{mean},
+##' \dQuote{median}, \dQuote{max} (maximum), \dQuote{stdev} (standard
+##' deviation) or \dQuote{weighted.mean}. The option
+##' \dQuote{frequency} (the default) is the simplest and plots the
+##' frequency of wind speed/direction in different bins. The scale
+##' therefore shows the counts in each bin. The option \dQuote{mean}
+##' will plot the mean concentration of a pollutant (see next point)
+##' in wind speed/direction bins, and so on.  Finally,
+##' \dQuote{weighted.mean} will plot the concentration of a pollutant
+##' weighted by wind speed/direction. Each segment therefore provides
+##' the percentage overall contribution to the total concentration.
+##' More information is given in the examples. Note that for options
+##' other than \dQuote{frequency}, it is necessary to also provide the
+##' name of a pollutant. See function \code{cutData} for further
+##' details.
 ##' @param ws.int Wind speed interval assumed. In some cases e.g. a low met
 ##'   mast, an interval of 0.5 may be more appropriate.
 ##' @param grid.line Radial spacing of grid lines.
@@ -55,28 +58,32 @@
 ##'   10)} - a scale from 0-10 in intervals of 10, or a more flexible sequence
 ##'   e.g. \code{breaks = c(0, 1, 5, 7, 10)}, which may be useful for some
 ##'   situations.
-##' @param cols Colours to be used for plotting. Options include "default",
-##'   "increment", "heat", "jet" and user defined. For user defined the user
-##'   can supply a list of colour names recognised by R (type \code{colours()}
-##'   to see the full list). An example would be \code{cols = c("yellow",
-##'   "green", "blue")}
+##' @param cols Colours to be used for plotting. Options include
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+##' and \code{RColorBrewer} colours --- see the \code{openair}
+##' \code{openColours} function for more details. For user defined the
+##' user can supply a list of colour names recognised by R (type
+##' \code{colours()} to see the full list). An example would be
+##' \code{cols = c("yellow", "green", "blue")}
 ##' @param trans Should a transformation be applied? Sometimes when producing
 ##'   plots of this kind they can be dominated by a few high points. The
 ##'   default therefore is \code{TRUE} and a square-root transform is applied.
 ##'   This results in a non-linear scale and (usually) a better representation
 ##'   of the distribution. If set to \code{FALSE} a linear scale is used.
-##' @param type \code{type} determines how the data are split i.e. conditioned,
-##'   and then plotted. The default is will produce a single plot using the
-##'   entire data. Type can be one of the built-in types as detailed in
-##'   \code{cutData} e.g. "season", "year", "weekday" and so on. For example,
-##'   \code{type = "season"} will produce four plots --- one for each season.
+##' @param type \code{type} determines how the data are split
+##' i.e. conditioned, and then plotted. The default is will produce a
+##' single plot using the entire data. Type can be one of the built-in
+##' types as detailed in \code{cutData} e.g. \dQuote{season},
+##' \dQuote{year}, \dQuote{weekday} and so on. For example, \code{type
+##' = "season"} will produce four plots --- one for each season.
 ##'
-##' It is also possible to choose \code{type} as another variable in the data
-##'   frame. If that variable is numeric, then the data will be split into four
-##'   quantiles (if possible) and labelled accordingly. If type is an existing
-##'   character or factor variable, then those categories/levels will be used
-##'   directly. This offers great flexibility for understanding the variation
-##'   of different variables and how they depend on one another.
+##' It is also possible to choose \code{type} as another variable in
+##' the data frame. If that variable is numeric, then the data will be
+##' split into four quantiles (if possible) and labelled
+##' accordingly. If type is an existing character or factor variable,
+##' then those categories/levels will be used directly. This offers
+##' great flexibility for understanding the variation of different
+##' variables and how they depend on one another.
 ##'
 ##' Type can be up length two e.g. \code{type = c("season", "weekday")} will
 ##'   produce a 2x2 plot split by season and day of the week. Note, when two
@@ -92,11 +99,11 @@
 ##'   ensuring a consistent scale between different plots. For example, to
 ##'   always ensure that wind speeds are displayed between 1-10, set
 ##'   \code{ws.int = 10}.
-##' @param offset \code{offset} controls the size of the 'hole' in the middle
-##'   and is expressed as a percentage of the maximum wind speed. Setting a
-##'   higher \code{offset} e.g. 50 is useful for \code{statistic =
-##'   "weighted.mean"} when \code{ws.int} is greater than the maximum wind
-##'   speed. See example below.
+##' @param offset \code{offset} controls the size of the \sQuote{hole}
+##' in the middle and is expressed as a percentage of the maximum wind
+##' speed. Setting a higher \code{offset} e.g. 50 is useful for
+##' \code{statistic = "weighted.mean"} when \code{ws.int} is greater
+##' than the maximum wind speed. See example below.
 ##' @param border.col The colour of the boundary of each wind speed/direction
 ##'   bin. The default is transparent. Another useful choice sometimes is
 ##'   "white".
@@ -123,7 +130,7 @@
 ##'   to handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{polarFreq} also
-##'   returns an object of class ``openair''. The object includes three main
+##'   returns an object of class \dQuote{openair}. The object includes three main
 ##'   components: \code{call}, the command used to generate the plot;
 ##'   \code{data}, the data frame of summarised information used to make the
 ##'   plot; and \code{plot}, the plot itself. If retained, e.g. using

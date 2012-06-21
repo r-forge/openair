@@ -24,15 +24,15 @@
   activity tends to occur at local time e.g. rush hour is
   at 8 am every day. When the clocks go forward in spring,
   the emissions are effectively released into the
-  atmosphere at BST - 1 hour during the summer. When
+  atmosphere at BST --- 1 hour during the summer. When
   plotting diurnal profiles, this has the effect of
-  "smearing-out" the concentrations. Sometimes, a better
-  approach is to express time as local time, which here is
-  defined as BST (British Summer Time). This correction
-  tends to produce better-defined diurnal profiles of
-  concentration (or other variables) and allows a better
-  comparison to be made with emissions/activity data. If
-  set to \code{FALSE} then GMT is used.}
+  \dQuote{smearing-out} the concentrations. Sometimes, a
+  better approach is to express time as local time, which
+  here is defined as BST (British Summer Time). This
+  correction tends to produce better-defined diurnal
+  profiles of concentration (or other variables) and allows
+  a better comparison to be made with emissions/activity
+  data. If set to \code{FALSE} then GMT is used.}
 
   \item{normalise}{Should variables be normalised? The
   default is \code{FALSE}. If \code{TRUE} then the
@@ -50,9 +50,9 @@
   i.e. conditioned, and then plotted. The default is will
   produce a single plot using the entire data. Type can be
   one of the built-in types as detailed in \code{cutData}
-  e.g. "season", "year", "weekday" and so on. For example,
-  \code{type = "season"} will produce four plots --- one
-  for each season.
+  e.g. \dQuote{season}, \dQuote{year}, \dQuote{weekday} and
+  so on. For example, \code{type = "season"} will produce
+  four plots --- one for each season.
 
   It is also possible to choose \code{type} as another
   variable in the data frame. If that variable is numeric,
@@ -80,7 +80,7 @@
   \item{B}{Number of bootstrap replicates to use. Can be
   useful to reduce this value when there are a large number
   of observations available to increase the speed of the
-  calculations without affecting the 95% confidence
+  calculations without affecting the 95\% confidence
   interval calculations by much.}
 
   \item{ci}{Should confidence intervals be shown? The
@@ -90,9 +90,13 @@
   plots.}
 
   \item{cols}{Colours to be used for plotting. Options
-  include "default", "increment", "heat", "spectral", "hue"
-  (default) and user defined (see manual for more
-  details).}
+  include \dQuote{default}, \dQuote{increment},
+  \dQuote{heat}, \dQuote{jet} and \code{RColorBrewer}
+  colours --- see the \code{openair} \code{openColours}
+  function for more details. For user defined the user can
+  supply a list of colour names recognised by R (type
+  \code{colours()} to see the full list). An example would
+  be \code{cols = c("yellow", "green", "blue")}}
 
   \item{key}{By default \code{timeVariation} produces four
   plots on one page.  While it is useful to see these plots
@@ -116,7 +120,7 @@
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
-  properly e.g.  by subscripting the `2' in NO2.}
+  properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
   \item{alpha}{The alpha transparency used for plotting
   confidence intervals.  0 is fully transparent and 1 is

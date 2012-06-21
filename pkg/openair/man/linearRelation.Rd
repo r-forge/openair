@@ -19,13 +19,14 @@
   on the y-axis of a relationship e.g. \code{y = "pm10"}.}
 
   \item{period}{A range of different time periods can be
-  analysed. "monthly" will plot a monthly time series and
-  "weekly" a weekly time series of the relationship between
-  \code{x} and \code{y}. "hour" will show the diurnal
-  relationship between \code{x} and \code{y} and "weekday"
-  the day of the week relationship between \code{x} and
-  \code{y}. "day.hour" will plot the relationship by
-  weekday and hour of the day.}
+  analysed. \dQuote{monthly} will plot a monthly time
+  series and \dQuote{weekly} a weekly time series of the
+  relationship between \code{x} and \code{y}. "hour" will
+  show the diurnal relationship between \code{x} and
+  \code{y} and \dQuote{weekday} the day of the week
+  relationship between \code{x} and \code{y}.
+  \dQuote{day.hour} will plot the relationship by weekday
+  and hour of the day.}
 
   \item{condition}{For \code{period = "hour"}, \code{period
   = "day"} and \code{period = "day.hour"}, setting
@@ -60,10 +61,10 @@
   properly e.g.  by subscripting the \sQuote{2} in NO2.}
 
   \item{cols}{Predefined colour scheme, currently only
-  enabled for \code{"greyscale"}.}
+  enabled for \dQuote{greyscale}.}
 
   \item{span}{span for \code{loess} fit. Controls the fit
-  line: lower values produce a more "wiggly" fit.}
+  line: lower values produce a more \dQuote{wiggly} fit.}
 
   \item{\dots}{Other graphical parameters. A useful one to
   remove the strip with the date range on at the top of the

@@ -43,16 +43,19 @@
 ##' @param year Year to plot e.g. \code{year = 2003}.
 ##' @param type Not yet implemented.
 ##' @param annotate This option controls what appears on each day of
-##' the calendar. Can be: "date" - shows day of the month; "wd" -
-##' shows vector-averaged wind direction, or "ws" - shows
-##' vector-averaged wind direction scaled by wind speed. Finally it
-##' can be "value" which shows the daily mean value.
+##' the calendar. Can be: \dQuote{date} --- shows day of the month;
+##' \dQuote{wd} --- shows vector-averaged wind direction, or
+##' \dQuote{ws} --- shows vector-averaged wind direction scaled by
+##' wind speed. Finally it can be \dQuote{value} which shows the daily
+##' mean value.
 ##' @param statistic Statistic passed to \code{timeAverage}.
-##' @param cols Colours to be used for plotting. Options include "default",
-##'   "increment", "heat", "jet" and user defined. For user defined the user
-##'   can supply a list of colour names recognised by R (type \code{colours()}
-##'   to see the full list). An example would be \code{cols = c("yellow",
-##'   "green", "blue")}
+##' @param cols Colours to be used for plotting. Options include
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+##' and \code{RColorBrewer} colours --- see the \code{openair}
+##' \code{openColours} function for more details. For user defined the
+##' user can supply a list of colour names recognised by R (type
+##' \code{colours()} to see the full list). An example would be
+##' \code{cols = c("yellow", "green", "blue")}
 ##' @param limits Use this option to manually set the colour scale limits. This
 ##'   is useful in the case when there is a need for two or more plots and a
 ##'   consistent scale is needed on each. Set the limits to cover the maximimum

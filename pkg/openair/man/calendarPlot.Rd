@@ -27,20 +27,22 @@
   \item{type}{Not yet implemented.}
 
   \item{annotate}{This option controls what appears on each
-  day of the calendar. Can be: "date" - shows day of the
-  month; "wd" - shows vector-averaged wind direction, or
-  "ws" - shows vector-averaged wind direction scaled by
-  wind speed. Finally it can be "value" which shows the
-  daily mean value.}
+  day of the calendar. Can be: \dQuote{date} --- shows day
+  of the month; \dQuote{wd} --- shows vector-averaged wind
+  direction, or \dQuote{ws} --- shows vector-averaged wind
+  direction scaled by wind speed. Finally it can be
+  \dQuote{value} which shows the daily mean value.}
 
   \item{statistic}{Statistic passed to \code{timeAverage}.}
 
   \item{cols}{Colours to be used for plotting. Options
-  include "default", "increment", "heat", "jet" and user
-  defined. For user defined the user can supply a list of
-  colour names recognised by R (type \code{colours()} to
-  see the full list). An example would be \code{cols =
-  c("yellow", "green", "blue")}}
+  include \dQuote{default}, \dQuote{increment},
+  \dQuote{heat}, \dQuote{jet} and \code{RColorBrewer}
+  colours --- see the \code{openair} \code{openColours}
+  function for more details. For user defined the user can
+  supply a list of colour names recognised by R (type
+  \code{colours()} to see the full list). An example would
+  be \code{cols = c("yellow", "green", "blue")}}
 
   \item{limits}{Use this option to manually set the colour
   scale limits. This is useful in the case when there is a

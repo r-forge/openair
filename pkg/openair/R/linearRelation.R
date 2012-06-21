@@ -46,12 +46,13 @@
 ##'   relationship e.g. \code{x = "nox"}.
 ##' @param y Second pollutant that when plotted would appear on the y-axis of a
 ##'   relationship e.g. \code{y = "pm10"}.
-##' @param period A range of different time periods can be analysed. "monthly"
-##'   will plot a monthly time series and "weekly" a weekly time series of the
-##'   relationship between \code{x} and \code{y}. "hour" will show the diurnal
-##'   relationship between \code{x} and \code{y} and "weekday" the day of the
-##'   week relationship between \code{x} and \code{y}. "day.hour" will plot the
-##'   relationship by weekday and hour of the day.
+##' @param period A range of different time periods can be
+##' analysed. \dQuote{monthly} will plot a monthly time series and
+##' \dQuote{weekly} a weekly time series of the relationship between
+##' \code{x} and \code{y}. "hour" will show the diurnal relationship
+##' between \code{x} and \code{y} and \dQuote{weekday} the day of the
+##' week relationship between \code{x} and \code{y}. \dQuote{day.hour}
+##' will plot the relationship by weekday and hour of the day.
 ##' @param condition For \code{period = "hour"}, \code{period = "day"} and
 ##'   \code{period = "day.hour"}, setting \code{condition = TRUE} will plot the
 ##'   relationships split by year. This is useful for seeing how the
@@ -75,9 +76,9 @@
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
 ##' @param cols Predefined colour scheme, currently only enabled for
-##'   \code{"greyscale"}.
+##'   \dQuote{greyscale}.
 ##' @param span span for \code{loess} fit. Controls the fit line: lower values
-##'   produce a more "wiggly" fit.
+##'   produce a more \dQuote{wiggly} fit.
 ##' @param \dots Other graphical parameters. A useful one to remove the strip
 ##'   with the date range on at the top of the plot is to set \code{strip =
 ##'   FALSE}.
