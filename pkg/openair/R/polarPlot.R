@@ -69,7 +69,7 @@
 ##'
 ##' @param mydata A data frame minimally containing \code{wd}, another
 ##' variable to plot in polar coordinates (the default is a column
-##' "ws" --- wind speed) and a pollutant. Should also contain \code{date}
+##' \dQuote{ws} --- wind speed) and a pollutant. Should also contain \code{date}
 ##' if plots by time period are required.
 ##' @param pollutant Mandatory. A pollutant name corresponding to a variable in
 ##'   a data frame should be supplied e.g. \code{pollutant = "nox"}. There can
@@ -78,16 +78,16 @@
 ##'   evaluation where two species would be expected to have similar
 ##'   concentrations. This saves the user stacking the data and it is possible
 ##'   to work with columns of data directly. A typical use would be
-##'   \code{pollutant = c("obs", "mod")} to compare two columns "obs" (the
-##'   observations) and "mod" (modelled values).
+##'   \code{pollutant = c("obs", "mod")} to compare two columns \dQuote{obs} (the
+##'   observations) and \dQuote{mod} (modelled values).
 ##' @param x Name of variable to plot against wind direction in polar
-##' coordinates, the default is wind speed, "ws".
+##' coordinates, the default is wind speed, \dQuote{ws}.
 ##' @param wd Name of wind direction field.
 ##' @param type \code{type} determines how the data are split
 ##' i.e. conditioned, and then plotted. The default is will produce a
 ##' single plot using the entire data. Type can be one of the built-in
-##' types as detailed in \code{cutData} e.g. "season", "year",
-##' "weekday" and so on. For example, \code{type = "season"} will
+##' types as detailed in \code{cutData} e.g. \dQuote{season}, \dQuote{year},
+##' \dQuote{weekday} and so on. For example, \code{type = "season"} will
 ##' produce four plots --- one for each season.
 ##'
 ##' It is also possible to choose \code{type} as another variable in
@@ -103,10 +103,11 @@
 ##' week. Note, when two types are provided the first forms the
 ##' columns and the second the rows.
 ##' @param statistic The statistic that should be applied to each wind
-##' speed/direction bin. Can be "mean" (default), "median", "max"
-##' (maximum), "frequency". "stdev" (standard deviation) or
-##' "weighted.mean". Because of the smoothing involved, the colour
-##' scale for some of these statistics is only to provide an
+##' speed/direction bin. Can be \dQuote{mean} (default),
+##' \dQuote{median}, \dQuote{max} (maximum),
+##' \dQuote{frequency}. \dQuote{stdev} (standard deviation) or
+##' \dQuote{weighted.mean}. Because of the smoothing involved, the
+##' colour scale for some of these statistics is only to provide an
 ##' indication of overall pattern and should not be interpreted in
 ##' concentration units e.g. for \code{statistic = "weighted.mean"}
 ##' where the bin mean is multiplied by the bin frequency and divided
@@ -115,9 +116,9 @@
 ##' useful because it provides an indication of the concentration *
 ##' frequency of occurrence and will highlight the wind
 ##' speed/direction conditions that dominate the overall mean.
-##' @param resolution Two plot resolutions can be set: "normal" (the
-##' default) and "fine", for a smoother plot. It should be noted that
-##' plots with a "fine" resolution can take longer to render and the
+##' @param resolution Two plot resolutions can be set: \dQuote{normal} (the
+##' default) and \dQuote{fine}, for a smoother plot. It should be noted that
+##' plots with a \dQuote{fine} resolution can take longer to render and the
 ##' default option should be sufficient or most circumstances.
 ##' @param limits The function does its best to choose sensible limits
 ##' automatically. However, there are circumstances when the user will
@@ -144,12 +145,12 @@
 ##' wind speed-direction bin. Note that if uncertainties are
 ##' calculated then the type is set to "default".
 ##' @param cols Colours to be used for plotting. Options include
-##' "default", "increment", "heat", "jet" and \code{RColorBrewer}
-##' colours --- see the \code{openair} \code{openColours} function for
-##' more details. For user defined the user can supply a list of
-##' colour names recognised by R (type \code{colours()} to see the
-##' full list). An example would be \code{cols = c("yellow", "green",
-##' "blue")}
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+##' and \code{RColorBrewer} colours --- see the \code{openair}
+##' \code{openColours} function for more details. For user defined the
+##' user can supply a list of colour names recognised by R (type
+##' \code{colours()} to see the full list). An example would be
+##' \code{cols = c("yellow", "green", "blue")}
 ##' @param min.bin The minimum number of points allowed in a wind
 ##' speed/wind direction bin.  The default is 1. A value of two
 ##' requires at least 2 valid records in each bin an so on; bins with

@@ -74,14 +74,15 @@ pollutionRose <- function(mydata,
 ##'   masts with low mean wind speeds a value of 1 or 0.5 m/s may be better.
 ##'   Note, this argument is superseded in \code{pollutionRose}. See
 ##'   \code{breaks} below.
-##' @param angle Default angle of "spokes" is 30. Other potentially useful
+##' @param angle Default angle of \dQuote{spokes} is 30. Other potentially useful
 ##'   angles are 45 and 10. Note that the width of the wind speed interval may
 ##'   need adjusting using \code{width}.
-##' @param type \code{type} determines how the data are split i.e. conditioned,
-##'   and then plotted. The default is will produce a single plot using the
-##'   entire data. Type can be one of the built-in types as detailed in
-##'   \code{cutData} e.g. "season", "year", "weekday" and so on. For example,
-##'   \code{type = "season"} will produce four plots --- one for each season.
+##' @param type \code{type} determines how the data are split
+##' i.e. conditioned, and then plotted. The default is will produce a
+##' single plot using the entire data. Type can be one of the built-in
+##' types as detailed in \code{cutData} e.g. \dQuote{season},
+##' \dQuote{year}, \dQuote{weekday} and so on. For example, \code{type
+##' = "season"} will produce four plots --- one for each season.
 ##'
 ##' It is also possible to choose \code{type} as another variable in the data
 ##'   frame. If that variable is numeric, then the data will be split into four
@@ -94,10 +95,11 @@ pollutionRose <- function(mydata,
 ##'   produce a 2x2 plot split by season and day of the week. Note, when two
 ##'   types are provided the first forms the columns and the second the rows.
 ##' @param cols Colours to be used for plotting. Options include
-##'   \code{default}, \code{increment}, \code{heat}, \code{jet}, \code{hue} and
-##'   user defined. For user defined the user can supply a list of colour names
-##'   recognised by R (type \code{colours()} to see the full list). An example
-##'   would be \code{cols = c("yellow", "green", "blue", "black")}.
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet},
+##' \dQuote{hue} and user defined. For user defined the user can
+##' supply a list of colour names recognised by R (type
+##' \code{colours()} to see the full list). An example would be
+##' \code{cols = c("yellow", "green", "blue", "black")}.
 ##' @param grid.line Grid line interval to use. If \code{NULL}, as in default,
 ##'   this is assigned by \code{windRose} based on the available data range.
 ##'   However, it can also be forced to a specific value, e.g.
@@ -109,8 +111,9 @@ pollutionRose <- function(mydata,
 ##' width of the segments. For example, \code{seg = 0.5} will produce
 ##' segments 0.5 * \code{angle}.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
-##'   \code{TRUE} titles and axis labels will automatically try and format
-##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
+##' \code{TRUE} titles and axis labels will automatically try and
+##' format pollutant names and units properly e.g.  by subscripting
+##' the \sQuote{2} in NO2.
 ##' @param breaks Most commonly, the number of break points for wind speed in
 ##'   \code{windRose} or pollutant in \code{pollutionRose}. For \code{windRose}
 ##'   and the \code{ws.int} default of 2 m/s, the default, 4, generates the
@@ -131,20 +134,21 @@ pollutionRose <- function(mydata,
 ##' \code{drawOpenKey} via \code{quickText}, applying the auto.text
 ##' argument, to handle formatting.
 ##' @param key.footer see \code{key.footer}.
-##' @param key.position Location where the scale key is to plotted.  Allowed
-##'   arguments currently include \code{"top"}, \code{"right"}, \code{"bottom"}
-##'   and \code{"left"}.
+##' @param key.position Location where the scale key is to plotted.
+##' Allowed arguments currently include \dQuote{"top"},
+##' \dQuote{"right"}, \dQuote{"bottom"} and \dQuote{"left"}.
 ##' @param key Fine control of the scale key via \code{drawOpenKey}. See
 ##'   \code{drawOpenKey} for further details.
 ##' @param dig.lab The number of signficant figures at which scientific number
 ##'   formatting is used in break point and key labelling. Default 5.
-##' @param statistic The \code{statistic} to be applied to each data bin in the
-##'   plot. Options currently include \code{"prop.count"},
-##'   \code{"prop.mean"} and \code{"abs.count"}. The default \code{"prop.count"}
-##'   sizes bins according to the proportion of the frequency of measurements.
-##'   Similarly, \code{prop.mean} sizes bins according to their relative contribution
-##'   to the mean. \code{"abs.count"} provides the absolute count of measurements
-##'   in each bin.
+##' @param statistic The \code{statistic} to be applied to each data
+##' bin in the plot. Options currently include \dQuote{"prop.count"},
+##' \dQuote{"prop.mean"} and \dQuote{"abs.count"}. The default
+##' \dQuote{"prop.count"} sizes bins according to the proportion of
+##' the frequency of measurements.  Similarly, \dQuote{prop.mean} sizes
+##' bins according to their relative contribution to the
+##' mean. \dQuote{"abs.count"} provides the absolute count of
+##' measurements in each bin.
 ##' @param pollutant Alternative data series to be sampled instead of wind
 ##'   speed. The \code{windRose} default NULL is equivalent to \code{pollutant
 ##'   = "ws"}.
@@ -160,13 +164,14 @@ pollutionRose <- function(mydata,
 ##' @export windRose pollutionRose
 ##' @import plyr
 ##' @return As well as generating the plot itself, \code{windRose} and
-##'   \code{pollutionRose} also return an object of class ``openair''. The
-##'   object includes three main components: \code{call}, the command used to
-##'   generate the plot; \code{data}, the data frame of summarised information
-##'   used to make the plot; and \code{plot}, the plot itself. If retained,
-##'   e.g. using \code{output <- windRose(mydata)}, this output can be used to
-##'   recover the data, reproduce or rework the original plot or undertake
-##'   further analysis.
+##' \code{pollutionRose} also return an object of class
+##' \dQuote{openair}. The object includes three main components:
+##' \code{call}, the command used to generate the plot; \code{data},
+##' the data frame of summarised information used to make the plot;
+##' and \code{plot}, the plot itself. If retained, e.g. using
+##' \code{output <- windRose(mydata)}, this output can be used to
+##' recover the data, reproduce or rework the original plot or
+##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
 ##'   including \code{print}, \code{plot} and \code{summarise}. See
