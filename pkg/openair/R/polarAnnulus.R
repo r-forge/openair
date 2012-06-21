@@ -82,11 +82,12 @@
 ##'   "weekday"} and \code{period = "weekday"}.
 ##'
 ##' @param limits Limits for colour scale.
-##' @param cols Colours to be used for plotting. Options include "default",
-##'   "increment", "heat", "jet" and user defined. For user defined the user
-##'   can supply a list of colour names recognised by R (type \code{colours()}
-##'   to see the full list). An example would be \code{cols = c("yellow",
-##'   "green", "blue")}
+##' @param cols Colours to be used for plotting. Options include
+##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
+##' and user defined. For user defined the user can supply a list of
+##' colour names recognised by R (type \code{colours()} to see the
+##' full list). An example would be \code{cols = c("yellow", "green",
+##' "blue")}
 ##' @param width The width of the annulus; can be "normal" (the default),
 ##'   "thin" or "fat".
 ##' @param min.bin The minimum number of points allowed in a wind speed/wind
