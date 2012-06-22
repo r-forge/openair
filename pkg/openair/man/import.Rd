@@ -24,8 +24,6 @@
   (csv) or TAB (txt). For example ";" is sometimes used to
   delineate separate columns.}
 
-  \item{"}{}
-
   \item{header.at}{The file row holding header information
   or \code{NULL} if no header to be used.}
 

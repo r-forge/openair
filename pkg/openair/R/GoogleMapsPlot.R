@@ -92,25 +92,29 @@
 ##'   a default range to the plot. To override this either set the required range
 ##'   using \code{xlim} and \code{ylim} (see below) or the map \code{zoom}
 ##'   level. (Note: The default is equivalent to \code{zoom = 15}.)
-##' @param type The type of data conditioning to apply before plotting. The
-##'   default is will produce a single plot using the entire data. Other type
-##'   options include "hour" (for hour of the day), "weekday" (for day of the
-##'   week) and "month" (for month of the year), "year", "season" (string,
-##'   summer, autumn or winter) and "daylight" (daylight or nighttime hour).
-##'   But it is also possible to set \code{type} to the name of another
-##'   variable in \code{mydata}, in which case the plotted data will be divided
-##'   into quantiles based on that data series. See \code{cutData} for further
-##'   details.(NOTE: type conditioning currently allows up to two levels of
-##'   conditioning, e.g., \code{type = c("weekday", "daylight")}.)
-##' @param xlim,ylim The x-axis and y-axis size ranges. By default these sized
-##'   on the basis of \code{latitude} and \code{longitude}, but can be forced
-##'   as part of the plot call. (NOTE: This are in-development and should be 
-##'   used with care. The RgoogleMaps argument \code{size = c(640, 640)} can be 
-##'   use to force map dimensions to square.)
-##' @param pollutant If supplied, the name of a pollutant or variable in
-##'   \code{mydata} that is to be evaluated at the each measurement point.
-##'   Depending on settings, nominally \code{cols} and \code{cex}, the
-##'   evaluation can be by colour, size or both.
+##' @param type The type of data conditioning to apply before
+##' plotting. The default is will produce a single plot using the
+##' entire data. Other type options include \dQuote{hour} (for hour of
+##' the day), \dQuote{weekday} (for day of the week) and
+##' \dQuote{month} (for month of the year), \dQuote{year},
+##' \dQuote{season} (string, summer, autumn or winter) and
+##' \dQuote{daylight} (daylight or nighttime hour).  But it is also
+##' possible to set \code{type} to the name of another variable in
+##' \code{mydata}, in which case the plotted data will be divided into
+##' quantiles based on that data series. See \code{cutData} for
+##' further details.(NOTE: type conditioning currently allows up to
+##' two levels of conditioning, e.g., \code{type = c("weekday",
+##' "daylight")}.)
+##' @param xlim,ylim The x-axis and y-axis size ranges. By default
+##' these sized on the basis of \code{latitude} and \code{longitude},
+##' but can be forced as part of the plot call. (NOTE: This are
+##' in-development and should be used with care. The RgoogleMaps
+##' argument \code{size = c(640, 640)} can be use to force map
+##' dimensions to square.)
+##' @param pollutant If supplied, the name of a pollutant or variable
+##' in \code{mydata} that is to be evaluated at the each measurement
+##' point.  Depending on settings, nominally \code{cols} and
+##' \code{cex}, the evaluation can be by colour, size or both.
 ##' @param labels If supplied, either the name of \code{mydata} column/field
 ##'   containing the labels to be used or a list, containing that field name
 ##'   (as \code{labels}), and any other label properties, e.g. \code{cex},
@@ -162,9 +166,9 @@
 ##' @param map.cols Like \code{cols} a colour scale, but, if supplied, used to
 ##'   recolour the map layer before plotting. (NOTE: If set, this will override
 ##'   \code{cols = "greyscale"}.)
-##' @param aspect The aspect ratio of the plot. If \code{NULL} (default), this 
-##'   is calculated by the function based on the data and \code{xlim} and 
-##'   \code{ylim} ranges.  
+##' @param aspect The aspect ratio of the plot. If \code{NULL} (default), this
+##'   is calculated by the function based on the data and \code{xlim} and
+##'   \code{ylim} ranges.
 ##' @param as.table \code{as.table} is a \code{lattice} option that controls
 ##'   the order in which multiple panels are displayed. The default
 ##'   (\code{TRUE}) produces layouts similar to other openair plot.
@@ -552,7 +556,7 @@ my.x <- diff(range(temp2$lonR, na.rm=TRUE))
 
 #was c(640, 640)
 my.size <- if(my.y > my.x)
-               c(ceiling((my.x/my.y) * 640), 640) else 
+               c(ceiling((my.x/my.y) * 640), 640) else
                c(640, ceiling((my.y/my.x) * 640))
 
         #override some RgoogleMaps defaults
@@ -804,12 +808,12 @@ openairMapManager <- function(map){
     #######################
 
     if("nativeRaster" %in% class(map$myTile) & require(png)){
-        
+
         #do to png native output
         writePNG(map$myTile, "XtempX.png")
         map$myTile <- readPNG("XtempX.png", native = FALSE)
         attr(map$myTile, "type") <- "rgb"
-        
+
     }
 
     #set up

@@ -23,7 +23,6 @@
 ##' @param sep Allows user to specify a delimiter if not "," (csv) or
 ##' TAB (txt). For example ";" is sometimes used to delineate separate
 ##' columns.
-##' @param "
 ##' @param header.at The file row holding header information or \code{NULL} if
 ##'   no header to be used.
 ##' @param data.at The file row to start reading data from. When generating the
@@ -121,6 +120,7 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
                           quote = quote, ...)
 
     names(thedata) <- Names
+
 
     ## rename date field
     if (!date %in% Names) stop (paste("Can't find variable", date))

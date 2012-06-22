@@ -31,18 +31,18 @@
 
   \item{type}{The type of data conditioning to apply before
   plotting. The default is will produce a single plot using
-  the entire data. Other type options include "hour" (for
-  hour of the day), "weekday" (for day of the week) and
-  "month" (for month of the year), "year", "season"
-  (string, summer, autumn or winter) and "daylight"
-  (daylight or nighttime hour).  But it is also possible to
-  set \code{type} to the name of another variable in
-  \code{mydata}, in which case the plotted data will be
-  divided into quantiles based on that data series. See
-  \code{cutData} for further details.(NOTE: type
-  conditioning currently allows up to two levels of
-  conditioning, e.g., \code{type = c("weekday",
-  "daylight")}.)}
+  the entire data. Other type options include \dQuote{hour}
+  (for hour of the day), \dQuote{weekday} (for day of the
+  week) and \dQuote{month} (for month of the year),
+  \dQuote{year}, \dQuote{season} (string, summer, autumn or
+  winter) and \dQuote{daylight} (daylight or nighttime
+  hour).  But it is also possible to set \code{type} to the
+  name of another variable in \code{mydata}, in which case
+  the plotted data will be divided into quantiles based on
+  that data series. See \code{cutData} for further
+  details.(NOTE: type conditioning currently allows up to
+  two levels of conditioning, e.g., \code{type =
+  c("weekday", "daylight")}.)}
 
   \item{xlim,ylim}{The x-axis and y-axis size ranges. By
   default these sized on the basis of \code{latitude} and
