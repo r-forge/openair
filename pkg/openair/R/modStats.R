@@ -182,7 +182,13 @@ n <- function(x, mod = "mod", obs = "obs") {
 FAC2 <- function(x, mod = "mod", obs = "obs") {
     x <- na.omit(x[ , c(mod, obs)])
     ratio <- x[, mod] / x[, obs]
-    res <- length(which(ratio >= 0.5 & ratio <= 2)) / nrow(x)
+    ratio <- na.omit(ratio)
+    len <- length(ratio)
+    if (len > 0) {
+        res <- length(which(ratio >= 0.5 & ratio <= 2)) / len
+    } else {
+        res <- NA
+    }
     data.frame(FAC2 = res)
 }
 

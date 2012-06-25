@@ -97,7 +97,7 @@ MannKendall <- function(mydata, ...) {
 ##' @param avg.time Can be \dQuote{month} (the default),
 ##' \dQuote{season} or \dQuote{year}. Determines the time over which
 ##' data should be averaged. Note that for \dQuote{year}, six or more
-##' years are required. For \dQuote{season} the data are plit up into
+##' years are required. For \dQuote{season} the data are split up into
 ##' spring: March, April, May etc. Note that December is considered as
 ##' belonging to winter of the following year.
 ##' @param statistic Statistic used for calculating monthly
