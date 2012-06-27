@@ -117,8 +117,8 @@
 
   \item{key.position}{Location where the scale key is to
   plotted. Allowed arguments currently include
-  \dQuote{"top"}, \dQuote{"right"}, \dQuote{"bottom"} and
-  \dQuote{"left"}.}
+  \dQuote{top}, \dQuote{right}, \dQuote{bottom} and
+  \dQuote{left}.}
 
   \item{key}{Fine control of the scale key via
   \code{drawOpenKey}. See \code{drawOpenKey} for further
@@ -130,12 +130,12 @@
 
   \item{statistic}{The \code{statistic} to be applied to
   each data bin in the plot. Options currently include
-  \dQuote{"prop.count"}, \dQuote{"prop.mean"} and
-  \dQuote{"abs.count"}. The default \dQuote{"prop.count"}
-  sizes bins according to the proportion of the frequency
-  of measurements.  Similarly, \dQuote{prop.mean} sizes
-  bins according to their relative contribution to the
-  mean. \dQuote{"abs.count"} provides the absolute count of
+  \dQuote{prop.count}, \dQuote{prop.mean} and
+  \dQuote{abs.count}. The default \dQuote{prop.count} sizes
+  bins according to the proportion of the frequency of
+  measurements.  Similarly, \dQuote{prop.mean} sizes bins
+  according to their relative contribution to the mean.
+  \dQuote{abs.count} provides the absolute count of
   measurements in each bin.}
 
   \item{pollutant}{Alternative data series to be sampled

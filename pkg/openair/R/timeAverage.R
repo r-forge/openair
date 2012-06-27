@@ -72,15 +72,17 @@
 ##' = "default"}.
 ##' @param percentile The percentile level in \% used when \code{statistic =
 ##'   "percentile"}. The default is 95.
-##' @param start.date A string giving a start date to use. This is sometimes
-##'   useful if a time series starts between obvious intervals. For example,
-##'   for a 1-minute time series that starts "2009-11-29 12:07:00" that needs
-##'   to be averaged up to 15-minute means, the intervals would be "2009-11-29
-##'   12:07:00", "2009-11-29 12:22:00" etc. Often, however, it is better to
-##'   round down to a more obvious start point e.g. "2009-11-29 12:00:00" such
-##'   that the sequence is then "2009-11-29 12:00:00", "2009-11-29 12:15:00"
-##'   \ldots{} \code{start.date} is therefore used to force this type of
-##'   sequence.
+##' @param start.date A string giving a start date to use. This is
+##' sometimes useful if a time series starts between obvious
+##' intervals. For example, for a 1-minute time series that starts
+##' \dQuote{2009-11-29 12:07:00} that needs to be averaged up to
+##' 15-minute means, the intervals would be \dQuote{2009-11-29
+##' 12:07:00}, \dQuote{2009-11-29 12:22:00} etc. Often, however, it is
+##' better to round down to a more obvious start point
+##' e.g. \dQuote{2009-11-29 12:00:00} such that the sequence is then
+##' \dQuote{2009-11-29 12:00:00}, \dQuote{2009-11-29 12:15:00} \ldots{}
+##' \code{start.date} is therefore used to force this type of
+##' sequence.
 ##' @param vector.ws Should vector averaging be carried out on wind
 ##' speed if available? The default is \code{FALSE} and scalar
 ##' averages are calculated. Vector averaging of the wind speed is

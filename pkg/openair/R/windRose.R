@@ -135,19 +135,19 @@ pollutionRose <- function(mydata,
 ##' argument, to handle formatting.
 ##' @param key.footer see \code{key.footer}.
 ##' @param key.position Location where the scale key is to plotted.
-##' Allowed arguments currently include \dQuote{"top"},
-##' \dQuote{"right"}, \dQuote{"bottom"} and \dQuote{"left"}.
+##' Allowed arguments currently include \dQuote{top},
+##' \dQuote{right}, \dQuote{bottom} and \dQuote{left}.
 ##' @param key Fine control of the scale key via \code{drawOpenKey}. See
 ##'   \code{drawOpenKey} for further details.
 ##' @param dig.lab The number of signficant figures at which scientific number
 ##'   formatting is used in break point and key labelling. Default 5.
 ##' @param statistic The \code{statistic} to be applied to each data
-##' bin in the plot. Options currently include \dQuote{"prop.count"},
-##' \dQuote{"prop.mean"} and \dQuote{"abs.count"}. The default
-##' \dQuote{"prop.count"} sizes bins according to the proportion of
+##' bin in the plot. Options currently include \dQuote{prop.count},
+##' \dQuote{prop.mean} and \dQuote{abs.count}. The default
+##' \dQuote{prop.count} sizes bins according to the proportion of
 ##' the frequency of measurements.  Similarly, \dQuote{prop.mean} sizes
 ##' bins according to their relative contribution to the
-##' mean. \dQuote{"abs.count"} provides the absolute count of
+##' mean. \dQuote{abs.count} provides the absolute count of
 ##' measurements in each bin.
 ##' @param pollutant Alternative data series to be sampled instead of wind
 ##'   speed. The \code{windRose} default NULL is equivalent to \code{pollutant
