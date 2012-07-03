@@ -335,21 +335,11 @@ polarFreq <- function(mydata,
     results.grid <- ddply(mydata, type, prepare.grid)
     results.grid <- na.omit(results.grid)
 
-    ## proper names of labelling ##############################################################################
-    pol.name <- sapply(levels(results.grid[ , type[1]]), function(x) quickText(x, auto.text))
-    strip <- strip.custom(factor.levels = pol.name)
-
-    if (length(type) == 1 ) {
-
-        strip.left <- FALSE
-
-    } else { ## two conditioning variables
-
-        pol.name <- sapply(levels(results.grid[ , type[2]]), function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels = pol.name)
-    }
-    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
-########################################################################################################
+    ## proper names of labelling ###################################################
+    strip.dat <- strip.fun(results.grid, type, auto.text)
+    strip <- strip.dat[[1]]
+    strip.left <- strip.dat[[2]]
+    pol.name <- strip.dat[[3]]
 
     results.grid$weights <- results.grid$weights ^ (1 / coef)
 

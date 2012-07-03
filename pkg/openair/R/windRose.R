@@ -453,23 +453,10 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
     results.grid$calm <- stat.labcalm(results.grid$calm)
 
     ## proper names of labelling ###################################################
-    pol.name <- sapply(levels(results.grid[ , type[1]]),
-                       function(x) quickText(x, auto.text))
-    strip <- strip.custom(factor.levels = pol.name)
-
-    if (length(type) == 1 ) {
-
-        strip.left <- FALSE
-
-    } else { ## two conditioning variables
-
-        pol.name <- sapply(levels(results.grid[ , type[2]]),
-                           function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels = pol.name)
-    }
-    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
-
-    ## #############################################################################
+    strip.dat <- strip.fun(results.grid, type, auto.text)
+    strip <- strip.dat[[1]]
+    strip.left <- strip.dat[[2]]
+    pol.name <- strip.dat[[3]]
 
     if (length(theLabels) < length(cols)) {
         col <- cols[1:length(theLabels)]
@@ -521,23 +508,27 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
                             subdata <- results.grid[subscripts, ]
 
-                            for (i in 1:nrow(subdata)) { ## go through wind angles 30, 60, ...
-                                with(subdata, {
-                                    for (j in 1:length(theLabels)) { ## go through paddles x1, x2, ...
-                                        if (j == 1) {
+                            if (nrow(subdata) > 0) {
 
-                                            temp <- "poly(wd[i], 0, x1[i], width * box.widths[1], col[1])"
+                                for (i in 1:nrow(subdata)) { ## go through wind angles 30, 60, ...
+                                    with(subdata, {
+                                        for (j in 1:length(theLabels)) { ## go through paddles x1, x2, ...
+                                            if (j == 1) {
 
-                                        } else {
+                                                temp <- "poly(wd[i], 0, x1[i], width * box.widths[1], col[1])"
 
-                                            temp <- paste("poly(wd[i], x", j - 1,
-                                                          "[i], x", j, "[i], width * box.widths[",
-                                                          j, "], col[", j, "])", sep = "")
+                                            } else {
 
+                                                temp <- paste("poly(wd[i], x", j - 1,
+                                                              "[i], x", j, "[i], width * box.widths[",
+                                                              j, "], col[", j, "])", sep = "")
+
+                                            }
+                                            eval(parse(text = temp))
                                         }
-                                        eval(parse(text = temp))
-                                    }
-                                })
+                                    })
+                                }
+
                             }
 
                             ltext(seq((myby + off.set), mymax, myby) * sin(pi / 4),
@@ -546,6 +537,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
                             if (annotate) ## don't add calms for prop.mean for now...
                                 if (statistic != "prop.mean") {
+
                                     ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
                                                                subdata$panel.fun[1], "\ncalm = ",
                                                                subdata$calm[1], stat.unit,

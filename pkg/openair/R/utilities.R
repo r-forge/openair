@@ -758,3 +758,25 @@ makeOpenKeyLegend <- function(key, default.key, fun.name = "function"){
                          c(y1[i - 1], y1[i], y2[i], y2[i - 1]),
                          col = myColors[group.number], border = NA, alpha = 0.4)
     }
+
+
+## gives names of lattice strips
+strip.fun <- function(results.grid, type, auto.text) {
+    ## proper names of labelling ###################################################
+    pol.name <- sapply(levels(factor(results.grid[ , type[1]])),
+                       function(x) quickText(x, auto.text))
+    strip <- strip.custom(factor.levels = pol.name)
+
+    if (length(type) == 1 ) {
+
+        strip.left <- FALSE
+
+    } else { ## two conditioning variables
+
+        pol.name <- sapply(levels(factor(results.grid[ , type[2]])),
+                           function(x) quickText(x, auto.text))
+        strip.left <- strip.custom(factor.levels = pol.name)
+    }
+    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
+    list(strip, strip.left, pol.name)
+}

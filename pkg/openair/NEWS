@@ -9,6 +9,8 @@ Changes in openair 0.7-0 [2012-05-30]
 *	Do not remove missing data from timeVariation
 *	Fix bug in FAC2 in modStats when observations = 0 (exclude
 	from calculation because indeterminate)
+*	Fix bug in windRose for empty panels and panel labelling when
+	data missing
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================

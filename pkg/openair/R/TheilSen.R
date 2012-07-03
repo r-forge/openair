@@ -402,24 +402,11 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
     if(!"skip" %in% names(extra.args))
         extra.args$skip <- FALSE
 
-
-    ## proper names of labelling ##############################################################################
-    pol.name <- sapply(levels(factor(split.data[ , type[1]])), function(x) quickText(x, auto.text))
-    strip <- strip.custom(factor.levels = pol.name)
-
-    if (length(type) == 1 ) {
-
-        strip.left <- FALSE
-
-    } else { ## two conditioning variables
-
-        pol.name <- sapply(levels(factor(split.data[ , type[2]])), function(x) quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels = pol.name)
-    }
-    if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
-########################################################################################################
-
-
+    ## proper names of labelling ###################################################
+    strip.dat <- strip.fun(split.data, type, auto.text)
+    strip <- strip.dat[[1]]
+    strip.left <- strip.dat[[2]]
+    pol.name <- strip.dat[[3]]
 
 #### calculate slopes etc ###############################################################################
 
