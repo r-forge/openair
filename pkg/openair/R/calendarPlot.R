@@ -5,7 +5,7 @@
 
 ## calendarPlot shows air quality or other data in a conventional calendar format.
 ## This makes it easy to gain a feel about variations in concentrations and other parameters
-## By default ir shows the day of the month for each day, but can also show the wind vector,
+## By default it shows the day of the month for each day, but can also show the wind vector,
 ## which may also be normalised to wind speed.
 
 
@@ -34,6 +34,18 @@
 ##' If wind speed is also available, then setting the option \code{annotate =
 ##' "ws"} will plot the wind vectors whose length is scaled to the wind speed.
 ##' Thus information on the daily mean wind speed and direction are available.
+##'
+##' It is also possible to plot categorical scales. This is useful
+##' where, for example, an air quality index defines concentrations as
+##' bands e.g. \dQuote{good}, \dQuote{poor}. In these cases users must
+##' supply \code{labels} and corresponding \code{breaks}.
+##'
+##' Note that is is possible to pre-calculate concentrations in some
+##' way before passing the data to \code{calendarPlot}. For example
+##' \code{\link{timeAverage}} could be used to calculate rolling 8-hour
+##' mean concentrations. The data can then be passed to
+##' \code{calendarPlot} and \code{statistic = "max"} chosen, which
+##' will plot maximum daily 8-hour mean concentrations.
 ##'
 ##' @param mydata A data frame minimally containing \code{date} and at least
 ##'   one other numeric variable and a year. The date should be in either
@@ -81,6 +93,15 @@
 ##' \code{timeAverage}. For example, \code{data.thresh = 75} means
 ##' that at least 75\% of the data must be available in a day for the
 ##' value to be calculate, else the data is removed.
+##' @param labels If a categorical scale is required then these labels
+##' will be used. Note there is one less label than break. For
+##' example, \code{labels = c("good", "bad", "very bad")}.
+##' @param breaks If a categorical scale is required then these breaks
+##' will be used. For example, \code{breaks = c(0, 50, 100, 1000)}. In
+##' this case \dQuote{good} corresponds to values berween 0 and 50 and
+##' so on. Users should set the maximum value of \code{breaks} to
+##' exceed the maximum data value to ensure it is within the maximum
+##' final range e.g. 100--1000 in this case.
 ##' @param main The plot title; default is pollutant and year.
 ##' @param key.header Adds additional text/labels to the scale key.
 ##'   For example, passing \code{calendarPlot(mydata, key.header = "header",
@@ -137,7 +158,10 @@
 ##' calendarPlot(selectByDate(mydata, month = c(3,6,10), year = 2003),
 ##' pollutant = "o3", year = 2003, annotate = "ws", cols = "heat")
 ##'
-##'
+##' # categorical scale example
+##' calendarPlot(mydata, pollutant = "no2", breaks = c(0, 50, 100, 150, 1000),
+##' labels = c("Very low", "Low", "High", "Very High"),
+##' cols = c("lightblue", "green", "yellow",  "red"), statistic = "max")
 ##'
 calendarPlot <- function(mydata,
                          pollutant = "nox",
@@ -153,11 +177,15 @@ calendarPlot <- function(mydata,
                          cex.lim = c(0.6, 1),
                          digits = 0,
                          data.thresh = 0,
+                         labels = NA,
+                         breaks = NA,
                          main = paste(pollutant, "in", year),
                          key.header = "", key.footer = "",
                          key.position = "right", key = TRUE,
                          auto.text = TRUE,
                          ...) {
+
+    conc.mat <- NULL ## keep R check quiet
 
     ##international keyboard
     ##first letter and ordered Sun to Sat
@@ -185,6 +213,7 @@ calendarPlot <- function(mydata,
     mydata <- openair:::checkPrep(mydata, vars, "default", remove.calm = FALSE)
 
     main <- quickText(main, auto.text)
+
 
     ## themes for calendarPlot
     def.theme  <- list(strip.background = list(col = "#ffe5cc"),
@@ -262,7 +291,7 @@ calendarPlot <- function(mydata,
     }
 
     ## calculate daily means
-    if ("POSIXt" %in% class(mydata$date)) {
+    if ("POSIXt" %in% class(mydata$date) && !is.factor(mydata[, pollutant])) {
         mydata <- timeAverage(mydata, "day", statistic= statistic, data.thresh = data.thresh)
         mydata$date <- as.Date(mydata$date)
     }
@@ -273,7 +302,12 @@ calendarPlot <- function(mydata,
     baseData <- mydata
 
     mydata <- ddply(mydata, type, function(x) prepare.grid(x, pollutant))
+    category <- FALSE ## assume pollutant is not a categorical value
+    if (!is.na(labels) && !is.na(breaks)) {
+        category <- TRUE
+        mydata <- transform(mydata, conc.mat = cut(conc.mat, breaks = breaks, labels = labels))
 
+    }
 
     if (annotate == "wd") {
         baseData$wd <- baseData$wd * 2 * pi / 360
@@ -289,19 +323,37 @@ calendarPlot <- function(mydata,
     }
 
     ## set up scales
-    nlev <- 200
-    if(missing(limits)) breaks <- pretty(mydata$conc.mat, n = nlev) else breaks <- pretty(limits,n = nlev)
-    nlev2 <- length(breaks)
-    col <- openColours(cols, (nlev2 - 1))
-    col.scale <- breaks
 
-#################
-                                        #scale key setup
-#################
-    legend <- list(col = col, at = col.scale, space = key.position,
-                   auto.text = auto.text, footer = key.footer, header = key.header,
-                   height = 1, width = 1.5, fit = "all")
-    legend <- openair:::makeOpenKeyLegend(key, legend, "calendarPlot")
+    ## categorical scales required
+    if (category) {
+        ## check the breaks and labels are consistent
+        if (length(labels) + 1 != length(breaks)) stop("Need one more break than labels")
+        n <- length(levels(mydata$conc.mat))
+        col <- openColours(cols, n)
+        legend <- list(col = col, space = key.position, auto.text = auto.text,
+                       labels = levels(mydata$conc.mat), footer = key.footer, header = key.header,
+                       height = 0.60, width = 1.5, fit = "scale",
+                       plot.style = "other")
+        breaks <- seq(0, n)
+        col.scale <- breaks
+        legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
+
+    } else { ## continuous colour scale
+        nlev <- 200
+        if (missing(limits)) {
+            breaks <- pretty(mydata$conc.mat, n = nlev)
+        } else {
+            breaks <- pretty(limits, n = nlev)
+        }
+        nlev2 <- length(breaks)
+        col <- openColours(cols, (nlev2 - 1))
+        col.scale <- breaks
+        legend <- list(col = col, at = col.scale, space = key.position,
+                       auto.text = auto.text, footer = key.footer, header = key.header,
+                       height = 1, width = 1.5, fit = "all")
+        legend <- openair:::makeOpenKeyLegend(key, legend, "calendarPlot")
+    }
+
 
     levelplot.args <- list(x = conc.mat ~ x * y | month, data = mydata,
                            par.settings = cal.theme,

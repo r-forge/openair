@@ -7,10 +7,10 @@
     statistic = "mean", cols = "heat", limits = c(0, 100),
     lim = NULL, col.lim = c("grey30", "black"),
     font.lim = c(1, 2), cex.lim = c(0.6, 1), digits = 0,
-    data.thresh = 0, main = paste(pollutant, "in", year),
-    key.header = "", key.footer = "",
-    key.position = "right", key = TRUE, auto.text = TRUE,
-    ...)
+    data.thresh = 0, labels = NA, breaks = NA,
+    main = paste(pollutant, "in", year), key.header = "",
+    key.footer = "", key.position = "right", key = TRUE,
+    auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -82,6 +82,19 @@
   means that at least 75\% of the data must be available in
   a day for the value to be calculate, else the data is
   removed.}
+
+  \item{labels}{If a categorical scale is required then
+  these labels will be used. Note there is one less label
+  than break. For example, \code{labels = c("good", "bad",
+  "very bad")}.}
+
+  \item{breaks}{If a categorical scale is required then
+  these breaks will be used. For example, \code{breaks =
+  c(0, 50, 100, 1000)}. In this case \dQuote{good}
+  corresponds to values berween 0 and 50 and so on. Users
+  should set the maximum value of \code{breaks} to exceed
+  the maximum data value to ensure it is within the maximum
+  final range e.g. 100--1000 in this case.}
 
   \item{main}{The plot title; default is pollutant and
   year.}
@@ -161,6 +174,21 @@
   \code{annotate = "ws"} will plot the wind vectors whose
   length is scaled to the wind speed. Thus information on
   the daily mean wind speed and direction are available.
+
+  It is also possible to plot categorical scales. This is
+  useful where, for example, an air quality index defines
+  concentrations as bands e.g. \dQuote{good},
+  \dQuote{poor}. In these cases users must supply
+  \code{labels} and corresponding \code{breaks}.
+
+  Note that is is possible to pre-calculate concentrations
+  in some way before passing the data to
+  \code{calendarPlot}. For example
+  \code{\link{timeAverage}} could be used to calculate
+  rolling 8-hour mean concentrations. The data can then be
+  passed to \code{calendarPlot} and \code{statistic =
+  "max"} chosen, which will plot maximum daily 8-hour mean
+  concentrations.
 }
 \examples{
 # load example data from package
@@ -179,6 +207,11 @@ cols = "heat")
 # show only specific months with selectByDate
 calendarPlot(selectByDate(mydata, month = c(3,6,10), year = 2003),
 pollutant = "o3", year = 2003, annotate = "ws", cols = "heat")
+
+# categorical scale example
+calendarPlot(mydata, pollutant = "no2", breaks = c(0, 50, 100, 150, 1000),
+labels = c("Very low", "Low", "High", "Very High"),
+cols = c("lightblue", "green", "yellow",  "red"), statistic = "max")
 }
 \author{
   David Carslaw
