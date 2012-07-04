@@ -4,7 +4,7 @@
 \title{Function to split data in different ways for conditioning}
 \usage{
   cutData(x, type = "default", hemisphere = "northern",
-    n.levels = 4, is.axis = FALSE, ...)
+    n.levels = 4, start.day, is.axis = FALSE, ...)
 
   cutDaylight(x, local.hour.offset = 0, latitude =
     51.522393, longitude = -0.154700, ...)
@@ -29,8 +29,22 @@
   \item{n.levels}{Number of quantiles to split numeric data
   into.}
 
+  \item{start.day}{What day of the week should the
+  \code{type = "weekday"} start on?  The user can change
+  the start day by supplying an integer between 0 and 6.
+  Sunday = 0, Monday = 1, \ldots For example to start the
+  weekday plots on a Saturday, choose \code{start.day =
+  6}.}
+
   \item{is.axis}{A logical (\code{TRUE}/\code{FALSE}), used
   to request shortened cut labels for axes.}
+
+  \item{...}{All additional parameters are passed on to
+  next function(s).  For example, with \code{cutData} all
+  additional parameters are passed on to \code{cutDaylight}
+  allowing direct access to \code{cutDaylight} via either
+  \code{cutData} or any \code{openair} using \code{cutData}
+  for \code{type} conditioning.}
 
   \item{local.hour.offset,latitude,longitude}{Parameters
   used by \code{cutDaylight} to estimate if the measurement
@@ -42,13 +56,6 @@
   AURN site associated with the \code{mydata} example data
   set. See \code{\dots{}} and Details below for further
   information.}
-
-  \item{\dots}{All additional parameters are passed on to
-  next function(s).  For example, with \code{cutData} all
-  additional parameters are passed on to \code{cutDaylight}
-  allowing direct access to \code{cutDaylight} via either
-  \code{cutData} or any \code{openair} using \code{cutData}
-  for \code{type} conditioning.}
 }
 \value{
   Returns a data frame with a column \code{cond} that is

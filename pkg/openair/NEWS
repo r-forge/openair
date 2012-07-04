@@ -11,6 +11,9 @@ Changes in openair 0.7-0 [2012-05-30]
 	from calculation because indeterminate)
 *	Fix bug in windRose for empty panels and panel labelling when
 	data missing
+*	New option start.day in cutData that affects most plots;
+	allows users to set start day when type = "weekday"
+
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================
