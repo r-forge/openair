@@ -14,9 +14,9 @@
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
-  \code{date} and at least one other numeric variable and a
-  year. The date should be in either \code{Date} format or
-  class \code{POSIXct}.}
+  \code{date} and at least one other numeric variable. The
+  date should be in either \code{Date} format or class
+  \code{POSIXct}.}
 
   \item{pollutant}{Mandatory. A pollutant name
   corresponding to a variable in a data frame should be
@@ -86,7 +86,8 @@
   \item{labels}{If a categorical scale is required then
   these labels will be used. Note there is one less label
   than break. For example, \code{labels = c("good", "bad",
-  "very bad")}.}
+  "very bad")}. \code{breaks} must also be supplied if
+  labels are given.}
 
   \item{breaks}{If a categorical scale is required then
   these breaks will be used. For example, \code{breaks =
@@ -157,11 +158,12 @@
   \code{calendarPlot} will plot one year of data in a
   conventional calendar format i.e. by month and day of the
   week. The main purpose of this function is to make it
-  easy to visualise data in a familiar way. Currently the
-  mean value of a variable is plotted using a colour scale.
-  Further statistics will be added in due course.
+  easy to visualise data in a familiar way. Daily
+  statistics are calculated using
+  \code{\link{timeAverage}}, which by default will
+  calculate the daily mean concentration.
 
-  If wind direction are available it is then possible to
+  If wind direction is available it is then possible to
   plot the wind direction vector on each day. This is very
   useful for getting a feel for the meteorological
   conditions that affect pollutant concentrations. Note
@@ -184,7 +186,7 @@
   Note that is is possible to pre-calculate concentrations
   in some way before passing the data to
   \code{calendarPlot}. For example
-  \code{\link{timeAverage}} could be used to calculate
+  \code{\link{rollingMean}} could be used to calculate
   rolling 8-hour mean concentrations. The data can then be
   passed to \code{calendarPlot} and \code{statistic =
   "max"} chosen, which will plot maximum daily 8-hour mean
