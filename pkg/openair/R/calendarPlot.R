@@ -363,89 +363,89 @@ calendarPlot <- function(mydata,
     }
 
 
-    levelplot.args <- list(x = conc.mat ~ x * y | month, data = mydata,
-                           par.settings = cal.theme,
-                           main = main,
-                           at = col.scale,
-                           col.regions = col,
-                           as.table = TRUE,
-                           scales = list(y = list(draw = FALSE),
-                           x = list(at = 1:7, labels = weekday.abb, tck = 0),
-                           par.strip.text = list(cex = 0.8),
-                           alternating = 1, relation = "free"),
-                           aspect = 6/7,
-                           between = list(x = 1),
-                           colorkey = FALSE, legend = legend,
-                           panel = function(x, y, subscripts,...) {
-                               panel.levelplot(x, y, subscripts,...)
-                               panel.abline(v=c(0.5: 7.5), col = "grey90")
-                               panel.abline(h=c(0.5: 7.5), col = "grey90")
+    lv.args <- list(x = conc.mat ~ x * y | month, data = mydata,
+                    par.settings = cal.theme,
+                    main = main,
+                    at = col.scale,
+                    col.regions = col,
+                    as.table = TRUE,
+                    scales = list(y = list(draw = FALSE),
+                    x = list(at = 1:7, labels = weekday.abb, tck = 0),
+                    par.strip.text = list(cex = 0.8),
+                    alternating = 1, relation = "free"),
+                    aspect = 6/7,
+                    between = list(x = 1),
+                    colorkey = FALSE, legend = legend,
+                    panel = function(x, y, subscripts,...) {
+                        panel.levelplot(x, y, subscripts,...)
+                        panel.abline(v=c(0.5: 7.5), col = "grey90")
+                        panel.abline(h=c(0.5: 7.5), col = "grey90")
 
-                               if (annotate == "date") {
-                                   ltext(x, y, labels = mydata$date.mat[subscripts], cex = 0.6,
-                                         col = as.character(mydata$dateColour[subscripts]))
-                               }
+                        if (annotate == "date") {
+                            ltext(x, y, labels = mydata$date.mat[subscripts], cex = 0.6,
+                                  col = as.character(mydata$dateColour[subscripts]))
+                        }
 
-                               if (annotate == "value") {
-                                   ## add some dates for navigation
-                                   date.col <- as.character(mydata$dateColour[subscripts])
-                                   ids <- which(date.col == "black")
-                                   date.col[ids] <- "transparent"
-                                   ltext(x, y, labels = mydata$date.mat[subscripts], cex = 0.6,
-                                         col = date.col)
+                        if (annotate == "value") {
+                            ## add some dates for navigation
+                            date.col <- as.character(mydata$dateColour[subscripts])
+                            ids <- which(date.col == "black")
+                            date.col[ids] <- "transparent"
+                            ltext(x, y, labels = mydata$date.mat[subscripts], cex = 0.6,
+                                  col = date.col)
 
-                                   concs <- mydata$value[subscripts]
+                            concs <- mydata$value[subscripts]
 
-                                   ## deal with values above/below threshold
-                                   ids <- seq_along(concs)
-                                   the.cols <- rep(col.lim[1], length(ids))
-                                   the.font <- rep(font.lim[1], length(ids))
-                                   the.cex <- rep(cex.lim[1], length(ids))
-                                   if (!is.null(lim)) {
-                                       ## ids where conc is >= lim
-                                       ids <- which(concs >= lim)
-                                       the.cols[ids] <- col.lim[2]
-                                       the.font[ids] <- font.lim[2]
-                                       the.cex[ids] <- cex.lim[2]
-                                   }
+                            ## deal with values above/below threshold
+                            ids <- seq_along(concs)
+                            the.cols <- rep(col.lim[1], length(ids))
+                            the.font <- rep(font.lim[1], length(ids))
+                            the.cex <- rep(cex.lim[1], length(ids))
+                            if (!is.null(lim)) {
+                                ## ids where conc is >= lim
+                                ids <- which(concs >= lim)
+                                the.cols[ids] <- col.lim[2]
+                                the.font[ids] <- font.lim[2]
+                                the.cex[ids] <- cex.lim[2]
+                            }
 
-                                   the.labs <- round(concs, digits = digits)
-                                   id <- which(is.na(the.labs))
-                                   if (length(id) > 0) {
-                                       the.labs <- as.character(the.labs)
-                                       the.labs[id] <- ""
-                                   }
-                                   ltext(x, y, labels = the.labs, cex = the.cex,
-                                         font = the.font, col = the.cols)
-                               }
+                            the.labs <- round(concs, digits = digits)
+                            id <- which(is.na(the.labs))
+                            if (length(id) > 0) {
+                                the.labs <- as.character(the.labs)
+                                the.labs[id] <- ""
+                            }
+                            ltext(x, y, labels = the.labs, cex = the.cex,
+                                  font = the.font, col = the.cols)
+                        }
 
-                               if (annotate == "wd") {
-                                   larrows(x + 0.5 * sin(wd$value[subscripts]),
-                                           y +  0.5 * cos(wd$value[subscripts]),
-                                           x +  -0.5 * sin(wd$value[subscripts]),
-                                           y +  -0.5 * cos(wd$value[subscripts]),
-                                           angle = 20, length = 0.07, lwd = 0.5)
-                               }
+                        if (annotate == "wd") {
+                            larrows(x + 0.5 * sin(wd$value[subscripts]),
+                                    y +  0.5 * cos(wd$value[subscripts]),
+                                    x +  -0.5 * sin(wd$value[subscripts]),
+                                    y +  -0.5 * cos(wd$value[subscripts]),
+                                    angle = 20, length = 0.07, lwd = 0.5)
+                        }
 
-                               if (annotate == "ws") {
-                                   larrows(x + (0.5 * sin(wd$value[subscripts]) *
-                                                ws$value[subscripts]),
-                                           y +  (0.5 * cos(wd$value[subscripts]) *
-                                                 ws$value[subscripts]) ,
-                                           x +  (-0.5 * sin(wd$value[subscripts]) *
-                                                 ws$value[subscripts]) ,
-                                           y +  (-0.5 * cos(wd$value[subscripts]) *
-                                                 ws$value[subscripts]),
-                                           angle = 20, length = 0.07, lwd = 0.5)
-                               }
+                        if (annotate == "ws") {
+                            larrows(x + (0.5 * sin(wd$value[subscripts]) *
+                                         ws$value[subscripts]),
+                                    y +  (0.5 * cos(wd$value[subscripts]) *
+                                          ws$value[subscripts]) ,
+                                    x +  (-0.5 * sin(wd$value[subscripts]) *
+                                          ws$value[subscripts]) ,
+                                    y +  (-0.5 * cos(wd$value[subscripts]) *
+                                          ws$value[subscripts]),
+                                    angle = 20, length = 0.07, lwd = 0.5)
+                        }
 
-                           })
+                    })
 
     ## reset for extra.args
-    levelplot.args <- openair:::listUpdate(levelplot.args, extra.args)
+    lv.args <- openair:::listUpdate(lv.args, extra.args)
 
     ## plot
-    print(do.call(levelplot, levelplot.args))
+    print(do.call(levelplot, lv.args))
 
     ## reset theme
     lattice.options(default.theme = def.theme)
