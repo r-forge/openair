@@ -3,7 +3,19 @@ pollutionRose <- function(mydata,
                           breaks = 6, paddle = FALSE, seg = 0.9, key.position = "right",
                           ...)
 {
+
+    ## extra.args setup
+    extra.args <- list(...)
+
+    ## check to see if two met data sets are being compared.
+    ## if so, set pollutant to one of the names
+    if ("ws2" %in% names(extra.args)) {
+        pollutant <-  extra.args$ws
+        if (missing(breaks)) breaks <- NA
+    }
+
     if (is.null(breaks))  breaks <- 6
+
     if (is.numeric(breaks) & length(breaks) == 1) {
         breaks2 <- co.intervals(mydata[ , pollutant][is.finite(mydata[ ,pollutant])],
                                 number = 10, overlap = 0)
@@ -52,13 +64,25 @@ pollutionRose <- function(mydata,
 ##' By default, \code{pollutionRose} will plot a pollution rose of \code{nox}
 ##' using "wedge" style segments and placing the scale key to the right of the
 ##' plot.
-##' @usage windRose(mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type = "default",
-##'                      cols = "default", grid.line = NULL, width = 1, seg = NULL,
-##'                      auto.text = TRUE, breaks = 4, offset = 10,
-##'                      paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
-##'                      key.position = "bottom", key = TRUE, dig.lab = 5,
-##'                      statistic = "prop.count", pollutant = NULL, annotate = TRUE,
-##'                      ...)
+##'
+##' It is possible to compare two wind speed-direction data sets using
+##' \code{pollutionRose}. There are many reasons for doing so e.g. to
+##' see how one site compares with another or for meteorological model
+##' evaluation. In this case, \code{ws} and \code{wd} are considered
+##' to the the reference data sets with which a second set of wind
+##' speed and wind directions are to be compared (\code{ws2} and
+##' \code{wd2}). The second set of values is subtracted from the first
+##' and the differences compared. If for example, \code{wd2} was
+##' biased positive compared with \code{wd} then \code{pollutionRose}
+##' will show the bias in polar coordinates. In its default use, wind
+##' direction bias is colour-coded to show negative bias in one colour
+##' and positive bias in another.
+##'
+##' @usage windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int = 2, angle = 30,
+##' type = "default", cols = "default", grid.line = NULL, width = 1, seg = NULL,
+##' auto.text = TRUE, breaks = 4, offset = 10, paddle = TRUE, key.header = NULL,
+##' key.footer = "(m/s)", key.position = "bottom", key = TRUE, dig.lab = 5,
+##' statistic = "prop.count", pollutant = NULL, annotate = TRUE, border = NA, ...)
 ##'
 ##'
 ##'     pollutionRose(mydata, pollutant = "nox", key.footer = pollutant,
@@ -70,6 +94,8 @@ pollutionRose <- function(mydata,
 ##' @param mydata A data frame containing fields \code{ws} and \code{wd}
 ##' @param ws Name of the column representing wind speed.
 ##' @param wd Name of the column representing wind direction.
+##' @param ws2 The user can supply a second set of wind speed and wind direction values with which the first can be compared. See details below for full explanation.
+##' @param wd2 see \code{ws2}.
 ##' @param ws.int The Wind speed interval. Default is 2 m/s but for low met
 ##'   masts with low mean wind speeds a value of 1 or 0.5 m/s may be better.
 ##'   Note, this argument is superseded in \code{pollutionRose}. See
@@ -154,6 +180,7 @@ pollutionRose <- function(mydata,
 ##'   = "ws"}.
 ##' @param annotate If \code{TRUE} then the percentage calm and mean values are
 ##'   printed in each panel.
+##' @param border Border colour for shaded areas. Default is no border.
 ##' @param ... For \code{pollutionRose} other parameters that are
 ##' passed on to \code{windRose}. For \code{windRose} other parameters
 ##' that are passed on to \code{drawOpenKey}, \code{lattice:xyplot}
@@ -215,13 +242,25 @@ pollutionRose <- function(mydata,
 ##' pollutionRose(mydata, pollutant = "pm10", type = "year", statistic = "prop.mean")
 ##' }
 ##'
+##' ## example of comparing 2 met sites
+##' ## first we will make some new ws/wd data with a postive bias
+##' mydata$ws2 = mydata$ws + 2 * rnorm(nrow(mydata)) + 1
+##' mydata$wd2 = mydata$wd + 30 * rnorm(nrow(mydata)) + 30
 ##'
-windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type = "default",
+##' ## need to correct negative wd
+##' id <- which(mydata$wd2 < 0)
+##' mydata$wd2[id] <- mydata$wd2[id] + 360
+##'
+##' ## results show postive bias in wd and ws
+##' pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
+windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int = 2,
+                      angle = 30, type = "default",
                       cols = "default", grid.line = NULL, width = 1, seg = NULL,
                       auto.text = TRUE, breaks = 4, offset = 10,
                       paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
                       key.position = "bottom", key = TRUE, dig.lab = 5,
                       statistic = "prop.count", pollutant = NULL, annotate = TRUE,
+                      border = NA,
                       ...)
 {
 
@@ -252,7 +291,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
         angle <- 3
     }
 
-    ##extra.args setup
+    ## extra.args setup
     extra.args <- list(...)
 
                                         #label controls
@@ -328,11 +367,41 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     ## variables we need
     vars <- c(wd, ws)
+
+    diff <- FALSE ## i.e. not two sets of ws/wd
+    rm.neg <- TRUE ## will remove negative ws in check.prep
+
+    ## case where two met data sets are to be compared
+    if (!is.na(ws2) & !is.na(wd2)) {
+        vars <- c(vars, ws2, wd2)
+        diff <- TRUE
+        rm.neg <- FALSE
+        mydata$ws <- mydata[, ws2] - mydata[, ws]
+        mydata$wd <- mydata[, wd2] - mydata[, wd]
+
+        ## fix negative wd
+        id <- which(mydata$wd < 0)
+        if (length(id) > 0) mydata$wd[id] <- mydata$wd[id] + 360
+        pollutant <- "ws"
+        key.footer <- "ws"
+        wd <- "wd" ; ws <- "ws"
+        vars <- c("ws", "wd")
+        if (missing(angle)) angle <- 10
+        if (missing(offset)) offset <- 20
+        ## set the breaks to cover all the data
+        if (is.na(breaks[1])) breaks <- c(-1 * max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE),
+                                                              max(mydata$ws, na.rm = TRUE))))), 0,
+                                         max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE),
+                                                           max(mydata$ws, na.rm = TRUE))))))
+        if (missing(cols)) cols <- c("lightskyblue", "tomato")
+        seg <- 1
+    }
+
     if (any(type %in% openair:::dateTypes)) vars <- c(vars, "date")
 
     if (!is.null(pollutant)) vars <- c(vars, pollutant)
 
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE, remove.neg = rm.neg)
 
     mydata <- na.omit(mydata)
 
@@ -361,7 +430,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     ## clean up cut intervals
     theLabels <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$x))
-    theLabels <- gsub("[,]", "-", theLabels)
+    theLabels <- gsub("[,]", " to ", theLabels)
 
     ## statistic handling
 
@@ -400,8 +469,16 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
         panel.fun <- stat.fun2(mydata[ , pollutant])
 
+        ## calculate mean wd - useful for cases comparing two met data sets
+        u <- mean(sin(2 * pi * mydata$wd / 360))
+        v <- mean(cos(2 * pi * mydata$wd / 360))
+        mean.wd <- atan2(u, v) * 360 / 2 / pi
+        if (mean.wd < 0) mean.wd <- mean.wd + 360
+        ## show as a negative (bias)
+        if (mean.wd > 180) mean.wd <- mean.wd - 360
+
         weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),
-                         calm = calm, panel.fun = panel.fun)
+                         calm = calm, panel.fun = panel.fun, mean.wd = mean.wd)
 
         weights
     }
@@ -422,7 +499,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
             y3 <- len2 * cos(theta) + width * sin(theta) + y.off
             y4 <- len2 * cos(theta) - width * sin(theta) + y.off
             lpolygon(c(x1, x2, x4, x3), c(y1, y2, y4, y3), col = colour,
-                     border = NA)
+                     border = border)
         }
 
     } else {
@@ -441,7 +518,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
             x2 <- rev(len2 * sin(theta) + x.off)
             y1 <- len1 * cos(theta) + x.off
             y2 <- rev(len2 * cos(theta) + x.off)
-            lpolygon(c(x1, x2), c(y1, y2), col = colour, border = NA)
+            lpolygon(c(x1, x2), c(y1, y2), col = colour, border = border)
         }
     }
 
@@ -451,9 +528,10 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
     ## format
     results.grid$calm <- stat.labcalm(results.grid$calm)
+    results.grid$mean.wd <- stat.labcalm(results.grid$mean.wd)
 
     ## proper names of labelling ###################################################
-    strip.dat <- strip.fun(results.grid, type, auto.text)
+    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -537,12 +615,20 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws.int = 2, angle = 30, type
 
                             if (annotate) ## don't add calms for prop.mean for now...
                                 if (statistic != "prop.mean") {
-
-                                    ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
+                                    if (!diff) {
+                                        ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
                                                                subdata$panel.fun[1], "\ncalm = ",
                                                                subdata$calm[1], stat.unit,
                                                                sep = ""), adj = c(1, 0), cex = 0.7,
                                           col = calm.col)
+                                    }
+                                    if (diff) {
+                                         ltext(max.freq, -max.freq, label = paste("mean ws = ",
+                                                               round(subdata$panel.fun[1], 1), "\nmean wd = ",
+                                                               round(subdata$mean.wd[1], 1),
+                                                               sep = ""), adj = c(1, 0), cex = 0.7,
+                                          col = calm.col)
+                                    }
                                 } else {
                                     ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
                                                                subdata$panel.fun[1], stat.unit,

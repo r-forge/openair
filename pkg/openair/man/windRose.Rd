@@ -3,13 +3,14 @@
 \alias{windRose}
 \title{Traditional wind rose plot and pollution rose variation}
 \usage{
-  windRose(mydata, ws = "ws", wd = "wd", ws.int = 2, angle
-    = 30, type = "default", cols = "default", grid.line =
-    NULL, width = 1, seg = NULL, auto.text = TRUE, breaks =
-    4, offset = 10, paddle = TRUE, key.header = NULL,
-    key.footer = "(m/s)", key.position = "bottom", key =
-    TRUE, dig.lab = 5, statistic = "prop.count", pollutant
-    = NULL, annotate = TRUE, ...)
+  windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 =
+    NA, ws.int = 2, angle = 30, type = "default", cols =
+    "default", grid.line = NULL, width = 1, seg = NULL,
+    auto.text = TRUE, breaks = 4, offset = 10, paddle =
+    TRUE, key.header = NULL, key.footer = "(m/s)",
+    key.position = "bottom", key = TRUE, dig.lab = 5,
+    statistic = "prop.count", pollutant = NULL, annotate =
+    TRUE, border = NA, ...)
 
   pollutionRose(mydata, pollutant = "nox", key.footer =
     pollutant, breaks = 6, paddle = FALSE, seg = 0.9,
@@ -23,6 +24,12 @@
 
   \item{wd}{Name of the column representing wind
   direction.}
+
+  \item{ws2}{The user can supply a second set of wind speed
+  and wind direction values with which the first can be
+  compared. See details below for full explanation.}
+
+  \item{wd2}{see \code{ws2}.}
 
   \item{ws.int}{The Wind speed interval. Default is 2 m/s
   but for low met masts with low mean wind speeds a value
@@ -145,6 +152,9 @@
   \item{annotate}{If \code{TRUE} then the percentage calm
   and mean values are printed in each panel.}
 
+  \item{border}{Border colour for shaded areas. Default is
+  no border.}
+
   \item{...}{For \code{pollutionRose} other parameters that
   are passed on to \code{windRose}. For \code{windRose}
   other parameters that are passed on to
@@ -221,6 +231,21 @@
   By default, \code{pollutionRose} will plot a pollution
   rose of \code{nox} using "wedge" style segments and
   placing the scale key to the right of the plot.
+
+  It is possible to compare two wind speed-direction data
+  sets using \code{pollutionRose}. There are many reasons
+  for doing so e.g. to see how one site compares with
+  another or for meteorological model evaluation. In this
+  case, \code{ws} and \code{wd} are considered to the the
+  reference data sets with which a second set of wind speed
+  and wind directions are to be compared (\code{ws2} and
+  \code{wd2}). The second set of values is subtracted from
+  the first and the differences compared. If for example,
+  \code{wd2} was biased positive compared with \code{wd}
+  then \code{pollutionRose} will show the bias in polar
+  coordinates. In its default use, wind direction bias is
+  colour-coded to show negative bias in one colour and
+  positive bias in another.
 }
 \note{
   \code{windRose} and \code{pollutionRose} both use
@@ -245,6 +270,18 @@ pollutionRose(mydata, pollutant = "nox")
 \dontrun{
 pollutionRose(mydata, pollutant = "pm10", type = "year", statistic = "prop.mean")
 }
+
+## example of comparing 2 met sites
+## first we will make some new ws/wd data with a postive bias
+mydata$ws2 = mydata$ws + 2 * rnorm(nrow(mydata)) + 1
+mydata$wd2 = mydata$wd + 30 * rnorm(nrow(mydata)) + 30
+
+## need to correct negative wd
+id <- which(mydata$wd2 < 0)
+mydata$wd2[id] <- mydata$wd2[id] + 360
+
+## results show postive bias in wd and ws
+pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
 }
 \author{
   David Carslaw (with some additional contributions by Karl
