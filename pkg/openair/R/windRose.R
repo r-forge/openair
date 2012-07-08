@@ -382,6 +382,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         ## fix negative wd
         id <- which(mydata$wd < 0)
         if (length(id) > 0) mydata$wd[id] <- mydata$wd[id] + 360
+
         pollutant <- "ws"
         key.footer <- "ws"
         wd <- "wd" ; ws <- "ws"
@@ -389,10 +390,11 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         if (missing(angle)) angle <- 10
         if (missing(offset)) offset <- 20
         ## set the breaks to cover all the data
-        if (is.na(breaks[1])) breaks <- c(-1 * max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE),
-                                                              max(mydata$ws, na.rm = TRUE))))), 0,
-                                         max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE),
-                                                           max(mydata$ws, na.rm = TRUE))))))
+        if (is.na(breaks[1])) {
+            max.br <- max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE), max(mydata$ws, na.rm = TRUE)))))
+            breaks <- c(-1 * max.br, 0, max.br)
+        }
+
         if (missing(cols)) cols <- c("lightskyblue", "tomato")
         seg <- 1
     }
@@ -408,8 +410,6 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
     if (is.null(pollutant)) pollutant <- ws
 
     mydata$x <- mydata[, pollutant]
-
-    ## if (type == "ws")  type <- "ws.1"
 
     mydata[ , wd] <- angle * ceiling(mydata[ , wd] / angle - 0.5)
     mydata[ , wd][mydata[ , wd] == 0] <- 360
@@ -585,6 +585,16 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
                                                       col = "grey85", lwd = 1))
 
                             subdata <- results.grid[subscripts, ]
+                            upper <- max.freq + off.set
+
+                            ## add axis lines
+                            larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
+                            larrows(0, -upper, 0, upper, code = 3, length = 0.1)
+
+                            ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
+                            ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
+                            ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
+                            ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
 
                             if (nrow(subdata) > 0) {
 
@@ -613,26 +623,27 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
                                   seq((myby + off.set), mymax, myby) * cos(pi / 4),
                                   paste(seq(myby, mymax, by = myby), stat.unit,  sep = ""), cex = 0.7)
 
+                            ## annotations e.g. calms, means etc
                             if (annotate) ## don't add calms for prop.mean for now...
                                 if (statistic != "prop.mean") {
                                     if (!diff) {
-                                        ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
-                                                               subdata$panel.fun[1], "\ncalm = ",
-                                                               subdata$calm[1], stat.unit,
-                                                               sep = ""), adj = c(1, 0), cex = 0.7,
-                                          col = calm.col)
+                                        ltext(max.freq + off.set, -max.freq - off.set,
+                                              label = paste(stat.lab2, " = ",
+                                              subdata$panel.fun[1], "\ncalm = ",
+                                              subdata$calm[1], stat.unit, sep = ""),
+                                              adj = c(1, 0), cex = 0.7, col = calm.col)
                                     }
-                                    if (diff) {
-                                         ltext(max.freq, -max.freq, label = paste("mean ws = ",
-                                                               round(subdata$panel.fun[1], 1), "\nmean wd = ",
-                                                               round(subdata$mean.wd[1], 1),
-                                                               sep = ""), adj = c(1, 0), cex = 0.7,
-                                          col = calm.col)
+                                    if (diff) { ## when two data sets are present
+                                        ltext(max.freq + off.set, -max.freq - off.set,
+                                              label = paste("mean ws = ",
+                                              round(subdata$panel.fun[1], 1),
+                                              "\nmean wd = ", round(subdata$mean.wd[1], 1),
+                                              sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
                                     }
                                 } else {
-                                    ltext(max.freq, -max.freq, label = paste(stat.lab2, " = ",
-                                                               subdata$panel.fun[1], stat.unit,
-                                                               sep = ""), adj = c(1, 0), cex = 0.7,
+                                    ltext(max.freq + off.set, -max.freq - off.set,
+                                          label = paste(stat.lab2, " = ", subdata$panel.fun[1],
+                                          stat.unit, sep = ""), adj = c(1, 0), cex = 0.7,
                                           col = calm.col)
                                 }
                         }, legend = legend)
