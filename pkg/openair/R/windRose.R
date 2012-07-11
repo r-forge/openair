@@ -477,6 +477,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         ## show as a negative (bias)
         if (mean.wd > 180) mean.wd <- mean.wd - 360
 
+
         weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),
                          calm = calm, panel.fun = panel.fun, mean.wd = mean.wd)
 

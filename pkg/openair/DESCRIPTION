@@ -3,6 +3,9 @@ Type: Package
 Title: Tools for the analysis of air pollution data
 Version: 0.6-6
 Date: 2012-07-06
+Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
+        "david.carslaw@kcl.ac.uk"), person("Karl", "Ropkins", role =
+        "aut", email = "K.Ropkins@its.leeds.ac.uk"))
 ByteCompile: true
 Author: David Carslaw and Karl Ropkins
 Depends:
