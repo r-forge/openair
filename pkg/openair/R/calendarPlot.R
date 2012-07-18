@@ -319,6 +319,7 @@ calendarPlot <- function(mydata,
     if (annotate == "wd") {
         baseData$wd <- baseData$wd * 2 * pi / 360
         wd <- ddply(baseData, type, function(x) prepare.grid(x, "wd"))
+        wd$value <- wd$conc.mat ## actual numerical value (retain for categorical scales)
     }
 
     if (annotate == "ws") {
@@ -327,6 +328,8 @@ calendarPlot <- function(mydata,
         ws <- ddply(baseData, type, function(x) prepare.grid(x, "ws"))
         ## normalise wind speeds to highest daily mean
         ws$conc.mat <- ws$conc.mat / max(ws$conc.mat, na.rm = TRUE)
+        ws$value <- ws$conc.mat ## actual numerical value (retain for categorical scales)
+        wd$value <- wd$conc.mat ## actual numerical value (retain for categorical scales)
     }
 
     ## set up scales
