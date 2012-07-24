@@ -15,6 +15,7 @@ Changes in openair 0.7-0 [2012-05-30]
 	allows users to set start day when type = "weekday"
 *	Allow categorical scales in calendarPlot
 *	Allow two met data sets to be compared in pollutionRose
+*	Allow statistic = "percentile" to be used with polarPlot
 
 
 Changes in openair 0.6-0 [2012-04-10]

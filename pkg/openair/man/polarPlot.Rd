@@ -6,11 +6,12 @@
     type = "default", statistic = "mean",
     resolution = "normal", limits = NA,
     exclude.missing = TRUE, uncertainty = FALSE,
-    cols = "default", min.bin = 1, upper = NA,
-    angle.scale = 315, units = x, force.positive = TRUE,
-    k = 100, normalise = FALSE, key.header = "",
-    key.footer = pollutant, key.position = "right",
-    key = TRUE, auto.text = TRUE, ...)
+    percentile = NA, cols = "default", min.bin = 1,
+    upper = NA, angle.scale = 315, units = x,
+    force.positive = TRUE, k = 100, normalise = FALSE,
+    key.header = "", key.footer = pollutant,
+    key.position = "right", key = TRUE, auto.text = TRUE,
+    ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -114,6 +115,15 @@
   frequency of measurements in each wind speed-direction
   bin. Note that if uncertainties are calculated then the
   type is set to "default".}
+
+  \item{percentile}{If \code{statistic = "percentile"} then
+  \code{percentile} is used, expressed from 0 to 100. Note
+  that the percentile value is calculated in the wind
+  speed, wind direction \sQuote{bins}. For this reason it
+  can also be useful to set \code{min.bin} to ensure there
+  are a sufficient number of points available to estimate a
+  percentile. See \code{quantile} for more details of how
+  percentiles are calculated.}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},

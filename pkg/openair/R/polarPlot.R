@@ -144,6 +144,13 @@
 ##' GAM and weighting is done by the frequency of measurements in each
 ##' wind speed-direction bin. Note that if uncertainties are
 ##' calculated then the type is set to "default".
+##' @param percentile If \code{statistic = "percentile"} then
+##' \code{percentile} is used, expressed from 0 to 100. Note that the
+##' percentile value is calculated in the wind speed, wind direction
+##' \sQuote{bins}. For this reason it can also be useful to set
+##' \code{min.bin} to ensure there are a sufficient number of points
+##' available to estimate a percentile. See \code{quantile} for more
+##' details of how percentiles are calculated.
 ##' @param cols Colours to be used for plotting. Options include
 ##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
 ##' and \code{RColorBrewer} colours --- see the \code{openair}
@@ -295,7 +302,7 @@
 ##'
 polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "default",
                       statistic = "mean", resolution = "normal", limits = NA,
-                      exclude.missing = TRUE, uncertainty = FALSE, cols = "default",
+                      exclude.missing = TRUE, uncertainty = FALSE, percentile = NA, cols = "default",
                       min.bin = 1, upper = NA, angle.scale = 315, units = x,
                       force.positive = TRUE, k = 100, normalise = FALSE,
                       key.header = "", key.footer = pollutant, key.position = "right",
@@ -304,6 +311,10 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     ## get rid of R check annoyances
     z = NULL
 
+    if (statistic == "percentile" & is.na(percentile)) {
+        warning("percentile value missing,  using 50")
+        percentile <- 50
+    }
 
     ## initial checks ##########################################################################################
     if (length(type) > 2) {stop("Maximum number of types is 2.")}
@@ -312,12 +323,13 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     if (uncertainty & length(pollutant) > 1) stop("Can only have one pollutant when uncertainty = TRUE")
 
-    if (!statistic %in% c("mean", "median", "frequency", "max", "stdev", "weighted.mean")) {
+    if (!statistic %in% c("mean", "median", "frequency", "max", "stdev", "weighted.mean", "percentile")) {
         stop (paste("statistic '", statistic, "' not recognised", sep = ""))
     }
 
     if (missing(key.header)) key.header <- statistic
     if (key.header == "weighted.mean") key.header <- c("weighted", "mean")
+    if (key.header == "percentile") key.header <- c(paste(percentile, "th", sep = ""), "percentile")
 
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -431,7 +443,10 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                          stdev = tapply(mydata[, pollutant], list(wd, x), function(x)
                          sd(x, na.rm = TRUE)),
                          weighted.mean = tapply(mydata[, pollutant], list(wd, x),
-                         function(x) (mean(x) * length(x) / nrow(mydata)))
+                         function(x) (mean(x) * length(x) / nrow(mydata))),
+                         percentile = tapply(mydata[, pollutant], list(wd, x), function(x)
+                         quantile(x, probs = percentile / 100, na.rm = TRUE))
+
                          )
 
         binned <- as.vector(t(binned))
@@ -509,7 +524,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     if (clip) results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
     ## proper names of labelling ###################################################
-    strip.dat <- strip.fun(results.grid, type, auto.text)
+    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
