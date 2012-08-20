@@ -163,7 +163,7 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
     prepare.cond <- function(mydata) {
         ## calculate the correlations
         thedata <- suppressWarnings(cor(mydata[, sapply(mydata, is.numeric)],
-                                        use = "pairwise.complete.obs" ))
+                                        use = "pairwise.complete.obs", ...))
 
         ## remove columns/rows where all are NA
         therows <- apply(thedata, 1, function(x) !all(is.na(x)))
