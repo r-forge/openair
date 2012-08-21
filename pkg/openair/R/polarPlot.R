@@ -635,7 +635,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
                            })
 
-                                        #reset for extra.args
+     ## reset for extra.args
     levelplot.args<- openair:::listUpdate(levelplot.args, extra.args)
 
                                         #plot
