@@ -127,11 +127,6 @@ quickText <- function(text, auto.text = TRUE){
 
     ## commands to strip unecessary * etc...
 
-    if (substr(ans, 21, 21) == "*") {
-        a <- ans
-        ans <- paste(substr(a, 1, 20), substr(a, 22, nchar(a)), sep = "")
-    }
-
     if (substr(ans, (nchar(ans) - 8), (nchar(ans) - 6)) == "] *") {
         a <- ans
         ans <- paste(substr(a, 1, (nchar(a) - 7)),
