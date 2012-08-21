@@ -18,7 +18,8 @@ Changes in openair 0.7-0 [2012-05-30]
 *	Allow statistic = "percentile" to be used with polarPlot
 *	Allow 'method' to be passed to cor in corPlot
 *	Added more back trajectory locations.
-
+*	Try harder to plot polarPlots when there is insufficent data
+	to calculate a smooth surface.
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================

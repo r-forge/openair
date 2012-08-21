@@ -462,11 +462,18 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
         ## no uncertainty to calculate
         if (!uncertainty) {
-            Mgam <- gam(binned ^ n ~ s(u, v, k = k))
-            pred <- predict.gam(Mgam, input.data)
-            pred <- pred ^ (1 / n)
-            pred <- as.vector(pred)
-            results <- data.frame(u = input.data$u, v = input.data$v, z = pred)
+            ## catch errors when not enough data to calculate surface
+            Mgam <- try(gam(binned ^ n ~ s(u, v, k = k)), TRUE)
+            if (!inherits(Mgam, "try-error")) {
+                pred <- predict.gam(Mgam, input.data)
+                pred <- pred ^ (1 / n)
+                pred <- as.vector(pred)
+                results <- data.frame(u = input.data$u, v = input.data$v, z = pred)
+            } else {
+                results <- data.frame(u = u, v = v, z = binned)
+                exclude.missing <- FALSE
+                warning(call. = FALSE, paste("Not enough data to fit surface.\nTry reducing the value of the smoothing parameter, k to less than ", k, ".",  sep = ""))
+            }
 
         } else {
 
