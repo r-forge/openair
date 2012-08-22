@@ -123,7 +123,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                         vector.ws = FALSE) {
 
     ## get rid of R check annoyances
-    year = season = month = u = v = site = NULL
+    year = season = month = Uu = Vv = site = NULL
 
     ## extract variables of interest
     vars <- names(mydata)
@@ -234,14 +234,14 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         ## calculate wind components
         if ("wd" %in% names(mydata)) {
             if (is.numeric(mydata$wd) && "ws" %in% names(mydata)) {
-                mydata <- transform(mydata,  u = ws * sin(2 * pi * wd / 360),
-                                    v = ws * cos(2 * pi * wd / 360))
+                mydata <- transform(mydata,  Uu = ws * sin(2 * pi * wd / 360),
+                                    Vv = ws * cos(2 * pi * wd / 360))
 
             }
 
             if (is.numeric(mydata$wd) && !"ws" %in% names(mydata)) {
-               mydata <- transform(mydata,  u = sin(2 * pi * wd / 360),
-                                    v = cos(2 * pi * wd / 360))
+               mydata <- transform(mydata,  Uu = sin(2 * pi * wd / 360),
+                                    Vv = cos(2 * pi * wd / 360))
             }
         }
 
@@ -323,7 +323,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if ("wd" %in% names(mydata)) {
             if (is.numeric(mydata$wd)) {
                 ## mean wd
-                dailymet <- within(dailymet, wd <- as.vector(atan2(u, v) * 360 / 2 / pi))
+                dailymet <- within(dailymet, wd <- as.vector(atan2(Uu, Vv) * 360 / 2 / pi))
 
                 ## correct for negative wind directions
                 ids <- which(dailymet$wd < 0)  ## ids where wd < 0
@@ -331,10 +331,10 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
                 ## vector average ws
                 if ("ws" %in% names(mydata)) {
-                    if (vector.ws) dailymet <- within(dailymet, ws <- (u ^ 2 + v ^ 2) ^ 0.5)
+                    if (vector.ws) dailymet <- within(dailymet, ws <- (Uu ^ 2 + Vv ^ 2) ^ 0.5)
                 }
 
-                dailymet <- subset(dailymet, select = c(-u, -v))
+                dailymet <- subset(dailymet, select = c(-Uu, -Vv))
             }
         }
 

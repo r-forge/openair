@@ -20,6 +20,7 @@ Changes in openair 0.7-0 [2012-05-30]
 *	Added more back trajectory locations.
 *	Try harder to plot polarPlots when there is insufficent data
 	to calculate a smooth surface.
+* Rename some variables in timeAverage to avoid variable clash.
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================
