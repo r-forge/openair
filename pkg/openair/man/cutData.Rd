@@ -13,10 +13,11 @@
   \item{x}{A data frame containing a field \code{date}.}
 
   \item{type}{A string giving the way in which the data
-  frame should be split. Pre-defined values are: "default",
-  "year", "hour", "month", "season", "weekday", "ws",
-  "site", "weekend", "monthyear", "daylight", "gmtbst" or
-  "bstgmt".
+  frame should be split. Pre-defined values are:
+  \dQuote{default}, \dQuote{year}, \dQuote{hour},
+  \dQuote{month}, \dQuote{season}, \dQuote{weekday},
+  \dQuote{site}, \dQuote{weekend}, \dQuote{monthyear},
+  \dQuote{daylight}, \dQuote{gmtbst} or \dQuote{bstgmt}.
 
   \code{type} can also be the name of a numeric or factor.
   If a numeric column name is supplied \code{cutData} will

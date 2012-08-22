@@ -86,10 +86,11 @@
 ##' cutDaylight(x, local.hour.offset = 0,
 ##'                  latitude = 51.522393, longitude = -0.154700, ...)
 ##' @param x A data frame containing a field \code{date}.
-##' @param type A string giving the way in which the data frame should be
-##'   split. Pre-defined values are: "default", "year", "hour", "month",
-##'   "season", "weekday", "ws", "site", "weekend", "monthyear", "daylight",
-##'   "gmtbst" or "bstgmt".
+##' @param type A string giving the way in which the data frame should
+##' be split. Pre-defined values are: \dQuote{default}, \dQuote{year},
+##' \dQuote{hour}, \dQuote{month}, \dQuote{season}, \dQuote{weekday},
+##' \dQuote{site}, \dQuote{weekend}, \dQuote{monthyear},
+##' \dQuote{daylight}, \dQuote{gmtbst} or \dQuote{bstgmt}.
 ##'
 ##' \code{type} can also be the name of a numeric or factor. If a numeric
 ##'   column name is supplied \code{cutData} will split the data into four
