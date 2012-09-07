@@ -97,15 +97,18 @@ trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, typ
         ## length of back trajectories
         traj$len <- ave(traj$lat, traj$date, FUN = length)
 
+        ## find length of back trajectories
         ## 96-hour back trajectories with origin: length should be 97
-        traj <- subset(traj, len == 97)
-        len <- nrow(traj) / 97
+        n <- max(abs(traj$hour.inc)) + 1
+
+        traj <- subset(traj, len == n)
+        len <- nrow(traj) / n
 
         ## lat/lon input matrices
-        x <- matrix(traj$lon, nrow = 97)
-        y <- matrix(traj$lat, nrow = 97)
+        x <- matrix(traj$lon, nrow = n)
+        y <- matrix(traj$lat, nrow = n)
 
-        z <- matrix(0, nrow = 97, ncol = len)
+        z <- matrix(0, nrow = n, ncol = len)
         res <- matrix(0, nrow = len, ncol = len)
 
         res <- .Call(method, x, y, res)
@@ -115,7 +118,7 @@ trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, typ
 
         dist.res <- as.dist(res)
         clusters <- pam(dist.res, n.cluster)
-        cluster <- rep(clusters$clustering, each = 97)
+        cluster <- rep(clusters$clustering, each = n)
         traj$cluster <- factor(cluster)
         traj
 

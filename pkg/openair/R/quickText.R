@@ -120,6 +120,8 @@ quickText <- function(text, auto.text = TRUE){
     ans <- gsub("r2", "R' ^2 *'", ans)
     ans <- gsub("R2", "R' ^2 *'", ans)
 
+    ans <- gsub("tau ", "' * tau * '", ans)
+
     ans <- gsub("umol/m2/s", "' * mu * 'mol m' ^-2 * ' s' ^-1 *'", ans)
     ans <- gsub("umol/m2", "' * mu * 'mol m' ^-2 *'", ans)
 
