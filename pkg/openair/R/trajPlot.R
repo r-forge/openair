@@ -56,23 +56,38 @@
 ##' "weekday")} will produce a 2x2 plot split by season and day of the
 ##' week. Note, when two types are provided the first forms the
 ##' columns and the second the rows.
-##' @param method For trajectory plots, either "scatter" or
-##' "level". The latter option bins the data according to the values
-##' of \code{x.inc} and \code{y.inc}.
+##'
 ##' @param smooth Should the trajectory surface be smoothed?
+##' @param statistic For \code{trajLevel}. By default the function
+##' will plot the mean concentration of a pollutant. If
+##' \code{statistic = "frequency"}, a plot will be shown for gridded
+##' trajectory frequencies. This is useful to understand where air
+##' masses tend to orginate.
+##'
+##' It is also possible to set \code{statistic = "difference"}. In
+##' this case trajectories where the associated concentration is
+##' greater than \code{percentile} are compared with the the full set
+##' of trajectories to understand the differences in freqeuncies of
+##' the origin of air masses. The comparsion is made by comparing the
+##' percentage change in gridded frequencies. For example, such a plot
+##' could show that the top 10\% of concentrations of PM10 tend to
+##' orginate from air-mass origins to the east.
+##' @param percentile For \code{trajLevel}. The percentile
+##' concentration of \code{pollutant} against which the all
+##' trajectories are compared.
 ##' @param map Should a base map be drawn? If \code{TRUE} the world
 ##' base map from the \code{maps} package is used.
 ##' @param lon.inc The longitude-interval to be used for binning data
-##' when \code{method = "level"}.
+##' for \code{trajLevel}.
 ##' @param lat.inc The latitude-interval to be used for binning data
-##' when \code{method = "level"}.
+##' when \code{trajLevel}.
 ##' @param ... other arguments are passed to \code{cutData} and
-##' \code{scatterPlot}. This provides access to arguments used in
-##' both these functions and functions that they in turn pass
-##' arguments on to. For example, \code{plotTraj} passes the argument
-##' \code{cex} on to \code{scatterPlot} which in turn passes it on to
-##' the \code{lattice} function \code{xyplot} where it is applied to
-##' set the plot symbol size.
+##' \code{scatterPlot}. This provides access to arguments used in both
+##' these functions and functions that they in turn pass arguments on
+##' to. For example, \code{plotTraj} passes the argument \code{cex} on
+##' to \code{scatterPlot} which in turn passes it on to the
+##' \code{lattice} function \code{xyplot} where it is applied to set
+##' the plot symbol size.
 ##' @export
 ##' @return NULL
 ##' @seealso \code{\link{importTraj}} to import trajectory data from the King's
@@ -123,12 +138,14 @@
 ##' smooth = TRUE, type = "season")
 ##' }
 trajLevel <- function(mydata, lon = "lon", lat = "lat",
-                      pollutant = "pm10", type = "default", method = "level", smooth = FALSE,
+                      pollutant = "pm10", type = "default", smooth = FALSE,
+                      statistic = "mean", percentile = 90,
                       map = TRUE, lon.inc = 1.5, lat.inc = 1.5,...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
 
+    method <- "level"
     if (is.list(mydata)) mydata <- rbind.fill(mydata)
 
     mydata <- cutData(mydata, type, ...)
@@ -142,8 +159,42 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     mydata <- mydata[ , c("date", "xgrid", "ygrid", type, pollutant)]
     ids <- which(names(mydata) %in% c("xgrid", "ygrid", type))
 
-    mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
-    attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
+    ## plot mean concentration
+    if (statistic == "mean") {
+        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+        attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
+    }
+
+    ## plot trajectory frequecies
+    if (statistic == "frequency") {
+        ## count % of times a cell contains a trajectory
+        n <- length(unique(mydata$date))
+        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) 100 * length(unique(x)) / n)
+        mydata[, pollutant] <- mydata[, "date"]
+    }
+
+    ## plot trajectory frequecy differences e.g. top 10% concs cf. mean
+    if (statistic == "difference") {
+        ## count % of times a cell contains a trajectory
+        n1 <- length(unique(mydata$date))
+        dat1 <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) 100 * length(unique(x)) / n1)
+        dat1[, pollutant] <- dat1[, "date"]
+
+        ## select top X percent
+        Q90 <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+        dat2 <- subset(mydata, get(pollutant) > Q90)
+        n2 <- length(unique(dat2$date))
+        dat2 <- aggregate(dat2[ , -ids], dat2[ , ids], function (x) 100 * length(unique(x)) / n2)
+        dat2[, pollutant] <- dat2[, "date"]
+
+        ## differences
+        mydata <- merge(dat1, dat2, by = c("xgrid", "ygrid", type))
+        pol1 <- paste(pollutant, ".x", sep = "")
+        pol2 <- paste(pollutant, ".y", sep = "")
+        mydata[, pollutant] <- 100* (mydata[, pol2] - mydata[, pol1]) / mydata[, pol1]
+    }
+
+
 
     ## change x/y names to gridded values
     lon <- "xgrid"
@@ -163,7 +214,17 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         extra.args$xlab <- "longitude"
 
      if(!"main" %in% names(extra.args))
-        extra.args$main <- pollutant
+        extra.args$main <- ""
+
+    if(!"key.header" %in% names(extra.args)) {
+        if (statistic == "frequency") extra.args$key.header <- "% trajectories"
+        if (statistic == "difference") extra.args$key.header <- quickText(paste("gridded differences", "\n(", percentile, "th percentile)", sep = ""))
+    }
+
+     if(!"key.footer" %in% names(extra.args))
+         extra.args$key.footer <- ""
+
+    extra.args$trajStat <- statistic
 
     ## the plot
     scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, type = type,
@@ -171,7 +232,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              x.inc = lon.inc, y.inc = lat.inc)
 
     ## reset for extra.args
-    scatterPlot.args<- openair:::listUpdate(scatterPlot.args, extra.args)
+    scatterPlot.args <- openair:::listUpdate(scatterPlot.args, extra.args)
 
     ## plot
     do.call(scatterPlot, scatterPlot.args)
@@ -184,12 +245,13 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 ##' and colour trajectories according to a grouping variable. See example below.
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type = "default",
-                     method = "scatter", smooth = FALSE, map = TRUE, lon.inc = 1.5,
+                     smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.5,
                      lat.inc = 1.5, group = NA, ...)
 {
 
     ##extra.args
     extra.args <- list(...)
+    method <- "scatter"
 
     #aspect, cex
     if(!"aspect" %in% names(extra.args))

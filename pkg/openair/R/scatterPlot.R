@@ -350,6 +350,7 @@ scatterPlot <- function(mydata,
          extra.args$lty <- 1
     if(!"layout" %in% names(extra.args))
          extra.args$layout <- NULL
+    if("trajStat" %in% names(extra.args)) trajStat <- extra.args$trajStat else trajStat <- "mean"
 
 
 
@@ -835,6 +836,42 @@ scatterPlot <- function(mydata,
 
         col.scale <- breaks
 
+        ## this is the default
+        if (trajStat == "mean") {
+            legend <- list(col = col, at = col.scale, space = key.position,
+                           auto.text = auto.text, footer = extra.args$key.footer,
+                           header = extra.args$key.header,
+                           height = 1, width = 1.5, fit = "all")
+            legend <- openair:::makeOpenKeyLegend(key, legend, "other")
+        }
+
+        if (trajStat == "frequency" | trajStat == "difference") {
+
+            if (trajStat == "frequency") {
+                breaks <- c(0, 1, 5, 10, 25, 100)
+                labels <- c("0 to 1", "1 to 5", "5 to 10", "10 to 25", "25 to 100")
+            }
+
+            if (trajStat == "difference") {
+                breaks <- c(-15000, -50, -25, -5, 5, 25, 50, 15000)
+                labels <- c("<-50", "-50 to -25", "-25 to -5", "-5 to 5", "5 to 25", "25 to 50", ">50")
+            }
+
+
+            ## frequency plot
+            mydata[, z] <- cut(mydata[, z], breaks = breaks, labels = labels)
+            n <- length(levels(mydata[, z]))
+
+            col <- openColours(cols, n)
+            legend <- list(col = col, space = key.position, auto.text = auto.text,
+                           labels = levels(mydata[, z]), footer = extra.args$key.footer,
+                           header = extra.args$key.header, height = 0.8, width = 1.5, fit = "scale",
+                           plot.style = "other")
+            breaks <- seq(0, n)
+            col.scale <- breaks
+            legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
+        }
+
 
         #plot byt ... handler
 
@@ -842,18 +879,15 @@ scatterPlot <- function(mydata,
                          strip = strip,
                          as.table = TRUE,
                          region = TRUE,
-                         col.regions = col,
-                         at = col.scale,
+                        col.regions = col,
+                        at = col.scale,
                          par.strip.text = list(cex = 0.8),
-                         colorkey = TRUE,
+                         colorkey = FALSE,
+                               legend = legend,
                          panel = function(x, y, z, subscripts,...) {
                              panel.grid(h = -1, v = -1)
                              panel.levelplot(x, y, z, subscripts,
-                                             interpolate = FALSE,
-                                             at = col.scale,
-                                             pretty = TRUE,
-                                             col.regions = col,
-                                             labels = FALSE)
+                                             labels = FALSE, ...)
 
                              if (mod.line) {
                                  panel.abline(a = c(0, 0.5), lty = 5)
