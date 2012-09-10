@@ -345,7 +345,7 @@ calendarPlot <- function(mydata,
                        labels = levels(mydata$conc.mat), footer = key.footer,
                        header = key.header, height = 0.8, width = 1.5, fit = "scale",
                        plot.style = "other")
-        breaks <- seq(0, n)
+
         col.scale <- breaks
         legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
 
@@ -366,7 +366,7 @@ calendarPlot <- function(mydata,
     }
 
 
-    lv.args <- list(x = conc.mat ~ x * y | month, data = mydata,
+    lv.args <- list(x = value ~ x * y | month, data = mydata,
                     par.settings = cal.theme,
                     main = main,
                     at = col.scale,
