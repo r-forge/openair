@@ -853,21 +853,18 @@ scatterPlot <- function(mydata,
             }
 
             if (trajStat == "difference") {
-                breaks <- c(-15000, -50, -25, -5, 5, 25, 50, 15000)
-                labels <- c("<-50", "-50 to -25", "-25 to -5", "-5 to 5", "5 to 25", "25 to 50", ">50")
+                breaks <- c(-15000, -10, -5, -1, 1, 5, 10, 15000)
+                labels <- c("<-10", "-10 to -5", "-5 to -1", "-1 to 1", "1 to 5", "5 to 10", ">10")
             }
 
-
             ## frequency plot
-            mydata[, z] <- cut(mydata[, z], breaks = breaks, labels = labels)
-            n <- length(levels(mydata[, z]))
-
+            n <- 7
             col <- openColours(cols, n)
             legend <- list(col = col, space = key.position, auto.text = auto.text,
-                           labels = levels(mydata[, z]), footer = extra.args$key.footer,
+                           labels = labels, footer = extra.args$key.footer,
                            header = extra.args$key.header, height = 0.8, width = 1.5, fit = "scale",
                            plot.style = "other")
-            breaks <- seq(0, n)
+
             col.scale <- breaks
             legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
         }

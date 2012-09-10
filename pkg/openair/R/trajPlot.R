@@ -209,7 +209,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         mydata <- merge(dat1, dat2, by = c("xgrid", "ygrid", type))
         pol1 <- paste(pollutant, ".x", sep = "")
         pol2 <- paste(pollutant, ".y", sep = "")
-        mydata[, pollutant] <- 100* (mydata[, pol2] - mydata[, pol1]) / mydata[, pol1]
+        mydata[, pollutant] <-  mydata[, pol2] - mydata[, pol1]
+
     }
 
 
