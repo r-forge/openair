@@ -6,12 +6,13 @@
   trajLevel(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
-    lon.inc = 1.5, lat.inc = 1.5, ...)
+    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
-    lon.inc = 1.5, lat.inc = 1.5, group = NA, ...)
+    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, group = NA,
+    ...)
 }
 \arguments{
   \item{mydata}{Data frame, the result of importing a
@@ -78,6 +79,11 @@
 
   \item{lat.inc}{The latitude-interval to be used for
   binning data when \code{trajLevel}.}
+
+  \item{min.bin}{For \code{trajLevel} the minimum number of
+  unique \emph{trajectories} in a grid cell. Counts below
+  \code{min.bin} are set as missing. For \code{statistic =
+  "frequency"} or \code{statistic = "frequency"}}
 
   \item{...}{other arguments are passed to \code{cutData}
   and \code{scatterPlot}. This provides access to arguments

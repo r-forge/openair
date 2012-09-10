@@ -81,6 +81,10 @@
 ##' for \code{trajLevel}.
 ##' @param lat.inc The latitude-interval to be used for binning data
 ##' when \code{trajLevel}.
+##' @param min.bin For \code{trajLevel} the minimum number of unique
+##' \emph{trajectories} in a grid cell. Counts below \code{min.bin} are set as
+##' missing. For \code{statistic = "frequency"} or \code{statistic =
+##' "frequency"}
 ##' @param ... other arguments are passed to \code{cutData} and
 ##' \code{scatterPlot}. This provides access to arguments used in both
 ##' these functions and functions that they in turn pass arguments on
@@ -140,7 +144,7 @@
 trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       pollutant = "pm10", type = "default", smooth = FALSE,
                       statistic = "mean", percentile = 90,
-                      map = TRUE, lon.inc = 1.5, lat.inc = 1.5,...)  {
+                      map = TRUE, lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, ...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
@@ -161,7 +165,10 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     ## plot mean concentration
     if (statistic == "mean") {
+        counts <-  aggregate(mydata[ , -ids], mydata[ , ids], function (x)  length(unique(x)))
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+        mydata$count <- counts$date
+        mydata <- subset(mydata, count >= min.bin)
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
     }
 
@@ -169,8 +176,15 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     if (statistic == "frequency") {
         ## count % of times a cell contains a trajectory
         n <- length(unique(mydata$date))
+        ## number in each bin
+        counts <-  aggregate(mydata[ , -ids], mydata[ , ids], function (x)  length(unique(x)))
+
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) 100 * length(unique(x)) / n)
+
+
         mydata[, pollutant] <- mydata[, "date"]
+        mydata$count <- counts$date
+        mydata <- subset(mydata, count >= min.bin)
     }
 
     ## plot trajectory frequecy differences e.g. top 10% concs cf. mean
@@ -184,8 +198,12 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         Q90 <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
         dat2 <- subset(mydata, get(pollutant) > Q90)
         n2 <- length(unique(dat2$date))
+        ## number in each bin
+        counts <-  aggregate(dat2[ , -ids], dat2[ , ids], function (x)  length(unique(x)))
         dat2 <- aggregate(dat2[ , -ids], dat2[ , ids], function (x) 100 * length(unique(x)) / n2)
         dat2[, pollutant] <- dat2[, "date"]
+        dat2$count <- counts$date
+        dat2 <- subset(dat2, count >= min.bin)
 
         ## differences
         mydata <- merge(dat1, dat2, by = c("xgrid", "ygrid", type))
@@ -246,7 +264,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type = "default",
                      smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.5,
-                     lat.inc = 1.5, group = NA, ...)
+                     lat.inc = 1.5, min.bin = 1, group = NA, ...)
 {
 
     ##extra.args
