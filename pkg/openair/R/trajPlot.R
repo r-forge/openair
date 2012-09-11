@@ -165,7 +165,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     ## plot mean concentration
     if (statistic == "mean") {
-        counts <-  aggregate(mydata[ , -ids], mydata[ , ids], function (x)  length(unique(x)))
+        counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
+                             function (x)  length(unique(x)))
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
         mydata$count <- counts$date
         mydata <- subset(mydata, count >= min.bin)
@@ -177,13 +178,21 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         ## count % of times a cell contains a trajectory
         n <- length(unique(mydata$date))
         ## number in each bin
-        counts <-  aggregate(mydata[ , -ids], mydata[ , ids], function (x)  length(unique(x)))
+        counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
+                             function (x)  length(unique(x)))
 
-        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) 100 * length(unique(x)) / n)
+        ## need dates for later processing e.g. for type = "season"
+        dates <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+        dates <- dates$date
+
+        mydata <- aggregate(mydata[ , -ids], mydata[ , ids],
+                            function (x) 100 * length(unique(x)) / n)
 
 
         mydata[, pollutant] <- mydata[, "date"]
         mydata$count <- counts$date
+        mydata$date <- dates
+        attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
         mydata <- subset(mydata, count >= min.bin)
     }
 
@@ -191,18 +200,31 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     if (statistic == "difference") {
         ## count % of times a cell contains a trajectory
         n1 <- length(unique(mydata$date))
-        dat1 <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) 100 * length(unique(x)) / n1)
+        dat1 <- aggregate(mydata[ , -ids], mydata[ , ids],
+                          function (x) 100 * length(unique(x)) / n1)
         dat1[, pollutant] <- dat1[, "date"]
+        dat1 <- subset(dat1, select = -date)
 
         ## select top X percent
         Q90 <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+
+        ## now select trajectories with conc > percentile
         dat2 <- subset(mydata, get(pollutant) > Q90)
         n2 <- length(unique(dat2$date))
         ## number in each bin
-        counts <-  aggregate(dat2[ , -ids], dat2[ , ids], function (x)  length(unique(x)))
-        dat2 <- aggregate(dat2[ , -ids], dat2[ , ids], function (x) 100 * length(unique(x)) / n2)
+        counts <-  aggregate(dat2[ , -ids], dat2[ , ids],
+                             function (x)  length(unique(x)))
+
+        ## need dates for later processing e.g. for type = "season"
+        dates <- aggregate(dat2[ , -ids], dat2[ , ids], mean, na.rm = TRUE)
+        dates <- dates$date
+
+        dat2 <- aggregate(dat2[ , -ids], dat2[ , ids],
+                          function (x) 100 * length(unique(x)) / n2)
         dat2[, pollutant] <- dat2[, "date"]
         dat2$count <- counts$date
+        dat2$date <- dates
+        attr(dat2$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
         dat2 <- subset(dat2, count >= min.bin)
 
         ## differences
