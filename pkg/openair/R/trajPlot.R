@@ -245,8 +245,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     extra.args <- list(...)
 
     ## aspect
-    if(!"aspect" %in% names(extra.args))
-        extra.args$aspect <- 1
+ #   if(!"aspect" %in% names(extra.args))
+   #     extra.args$aspect <- 1
 
     if(!"ylab" %in% names(extra.args))
         extra.args$ylab <- "latitude"
