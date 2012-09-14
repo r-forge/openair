@@ -336,7 +336,7 @@ polarFreq <- function(mydata,
     results.grid <- na.omit(results.grid)
 
     ## proper names of labelling ###################################################
-    strip.dat <- strip.fun(results.grid, type, auto.text)
+    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -360,7 +360,7 @@ polarFreq <- function(mydata,
 
     col <- openColours(cols, (nlev2 - 1))
 
-    results.grid$div <- cut(results.grid$weights, breaks)
+    results.grid$div <- cut(results.grid$weights, breaks, include.lowest = TRUE)
 
     ## for pollution data
     results.grid$weights[results.grid$weights == "NaN"] <- 0
@@ -368,8 +368,8 @@ polarFreq <- function(mydata,
 
 
     ##  scale key setup ################################################################################################
-    legend <- list(col = col[1:length(breaks) - 1], at = breaks,
-                   labels = list(at = br^(1/coef), labels = br),
+    legend <- list(col = col[1:(length(breaks) - 1)], at = breaks,
+                   labels = list(at = br ^ (1 / coef), labels = br),
                    space = key.position,
                    auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
@@ -399,7 +399,7 @@ polarFreq <- function(mydata,
 
                       for (i in 1:nrow(subdata)) {
                           colour <- col[as.numeric(subdata$div[i])]
-                          if (subdata$weights[i] == 0) colour <- "transparent"
+                       #   if (subdata$weights[i] == 0) colour <- "transparent"
                           poly(subdata$wd[i], subdata$ws[i], colour)
                       }
 
@@ -441,7 +441,7 @@ polarFreq <- function(mydata,
 #################
     ## output
 #################
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
+    if (length(type) == 1) plot(plt) else plot(openair:::useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"

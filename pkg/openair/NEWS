@@ -22,6 +22,8 @@ Changes in openair 0.7-0 [2012-05-30]
 	to calculate a smooth surface.
 * 	Rename some variables in timeAverage to avoid variable clash.
 *	Add gridded frequency capability to trajLevel
+*	Fix bug in colour scaling in polarFreq when statistic =
+	"stdev" (0 would not be plotted)
 
 Changes in openair 0.6-0 [2012-04-10]
 =====================================
