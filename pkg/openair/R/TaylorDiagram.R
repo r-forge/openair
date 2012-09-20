@@ -224,10 +224,11 @@
 ##'
 ##' ## do for all models
 ##' TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model")
-##'
+##' \dontrun{
 ##' ## all models, by season
 ##' TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model",
 ##' type = "season")
+##' }
 ##'
 ##'
 TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type = "default",

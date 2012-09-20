@@ -232,7 +232,9 @@ pollutionRose <- function(mydata,
 ##' windRose(mydata,type = "year")
 ##'
 ##' # windRose in 10 degree intervals with gridlines and width adjusted
+##' \dontrun{
 ##' windRose(mydata, angle = 10, width = 0.2, grid.line = 1)
+##' }
 ##'
 ##' # pollutionRose of nox
 ##' pollutionRose(mydata, pollutant = "nox")

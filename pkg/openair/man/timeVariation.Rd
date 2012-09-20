@@ -224,17 +224,17 @@ timeVariation(subset(mydata, ws > 3 & wd > 100 & wd < 270),
 pollutant = "pm10", ylab = "pm10 (ug/m3)")
 
 # multiple pollutants with concentrations normalised
-timeVariation(mydata, pollutant = c("nox", "co"), normalise = TRUE)
+\dontrun{timeVariation(mydata, pollutant = c("nox", "co"), normalise = TRUE)}
 
 # show BST/GMT variation (see ?cutData for more details)
 # the NOx plot shows the profiles are very similar when expressed in
 # local time, showing that the profile is dominated by a local source
 # that varies by local time and not by GMT i.e. road vehicle emissions
 
-timeVariation(mydata, pollutant = "nox", type = "gmtbst")
+\dontrun{timeVariation(mydata, pollutant = "nox", type = "gmtbst")}
 
 ## In this case it is better to group the results for clarity:
-timeVariation(mydata, pollutant = "nox", group = "gmtbst")
+\dontrun{timeVariation(mydata, pollutant = "nox", group = "gmtbst")}
 
 # By contrast, a variable such as wind speed shows a clear shift when
 #  expressed in local time. These two plots can help show whether the
@@ -257,12 +257,16 @@ timeVariation(mydata, poll= c("pm25", "pm10"), difference = TRUE)
 # are important because flows of cars are approximately invariant by
 # day of the week
 
+\dontrun{
 mydata <- splitByDate(mydata, dates= "1/1/2003", labels = c("before Jan. 2003", "After Jan. 2003"))
 timeVariation(mydata, pollutant = "no2", group = "split.by", difference = TRUE)
+}
 
 ## sub plots can be extracted from the openair object
+\dontrun{
 myplot <- timeVariation(mydata, pollutant = "no2")
 plot(myplot, subset = "day.hour") # top weekday and plot
+}
 
 ## individual plots
 ## plot(myplot, subset="day.hour") for the weekday and hours subplot (top)

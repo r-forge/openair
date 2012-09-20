@@ -290,7 +290,7 @@
 ##' \dontrun{polarPlot(mydata, pollutant = "so2", type = "year", main = "polarPlot of so2")}
 ##'
 ##' # set minimum number of bins to be used to see if pattern remains similar
-##' polarPlot(mydata, pollutant = "nox", min.bin = 3)
+##' \dontrun{polarPlot(mydata, pollutant = "nox", min.bin = 3)}
 ##'
 ##' # plot by day of the week
 ##'

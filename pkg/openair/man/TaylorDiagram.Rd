@@ -268,10 +268,11 @@ mod.dat$mod2 <- mod.dat2$mod
 
 ## do for all models
 TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model")
-
+\dontrun{
 ## all models, by season
 TaylorDiagram(mod.dat, obs = "obs", mod = c("mod", "mod2"), group = "model",
 type = "season")
+}
 }
 \author{
   David Carslaw

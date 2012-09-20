@@ -152,7 +152,7 @@
 ##' polarFreq(mydata)
 ##'
 ##' # wind frequencies by year
-##' polarFreq(mydata, type = "year")
+##' \dontrun{polarFreq(mydata, type = "year")}
 ##'
 ##'
 ##' # mean SO2 by year, showing only bins with at least 2 points

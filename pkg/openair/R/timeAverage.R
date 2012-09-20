@@ -107,10 +107,10 @@
 ##'
 ##' ## daily average values ensuring at least 75 % data capture
 ##' ## i.e. at least 18 valid hours
-##' daily <- timeAverage(mydata, avg.time = "day", data.thresh = 75)
+##' \dontrun{daily <- timeAverage(mydata, avg.time = "day", data.thresh = 75)}
 ##'
 ##' ## 2-weekly averages
-##' fortnight <- timeAverage(mydata, avg.time = "2 week")
+##' \dontrun{fortnight <- timeAverage(mydata, avg.time = "2 week")}
 ##'
 ##' ## make a 15-minute time series from an hourly one
 ##' \dontrun{
