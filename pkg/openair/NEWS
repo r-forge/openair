@@ -1,3 +1,7 @@
+Changes in openair 0.8-0 [2012-05-30]
+=====================================
+*	make sure missing dates are plotted properly in scatterPlot
+
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
 *	Allow more flexible layout when two or more pollutants

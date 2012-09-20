@@ -463,7 +463,7 @@ scatterPlot <- function(mydata,
 
     ## remove missing data except for time series where we want to show gaps
     ## this also removes missing factors
-    if (class(mydata[ , x])[1] != "Date" | !"POSIXt" %in% class(mydata[ , x])) {
+    if (class(mydata[ , x])[1] != "Date" & !"POSIXt" %in% class(mydata[ , x])) {
         mydata <- na.omit(mydata)
     }
 
