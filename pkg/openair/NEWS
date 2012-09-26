@@ -2,7 +2,8 @@ Changes in openair 0.8-0 [2012-05-30]
 =====================================
 *	make sure missing dates are plotted properly in scatterPlot
 *	fix regression in corPlot - main did not work
-*	improve handling of time zones in import
+*	remove time zone options in import - users must supply data in
+	GMT (UTC). Too many problems introduced due to daylight saving time
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
