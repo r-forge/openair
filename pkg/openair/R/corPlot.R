@@ -123,6 +123,8 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
                            quickText(extra.args$ylab, auto.text) else quickText(NULL, auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
+    extra.args$method <- if("method" %in% names(extra.args))
+                           extra.args$method else "pearson"
 
     #layout default
     if(!"layout" %in% names(extra.args))
@@ -162,8 +164,9 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
 
     prepare.cond <- function(mydata) {
         ## calculate the correlations
+
         thedata <- suppressWarnings(cor(mydata[, sapply(mydata, is.numeric)],
-                                        use = "pairwise.complete.obs", ...))
+                                        use = "pairwise.complete.obs", method = extra.args$method))
 
         ## remove columns/rows where all are NA
         therows <- apply(thedata, 1, function(x) !all(is.na(x)))
