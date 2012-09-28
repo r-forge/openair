@@ -3,7 +3,12 @@ Changes in openair 0.8-0 [2012-05-30]
 *	make sure missing dates are plotted properly in scatterPlot
 *	fix regression in corPlot - main did not work
 *	remove time zone options in import - users must supply data in
-	GMT (UTC). Too many problems introduced due to daylight saving time
+	GMT (UTC). Too many problems introduced due to daylight saving
+	time
+*	Use Legates and McCabe Coefficient of Efficiency in modStats
+	in place of the Index of Agreement - easier to interpret.
+*	Allow type = "month" etc to be used in timeVariation (was
+	variable clash)
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
