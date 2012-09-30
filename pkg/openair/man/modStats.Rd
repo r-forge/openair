@@ -94,7 +94,7 @@
 
   For negative values of COE, the model is less effective
   than the observed mean in predicting the variation in the
-  observations.}
+  observations. }
 
   All statistics are based on complete pairs of \code{mod}
   and \code{obs}.

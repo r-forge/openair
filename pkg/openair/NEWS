@@ -8,7 +8,8 @@ Changes in openair 0.8-0 [2012-05-30]
 *	Use Legates and McCabe Coefficient of Efficiency in modStats
 	in place of the Index of Agreement - easier to interpret.
 *	Allow type = "month" etc to be used in timeVariation (was
-	variable clash)
+	variable clash). Allow more flexibility when group and type
+	are used
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

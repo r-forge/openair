@@ -336,7 +336,11 @@ alpha = 0.4, ...)  {
         mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
 
     } else {
-        names(mydata)[2:3] <- c("value", "variable")
+        ## group needs to be 'variable' and pollutant 'value'
+        id <- which(names(mydata) == poll.orig)
+        names(mydata)[id] <- "value"
+        id <- which(names(mydata) == group)
+
         mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
         the.names <- levels(mydata[ , "variable"])
         if (difference) the.names <- c(the.names, paste(levels(mydata$variable)[2], "-",
@@ -809,7 +813,3 @@ errorDiff <- function(mydata, vars = "day.hour", poll1, poll2, type, B = B)
 
     res
 }
-
-
-
-

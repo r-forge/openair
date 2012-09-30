@@ -40,6 +40,7 @@
 ##' For negative values of COE, the model is less effective than the
 ##' observed mean in predicting the variation in the
 ##' observations.
+##' }
 ##'
 ##' All statistics are based on complete pairs of \code{mod} and \code{obs}.
 ##'
@@ -71,15 +72,14 @@
 ##' variables and how they depend on one another.
 ##'
 ##' More than one type can be considered e.g. \code{type = c("season",
-##'   "weekday")} will produce statistics split by season and day of the week.
+##' "weekday")} will produce statistics split by season and day of the
+##' week.
 ##' @param rank.name Simple model ranking can be carried out if
 ##' \code{rank.name} is supplied. \code{rank.name} will generally
 ##' refer to a column representing a model name, which is to
 ##' ranked. The ranking is based the COE performance, as that
 ##' indicator is arguably the best single model performance indicator
 ##' available.
-##'
-##'
 ##' @param ... Other aruments to be passed to \code{cutData} e.g.
 ##'   \code{hemisphere = "southern"}
 ##' @export
