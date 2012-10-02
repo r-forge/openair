@@ -340,6 +340,7 @@ alpha = 0.4, ...)  {
         id <- which(names(mydata) == poll.orig)
         names(mydata)[id] <- "value"
         id <- which(names(mydata) == group)
+        names(mydata)[id] <- "variable"
 
         mydata$variable <- factor(mydata$variable)  ## drop unused factor levels
         the.names <- levels(mydata[ , "variable"])
