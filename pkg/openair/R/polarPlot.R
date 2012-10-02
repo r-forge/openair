@@ -548,25 +548,44 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     nlev <- 200  ## preferred number of intervals
 
     ## handle missing breaks arguments
-    if(missing(limits)) breaks <- pretty(results.grid$z, n = nlev) else breaks <-
-        pretty(limits, n = nlev)
 
-    nlev2 = length(breaks)
+    if (missing(limits)) {
+        breaks <- pretty(results.grid$z, n = nlev)
+        labs <- pretty(breaks, 7)
+        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
+    } else {
+
+        breaks <- pretty(limits, n = nlev)
+        labs <- pretty(breaks, 7)
+        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
+        if (max(limits) < max(results.grid$z, na.rm = TRUE)) {
+            ## if clipping highest, then annotate differently
+            id <- which(results.grid$z > max(limits))
+            results.grid$z[id] <- max(limits)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            labs[length(labs)] <- paste(">", labs[length(labs)])
+        }
+    }
+
+    nlev2 <- length(breaks)
 
     col <- openColours(cols, (nlev2 - 1))
 
-    col.scale = breaks
+    col.scale <- breaks
 
-                                        #special handling of layout for uncertainty
+    ## special handling of layout for uncertainty
     if (uncertainty & is.null(extra.args$layout)) {
         extra.args$layout <- c(3, 1)
     }
 
-
     ## scale key setup ######################################################################################
 
-    legend <- list(col = col, at = col.scale, space = key.position,
-                   auto.text = auto.text, footer = key.footer, header = key.header,
+    legend <- list(col = col, at = col.scale, labels = list(labels = labs),
+                   space = key.position, auto.text = auto.text,
+                   footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
     legend <- openair:::makeOpenKeyLegend(key, legend, "polarPlot")
 

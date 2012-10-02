@@ -4,10 +4,11 @@
 \usage{
   percentileRose(mydata, pollutant = "nox",
     type = "default", percentile = c(25, 50, 75, 90, 95),
-    cols = "default", fill = TRUE, intervals = NULL,
-    angle.scale = 45, auto.text = TRUE, key.header = NULL,
-    key.footer = "percentile", key.position = "bottom",
-    key = TRUE, ...)
+    cols = "default", mean = TRUE, mean.lty = 1,
+    mean.lwd = 3, mean.col = "grey", fill = TRUE,
+    intervals = NULL, angle.scale = 45, auto.text = TRUE,
+    key.header = NULL, key.footer = "percentile",
+    key.position = "bottom", key = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing \code{wd}
@@ -42,7 +43,8 @@
   first forms the columns and the second the rows.}
 
   \item{percentile}{The percentile value(s) to plot. Must
-  be between 0--100.}
+  be between 0--100. If \code{percentile = NA} then only a
+  mean line will be shown.}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},
@@ -52,6 +54,14 @@
   supply a list of colour names recognised by R (type
   \code{colours()} to see the full list). An example would
   be \code{cols = c("yellow", "green", "blue")}}
+
+  \item{mean}{Show the mean by wind direction as a line?}
+
+  \item{mean.lty}{Line type for mean line.}
+
+  \item{mean.lwd}{Line width for mean line.}
+
+  \item{mean.col}{Line colour for mean line.}
 
   \item{fill}{Should the percentile intervals be filled
   (default) or should lines be drawn (\code{fill =

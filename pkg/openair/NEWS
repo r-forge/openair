@@ -10,6 +10,9 @@ Changes in openair 0.8-0 [2012-05-30]
 *	Allow type = "month" etc to be used in timeVariation (was
 	variable clash). Allow more flexibility when group and type
 	are used
+*	Better handling of user-defined limits in polarPlot and
+	scatterPlot (method = "level")
+*	Add mean line option to percentileRose.
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

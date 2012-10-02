@@ -139,7 +139,7 @@
 ##'   pollutants a single column can make to key too wide. The user can thus
 ##'   choose to use several columns by setting \code{columns} to be less than
 ##'   the number of pollutants.
-##' @param key.position  Location where the scale key is to plotted.  Allowed
+##' @param key.position Location where the scale key is to plotted.  Allowed
 ##'   arguments currently include \dQuote{top}, \dQuote{right}, \dQuote{bottom}
 ##'   and \dQuote{left}.
 ##' @param strip Should a strip be drawn? The default is \code{TRUE}.
@@ -153,6 +153,11 @@
 ##'   "level"}.
 ##' @param y.inc The y-interval to be used for binning data when \code{method =
 ##'   "level"}.
+##' @param limits For \code{method = "level"} the function does its
+##' best to choose sensible limits automatically. However, there are
+##' circumstances when the user will wish to set different ones. The
+##' limits are set in the form \code{c(lower, upper)}, so \code{limits
+##' = c(0, 100)} would force the plot limits to span 0-100.
 ##' @param y.relation This determines how the y-axis scale is
 ##' plotted. \dQuote{same} ensures all panels use the same scale and
 ##' \dQuote{free} will use panel-specfic scales. The latter is a
@@ -173,7 +178,7 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2} in NO2.
-##' @param \dots Other graphical parameters are passed onto \code{cutData} and
+##' @param ... Other graphical parameters are passed onto \code{cutData} and
 ##'   an appropriate \code{lattice} plot function (\code{xyplot}, \code{levelplot}
 ##'   or \code{hexbinplot} depending on \code{method}). For example,
 ##'   \code{scatterPlot} passes the option \code{hemisphere = "southern"} on to
@@ -296,6 +301,7 @@ scatterPlot <- function(mydata,
                         log.y = FALSE,
                         x.inc = 10,
                         y.inc = 10,
+                        limits = NULL,
                         y.relation = "same",
                         x.relation = "same",
                         ref.x = NULL,
@@ -827,18 +833,41 @@ scatterPlot <- function(mydata,
 
         nlev <- 200
 
-        breaks <- pretty(mydata[ , z], n = nlev)
+        ## handling of colour scale limits
+        if (missing(limits)) {
+            breaks <- pretty(mydata[[z]], n = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
+        } else {
+
+            breaks <- pretty(limits, n = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
+            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
+                ## if clipping highest, then annotate differently
+                id <- which(mydata[[z]] > max(limits))
+                mydata[[z]][id] <- max(limits)
+                labs <- pretty(breaks, 7)
+                labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+                labs[length(labs)] <- paste(">", labs[length(labs)])
+            }
+        }
+
 
         nlev2 <- length(breaks)
 
         if (missing(cols)) cols <- "default"
         col <- openColours(cols, (nlev2 - 1))
+        breaks <- c(breaks[1:(length(breaks) - 1)], max(mydata[[z]], na.rm = TRUE))
 
         col.scale <- breaks
 
         ## this is the default
         if (trajStat == "mean") {
-            legend <- list(col = col, at = col.scale, space = key.position,
+            legend <- list(col = col, at = col.scale, labels = list(labels = labs),
+                           space = key.position,
                            auto.text = auto.text, footer = extra.args$key.footer,
                            header = extra.args$key.header,
                            height = 1, width = 1.5, fit = "all")
