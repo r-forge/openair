@@ -790,7 +790,11 @@ scatterPlot <- function(mydata,
         rhs <- c("xgrid", "ygrid", type)
         rhs <- paste(rhs, collapse = "+")
         myform <- formula(paste(z, "~", rhs))
-        mydata <-aggregate(myform, data = mydata, mean, na.rm = TRUE)
+
+        ## only aggregate if we have to (for data pre-gridded)
+        if (nrow(unique(subset(mydata, select = c(xgrid, ygrid)))) != nrow(mydata)) {
+            mydata <-aggregate(myform, data = mydata, mean, na.rm = TRUE)
+        }
 
         smooth.grid <- function(mydata, z) {
 
