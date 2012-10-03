@@ -319,6 +319,8 @@ scatterPlot <- function(mydata,
     y.nam <- y
     thekey <- key
 
+    xgrid <- NULL; ygrid <- NULL
+
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
