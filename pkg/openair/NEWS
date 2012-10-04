@@ -12,7 +12,9 @@ Changes in openair 0.8-0 [2012-05-30]
 	are used
 *	Better handling of user-defined limits in polarPlot and
 	scatterPlot (method = "level")
-*	Add mean line option to percentileRose.
+*	Add optional mean line option to percentileRose.
+*	Correct pollutionRose documentation about comparing 2 data
+	sets (first subtracted from second)
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
