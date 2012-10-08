@@ -332,7 +332,7 @@ scatterPlot <- function(mydata,
         ## other local colours
         method.col <- "greyscale"
     } else {
-        method.col <- "default"
+        method.col <- cols
     }
 
 
@@ -573,7 +573,7 @@ scatterPlot <- function(mydata,
                             border = "grey")
             }
 
-            if (plot.type == "l") {
+            if (plot.type %in% c("l", "s", "S", "spline")) {
                 key <- list(lines = list(col = myColors[1:npol], lty = extra.args$lty, lwd = extra.args$lwd),
                             text = list(lab = pol.name, cex = 0.8),  space = key.position,
                             columns = key.columns,
@@ -615,23 +615,12 @@ scatterPlot <- function(mydata,
     if(!"skip" %in% names(extra.args))
          extra.args$skip <- FALSE
 
-    ## proper names of labelling
+    ## proper names of stripName
     ## ############################################################################
-
-    stripName <- sapply(levels(mydata[ , type[1]]), function(x) quickText(x, auto.text))
-    if (strip) strip <- strip.custom(factor.levels = stripName)
-
-    if (length(type) == 1 ) {
-
-        strip.left <- FALSE
-
-    } else { ## two conditioning variables
-        stripName <- sapply(levels(mydata[ , type[2]]), function(x)
-                            quickText(x, auto.text))
-        strip.left <- strip.custom(factor.levels =  stripName)
-    }
-    ## #############################################################################
-
+    strip.dat <- openair:::strip.fun(mydata, type, auto.text)
+    strip <- strip.dat[[1]]
+    strip.left <- strip.dat[[2]]
+    pol.name <- strip.dat[[3]]
 
     ## no strip needed for single panel
     if (length(type) == 1 & type[1]  == "default") strip <- FALSE
@@ -747,6 +736,7 @@ scatterPlot <- function(mydata,
 
         hexbinplot.args <- list(x = myform, data = mydata,
                           strip = strip,
+                          strip.left = strip.left,
                           as.table = TRUE,
                           xbins = 40,
                           par.strip.text = list(cex = 0.8),
@@ -1004,6 +994,9 @@ scatterPlot <- function(mydata,
         #plot via ... handler
         levelplot.args <- list(x = myform, data = results.grid,
                          as.table = TRUE,
+                               strip = strip,
+                      strip.left = strip.left,
+                               par.strip.text = list(cex = 0.8),
                          col.regions = col,
                          region = TRUE,
                          at = col.scale,
