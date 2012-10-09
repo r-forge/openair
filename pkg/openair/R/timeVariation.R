@@ -404,7 +404,7 @@ alpha = 0.4, ...)  {
         lims
     }
 
-    npol <- length(unique(mydata$variable)) ## number of pollutants
+    npol <- length(levels(mydata$variable)) ## number of pollutants
 
     if (difference) {
         npol <- 3 ## 3 pollutants if difference considered
