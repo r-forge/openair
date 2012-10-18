@@ -164,10 +164,10 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ids <- which(names(mydata) %in% c("xgrid", "ygrid", type))
 
     ## plot mean concentration
-    if (statistic == "mean") {
+    if (statistic %in% c("mean", "median")) {
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
                              function (x)  length(unique(x)))
-        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], get(statistic), na.rm = TRUE)
         mydata$count <- counts$date
         mydata <- subset(mydata, count >= min.bin)
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ

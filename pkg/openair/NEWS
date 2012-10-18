@@ -17,6 +17,10 @@ Changes in openair 0.8-0 [2012-05-30]
 	sets (first subtracted from second)
 *	Fix bug in timeVariation that showed extra NA level for
 	certain groups/types
+*	Fix scaling bug in polarCluster when there is negative data
+	e.g. x = "temp"
+*	Allow statistic = "median" in trajLevel
+*	NEW FUNCTION timeProp to plot time series by category as a barchart
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

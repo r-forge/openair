@@ -269,6 +269,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
 
     ## labels for scaling
     labels <- pretty(intervals + min.scale)
+    upper <- max(intervals)
 
     ## offset the lines/labels if necessary
     intervals <- intervals + (min(labels) - min.scale)
@@ -278,6 +279,8 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
         labels <- labels[-1]
         intervals <- intervals[-1]
     }
+
+
 
     levelplot.args <- list(x = myform, results.grid, axes = FALSE,
                            as.table = TRUE,
