@@ -83,6 +83,13 @@
 ##' @param box.width The width of the boxes for
 ##' \code{panel.boxplot}. A value of 1 means that there is no gap
 ##' between the boxes.
+##' @param key.columns Number of columns to be used in the key. With
+##' many pollutants a single column can make to key too wide. The user
+##' can thus choose to use several columns by setting \code{columns}
+##' to be less than the number of pollutants.
+##' @param key.position Location where the scale key is to plotted.
+##' Allowed arguments currently include \dQuote{top}, \dQuote{right},
+##' \dQuote{bottom} and \dQuote{left}.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels etc. will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
@@ -112,8 +119,8 @@
 ##'
 timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time = "day",
                      type = "default",  cols = "Set1", date.breaks = 7,
-                     date.format = NULL, box.width = 1,
-                     auto.text = TRUE, ...) {
+                     date.format = NULL, box.width = 1, key.columns = 1,
+                        key.position = "right", auto.text = TRUE, ...) {
 
     ## keep check happy
     sums <- NULL; freq <- NULL
@@ -134,14 +141,16 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
     ## label controls
 
-    extra.args$main <- if ("main" %in% names(extra.args))
+    main <- if ("main" %in% names(extra.args))
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
-    extra.args$xlab <- if ("xlab" %in% names(extra.args))
+    xlab <- if ("xlab" %in% names(extra.args))
         quickText(extra.args$xlab, auto.text) else "date"
-    extra.args$ylab <- if ("ylab" %in% names(extra.args))
+    ylab <- if ("ylab" %in% names(extra.args))
         quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
-    extra.args$xlim <- if ("xlim" %in% names(extra.args))
+    xlim <- if ("xlim" %in% names(extra.args))
         xlim else NULL
+    ylim <- if ("ylim" %in% names(extra.args))
+        ylim else NULL
 
     ## variables needed
     vars <- c("date", pollutant, proportion)
@@ -229,48 +238,48 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
     thedates <- sort(unique(results$date))
     gap <- difftime(thedates[2], thedates[1], units = "secs")
 
-    if (is.null(extra.args$xlim)) xlim <- range(results$date) + c(-1 * gap, gap)
-    xlab <- extra.args$xlab
-
-    if (is.null(extra.args$ylim)) ylim <- c(0, 1.04 * y.max)
-    ylab <- extra.args$ylab
+    if (is.null(xlim)) xlim <- range(results$date) + c(-1 * gap, gap)
 
 
-    clust.plt <- xyplot(myform, data = results,
-                        ylim = ylim,
-                        xlim = xlim,
-                        ylab = ylab,
-                        xlab = xlab,
-                        as.table = TRUE,
-                        strip = strip,
-                        strip.left = strip.left,
-                        groups = get(proportion),
-                        stack = TRUE,
-                        scales = scales,
-                        col = cols,
-                        border = NA,
-                        drop.unused.levels = FALSE,
-                        horizontal = FALSE,
-                        key = list(rectangles = list(col = cols, border = NA),
-                        text = list(levels(results[[proportion]])), space = "right",
-                        title = proportion, cex.title = 1),
-                        par.strip.text = list(cex = 0.8),...,
-                        panel = function (..., col) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = dates, col = "grey95", ...)
-
-                            panel.barchart(..., col = cols, box.width = box.width)
-                        }
-                        )
+    if (is.null(ylim)) ylim <- c(0, 1.04 * y.max)
 
 
-    thePlot <- clust.plt
+    plt <- xyplot(myform, data = results,
+                  as.table = TRUE,
+                  strip = strip,
+                  strip.left = strip.left,
+                  groups = cluster,
+                  stack = TRUE,
+                  scales = scales,
+                  col = cols,
+                  border = NA,
+                  drop.unused.levels = FALSE,
+                  horizontal = FALSE,
+                  key = list(rectangles = list(col = cols, border = NA),
+                  text = list(levels(results[[proportion]])), space = key.position,
+                  title = proportion, cex.title = 1, columns = key.columns),
+                  par.strip.text = list(cex = 0.8),...,
+                  panel = function (..., col) {
 
-    print(thePlot)
+                      panel.grid(-1, 0)
+                      panel.abline(v = dates, col = "grey95", ...)
+
+                      panel.barchart(..., col = cols, box.width = box.width)
+                  }
+                  )
+
+    plt$ylab <- ylab
+    plt$xlab <- xlab
+    plt$x.limits <- xlim
+    plt$y.limits <- ylim
+    plt$main <- main
+
+
+    print(plt)
 
     invisible(trellis.last.object())
 
-    output <- list(plot = list(thePlot, trellis.last.object()), data = results, call = match.call())
+    output <- list(plot = list(plt, trellis.last.object()), data = results, call = match.call())
     class(output) <- "openair"
     invisible(output)
 }

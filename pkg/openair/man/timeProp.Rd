@@ -5,8 +5,8 @@
   timeProp(mydata, pollutant = "nox",
     proportion = "cluster", avg.time = "day",
     type = "default", cols = "Set1", date.breaks = 7,
-    date.format = NULL, box.width = 1, auto.text = TRUE,
-    ...)
+    date.format = NULL, box.width = 1, key.columns = 1,
+    key.position = "right", auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -87,6 +87,17 @@
   \item{box.width}{The width of the boxes for
   \code{panel.boxplot}. A value of 1 means that there is no
   gap between the boxes.}
+
+  \item{key.columns}{Number of columns to be used in the
+  key. With many pollutants a single column can make to key
+  too wide. The user can thus choose to use several columns
+  by setting \code{columns} to be less than the number of
+  pollutants.}
+
+  \item{key.position}{Location where the scale key is to
+  plotted. Allowed arguments currently include
+  \dQuote{top}, \dQuote{right}, \dQuote{bottom} and
+  \dQuote{left}.}
 
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels etc.
