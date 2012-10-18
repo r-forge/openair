@@ -268,12 +268,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
                   }
                   )
 
-    plt$ylab <- ylab
-    plt$xlab <- xlab
-    plt$x.limits <- xlim
-    plt$y.limits <- ylim
-    plt$main <- main
-
+    ## update extra args; usual method does not seem to work...
+    plt <- modifyList(plt, list(ylab = ylab, xlab = xlab, x.limits = xlim, y.limits = ylim, main = main))
 
     print(plt)
 
