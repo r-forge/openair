@@ -120,7 +120,7 @@
 timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time = "day",
                      type = "default",  cols = "Set1", date.breaks = 7,
                      date.format = NULL, box.width = 1, key.columns = 1,
-                        key.position = "right", auto.text = TRUE, ...) {
+                     key.position = "right", auto.text = TRUE, ...) {
 
     ## keep check happy
     sums <- NULL; freq <- NULL
@@ -132,6 +132,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
     }
 
     if (length(type) > 1) stop ("'type' can only be of length 1.")
+
+    ## if proportion is not categorical then make it so
     if (!class(mydata[[proportion]]) %in% c("factor", "character")) {
         mydata <- cutData(mydata, proportion)
     }
@@ -211,9 +213,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
     ## ###################################################################################
 
     cols <-  openColours(cols, length(levels(results[[proportion]])))
-    temp <- "default"
-    if (type != "default") temp <- type #paste(c("statistic", type), collapse = "+")
-    myform <- formula(paste("Var1 ~ date | ", temp, sep = ""))
+
+    myform <- formula(paste("Var1 ~ date | ", type, sep = ""))
 
     dates <- openair:::dateBreaks(results$date, date.breaks)$major ## for date scale
 
@@ -240,15 +241,13 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
     if (is.null(xlim)) xlim <- range(results$date) + c(-1 * gap, gap)
 
-
     if (is.null(ylim)) ylim <- c(0, 1.04 * y.max)
-
 
     plt <- xyplot(myform, data = results,
                   as.table = TRUE,
                   strip = strip,
                   strip.left = strip.left,
-                  groups = cluster,
+                  groups = get(proportion),
                   stack = TRUE,
                   scales = scales,
                   col = cols,
@@ -263,7 +262,6 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
                       panel.grid(-1, 0)
                       panel.abline(v = dates, col = "grey95", ...)
-
                       panel.barchart(..., col = cols, box.width = box.width)
                   }
                   )
