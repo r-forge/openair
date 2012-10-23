@@ -37,11 +37,15 @@ MannKendall <- function(mydata, ...) {
 ##' Note! that since version 0.5-11 openair uses Theil-Sen to derive
 ##' the p values also. This is to ensure there is consistency between
 ##' the calculated p value and other trend parameters i.e. slope
-##' estimates and uncertianties. This change may slightly affect some
+##' estimates and uncertainties. This change may slightly affect some
 ##' of the p-estimates previously given by openair because the p
 ##' estimates are now calculated using bootstrap resampling by default
 ##' and previously they were not. However, users can still for the
-##' moment call the \code{TheilSen} function using \code{MannKendall}
+##' moment call the \code{TheilSen} function using \code{MannKendall}.
+##'
+##' Note that the symbols shown next to each trend estimate relate to
+##' how statistically significant the trend estimate is: p $<$ 0.001 =
+##' ***, p $<$ 0.01 = **, p $<$ 0.05 = * and p $<$ 0.1 = $+$.
 ##'
 ##' Some of the code used in \code{TheilSen} is based on that from
 ##' Rand Wilcox \url{http://www-rcf.usc.edu/~rwilcox/}. This mostly
@@ -88,7 +92,7 @@ MannKendall <- function(mydata, ...) {
 ##' accordingly. If type is an existing character or factor variable,
 ##' then those categories/levels will be used directly. This offers
 ##' great flexibility for understanding the variation of different
-##' variables and how they dcepend on one another.
+##' variables and how they depend on one another.
 ##'
 ##' Type can be up length two e.g. \code{type = c("season",
 ##' "weekday")} will produce a 2x2 plot split by season and day of the
