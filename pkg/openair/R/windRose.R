@@ -472,9 +472,10 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         panel.fun <- stat.fun2(mydata[ , pollutant])
 
         ## calculate mean wd - useful for cases comparing two met data sets
-        u <- mean(sin(2 * pi * mydata$wd / 360))
-        v <- mean(cos(2 * pi * mydata$wd / 360))
+        u <- mean(sin(2 * pi * mydata[, wd] / 360))
+        v <- mean(cos(2 * pi * mydata[, wd] / 360))
         mean.wd <- atan2(u, v) * 360 / 2 / pi
+
         if (mean.wd < 0) mean.wd <- mean.wd + 360
         ## show as a negative (bias)
         if (mean.wd > 180) mean.wd <- mean.wd - 360

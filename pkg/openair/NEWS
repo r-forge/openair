@@ -20,7 +20,9 @@ Changes in openair 0.8-0 [2012-05-30]
 *	Fix scaling bug in polarCluster when there is negative data
 	e.g. x = "temp"
 *	Allow statistic = "median" in trajLevel
-*	NEW FUNCTION timeProp to plot time series by category as a barchart
+*	NEW FUNCTION timeProp to plot time series by category as a
+	barchart
+*	Fix windRose bug when wind direction name was not wd
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
