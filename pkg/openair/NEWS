@@ -23,6 +23,7 @@ Changes in openair 0.8-0 [2012-05-30]
 *	NEW FUNCTION timeProp to plot time series by category as a
 	barchart
 *	Fix windRose bug when wind direction name was not wd
+*	Fix bug in importAURN when pollutant = "all" was specified
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
