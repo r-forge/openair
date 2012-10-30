@@ -362,10 +362,12 @@ one more label than date")
 ##'   \code{month = 1:6} to select months 1-6 (January to June), or by name
 ##'   e.g. \code{month = c("January", "December")}. Names can be abbreviated to
 ##'   3 letters and be in lower or upper case.
-##' @param day A day name or or days to select. For example \code{day
-##' = c("Monday", "Wednesday")}. Names can be abbreviated to 3 letters
-##' and be in lower or upper case. Also accepts \dQuote{weekday}
-##' (Monday - Friday) and \dQuote{weekend} for convenience.
+##' @param day A day name or or days to select. \code{day} can be
+##' numeric (1 to 31) or character. For example \code{day =
+##' c("Monday", "Wednesday")} or \code{day = 1:10} (to select the 1st
+##' to 10th of each month). Names can be abbreviated to 3 letters and
+##' be in lower or upper case. Also accepts \dQuote{weekday} (Monday -
+##' Friday) and \dQuote{weekend} for convenience.
 ##' @param hour An hour or hours to select from 0-23 e.g. \code{hour = 0:12} to
 ##'   select hours 0 to 12 inclusive.
 ##' @export
@@ -422,8 +424,10 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
     if (!missing(year)) {
         mydata <- mydata[as.numeric(format(mydata$date, "%Y")) %in%  year, ]
     }
+
     if (!missing(month)) {
         if (is.numeric(month)) {
+            if (any(month < 1 | month > 12)) stop ("Month must be between 1 to 12.")
             mydata <- mydata[as.numeric(format(mydata$date, "%m")) %in% month, ]
         }
         else {
@@ -432,16 +436,27 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
         }
     }
     if (!missing(hour)) {
+        if (any(hour < 0 | hour > 23)) stop ("Hour must be between 0 to 23.")
         mydata <- mydata[as.numeric(format(mydata$date, "%H")) %in% hour, ]
     }
+
     if (!missing(day)) {
         days <- day
-        if (day[1] == "weekday")
-            days <- weekday.names[1:5]
-        if (day[1] == "weekend")
-            days <- weekday.names[6:7]
-        mydata <- subset(mydata, substr(tolower(format(date,
-            "%A")), 1, 3) %in% substr(tolower(days), 1, 3))
+
+        if (is.numeric(day)) {
+
+            if (any(day < 1 | day > 31)) stop ("Day must be between 1 to 31.")
+            mydata <- mydata[as.numeric(format(mydata$date, "%d")) %in% day, ]
+
+        } else {
+
+            if (day[1] == "weekday")
+                days <- weekday.names[1:5]
+            if (day[1] == "weekend")
+                days <- weekday.names[6:7]
+            mydata <- subset(mydata, substr(tolower(format(date, "%A")), 1, 3) %in%
+                             substr(tolower(days), 1, 3))
+        }
     }
     mydata
 }

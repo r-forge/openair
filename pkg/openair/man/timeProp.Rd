@@ -128,7 +128,7 @@
 \details{
   In order to plot time series in this way, some sort of
   time aggregation is needed, which is controlled by the
-  option \code{timeAverage}.
+  option \code{avg.time}.
 
   The plot shows the value of \code{pollutant} on the
   y-axis (averaged according to \code{avg.time}). The time
