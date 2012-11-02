@@ -6,12 +6,15 @@
   trajLevel(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
-    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, ...)
+    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1,
+    map.fill = TRUE, map.cols = "grey40", map.alpha = 0.4,
+    ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
     lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, group = NA,
+    map.fill = TRUE, map.cols = "grey40", map.alpha = 0.4,
     ...)
 }
 \arguments{
@@ -84,6 +87,20 @@
   unique \emph{trajectories} in a grid cell. Counts below
   \code{min.bin} are set as missing. For \code{statistic =
   "frequency"} or \code{statistic = "frequency"}}
+
+  \item{map.fill}{Should the base map be a filled polygon?
+  Default is to fill countries.}
+
+  \item{map.cols}{If \code{map.fill = TRUE} \code{map.cols}
+  controls the fill colour. Examples include \code{map.fill
+  = "grey40"} and \code{map.fill = openColours("default",
+  10)}. The latter colours the countries and can help
+  differentiate them.}
+
+  \item{map.alpha}{The transpency level of the filled map
+  which takes values from 0 (full transparency) to 1 (full
+  opacity). Setting it below 1 can help view trajectories,
+  trajectory surfaces etc. \emph{and} a filled base map.}
 
   \item{...}{other arguments are passed to \code{cutData}
   and \code{scatterPlot}. This provides access to arguments

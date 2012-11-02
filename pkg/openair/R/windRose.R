@@ -437,6 +437,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
     ## statistic handling
 
     prepare.grid <- function(mydata) {
+        ## return if there is nothing to plot
+        if (all(is.na(mydata$x))) return()
 
         levels(mydata$x) <- c(paste("x", 1:length(theLabels), sep = ""))
 
@@ -476,9 +478,13 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         v <- mean(cos(2 * pi * mydata[, wd] / 360))
         mean.wd <- atan2(u, v) * 360 / 2 / pi
 
-        if (mean.wd < 0) mean.wd <- mean.wd + 360
-        ## show as a negative (bias)
-        if (mean.wd > 180) mean.wd <- mean.wd - 360
+        if (all(is.na(mean.wd))) {
+            mean.wd <- NA
+        } else {
+            if (mean.wd < 0) mean.wd <- mean.wd + 360
+            ## show as a negative (bias)
+            if (mean.wd > 180) mean.wd <- mean.wd - 360
+        }
 
 
         weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),

@@ -85,6 +85,16 @@
 ##' \emph{trajectories} in a grid cell. Counts below \code{min.bin} are set as
 ##' missing. For \code{statistic = "frequency"} or \code{statistic =
 ##' "frequency"}
+##' @param map.fill Should the base map be a filled polygon? Default
+##' is to fill countries.
+##' @param map.cols If \code{map.fill = TRUE} \code{map.cols} controls
+##' the fill colour. Examples include \code{map.fill = "grey40"} and
+##' \code{map.fill = openColours("default", 10)}. The latter colours
+##' the countries and can help differentiate them.
+##' @param map.alpha The transpency level of the filled map which
+##' takes values from 0 (full transparency) to 1 (full
+##' opacity). Setting it below 1 can help view trajectories,
+##' trajectory surfaces etc. \emph{and} a filled base map.
 ##' @param ... other arguments are passed to \code{cutData} and
 ##' \code{scatterPlot}. This provides access to arguments used in both
 ##' these functions and functions that they in turn pass arguments on
@@ -144,7 +154,9 @@
 trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       pollutant = "pm10", type = "default", smooth = FALSE,
                       statistic = "mean", percentile = 90,
-                      map = TRUE, lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, ...)  {
+                      map = TRUE, lon.inc = 1.5, lat.inc = 1.5, min.bin = 1,
+                      map.fill = TRUE, map.cols = "grey40",
+                      map.alpha = 0.4, ...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
@@ -270,7 +282,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ## the plot
     scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, type = type,
                              method = method, smooth = smooth, map = map,
-                             x.inc = lon.inc, y.inc = lat.inc)
+                             x.inc = lon.inc, y.inc = lat.inc, map.fill = map.fill,
+                             map.cols = map.cols, map.alpha = map.alpha)
 
     ## reset for extra.args
     scatterPlot.args <- openair:::listUpdate(scatterPlot.args, extra.args)
@@ -287,7 +300,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type = "default",
                      smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.5,
-                     lat.inc = 1.5, min.bin = 1, group = NA, ...)
+                     lat.inc = 1.5, min.bin = 1, group = NA, map.fill = TRUE,
+                     map.cols = "grey40", map.alpha = 0.4, ...)
 {
 
     ##extra.args
@@ -316,7 +330,8 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type 
 
         scatterPlot.args <- list(mydata, x = lon, y = lat, z = NA, type = type, method = method,
                                  smooth = smooth, map = map, x.inc = lon.inc, y.inc = lat.inc,
-                                 key = key, group = group)
+                                 key = key, group = group, map.fill = map.fill,
+                                 map.cols = map.cols, map.alpha = map.alpha)
 
     } else {
          if(!"main" %in% names(extra.args))
@@ -324,11 +339,12 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type 
 
         scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, type = type, method = method,
                                  smooth = smooth, map = map, x.inc = lon.inc, y.inc = lat.inc,
-                                 group = group)
+                                 group = group, map.fill = map.fill, map.cols = map.cols,
+                                 map.alpha = map.alpha)
     }
 
     #reset for extra.args
-    scatterPlot.args<- listUpdate(scatterPlot.args, extra.args)
+    scatterPlot.args <- openair:::listUpdate(scatterPlot.args, extra.args)
 
     #plot
     do.call(scatterPlot, scatterPlot.args)

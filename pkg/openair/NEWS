@@ -26,7 +26,12 @@ Changes in openair 0.8-0 [2012-05-30]
 *	Fix bug in importAURN when pollutant = "all" was specified
 *	Allow minimum value of breaks in ws to be above minimum ws
 	value, but warn.
-*	Allow day to be numeric in selectByDate to select days of the month
+*	Allow day to be numeric in selectByDate to select days of the
+	month
+*	Better base maps with trajectory plotting (filled and alpha
+	transparency)
+*	Fix windRose bug where all data are missing
+
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

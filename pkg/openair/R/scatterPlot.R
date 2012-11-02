@@ -691,8 +691,16 @@ scatterPlot <- function(mydata,
 
                       if (map && group.number == 1) {
                           require(maps)
-                          mp <- map(database="world", plot = FALSE)
-                          llines(mp$x, mp$y, col = "black")
+
+                          if (extra.args$map.fill) {
+                              mp <- map(database="world", plot = FALSE, fill = TRUE)
+                              panel.polygon(mp$x, mp$y, col = extra.args$map.cols, border = "white",
+                                            alpha = extra.args$map.alpha, ...)
+                          } else {
+                               mp <- map(database="world", plot = FALSE)
+                               llines(mp$x, mp$y, col = "black")
+
+                          }
                       }
 
 
@@ -918,11 +926,19 @@ scatterPlot <- function(mydata,
                              }
 
                              if (map) {
-
                                  require(maps)
-                                 mp <- map(database="world", plot = FALSE)
-                                 llines(mp$x, mp$y, col = "black")
+
+                                 if (extra.args$map.fill) {
+                                     mp <- map(database="world", plot = FALSE, fill = TRUE)
+                                     panel.polygon(mp$x, mp$y, col = extra.args$map.cols, border = "white",
+                                                   alpha = extra.args$map.alpha, ...)
+                                 } else {
+                                     mp <- map(database="world", plot = FALSE)
+                                     llines(mp$x, mp$y, col = "black")
+
+                                 }
                              }
+
                              ## add reference lines
                              panel.abline(v = ref.x, lty = 5)
                              panel.abline(h = ref.y, lty = 5)

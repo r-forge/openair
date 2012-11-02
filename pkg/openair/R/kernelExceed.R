@@ -138,7 +138,7 @@ kernelExceed <- function(polar,
 
     ## extract variables of interest
     vars <- c(y, x, "date", pollutant)
-    polar <- checkPrep(polar, vars, type, remove.calm = FALSE)
+    polar <- openair:::checkPrep(polar, vars, type, remove.calm = FALSE)
     polar <- subset(polar, wd > 0)
 
     ##extra.args
