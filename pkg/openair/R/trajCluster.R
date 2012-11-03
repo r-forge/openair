@@ -74,7 +74,8 @@
 ##' traj <- trajCluster(traj, method = "Angle", type = "season", n.clusters = 4)
 ##' }
 trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, type = "default",
-                        cols = "Set1", split.after = FALSE, ...) {
+                        cols = "Set1", split.after = FALSE, map.fill = TRUE, map.cols = "grey40",
+                        map.alpha = 0.4, ...) {
 
     if (tolower(method) == "euclid")  method <- "distEuclid" else method <- "distAngle"
 
@@ -144,7 +145,8 @@ trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, typ
         attr(agg$date, "tzone") <- "GMT"
 
         plot.args <- list(agg, x = "lon", y ="lat", group = "cluster",
-                    col = cols, type = type, map = TRUE)
+                    col = cols, type = type, map = TRUE, map.fill = map.fill,
+                          map.cols = map.cols, map.alpha = map.alpha)
 
          ## reset for extra.args
         plot.args <- openair:::listUpdate(plot.args, extra.args)
