@@ -4,7 +4,8 @@
 \usage{
   trajCluster(traj, method = "Euclid", n.cluster = 5,
     plot = TRUE, type = "default", cols = "Set1",
-    split.after = FALSE, ...)
+    split.after = FALSE, map.fill = TRUE,
+    map.cols = "grey40", map.alpha = 0.4, ...)
 }
 \arguments{
   \item{traj}{An openair trajectory data frame resulting
