@@ -299,8 +299,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 ##' and colour trajectories according to a grouping variable. See example below.
 ##' @export
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type = "default",
-                     smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.5,
-                     lat.inc = 1.5, min.bin = 1, group = NA, map.fill = TRUE,
+                     smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.0,
+                     lat.inc = 1.0, min.bin = 1, group = NA, map.fill = TRUE,
                      map.cols = "grey40", map.alpha = 0.4, ...)
 {
 
@@ -309,8 +309,9 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type 
     method <- "scatter"
 
     #aspect, cex
-    if(!"aspect" %in% names(extra.args))
-        extra.args$aspect <- 1
+     if(!"plot.type" %in% names(extra.args))
+        extra.args$plot.type <- "l"
+
     if(!"cex" %in% names(extra.args))
         extra.args$cex <- 0.1
 

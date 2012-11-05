@@ -6,14 +6,13 @@
   trajLevel(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
-    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1,
-    map.fill = TRUE, map.cols = "grey40", map.alpha = 0.4,
-    ...)
+    lon.inc = 1, lat.inc = 1, min.bin = 1, map.fill = TRUE,
+    map.cols = "grey40", map.alpha = 0.4, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat",
     pollutant = "pm10", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
-    lon.inc = 1.5, lat.inc = 1.5, min.bin = 1, group = NA,
+    lon.inc = 1, lat.inc = 1, min.bin = 1, group = NA,
     map.fill = TRUE, map.cols = "grey40", map.alpha = 0.4,
     ...)
 }

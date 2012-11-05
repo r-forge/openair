@@ -134,7 +134,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
     if (length(type) > 1) stop ("'type' can only be of length 1.")
 
     ## if proportion is not categorical then make it so
-    if (!class(mydata[[proportion]]) %in% c("factor", "character")) {
+    if (!class(mydata[[proportion]]) %in% c("factor")) {
+
         mydata <- cutData(mydata, proportion)
     }
 
