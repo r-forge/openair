@@ -31,6 +31,7 @@ Changes in openair 0.8-0 [2012-05-30]
 *	Better base maps with trajectory plotting (filled and alpha
 	transparency)
 *	Fix windRose bug where all data are missing
+*	Use higher resolution mapdata not maps package for trajectory plots
 
 
 Changes in openair 0.7-0 [2012-05-30]
