@@ -424,7 +424,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
 
     if (max(breaks) < max(mydata$x, na.rm = TRUE)) breaks <- c(breaks, max(mydata$x, na.rm = TRUE))
 
-    if (min(breaks) > min(mydata$x, na.rm = TRUE)) warning ("Some wind speeds are below minimum break.")
+    if (min(breaks) > min(mydata$x, na.rm = TRUE)) warning ("Some values are below minimum break.")
 
     breaks <- unique(breaks)
     mydata$x <- cut(mydata$x, breaks = breaks, include.lowest = FALSE,
