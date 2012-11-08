@@ -64,6 +64,14 @@
 ##' trajectory frequencies. This is useful to understand where air
 ##' masses tend to orginate.
 ##'
+##' For \code{trajLevel}, the argument \code{method = "hexbin"} can be
+##' used. In this case hexagonal binning of the trajectory
+##' \emph{points} (i.e. a point every three hours along each back
+##' trajectory). The plot then shows the trajectory frequencies uses
+##' hexagonal binning. This is an alternative way of viewing
+##' trajectory frequencies compared with \code{statistic =
+##' "frequency"}.
+##'
 ##' It is also possible to set \code{statistic = "difference"}. In
 ##' this case trajectories where the associated concentration is
 ##' greater than \code{percentile} are compared with the the full set
@@ -161,14 +169,49 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
 
-    method <- "level"
+    ## extra.args
+    extra.args <- list(...)
+
+    if(!"ylab" %in% names(extra.args))
+        extra.args$ylab <- "latitude"
+
+    if(!"xlab" %in% names(extra.args))
+        extra.args$xlab <- "longitude"
+
+     if(!"main" %in% names(extra.args))
+        extra.args$main <- ""
+
+    if(!"key.header" %in% names(extra.args)) {
+        if (statistic == "frequency") extra.args$key.header <- "% trajectories"
+        if (statistic == "difference") extra.args$key.header <- quickText(paste("gridded differences", "\n(", percentile, "th percentile)", sep = ""))
+    }
+
+     if(!"key.footer" %in% names(extra.args))
+         extra.args$key.footer <- ""
+
+    extra.args$trajStat <- statistic
+
+    if(!"method" %in% names(extra.args)) {
+        method <- "level"
+    } else {
+        method <- extra.args$method
+        statistic = "XX" ## i.e. it wont touch the data
+    }
+
+
+
     if (is.list(mydata)) mydata <- rbind.fill(mydata)
 
     mydata <- cutData(mydata, type, ...)
 
     ## bin data
-    mydata$ygrid <- round_any(mydata[ , lat], lat.inc)
-    mydata$xgrid <- round_any(mydata[ , lon], lon.inc)
+    if (method == "level") {
+        mydata$ygrid <- round_any(mydata[ , lat], lat.inc)
+        mydata$xgrid <- round_any(mydata[ , lon], lon.inc)
+    } else {
+        mydata$ygrid <- mydata[ , lat]
+        mydata$xgrid <- mydata[ , lon]
+    }
 
     rhs <- c("xgrid", "ygrid", type)
     rhs <- paste(rhs, collapse = "+")
@@ -248,36 +291,9 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     }
 
 
-
     ## change x/y names to gridded values
     lon <- "xgrid"
     lat <- "ygrid"
-
-    ## extra.args
-    extra.args <- list(...)
-
-    ## aspect
- #   if(!"aspect" %in% names(extra.args))
-   #     extra.args$aspect <- 1
-
-    if(!"ylab" %in% names(extra.args))
-        extra.args$ylab <- "latitude"
-
-    if(!"xlab" %in% names(extra.args))
-        extra.args$xlab <- "longitude"
-
-     if(!"main" %in% names(extra.args))
-        extra.args$main <- ""
-
-    if(!"key.header" %in% names(extra.args)) {
-        if (statistic == "frequency") extra.args$key.header <- "% trajectories"
-        if (statistic == "difference") extra.args$key.header <- quickText(paste("gridded differences", "\n(", percentile, "th percentile)", sep = ""))
-    }
-
-     if(!"key.footer" %in% names(extra.args))
-         extra.args$key.footer <- ""
-
-    extra.args$trajStat <- statistic
 
     ## the plot
     scatterPlot.args <- list(mydata, x = lon, y = lat, z = pollutant, type = type,

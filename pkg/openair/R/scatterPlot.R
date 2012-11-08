@@ -274,42 +274,17 @@
 ##' }
 ##'
 ##'
-scatterPlot <- function(mydata,
-                        x = "nox",
-                        y = "no2",
-                        z = NA,
-                        method = "scatter",
-                        group = NA,
-                        avg.time = "default",
-                        data.thresh = 0,
-                        statistic = "mean",
-                        percentile = NA,
-                        type = "default",
-                        smooth = FALSE,
-                        spline = FALSE,
-                        linear = FALSE,
-                        ci = TRUE,
-                        mod.line = FALSE,
-                        cols = "hue",
-                        plot.type = "p",
-                        key = TRUE,
-                        key.title = group,
-                        key.columns = 1,
-                        key.position = "right",
-                        strip = TRUE,
-                        log.x = FALSE,
-                        log.y = FALSE,
-                        x.inc = 10,
-                        y.inc = 10,
-                        limits = NULL,
-                        y.relation = "same",
-                        x.relation = "same",
-                        ref.x = NULL,
-                        ref.y = NULL,
-                        k = 100,
-                        trans = TRUE,
-                        map = FALSE,
-                        auto.text = TRUE, ...)   {
+scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter",
+                        group = NA, avg.time = "default", data.thresh = 0,
+                        statistic = "mean", percentile = NA,
+                        type = "default", smooth = FALSE, spline = FALSE,
+                        linear = FALSE, ci = TRUE, mod.line = FALSE, cols = "hue",
+                        plot.type = "p", key = TRUE, key.title = group,
+                        key.columns = 1, key.position = "right", strip = TRUE,
+                        log.x = FALSE, log.y = FALSE, x.inc = 10, y.inc = 10,
+                        limits = NULL, y.relation = "same", x.relation = "same",
+                        ref.x = NULL, ref.y = NULL, k = 100, trans = TRUE,
+                        map = FALSE, auto.text = TRUE, ...)   {
 
     ## basic function to plot single/multiple time series in flexible waysproduce scatterPlot
     ## Author: David Carslaw 27 Jan. 10
@@ -482,7 +457,7 @@ scatterPlot <- function(mydata,
         mydata[, x] <- factor(mydata[, x])
     }
 
-    ## continuous colors ##########################################################################################
+    ## continuous colors ####################################################################
 
     if (!is.na(z) & method == "scatter") {
         if (z %in% openair:::dateTypes) stop("Colour coding requires 'z' to be continuous numeric variable'")
@@ -699,10 +674,8 @@ scatterPlot <- function(mydata,
                           } else {
                                mp <- map(database="worldHires", plot = FALSE)
                                llines(mp$x, mp$y, col = "black")
-
                           }
                       }
-
 
                       if (mod.line && group.number == 1) {
 
@@ -710,7 +683,6 @@ scatterPlot <- function(mydata,
                           panel.abline(a = c(0, 2), lty = 5)
                           panel.abline(a = c(0, 1), lty = 1)
                       }
-
 
                       ## add reference lines
                       panel.abline(v = ref.x, lty = 5)
@@ -740,18 +712,16 @@ scatterPlot <- function(mydata,
     if (method == "hexbin") {
         require(hexbin)
 
-        ##plot via ... handler
+        ##hexbin via ... handler
 
         hexbinplot.args <- list(x = myform, data = mydata,
                           strip = strip,
                           strip.left = strip.left,
                           as.table = TRUE,
-                          xbins = 40,
                           par.strip.text = list(cex = 0.8),
                           colorkey = TRUE,
-                          aspect = 1,
                           colramp = function(n) {openColours(method.col, n)},
-                          trans = function(x) log(x), inv = function(x) exp(x),
+                          trans = function(x) log(x), inv = function(x) exp(x), ...,
                           panel = function(x,...) {
                               panel.grid(-1, -1)
                               panel.hexbinplot(x,...)
@@ -759,6 +729,20 @@ scatterPlot <- function(mydata,
                                   panel.abline(a = c(0, 0.5), lty = 5)
                                   panel.abline(a = c(0, 2), lty = 5)
                                   panel.abline(a = c(0, 1), lty = 1)
+                              }
+
+                              if (map) { ## for trajectory plotting
+                                  require(mapdata)
+
+                                  if (extra.args$map.fill) {
+                                      mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
+                                      panel.polygon(mp$x, mp$y, col = extra.args$map.cols, border = "white",
+                                                    alpha = extra.args$map.alpha)
+                                  } else {
+                                      mp <- map(database="worldHires", plot = FALSE)
+                                      llines(mp$x, mp$y, col = "black")
+
+                                  }
                               }
                               ## add reference lines
                               panel.abline(v = ref.x, lty = 5)
@@ -902,9 +886,6 @@ scatterPlot <- function(mydata,
             legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
         }
 
-
-        #plot byt ... handler
-
         levelplot.args <- list(x = myform, data = mydata,
                          strip = strip,
                          as.table = TRUE,
@@ -961,9 +942,7 @@ scatterPlot <- function(mydata,
 
     }
 
-
     ## kernel density
-
 
     if (method == "density") {
         prepare.grid <- function(subdata) {
@@ -989,7 +968,7 @@ scatterPlot <- function(mydata,
             results
         }
 
-#############################################################################
+        ## ###########################################################################
 
         results.grid <-  ddply(mydata, type, prepare.grid)
 
