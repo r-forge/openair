@@ -392,7 +392,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         }
     }
 
-    ## ##########################################################################################################
+    ## ###########################################################################################
 
     mydata <- na.omit(mydata)
     ## cutData depending on type
@@ -610,55 +610,54 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))
 
-    levelplot.args <- list(x = myform, results.grid, axes = FALSE,
-                           as.table = TRUE,
-                           strip = strip,
-                           strip.left = strip.left,
-                           col.regions = col,
-                           region = TRUE,
-                           aspect = 1,
-                           at = col.scale,
-                           par.strip.text = list(cex = 0.8),
-                           scales = list(draw = FALSE),
-                           xlim = c(-upper * 1.025, upper * 1.025),
-                           ylim = c(-upper * 1.025, upper * 1.025),
-                           colorkey = FALSE, legend = legend,
+    Args <- list(x = myform, results.grid, axes = FALSE,
+                 as.table = TRUE,
+                 strip = strip,
+                 strip.left = strip.left,
+                 col.regions = col,
+                 region = TRUE,
+                 aspect = 1,
+                 at = col.scale,
+                 par.strip.text = list(cex = 0.8),
+                 scales = list(draw = FALSE),
+                 xlim = c(-upper * 1.025, upper * 1.025),
+                 ylim = c(-upper * 1.025, upper * 1.025),
+                 colorkey = FALSE, legend = legend,
 
-                           panel = function(x, y, z,subscripts,...) {
-                               panel.levelplot(x, y, z,
-                                               subscripts,
-                                               at = col.scale,
-                                               pretty = TRUE,
-                                               col.regions = col,
-                                               labels = FALSE)
+                 panel = function(x, y, z,subscripts,...) {
+                     panel.levelplot(x, y, z,
+                                     subscripts,
+                                     at = col.scale,
+                                     pretty = TRUE,
+                                     col.regions = col,
+                                     labels = FALSE)
 
-                               angles <- seq(0, 2 * pi, length = 360)
+                     angles <- seq(0, 2 * pi, length = 360)
 
-                               sapply(intervals, function(x) llines(x * sin(angles), x * cos(angles),
-                                                                    col = "grey", lty = 5))
+                     sapply(intervals, function(x) llines(x * sin(angles), x * cos(angles),
+                                                          col = "grey", lty = 5))
 
 
-                               ltext(1.07 * intervals * sin(pi * angle.scale / 180),
-                                     1.07 * intervals * cos(pi * angle.scale / 180),
-                                     sapply(paste(labels, c("", "", units, rep("", 7))), function(x)
-                                            quickText(x, auto.text)) , cex = 0.7, pos = 4)
+                     ltext(1.07 * intervals * sin(pi * angle.scale / 180),
+                           1.07 * intervals * cos(pi * angle.scale / 180),
+                           sapply(paste(labels, c("", "", units, rep("", 7))), function(x)
+                                  quickText(x, auto.text)) , cex = 0.7, pos = 4)
 
-                               ## add axis line to central polarPlot
-                               larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
-                               larrows(0, -upper, 0, upper, code = 3, length = 0.1)
+                     ## add axis line to central polarPlot
+                     larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
+                     larrows(0, -upper, 0, upper, code = 3, length = 0.1)
 
-                               ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
-                               ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
-                               ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
-                               ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
+                     ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
+                     ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
+                     ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
+                     ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
 
-                           })
+                 })
 
-     ## reset for extra.args
-    levelplot.args<- openair:::listUpdate(levelplot.args, extra.args)
+    ## reset for extra.args
+    Args<- openair:::listUpdate(Args, extra.args)
 
-                                        #plot
-    plt <- do.call(levelplot, levelplot.args)
+    plt <- do.call(levelplot, Args)
 
     ## output ##############################################################################################
 
