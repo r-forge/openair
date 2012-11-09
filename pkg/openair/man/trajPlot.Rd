@@ -58,6 +58,14 @@
   for gridded trajectory frequencies. This is useful to
   understand where air masses tend to orginate.
 
+  For \code{trajLevel}, the argument \code{method =
+  "hexbin"} can be used. In this case hexagonal binning of
+  the trajectory \emph{points} (i.e. a point every three
+  hours along each back trajectory). The plot then shows
+  the trajectory frequencies uses hexagonal binning. This
+  is an alternative way of viewing trajectory frequencies
+  compared with \code{statistic = "frequency"}.
+
   It is also possible to set \code{statistic =
   "difference"}. In this case trajectories where the
   associated concentration is greater than
