@@ -211,7 +211,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
 
 
 
-        if (tolower(pollutant) == "o3") {
+        if (length(grep("o3", pollutant, ignore.case = TRUE)) == 1) {
             rollingO3 <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
                                ozoneRolling, ...)
             names(rollingO3)[2] <- "roll.8.O3.gt.100"
@@ -226,9 +226,10 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
                                                 all = TRUE), o3.results)
             o3.results$pollutant <- "O3"
             results <- o3.results
+            results
         }
 
-        if (tolower(pollutant) == "no2") {
+        if (length(grep("no2", pollutant, ignore.case = TRUE)) == 1) {
             hours <- ddply(mydata[ , c("year", pollutant)], .(year), hoursMoreThan, threshold = 200,
                            ...)
             names(hours)[2] <- "hours.gt.200"
@@ -237,11 +238,13 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
                                 Percentile, hours)
             no2.results <- Reduce(function(x, y, by = 'year') merge(x, y, by = 'year',
                                                  all = TRUE), no2.results)
+
             no2.results$pollutant <- "NO2"
             results <- no2.results
+            results
         }
 
-        if (tolower(pollutant) == "pm10") {
+        if (length(grep("pm10", pollutant, ignore.case = TRUE)) == 1) {
             days <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
                           daysMoreThan, threshold = 50, ...)
             names(days)[2] <- "days.gt.50"
@@ -253,9 +256,10 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
                                                   all = TRUE), pm10.results)
             pm10.results$pollutant <- "PM10"
             results <- pm10.results
+            results
         }
 
-        if (tolower(pollutant) == "co") {
+        if (length(grep("co", pollutant, ignore.case = TRUE)) == 1) {
 
             co.results <- list(dataCapture, Mean, Min, Max, Median, maxDaily, rollMax8, rollMax24,
                                Percentile)
@@ -263,9 +267,11 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
                                                 all = TRUE), co.results)
             co.results$pollutant <- "CO"
             results <- co.results
+            results
         }
 
-        if (!any(tolower(pollutant) %in% thePolls)) {
+      #  if (!any(tolower(pollutant) %in% thePolls)) {
+        if (!any(sapply(thePolls, function (x) grep(x, pollutant, ignore.case = TRUE)) >0)) {
 
             results <- list(dataCapture, Mean, Min, Max, Median, maxDaily, rollMax8, rollMax24,
                             Percentile)
