@@ -302,9 +302,9 @@
 ##'
 polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "default",
                       statistic = "mean", resolution = "normal", limits = NA,
-                      exclude.missing = TRUE, uncertainty = FALSE, percentile = NA, cols = "default",
-                      min.bin = 1, upper = NA, angle.scale = 315, units = x,
-                      force.positive = TRUE, k = 100, normalise = FALSE,
+                      exclude.missing = TRUE, uncertainty = FALSE, percentile = NA,
+                      cols = "default", min.bin = 1, upper = NA, angle.scale = 315,
+                      units = x, force.positive = TRUE, k = 100, normalise = FALSE,
                       key.header = "", key.footer = pollutant, key.position = "right",
                       key = TRUE, auto.text = TRUE, ...) {
 
@@ -316,7 +316,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         percentile <- 50
     }
 
-    ## initial checks ##########################################################################################
+    ## initial checks ####################################################################
     if (length(type) > 2) {stop("Maximum number of types is 2.")}
 
     if (uncertainty) type <- "default" ## can't have conditioning here
@@ -581,7 +581,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         extra.args$layout <- c(3, 1)
     }
 
-    ## scale key setup ######################################################################################
+    ## scale key setup #####################################################################
 
     legend <- list(col = col, at = col.scale, labels = list(labels = labs),
                    space = key.position, auto.text = auto.text,
@@ -589,7 +589,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                    height = 1, width = 1.5, fit = "all")
     legend <- openair:::makeOpenKeyLegend(key, legend, "polarPlot")
 
-    ## ######################################################################################################
+    ## #####################################################################################
 
     ## scaling
     ## scaling of 'zeroed' data
@@ -659,9 +659,10 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     plt <- do.call(levelplot, Args)
 
-    ## output ##############################################################################################
+    ## output #######################################################################
 
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
+    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip,
+              strip.left = strip.left))
 
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
