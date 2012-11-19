@@ -218,6 +218,9 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         ## pad missing hours
         mydata <- openair:::date.pad(mydata)
 
+        ## make sure function is not called with window width longer than data
+        if (hours > nrow(mydata)) return(mydata)
+
         mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh,
                                     PACKAGE = "openair")
         mydata
