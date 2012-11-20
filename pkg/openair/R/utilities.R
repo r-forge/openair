@@ -203,7 +203,7 @@ decimalDate <- function(x, date = "date") {
 ##'
 ##'
 rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
-                         data.thresh = 75){
+                         data.thresh = 75, ...){
     ## function to calculate rolling means
     ## uses C++ code
 
@@ -213,7 +213,7 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
 
     if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
 
-    calc.rolling <- function(mydata, pollutant, hours, new.name, data.thresh) {
+    calc.rolling <- function(mydata, ...) {
 
         ## pad missing hours
         mydata <- openair:::date.pad(mydata)
@@ -229,11 +229,10 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
     ## split if several sites
     if ("site" %in% names(mydata)) { ## split by site
 
-        mydata <- ddply(mydata, .(site), function(x) calc.rolling(x, pollutant, hours,
-                                                           new.name, data.thresh))
+        mydata <- ddply(mydata, .(site), function(x) calc.rolling(x, ...))
         mydata
     } else {
-        mydata <- calc.rolling(mydata, pollutant, hours, new.name, data.thresh)
+        mydata <- calc.rolling(mydata, ...)
         mydata
     }
 }
