@@ -35,8 +35,9 @@ Changes in openair 0.8-0 [2012-05-30]
 	plots
 *	Allow method = "hexbin" in trajLevel for hexagonal binning
 	of trajectory frequencies
-*	Refine rollingMean at beginning of time series
-
+*	Refine rollingMean to allow moving window to be aligned
+	centre/center, left or right + better treatment of ends when
+	data capture threshold used.
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

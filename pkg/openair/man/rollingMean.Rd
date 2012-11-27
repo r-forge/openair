@@ -3,7 +3,8 @@
 \title{Calculate rollingMean values}
 \usage{
   rollingMean(mydata, pollutant = "o3", hours = 8,
-    new.name = "rolling", data.thresh = 75)
+    new.name = "rolling", data.thresh = 75,
+    align = "centre", ...)
 }
 \arguments{
   \item{mydata}{A data frame containing a \code{date}
@@ -25,6 +26,16 @@
   \code{hours = 8} and \code{data.thresh = 75} at least 6
   hours are required to calculate the mean, else \code{NA}
   is returned.}
+
+  \item{align}{specifyies how the moving window should be
+  aligned. \code{"right"} means that the previous
+  \code{hours} (including the current) are averaged. This
+  seems to be the default for UK air quality rolling mean
+  statistics. \code{"left"} means that the forward
+  \code{hours} are averaged, and \code{"centre"} or
+  \code{"center"}, which is the default.}
+
+  \item{...}{other arguments, currently unused.}
 }
 \description{
   Calculate rollingMean values taking account of data
@@ -39,7 +50,7 @@
 \examples{
 ## rolling 8-hour mean for ozone
 mydata <- rollingMean(mydata, pollutant = "o3", hours = 8, new.name =
-"rollingo3", data.thresh = 75)
+"rollingo3", data.thresh = 75, align = "right")
 }
 \author{
   David Carslaw

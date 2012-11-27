@@ -108,7 +108,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
         ozoneRolling <- function(mydata, ...) {
             ## first calculate rolling hourly means
 
-            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], 8, data.thresh,
+            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], 8, data.thresh, "right",
                                          PACKAGE = "openair")
             daily <- timeAverage(mydata, avg.time = "day", statistic = "max", data.thresh)
             days <- length(which(daily[ , "rolling"] > 100))
@@ -138,7 +138,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
             if (all(is.na(mydata[ , pollutant]))) return(NA)
             ## first calculate rolling hourly means
 
-            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh,
+            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh, "right",
                                          PACKAGE = "openair")
             rollMax <- max(mydata[ , "rolling"], na.rm = TRUE)
             rollMax

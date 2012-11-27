@@ -192,6 +192,13 @@ decimalDate <- function(x, date = "date") {
 ##'   value. For example, with \code{hours = 8} and \code{data.thresh = 75} at
 ##'   least 6 hours are required to calculate the mean, else \code{NA} is
 ##'   returned.
+##' @param align specifyies how the moving window should be
+##' aligned. \code{"right"} means that the previous \code{hours}
+##' (including the current) are averaged. This seems to be the default
+##' for UK air quality rolling mean statistics. \code{"left"} means
+##' that the forward \code{hours} are averaged, and \code{"centre"} or
+##' \code{"center"}, which is the default.
+##' @param ... other arguments, currently unused.
 ##' @export
 ##' @author David Carslaw
 ##' @keywords methods
@@ -199,16 +206,17 @@ decimalDate <- function(x, date = "date") {
 ##'
 ##' ## rolling 8-hour mean for ozone
 ##' mydata <- rollingMean(mydata, pollutant = "o3", hours = 8, new.name =
-##' "rollingo3", data.thresh = 75)
+##' "rollingo3", data.thresh = 75, align = "right")
 ##'
 ##'
 rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
-                         data.thresh = 75, ...){
+                         data.thresh = 75, align = "centre", ...){
     ## function to calculate rolling means
     ## uses C++ code
 
     ## get rid of R check annoyances
     site = NULL
+    if (!align %in% c("left", "right", "centre", "center")) stop("align should be one of 'right', 'left', 'centre' or 'center'.")
 
 
     if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
@@ -221,7 +229,7 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         ## make sure function is not called with window width longer than data
         if (hours > nrow(mydata)) return(mydata)
 
-        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh,
+        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh, align,
                                     PACKAGE = "openair")
         mydata
     }
