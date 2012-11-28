@@ -1,4 +1,4 @@
-Changes in openair 0.8-0 [2012-05-30]
+Changes in openair 0.8-0 [2012-11-30]
 =====================================
 *	make sure missing dates are plotted properly in scatterPlot
 *	fix regression in corPlot - main did not work
@@ -37,7 +37,8 @@ Changes in openair 0.8-0 [2012-05-30]
 	of trajectory frequencies
 *	Refine rollingMean to allow moving window to be aligned
 	centre/center, left or right + better treatment of ends when
-	data capture threshold used.
+	data capture threshold used. Use option 'width' rather than
+	'hours' because non-hourly data can be considered.
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

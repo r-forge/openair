@@ -352,9 +352,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     if ("site" %in% names(mydata)) { ## split by site
         mydata$site <- factor(mydata$site)
         mydata <- ddply(mydata, .(site), calc.mean, start.date)
-        mydata
     } else {
         mydata <- calc.mean(mydata, start.date)
-        mydata
     }
+    mydata
 }

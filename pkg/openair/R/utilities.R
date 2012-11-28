@@ -176,22 +176,29 @@ decimalDate <- function(x, date = "date") {
 ##'
 ##' Calculate rollingMean values taking account of data capture thresholds
 ##'
-##' This is a utility function mostly designed to calculate rolling mean
-##' statistics relevent to some pollutant limits e.g. 8 hour rolling means for
-##' ozone and 24 hour rollingMeans for PM10.
+##' This is a utility function mostly designed to calculate rolling
+##' mean statistics relevant to some pollutant limits e.g. 8 hour
+##' rolling means for ozone and 24 hour rolling means for
+##' PM10. However, the function has a more general use in helping to
+##' display rolling mean values in flexible ways e.g. with the rolling
+##' window width left, right or centre aligned.
 ##'
-##' @param mydata A data frame containing a \code{date} field.
+##' @param mydata A data frame containing a \code{date}
+##' field. \code{mydata} must contain a \code{date} field in
+##' \code{Date} or \code{POSIXct} format. The input time series must
+##' be regular e.g. hourly, daily.
 ##' @param pollutant The name of a pollutant e.g. \code{pollutant = "o3"}.
-##' @param hours The averaging period to use e.g. \code{hours = 8} will
-##'   generate 8-hour rollingMean values.
-##' @param new.name The name given to the new rollingMean variable. If not
-##'   supplied it will create a name based on the name of the pollutant and the
-##'   averaging period used.
+##' @param width The averaging period (rolling window width) to use
+##' e.g. \code{width = 8} will generate 8-hour rolling mean values
+##' when hourly data are analysed.
+##' @param new.name The name given to the new rollingMean variable. If
+##' not supplied it will create a name based on the name of the
+##' pollutant and the averaging period used.
 ##' @param data.thresh The data capture threshold in %. No values are
-##'   calculated if data capture over the period of interest is less than this
-##'   value. For example, with \code{hours = 8} and \code{data.thresh = 75} at
-##'   least 6 hours are required to calculate the mean, else \code{NA} is
-##'   returned.
+##' calculated if data capture over the period of interest is less
+##' than this value. For example, with \code{width = 8} and
+##' \code{data.thresh = 75} at least 6 hours are required to calculate
+##' the mean, else \code{NA} is returned.
 ##' @param align specifyies how the moving window should be
 ##' aligned. \code{"right"} means that the previous \code{hours}
 ##' (including the current) are averaged. This seems to be the default
@@ -205,11 +212,11 @@ decimalDate <- function(x, date = "date") {
 ##' @examples
 ##'
 ##' ## rolling 8-hour mean for ozone
-##' mydata <- rollingMean(mydata, pollutant = "o3", hours = 8, new.name =
+##' mydata <- rollingMean(mydata, pollutant = "o3", width = 8, new.name =
 ##' "rollingo3", data.thresh = 75, align = "right")
 ##'
 ##'
-rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling",
+rollingMean <- function(mydata, pollutant = "o3", width = 8, new.name = "rolling",
                          data.thresh = 75, align = "centre", ...){
     ## function to calculate rolling means
     ## uses C++ code
@@ -219,7 +226,8 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
     if (!align %in% c("left", "right", "centre", "center")) stop("align should be one of 'right', 'left', 'centre' or 'center'.")
 
 
-    if (missing(new.name)) new.name <- paste("rolling", hours, pollutant, sep = "")
+    if (missing(new.name)) new.name <- paste("rolling", width, pollutant, sep = "")
+    if (data.thresh < 0 | data.thresh > 100) stop("Data threshold must be between 0 and 100.")
 
     calc.rolling <- function(mydata, ...) {
 
@@ -227,9 +235,9 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         mydata <- openair:::date.pad(mydata)
 
         ## make sure function is not called with window width longer than data
-        if (hours > nrow(mydata)) return(mydata)
+        if (width > nrow(mydata)) return(mydata)
 
-        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh, align,
+        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], width, data.thresh, align,
                                     PACKAGE = "openair")
         mydata
     }
@@ -243,8 +251,8 @@ rollingMean <- function(mydata, pollutant = "o3", hours = 8, new.name = "rolling
         mydata <- calc.rolling(mydata, ...)
         mydata
     }
-}
 
+}
 
 
 

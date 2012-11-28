@@ -12,17 +12,17 @@ using namespace Rcpp;
 NumericVector ends(NumericVector A, LogicalVector NA, NumericVector res, std::string align,
 		   int start, int end, int lenr, double capr);
 
-RcppExport SEXP rollingMean(SEXP x, SEXP len, SEXP cap, SEXP align) {
+RcppExport SEXP rollingMean(SEXP x, SEXP lenr, SEXP capr, SEXP alignr) {
   NumericVector A(x); // the data
-  NumericVector res(x); // for results
-  LogicalVector NA(x); // for missings
-
-  double capr = as<int>(cap); // data capture %
-  int lenr = as<int>(len); // window size %
-  std::string alignr = as<std::string>(align); // window (left, center, right)
-
   int n = A.size(); // length of data
-  double sum = 0.0; // sum of values over window
+  double cap = as<int>(capr); // data capture %
+  int len = as<int>(lenr); // window size %
+  std::string align = as<std::string>(alignr); // window (left, center, right)
+
+  NumericVector res(n); // for results
+  LogicalVector NA(A); // for missings
+
+  double sum = 0; // sum of values over window
   double sumNA = 0; // number of missings
   int start = 0; //use this to set offset to get alignment
   int end = 0; //use this to set offset to get alignment
@@ -30,63 +30,63 @@ RcppExport SEXP rollingMean(SEXP x, SEXP len, SEXP cap, SEXP align) {
   NA = is_na(A) ; // logical vector of missings
 
   // make sure window width is less than data length
-  if (lenr > n) {
-    //  std::cout << "Window width more than length of data, use a smaller window width." ;
-    lenr = 1;
+  if (len > n) {
+  //  std::cout << "Window width more than length of data, use a smaller window width." ;
+    len = 1;
   }
 
   // determine where to index and update
-  if (alignr == "left") start = (lenr - 1);
-  if ((alignr == "center") || (alignr == "centre")) {
-    start = floor(lenr / 2);
-    alignr = "centre"; // force single spelling!
+  if (align == "left") start = (len - 1);
+  if ((align == "center") || (align == "centre")) {
+    start = floor(len / 2);
+    align = "centre"; // force single spelling!
   }
 
   // main loop
-  for (int i = 0; i <= (n - lenr); i++) {
+  for (int i = 0; i <= (n - len); i++) {
     sum = 0; // initialise
     sumNA = 0;
 
     // now go through each window
-    for (int j = i; j < (i + lenr); j++) {
+    for (int j = i; j < (i + len); j++) {
 
-      if (NA(j)) {
+      if (NA[j]) {
         sumNA += 1; // count missings
       }
       else
         {
-          sum += A(j); // sum values that are not missing
+          sum += A[j]; // sum values that are not missing
         }
     }
 
     // calculate mean if within data capture threshold, if not set to missing
 
-    if (1 - sumNA / lenr < capr / 100) {
-      res(i + lenr - 1 - start) = NA_REAL;
+    if (1 - sumNA / len < cap / 100) {
+      res[i + len - 1 - start] = NA_REAL;
     }
     else
       {
-        res(i + lenr - 1 - start) = sum / (lenr - sumNA);
+        res[i + len - 1 - start] = sum / (len - sumNA);
       }
   }
 
-  if (alignr == "right") start = 0, end = lenr - 2;
-  if (alignr == "left") start = n - lenr, end = n - 1;
+  if (align == "right") start = 0, end = len - 2;
+  if (align == "left") start = n - len, end = n - 1;
 
-  res = ends(A, NA, res, alignr, start, end, lenr, capr);
+  res = ends(A, NA, res, align, start, end, len, cap);
 
   // For align = 'centre' need to deal with both ends
-  if (alignr == "centre") {
-    start = 0, end = floor(lenr / 2);
-    alignr = "right";
-    res = ends(A, NA, res, alignr, start, end, lenr, capr);
+  if (align == "centre") {
+    start = 0, end = floor(len / 2);
+    align = "right";
+    res = ends(A, NA, res, align, start, end, len, cap);
 
-    alignr = "left";
-    start = n - floor(lenr / 2), end = n - 1;
-    res = ends(A, NA, res, alignr, start, end, lenr, capr);
+    align = "left";
+    start = n - floor(len / 2), end = n - 1;
+   res = ends(A, NA, res, align, start, end, len, cap);
   }
 
-  return res;
+  return(res);
 }
 
 // function to deal with ends where there is < len records
@@ -108,22 +108,22 @@ NumericVector ends(NumericVector A, LogicalVector NA, NumericVector result, std:
 
       for (int j = start; j <= i; j++) {
 
-	if (NA(j)) {
+	if (NA[j]) {
 	  sumNA += 1; // count missings
 	}
 	else
 	  {
 	    nd +=1;
-	    sum += A(j); // sum values that are not missing
+	    sum += A[j]; // sum values that are not missing
 	  }
       }
 
       if (1 - sumNA / lenr < capr / 100) {
-	result(i) = NA_REAL;
+	result[i] = NA_REAL;
       }
       else
 	{
-	  result(i) = sum / nd;
+	  result[i] = sum / nd;
 	}
     }
   }
@@ -139,22 +139,22 @@ NumericVector ends(NumericVector A, LogicalVector NA, NumericVector result, std:
 
       for (int j = end; j >= i; j--) {
 
-	if (NA(j)) {
+	if (NA[j]) {
 	  sumNA += 1; // count missings
 	}
 	else
 	  {
 	    nd +=1;
-	    sum += A(j); // sum values that are not missing
+	    sum += A[j]; // sum values that are not missing
 	  }
       }
 
       if (1 - sumNA / lenr < capr / 100) {
-	result(i) = NA_REAL;
+	result[i] = NA_REAL;
       }
       else
 	{
-	  result(i) = sum / nd;
+	  result[i] = sum / nd;
 	}
     }
   }

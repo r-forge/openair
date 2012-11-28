@@ -134,11 +134,11 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
             maxDaily
         }
 
-        rollMax <- function(mydata, hours = hours, ...) {
+        rollMax <- function(mydata, width = width, ...) {
             if (all(is.na(mydata[ , pollutant]))) return(NA)
             ## first calculate rolling hourly means
 
-            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], hours, data.thresh, "right",
+            mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], width, data.thresh, "right",
                                          PACKAGE = "openair")
             rollMax <- max(mydata[ , "rolling"], na.rm = TRUE)
             rollMax
@@ -194,11 +194,11 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
         names(dataCapture)[2] <- "data.capture"
 
         rollMax8 <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
-                          rollMax, hours = 8, ...)
+                          rollMax, width = 8, ...)
         names(rollMax8)[2] <- "max.rolling.8"
 
         rollMax24 <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
-                           rollMax, hours = 24, ...)
+                           rollMax, width = 24, ...)
         names(rollMax24)[2] <- "max.rolling.24"
 
 
