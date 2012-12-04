@@ -39,6 +39,8 @@ Changes in openair 0.8-0 [2012-11-30]
 	centre/center, left or right + better treatment of ends when
 	data capture threshold used. Use option 'width' rather than
 	'hours' because non-hourly data can be considered.
+*	Fix pollutionRose scaling issue, which sometimes missed the
+	lower interval
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

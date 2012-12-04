@@ -17,11 +17,12 @@ pollutionRose <- function(mydata,
     if (is.null(breaks))  breaks <- 6
 
     if (is.numeric(breaks) & length(breaks) == 1) {
+
         breaks2 <- co.intervals(mydata[ , pollutant][is.finite(mydata[ ,pollutant])],
                                 number = 10, overlap = 0)
-        breaks <- pretty(c(min(mydata[ , pollutant], na.rm = TRUE),
-                           breaks2[nrow(breaks2), 1]), breaks)
-        breaks <- breaks[breaks >= min(mydata[ , pollutant], na.rm = TRUE)]
+        breaks <- unique(pretty(c(min(mydata[ , pollutant], na.rm = TRUE),
+                           breaks2[nrow(breaks2), 1]), breaks))
+
     }
 
     windRose(mydata, pollutant = pollutant, paddle = paddle, seg = seg,
