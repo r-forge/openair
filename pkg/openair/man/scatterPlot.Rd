@@ -12,8 +12,8 @@
     key.position = "right", strip = TRUE, log.x = FALSE,
     log.y = FALSE, x.inc = 10, y.inc = 10, limits = NULL,
     y.relation = "same", x.relation = "same", ref.x = NULL,
-    ref.y = NULL, k = 100, trans = TRUE, map = FALSE,
-    auto.text = TRUE, ...)
+    ref.y = NULL, k = 100, map = FALSE, auto.text = TRUE,
+    ...)
 }
 \arguments{
   \item{mydata}{A data frame containing at least two
@@ -206,12 +206,6 @@
 
   \item{k}{Smoothing parameter supplied to \code{gam} for
   fitting a smooth surface when \code{method = "level"}.}
-
-  \item{trans}{\code{trans} is used when \code{continuous =
-  TRUE}. Often for a good colour scale with skewed data it
-  is a good idea to "compress" the scale. If \code{TRUE} a
-  square root transform is used, if \code{FALSE} a linear
-  scale is used.}
 
   \item{map}{Should a base map be drawn? This option is
   under development.}

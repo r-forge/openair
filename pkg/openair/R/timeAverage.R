@@ -219,7 +219,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
          ## start from a particular time, if given
         if (!is.na(start.date)) {
 
-            firstLine <- data.frame(date = as.POSIXct(start.date))
+            firstLine <- data.frame(date = as.POSIXct(start.date, tz = TZ))
 
             mydata <- rbind.fill(firstLine, mydata)
 
@@ -270,6 +270,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         } else {
             ## cut into sections dependent on period
             mydata$cuts <- cut(mydata$date, avg.time)
+        #    mydata$date <- as.POSIXct(mydata$cuts, tz = TZ)
         }
 
 
@@ -278,6 +279,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             ## two methods of calculating stats, one that takes account of data capture (slow), the
             ## other not (faster)
             newMethod <- function(x, data.thresh, na.rm) {
+
                 ## calculate mean only if above data capture threshold
                 if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
                     res <- eval(parse(text = form))
@@ -289,6 +291,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
             ## need to make sure all data are present..
             mydata <- openair:::date.pad(mydata)
+
+            ## cut into sections dependent on period
+            mydata$cuts <- cut(mydata$date, avg.time)
 
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
                                          drop = FALSE], list(date = mydata$cuts), newMethod,
