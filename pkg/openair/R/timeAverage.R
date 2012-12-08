@@ -155,6 +155,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
     calc.mean <- function(mydata, start.date) { ## function to calculate means
 
+        ## need to check whether avg.time is > or < actual time gap of data
+        ## then data will be expanded or aggregated accordingly
+
         ## time diff in seconds of orginal data
         timeDiff <-  as.numeric(strsplit(openair:::find.time.interval(mydata$date),
                                          " ")[[1]][1])
@@ -278,6 +281,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
             ## two methods of calculating stats, one that takes account of data capture (slow), the
             ## other not (faster)
+            ## Note need to know time interval of data to work out data capture, can
+            ## be a problem for non-regular time series...
+
             newMethod <- function(x, data.thresh, na.rm) {
 
                 ## calculate mean only if above data capture threshold
@@ -342,8 +348,6 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                 dailymet <- subset(dailymet, select = c(-Uu, -Vv))
             }
         }
-
-        if ("site" %in% names(mydata)) dailymet$site <- mydata$site[1]
 
         ## fill missing gaps
         if (avg.time != "season") {

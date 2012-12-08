@@ -683,26 +683,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             if (spline) panel.smooth.spline(x, y, col = myColors[group.number],
                                                             lwd = lwd, ...)
 
+                            ## add base map
+                            if (map && group.number == 1)  add.map(Args, ...)
 
-                            if (map && group.number == 1) {
-                                require(mapdata)
-
-                                if (Args$map.fill) {
-                                    mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
-                                    panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
-                                                  alpha = Args$map.alpha, ...)
-                                } else {
-                                    mp <- map(database="worldHires", plot = FALSE)
-                                    llines(mp$x, mp$y, col = "black")
-                                }
-                            }
-
-                            if (mod.line && group.number == 1) {
-
-                                panel.abline(a = c(0, 0.5), lty = 5)
-                                panel.abline(a = c(0, 2), lty = 5)
-                                panel.abline(a = c(0, 1), lty = 1)
-                            }
+                            if (mod.line && group.number == 1) panel.modline(...)
 
                             ## add reference lines
                             panel.abline(v = ref.x, lty = 5)
@@ -710,8 +694,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                         })
 
-                                        #by default title if z set
-                                        #else none
+        ## by default title if z set
+        ## else none
         default.main <- if(is.na(z)) "" else paste(x, "vs.", y, "by levels of", z)
 
         Args$main <- if("main" %in% names(Args))
@@ -721,10 +705,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         if(!"pch" %in% names(Args))
             Args$pch <- 1
 
-                                        #reset for Args
+        ## reset for Args
         xyplot.args<- openair:::listUpdate(xyplot.args, Args)
 
-                                        #plot
+        ## plot
         plt <- do.call(xyplot, xyplot.args)
 
     }
@@ -745,41 +729,28 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 panel = function(x,...) {
                                     panel.grid(-1, -1)
                                     panel.hexbinplot(x,...)
-                                    if (mod.line) {
-                                        panel.abline(a = c(0, 0.5), lty = 5)
-                                        panel.abline(a = c(0, 2), lty = 5)
-                                        panel.abline(a = c(0, 1), lty = 1)
-                                    }
 
-                                    if (map) { ## for trajectory plotting
-                                        require(mapdata)
+                                    if (mod.line) panel.modline(...)
 
-                                        if (Args$map.fill) {
-                                            mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
-                                            panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
-                                                          alpha = Args$map.alpha)
-                                        } else {
-                                            mp <- map(database="worldHires", plot = FALSE)
-                                            llines(mp$x, mp$y, col = "black")
+                                    ## base map
+                                    if (map) add.map(Args, ...)
 
-                                        }
-                                    }
                                     ## add reference lines
                                     panel.abline(v = ref.x, lty = 5)
                                     panel.abline(h = ref.y, lty = 5)
                                 })
 
-                                        #by default no title ever
+        ## by default no title ever
         Args$main <- if("main" %in% names(Args))
             quickText(Args$main, auto.text) else quickText("", auto.text)
 
         if(!"pch" %in% names(Args))
             Args$pch <- 1
 
-                                        #reset for Args
+        ## reset for Args
         hexbinplot.args<- openair:::listUpdate(hexbinplot.args, Args)
 
-                                        #plot
+        ## plot
         plt <- do.call(hexbinplot, hexbinplot.args)
 
     }
@@ -926,19 +897,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                        panel.abline(a = c(0, 1), lty = 1)
                                    }
 
-                                   if (map) {
-                                       require(mapdata)
-
-                                       if (Args$map.fill) {
-                                           mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
-                                           panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
-                                                         alpha = Args$map.alpha, ...)
-                                       } else {
-                                           mp <- map(database="worldHires", plot = FALSE)
-                                           llines(mp$x, mp$y, col = "black")
-
-                                       }
-                                   }
+                                   ## add base map
+                                   if (map) add.map(Args, ...)
 
                                    ## add reference lines
                                    panel.abline(v = ref.x, lty = 5)
@@ -1025,27 +985,24 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                                    pretty = TRUE,
                                                    col.regions = col,
                                                    labels = FALSE)
-                                   if (mod.line) {
-                                       panel.abline(a = c(0, 0.5), lty = 5)
-                                       panel.abline(a = c(0, 2), lty = 5)
-                                       panel.abline(a = c(0, 1), lty = 1)
-                                   }
+                                   if (mod.line) panel.modline(...)
+
                                    ## add reference lines
                                    panel.abline(v = ref.x, lty = 5)
                                    panel.abline(h = ref.y, lty = 5)
                                })
 
-                                        #by default no title ever
+        ## by default no title ever
         Args$main <- if("main" %in% names(Args))
             quickText(Args$main, auto.text) else quickText("", auto.text)
 
         if(!"pch" %in% names(Args))
             Args$pch <- 1
 
-                                        #reset for Args
+        ## reset for Args
         levelplot.args<- openair:::listUpdate(levelplot.args, Args)
 
-                                        #plot
+        ## plot
         plt <- do.call(levelplot, levelplot.args)
 
     }
@@ -1060,7 +1017,27 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
 }
 
+## function to add base map ##############################################################
+add.map <- function (Args, ...) {
+    require(mapdata)
 
+    if (Args$map.fill) {
+        mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
+        panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
+                      alpha = Args$map.alpha, ...)
+    } else {
+        mp <- map(database="worldHires", plot = FALSE)
+        llines(mp$x, mp$y, col = "black")
+
+    }
+}
+
+## add simple FAC2 lines #################################################################
+panel.modline <- function (...) {
+    panel.abline(a = c(0, 0.5), lty = 5)
+    panel.abline(a = c(0, 2), lty = 5)
+    panel.abline(a = c(0, 1), lty = 1)
+}
 
 panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ...,
                           se = TRUE, level = 0.95, n = 100, col = plot.line$col,
