@@ -50,23 +50,23 @@ RcppExport SEXP rollingMean(SEXP x, SEXP lenr, SEXP capr, SEXP alignr) {
     // now go through each window
     for (int j = i; j < (i + len); j++) {
 
-      if (NA[j]) {
+      if (NA(j)) {
         sumNA += 1; // count missings
       }
       else
         {
-          sum += A[j]; // sum values that are not missing
+          sum += A(j); // sum values that are not missing
         }
     }
 
     // calculate mean if within data capture threshold, if not set to missing
 
     if (1 - sumNA / len < cap / 100) {
-      res[i + len - 1 - start] = NA_REAL;
+      res(i + len - 1 - start) = NA_REAL;
     }
     else
       {
-        res[i + len - 1 - start] = sum / (len - sumNA);
+        res(i + len - 1 - start) = sum / (len - sumNA);
       }
   }
 
@@ -108,22 +108,22 @@ NumericVector ends(NumericVector A, LogicalVector NA, NumericVector result, std:
 
       for (int j = start; j <= i; j++) {
 
-	if (NA[j]) {
+	if (NA(j)) {
 	  sumNA += 1; // count missings
 	}
 	else
 	  {
 	    nd +=1;
-	    sum += A[j]; // sum values that are not missing
+	    sum += A(j); // sum values that are not missing
 	  }
       }
 
       if (1 - sumNA / lenr < capr / 100) {
-	result[i] = NA_REAL;
+	result(i) = NA_REAL;
       }
       else
 	{
-	  result[i] = sum / nd;
+	  result(i) = sum / nd;
 	}
     }
   }
@@ -139,22 +139,22 @@ NumericVector ends(NumericVector A, LogicalVector NA, NumericVector result, std:
 
       for (int j = end; j >= i; j--) {
 
-	if (NA[j]) {
+	if (NA(j)) {
 	  sumNA += 1; // count missings
 	}
 	else
 	  {
 	    nd +=1;
-	    sum += A[j]; // sum values that are not missing
+	    sum += A(j); // sum values that are not missing
 	  }
       }
 
       if (1 - sumNA / lenr < capr / 100) {
-	result[i] = NA_REAL;
+	result(i) = NA_REAL;
       }
       else
 	{
-	  result[i] = sum / nd;
+	  result(i) = sum / nd;
 	}
     }
   }
