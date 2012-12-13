@@ -332,7 +332,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if ("trajStat" %in% names(Args)) trajStat <- Args$trajStat else trajStat <- "mean"
 
     Args$map.cols <- if ("map.cols" %in% names(Args)) Args$map.cols else "grey20"
-    Args$map.alpha <- if ("map.alpha" %in% names(Args)) Args$map.alpha else 0.3
+    Args$map.alpha <- if ("map.alpha" %in% names(Args)) Args$map.alpha else 0.2
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.alpha else TRUE
 
 
@@ -624,6 +624,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     id <- which(names(mydata) == group)
     names(mydata)[id] <- "MyGroupVar"
 
+    ## for printing map at end, if necessary
+    groupMax <- length(unique(factor(mydata$MyGroupVar)))
 
     if (method == "scatter") {
 
@@ -684,7 +686,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                                             lwd = lwd, ...)
 
                             ## add base map
-                            if (map && group.number == 1)  add.map(Args, ...)
+                            if (map && group.number == groupMax)  add.map(Args, ...)
 
                             if (mod.line && group.number == 1) panel.modline(...)
 
