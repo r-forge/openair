@@ -130,7 +130,7 @@ trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, typ
         dist.res <- as.dist(res)
         clusters <- pam(dist.res, n.cluster)
         cluster <- rep(clusters$clustering, each = n)
-        traj$cluster <- factor(cluster)
+        traj$cluster <- factor(paste("C", cluster, sep = ""))
         traj
 
     }
