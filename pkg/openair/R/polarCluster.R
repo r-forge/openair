@@ -339,6 +339,8 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
 
     if (length(type) == 1L) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
 
+    ## change cluster output to C1, C2 etc
+    mydata$cluster <- paste("C", mydata$cluster, sep = "")
 
     output <- list(plot = plt, data = mydata, call = match.call())
     invisible(output)
