@@ -44,6 +44,8 @@ Changes in openair 0.8-0 [2012-11-30]
 *	Fix timeAverage data capture issue - was not always setting
 	data to NA
 *	Output clusters as C1, C2 etc. not 1, 2.
+*	Use same labelling in calendarPlot as other functions (wrong
+	month order in non-English locales)
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================
