@@ -124,10 +124,10 @@
 ##' large international airport.  Atmospheric Environment. 40/28 pp
 ##' 5424-5434.
 ##'
-##' Carslaw, D.C. and S.D. Beevers (2012). Characterising and
+##' Carslaw, D.C., & Beevers, S.D. (2013). Characterising and
 ##' understanding emission sources using bivariate polar plots and
-##' k-means clustering. Environmental Modelling & Software. Submitted.
-##' @keywords methods
+##' k-means clustering. Environmental Modelling & Software, 40,
+##' 325-329. doi:10.1016/j.envsoft.2012.09.005
 ##' @examples
 ##'
 ##' \dontrun{

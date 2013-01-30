@@ -71,15 +71,16 @@
 ##' variable to plot in polar coordinates (the default is a column
 ##' \dQuote{ws} --- wind speed) and a pollutant. Should also contain \code{date}
 ##' if plots by time period are required.
-##' @param pollutant Mandatory. A pollutant name corresponding to a variable in
-##'   a data frame should be supplied e.g. \code{pollutant = "nox"}. There can
-##'   also be more than one pollutant specified e.g. \code{pollutant = c("nox",
-##'   "no2")}. The main use of using two or more pollutants is for model
-##'   evaluation where two species would be expected to have similar
-##'   concentrations. This saves the user stacking the data and it is possible
-##'   to work with columns of data directly. A typical use would be
-##'   \code{pollutant = c("obs", "mod")} to compare two columns \dQuote{obs} (the
-##'   observations) and \dQuote{mod} (modelled values).
+##' @param pollutant Mandatory. A pollutant name corresponding to a
+##' variable in a data frame should be supplied e.g. \code{pollutant =
+##' "nox"}. There can also be more than one pollutant specified
+##' e.g. \code{pollutant = c("nox", "no2")}. The main use of using two
+##' or more pollutants is for model evaluation where two species would
+##' be expected to have similar concentrations. This saves the user
+##' stacking the data and it is possible to work with columns of data
+##' directly. A typical use would be \code{pollutant = c("obs",
+##' "mod")} to compare two columns \dQuote{obs} (the observations) and
+##' \dQuote{mod} (modelled values).
 ##' @param x Name of variable to plot against wind direction in polar
 ##' coordinates, the default is wind speed, \dQuote{ws}.
 ##' @param wd Name of wind direction field.
@@ -235,25 +236,26 @@
 ##' @export
 ##' @import lattice
 ##' @import mgcv
-##' @return As well as generating the plot itself, \code{polarPlot} also
-##'   returns an object of class ``openair''. The object includes three main
-##'   components: \code{call}, the command used to generate the plot;
-##'   \code{data}, the data frame of summarised information used to make the
-##'   plot; and \code{plot}, the plot itself. If retained, e.g. using
-##'   \code{output <- polarPlot(mydata, "nox")}, this output can be used to
-##'   recover the data, reproduce or rework the original plot or undertake
-##'   further analysis.
+##' @return As well as generating the plot itself, \code{polarPlot}
+##' also returns an object of class ``openair''. The object includes
+##' three main components: \code{call}, the command used to generate
+##' the plot; \code{data}, the data frame of summarised information
+##' used to make the plot; and \code{plot}, the plot itself. If
+##' retained, e.g. using \code{output <- polarPlot(mydata, "nox")},
+##' this output can be used to recover the data, reproduce or rework
+##' the original plot or undertake further analysis.
 ##'
-##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summary}. See
-##'   \code{\link{openair.generics}} for further details.
+##' An openair output can be manipulated using a number of generic
+##' operations, including \code{print}, \code{plot} and
+##' \code{summary}. See \code{\link{openair.generics}} for further
+##' details.
 ##'
-##' \code{polarPlot} surface data can also be extracted directly using the
-##'   \code{results}, e.g.  \code{results(object)} for \code{output <-
-##'   polarPlot(mydata, "nox")}. This returns a data frame with four set
-##'   columns: \code{cond}, conditioning based on \code{type}; \code{u} and
-##'   \code{v}, the translational vectors based on \code{ws} and \code{wd}; and
-##'   the local \code{pollutant} estimate.
+##' \code{polarPlot} surface data can also be extracted directly using
+##' the \code{results}, e.g.  \code{results(object)} for \code{output
+##' <- polarPlot(mydata, "nox")}. This returns a data frame with four
+##' set columns: \code{cond}, conditioning based on \code{type};
+##' \code{u} and \code{v}, the translational vectors based on
+##' \code{ws} and \code{wd}; and the local \code{pollutant} estimate.
 ##' @author David Carslaw
 ##' @seealso \code{\link{polarAnnulus}}, \code{\link{polarFreq}}, \code{\link{percentileRose}}
 ##' @references
@@ -363,11 +365,14 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
 
+    mydata <- na.omit(mydata)
+
     ## this is used later for the 'x' scale
-    min.scale <- floor(min(mydata[[x]], na.rm = TRUE))
+    min.scale <- min(mydata[[x]], na.rm = TRUE)
+
 
     ## scale data by subtracting the min value
-    ## this helps with dealing with data with offsets - scaling
+    ## this helps with dealing with data with offsets - scaling (starts from zero, always postive)
     mydata[ , x] <- mydata[ , x] - min(mydata[ , x], na.rm = TRUE)
 
     ## if more than one pollutant, need to stack the data and set type = "variable"
@@ -392,16 +397,16 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         }
     }
 
-    ## ###########################################################################################
+    ## ##############################################################################
 
-    mydata <- na.omit(mydata)
+
     ## cutData depending on type
     mydata <- cutData(mydata, type, ...)
 
 
     ## if upper ws not set, set it to the max to display all information
-    max.ws <- ceiling(max(mydata[[x]], na.rm = TRUE))
-    min.ws <- floor(min(mydata[[x]], na.rm = TRUE))
+    max.ws <- max(mydata[[x]], na.rm = TRUE)
+    min.ws <- min(mydata[[x]], na.rm = TRUE)
     clip <- TRUE ## used for removing data where ws > upper
 
     if(missing(upper)) {
@@ -581,7 +586,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         extra.args$layout <- c(3, 1)
     }
 
-    ## scale key setup #####################################################################
+    ## scale key setup ##############################################################
 
     legend <- list(col = col, at = col.scale, labels = list(labels = labs),
                    space = key.position, auto.text = auto.text,
@@ -589,7 +594,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                    height = 1, width = 1.5, fit = "all")
     legend <- openair:::makeOpenKeyLegend(key, legend, "polarPlot")
 
-    ## #####################################################################################
+    ## ##############################################################################
 
     ## scaling
     ## scaling of 'zeroed' data
