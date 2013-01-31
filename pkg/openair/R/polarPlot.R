@@ -257,27 +257,37 @@
 ##' \code{u} and \code{v}, the translational vectors based on
 ##' \code{ws} and \code{wd}; and the local \code{pollutant} estimate.
 ##' @author David Carslaw
-##' @seealso \code{\link{polarAnnulus}}, \code{\link{polarFreq}}, \code{\link{percentileRose}}
+##' @seealso \code{\link{polarCluster}} for identifying features in
+##' bivairate polar plots and for post processing and
+##' \code{\link{polarAnnulus}}, \code{\link{polarFreq}},
+##' \code{\link{percentileRose}} for other ways of plotting directional data.
 ##' @references
 ##'
-##' Carslaw, D.C., Beevers, S.D, Ropkins, K and M.C. Bell (2006).  Detecting
-##'   and quantifying aircraft and other on-airport contributions to ambient
-##'   nitrogen oxides in the vicinity of a large international airport.
-##'   Atmospheric Environment. 40/28 pp 5424-5434.
+##' Carslaw, D.C., Beevers, S.D, Ropkins, K and M.C. Bell (2006).
+##' Detecting and quantifying aircraft and other on-airport
+##' contributions to ambient nitrogen oxides in the vicinity of a
+##' large international airport.  Atmospheric Environment. 40/28 pp
+##' 5424-5434.
 ##'
-##' Henry, R.C., Chang, Y.S., Spiegelman, C.H., 2002. Locating nearby sources
-##'   of air pollution by nonparametric regression of atmospheric
-##'   concentrations on wind direction. Atmospheric Environment 36 (13),
-##'   2237-2244.
+##' Carslaw, D.C., & Beevers, S.D. (2013). Characterising and
+##' understanding emission sources using bivariate polar plots and
+##' k-means clustering. Environmental Modelling & Software, 40,
+##' 325-329. doi:10.1016/j.envsoft.2012.09.005
 ##'
-##' Westmoreland, E.J., N. Carslaw, D.C. Carslaw, A. Gillah and E. Bates
-##'   (2007).  Analysis of air quality within a street canyon using statistical
-##'   and dispersion modelling techniques.  Atmospheric Environment. Vol.
-##'   41(39), pp. 9195-9205.
+##' Henry, R.C., Chang, Y.S., Spiegelman, C.H., 2002. Locating nearby
+##' sources of air pollution by nonparametric regression of
+##' atmospheric concentrations on wind direction. Atmospheric
+##' Environment 36 (13), 2237-2244.
 ##'
-##' Yu, K.N., Cheung, Y.P., Cheung, T., Henry, R.C., 2004.  Identifying the
-##'   impact of large urban airports on local air quality by nonparametric
-##'   regression. Atmospheric Environment 38 (27), 4501-4507.
+##' Westmoreland, E.J., N. Carslaw, D.C. Carslaw, A. Gillah and
+##' E. Bates (2007).  Analysis of air quality within a street canyon
+##' using statistical and dispersion modelling techniques.
+##' Atmospheric Environment. Vol.  41(39), pp. 9195-9205.
+##'
+##' Yu, K.N., Cheung, Y.P., Cheung, T., Henry, R.C., 2004.
+##' Identifying the impact of large urban airports on local air
+##' quality by nonparametric regression. Atmospheric Environment 38
+##' (27), 4501-4507.
 ##' @keywords methods
 ##' @examples
 ##'
@@ -343,10 +353,10 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
 
-    ##extra.args setup
+    ## extra.args setup
     extra.args <- list(...)
 
-                                        #label controls
+    ## label controls
     extra.args$xlab <- if("xlab" %in% names(extra.args))
         quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
     extra.args$ylab <- if("ylab" %in% names(extra.args))
@@ -354,7 +364,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     extra.args$main <- if("main" %in% names(extra.args))
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
-                                        #layout default
+    ## layout default
     if(!"layout" %in% names(extra.args))
         extra.args$layout <- NULL
 
@@ -372,7 +382,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
 
     ## scale data by subtracting the min value
-    ## this helps with dealing with data with offsets - scaling (starts from zero, always postive)
+    ## this helps with dealing with negative data on radial axis (starts from zero, always postive)
     mydata[ , x] <- mydata[ , x] - min(mydata[ , x], na.rm = TRUE)
 
     ## if more than one pollutant, need to stack the data and set type = "variable"
@@ -409,7 +419,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     min.ws <- min(mydata[[x]], na.rm = TRUE)
     clip <- TRUE ## used for removing data where ws > upper
 
-    if(missing(upper)) {
+    if (missing(upper)) {
         upper <- max.ws
         clip <- FALSE
     }

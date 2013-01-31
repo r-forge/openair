@@ -358,10 +358,15 @@ polarPlot(mydata, pollutant = "nox")
 }
 \references{
   Carslaw, D.C., Beevers, S.D, Ropkins, K and M.C. Bell
-  (2006).  Detecting and quantifying aircraft and other
+  (2006). Detecting and quantifying aircraft and other
   on-airport contributions to ambient nitrogen oxides in
   the vicinity of a large international airport.
   Atmospheric Environment. 40/28 pp 5424-5434.
+
+  Carslaw, D.C., & Beevers, S.D. (2013). Characterising and
+  understanding emission sources using bivariate polar
+  plots and k-means clustering. Environmental Modelling &
+  Software, 40, 325-329. doi:10.1016/j.envsoft.2012.09.005
 
   Henry, R.C., Chang, Y.S., Spiegelman, C.H., 2002.
   Locating nearby sources of air pollution by nonparametric
@@ -371,7 +376,7 @@ polarPlot(mydata, pollutant = "nox")
   Westmoreland, E.J., N. Carslaw, D.C. Carslaw, A. Gillah
   and E. Bates (2007).  Analysis of air quality within a
   street canyon using statistical and dispersion modelling
-  techniques.  Atmospheric Environment. Vol.  41(39), pp.
+  techniques. Atmospheric Environment. Vol.  41(39), pp.
   9195-9205.
 
   Yu, K.N., Cheung, Y.P., Cheung, T., Henry, R.C., 2004.
@@ -380,8 +385,11 @@ polarPlot(mydata, pollutant = "nox")
   Environment 38 (27), 4501-4507.
 }
 \seealso{
+  \code{\link{polarCluster}} for identifying features in
+  bivairate polar plots and for post processing and
   \code{\link{polarAnnulus}}, \code{\link{polarFreq}},
-  \code{\link{percentileRose}}
+  \code{\link{percentileRose}} for other ways of plotting
+  directional data.
 }
 \keyword{methods}
 
