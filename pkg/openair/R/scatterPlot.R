@@ -846,7 +846,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         col.scale <- breaks
 
         ## this is the default
-        if (trajStat == "mean") {
+        if (trajStat %in% c("mean", "pscf")) {
             legend <- list(col = col, at = col.scale, labels = list(labels = labs),
                            space = key.position,
                            auto.text = auto.text, footer = Args$key.footer,
@@ -855,7 +855,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             legend <- openair:::makeOpenKeyLegend(key, legend, "other")
         }
 
-        if (trajStat == "frequency" | trajStat == "difference") {
+        if (trajStat %in% c("frequency", "difference")) {
 
             if (trajStat == "frequency") {
                 breaks <- c(0, 1, 5, 10, 25, 100)
@@ -866,6 +866,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                 breaks <- c(-15000, -10, -5, -1, 1, 5, 10, 15000)
                 labels <- c("<-10", "-10 to -5", "-5 to -1", "-1 to 1", "1 to 5", "5 to 10", ">10")
             }
+
 
             ## frequency plot
             n <- 7

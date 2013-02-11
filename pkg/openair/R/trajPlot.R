@@ -80,6 +80,9 @@
 ##' percentage change in gridded frequencies. For example, such a plot
 ##' could show that the top 10\% of concentrations of PM10 tend to
 ##' orginate from air-mass origins to the east.
+##'
+##' If \code{statistic = "pscf"} then a Potential Source Contribution
+##' Function map is produced. See details.
 ##' @param percentile For \code{trajLevel}. The percentile
 ##' concentration of \code{pollutant} against which the all
 ##' trajectories are compared.
@@ -164,7 +167,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       statistic = "mean", percentile = 90,
                       map = TRUE, lon.inc = 1.0, lat.inc = 1.0, min.bin = 1,
                       map.fill = TRUE, map.cols = "grey40",
-                      map.alpha = 0.4, ...)  {
+                      map.alpha = 0.3, ...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
@@ -249,6 +252,57 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         mydata$date <- dates
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
         mydata <- subset(mydata, count >= min.bin)
+    }
+
+    ## Poential Source Contribution Function
+    if (tolower(statistic) == "pscf") {
+         ## count % of times a cell contains a trajectory
+        n1 <- length(unique(mydata$date))
+        dat1 <- aggregate(mydata[ , -ids], mydata[ , ids],
+                          function (x) length(x))
+        dat1[, pollutant] <- dat1[, "date"]
+        dat1 <- subset(dat1, select = -date)
+
+        ## select top X percent
+        Q90 <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+
+        ## now select trajectories with conc > percentile
+        dat2 <- subset(mydata, get(pollutant) > Q90)
+        n2 <- length(unique(dat2$date))
+        ## number in each bin
+        counts <-  aggregate(dat2[ , -ids], dat2[ , ids],
+                             function (x)  length(x))
+
+        ## need dates for later processing e.g. for type = "season"
+        dates <- aggregate(dat2[ , -ids], dat2[ , ids], mean, na.rm = TRUE)
+        dates <- dates$date
+
+        dat2 <- aggregate(dat2[ , -ids], dat2[ , ids],
+                          function (x) length(x))
+        dat2[, pollutant] <- dat2[, "date"]
+        dat2$count <- counts$date
+        dat2$date <- dates
+        attr(dat2$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
+        dat2 <- subset(dat2, count >= min.bin)
+
+        ## differences
+        mydata <- merge(dat1, dat2, by = c("xgrid", "ygrid", type))
+        pol1 <- paste(pollutant, ".x", sep = "")
+        pol2 <- paste(pollutant, ".y", sep = "")
+        mydata[, pollutant] <-  mydata[, pol2] / mydata[, pol1]
+
+        ## adjust at edges
+        n <- mean(mydata$count)
+        id <- which(mydata$count > n & mydata$count <= 2 * n)
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.75
+
+        id <- which(mydata$count > (n / 2) & mydata$count <= n)
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.5
+
+        id <- which(mydata$count <= (n / 2))
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.15
+
+
     }
 
     ## plot trajectory frequecy differences e.g. top 10% concs cf. mean
