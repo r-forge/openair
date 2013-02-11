@@ -4,11 +4,12 @@
 \usage{
   percentileRose(mydata, pollutant = "nox",
     type = "default", percentile = c(25, 50, 75, 90, 95),
-    cols = "default", mean = TRUE, mean.lty = 1,
-    mean.lwd = 3, mean.col = "grey", fill = TRUE,
-    intervals = NULL, angle.scale = 45, auto.text = TRUE,
-    key.header = NULL, key.footer = "percentile",
-    key.position = "bottom", key = TRUE, ...)
+    method = "default", cols = "default", mean = TRUE,
+    mean.lty = 1, mean.lwd = 3, mean.col = "grey",
+    fill = TRUE, intervals = NULL, angle.scale = 45,
+    auto.text = TRUE, key.header = NULL,
+    key.footer = "percentile", key.position = "bottom",
+    key = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing \code{wd}
@@ -45,6 +46,17 @@
   \item{percentile}{The percentile value(s) to plot. Must
   be between 0--100. If \code{percentile = NA} then only a
   mean line will be shown.}
+
+  \item{method}{When \code{method = "default"} the supplied
+  percentiles by wind direction are calculated. When
+  \code{method = "cpf"} the conditional probability
+  function (CPF) is plotted and a single (usually high)
+  percentile level is supplied. The CPF is defined as CPF =
+  my/ny, where my is the number of samples in the wind
+  sector y with mixing ratios greater than the
+  \emph{overall} percentile concentration, and ny is the
+  total number of samples in the same wind sector (see
+  Ashbaugh et al., 1985).}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},
@@ -183,6 +195,12 @@ percentileRose(mydata, type = c("season", "daylight"), pollutant = "o3", col = "
 }
 \author{
   David Carslaw
+}
+\references{
+  Ashbaugh, L.L., Malm, W.C., Sadeh, W.Z., 1985. A
+  residence time probability analysis of sulfur
+  concentrations at ground canyon national park.
+  Atmospheric Environment 19 (8), 1263-1270.
 }
 \seealso{
   See Also as \code{\link{windRose}},

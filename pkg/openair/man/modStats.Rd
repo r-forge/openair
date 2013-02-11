@@ -75,7 +75,9 @@
 
   \item \eqn{RMSE}, the root mean squared error.
 
-  \item \eqn{r}, the Pearson correlation coefficient.
+  \item \eqn{r}, the Pearson correlation coefficient. Note,
+  can also supply and aurument \code{method} e.g.
+  \code{method = "spearman"}
 
   \item \eqn{COE}, the \emph{Coefficient of Efficiency}
   based on Legates and McCabe (1999, 2012). There have been

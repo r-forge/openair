@@ -22,7 +22,8 @@
 ##'
 ##' \item \eqn{RMSE}, the root mean squared error.
 ##'
-##' \item \eqn{r}, the Pearson correlation coefficient.
+##' \item \eqn{r}, the Pearson correlation coefficient. Note, can also
+##' supply and aurument \code{method} e.g. \code{method = "spearman"}
 ##'
 ##' \item \eqn{COE}, the \emph{Coefficient of Efficiency} based on
 ##' Legates and McCabe (1999, 2012). There have been many suggestions
@@ -128,7 +129,7 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", rank.n
     res.NMB <- ddply(mydata, type, NMB, mod, obs)
     res.NMGE <- ddply(mydata, type, NMGE, mod, obs)
     res.RMSE <- ddply(mydata, type, RMSE, mod, obs)
-    res.r <- ddply(mydata, type, r, mod, obs)
+    res.r <- ddply(mydata, type, r, mod, obs, ...)
     res.COE <- ddply(mydata, type, COE, mod, obs)
 
     ## merge them all into one data frame
@@ -235,9 +236,10 @@ RMSE <- function(x, mod = "mod", obs = "obs") {
 }
 
 ## correlation coefficient
-r <- function(x, mod = "mod", obs = "obs") {
+r <- function(x, mod = "mod", obs = "obs", ...) {
+
     x <- na.omit(x[ , c(mod, obs)])
-    res <- suppressWarnings(cor(x[ , mod], x[ , obs])) ## when SD=0
+    res <- suppressWarnings(cor(x[ , mod], x[ , obs], ...)) ## when SD=0
     data.frame(r = res)
 }
 

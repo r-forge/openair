@@ -4,7 +4,8 @@
 \usage{
   timeProp(mydata, pollutant = "nox",
     proportion = "cluster", avg.time = "day",
-    type = "default", cols = "Set1", date.breaks = 7,
+    type = "default", statistic = "mean",
+    normalise = FALSE, cols = "Set1", date.breaks = 7,
     date.format = NULL, box.width = 1, key.columns = 1,
     key.position = "right", auto.text = TRUE, ...)
 }
@@ -59,6 +60,17 @@
   different variables and how they depend on one another.
 
   \code{type} must be of length one.}
+
+  \item{statistic}{Determines how the bars are calculated.
+  The default (\dQuote{mean}) will provide the contribution
+  to the overall mean for a time interval. \code{statistic
+  = "frequency"} will give the proportion in terms of
+  counts.}
+
+  \item{normalise}{If \code{normalise = TRUE} then each
+  time interval is scaled to 100. This is helpful to show
+  the relative (percentage) contribution of the
+  proportions.}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},

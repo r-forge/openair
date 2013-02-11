@@ -60,6 +60,13 @@
 ##' variables and how they depend on one another.
 ##'
 ##' \code{type} must be of length one.
+##' @param statistic Determines how the bars are calculated. The
+##' default (\dQuote{mean}) will provide the contribution to the
+##' overall mean for a time interval. \code{statistic = "frequency"}
+##' will give the proportion in terms of counts.
+##' @param normalise If \code{normalise = TRUE} then each time
+##' interval is scaled to 100. This is helpful to show the relative
+##' (percentage) contribution of the proportions.
 ##' @param cols Colours to be used for plotting. Options include
 ##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
 ##' and \code{RColorBrewer} colours --- see the \code{openair}
@@ -118,12 +125,12 @@
 ##' }
 ##'
 timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time = "day",
-                     type = "default",  cols = "Set1", date.breaks = 7,
+                     type = "default", statistic = "mean", normalise = FALSE, cols = "Set1", date.breaks = 7,
                      date.format = NULL, box.width = 1, key.columns = 1,
                      key.position = "right", auto.text = TRUE, ...) {
 
     ## keep check happy
-    sums <- NULL; freq <- NULL
+    sums <- NULL; freq <- NULL; Var1 <- NULL
 
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -138,6 +145,9 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
         mydata <- cutData(mydata, proportion)
     }
+
+    if (!statistic %in% c("mean", "frequency"))
+        stop ("statisic should be 'mean' or 'frequency'.")
 
     ## extra.args setup
     extra.args <- list(...)
@@ -154,6 +164,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
         xlim else NULL
     ylim <- if ("ylim" %in% names(extra.args))
         ylim else NULL
+
+
 
     ## variables needed
     vars <- c("date", pollutant, proportion)
@@ -179,6 +191,8 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
     mydata <- cutData(mydata, type)
 
+    ## remove missing
+    mydata <- na.omit(mydata)
     mydata <- ddply(mydata, c(proportion, type), fun.pad)
 
     procData <- function(mydata, avg.time, ...) {
@@ -189,7 +203,15 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
         ## the values
         values <- ddply(mydata, proportion, timeAverage, avg.time = avg.time, statistic = "mean")
 
-        ## add drequencies
+        ## do not weight by concentration if statistic = frequency, just repeat overall mean
+        ## by proportion
+        if (statistic == "frequency") {
+
+            tmp <- timeAverage(mydata, avg.time)
+            values[, pollutant] <- rep(tmp[, pollutant], length(unique(mydata[, proportion])))
+        }
+
+        ## add frequencies
         values$freq <- freqs[[pollutant]]
 
         ## conc * freq
@@ -197,6 +219,10 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
         ## weighted conc
         res <- ddply(values, .(date), transform, Var1 = sums / sum(freq, na.rm = TRUE))
+
+        ## normlaise to 100 if needed
+        if (normalise) res <- ddply(res, .(date), transform,
+                                    Var1 = Var1 * (100 / sum(Var1, na.rm = TRUE)))
 
         res
 
@@ -230,7 +256,7 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
     ## work out time gap to get box.width
     tmp <- diff(unique(results$date))
-    if (attr(tmp, "units") == "hours") fac <- 7 * 24 * 3600
+    if (attr(tmp, "units") == "weeks") fac <- 7 * 24 * 3600
     if (attr(tmp, "units") == "days") fac <- 24 * 3600
     if (attr(tmp, "units") == "hours") fac <- 3600
 
@@ -244,12 +270,22 @@ timeProp <- function(mydata, pollutant = "nox", proportion = "cluster", avg.time
 
     if (is.null(ylim)) ylim <- c(0, 1.04 * y.max)
 
+    if (normalise) ylab <- quickText(paste("% contribution to", pollutant), auto.text)
+
+    ## sub heading
+    if (statistic == "frequency") {
+        sub <- "contribution weighted by frequency"
+    } else {
+         sub <- "contribution weighted by mean"
+    }
+
     plt <- xyplot(myform, data = results,
                   as.table = TRUE,
                   strip = strip,
                   strip.left = strip.left,
                   groups = get(proportion),
                   stack = TRUE,
+                  sub = sub,
                   scales = scales,
                   col = cols,
                   border = NA,
