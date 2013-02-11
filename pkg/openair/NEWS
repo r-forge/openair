@@ -49,6 +49,8 @@ Changes in openair 0.8-0 [2012-11-30]
 *	Export dendogram in corPlot - see example in help file
 *	Fix scaling bug in polarPlot when radial variable was negative
 	and small
+*	Update 'mydata' to set negative data to NA
+*	Add method = CPF to percentile rose
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

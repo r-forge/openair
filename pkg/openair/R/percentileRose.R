@@ -196,7 +196,12 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
         mydata <- melt(mydata, measure.vars = pollutant)
         ## now set pollutant to "value"
         pollutant <- "value"
-        type <- c(type, "variable")
+        if (type == "default") {
+            type <- "variable"
+        } else {
+            type <- c(type, "variable")
+        }
+
     }
 
 
@@ -330,7 +335,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                    plot.style =  "other")
     legend <- openair:::makeOpenKeyLegend(key, legend, "percentileRose")
 
-    if (mean.only) legend <- NULL
+    if (mean.only || tolower(method) == "cpf") legend <- NULL
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("y ~ x | ", temp, sep = ""))
