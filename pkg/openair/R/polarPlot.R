@@ -458,13 +458,20 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     input.data <- expand.grid(u = seq(-upper, upper, length = int),
                               v = seq(-upper, upper, length = int))
 
+    ## for CPF
+    Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+
+    if (statistic == "cpf") {
+        sub <- paste("CPF probability at the ", percentile,
+                     "th percentile (=", round(Pval, 1), ")", sep = "")
+    } else {
+        sub <- NULL
+    }
+
     prepare.grid <- function(mydata) {
         ## identify which ws and wd bins the data belong
         wd <- cut(mydata[ , wd], breaks = seq(0, 360, 10), include.lowest = TRUE)
         x <- cut(mydata[ , x], breaks = seq(0, max.ws, length = 31), include.lowest = TRUE)
-
-        ## for CPF
-        Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
 
         binned <- switch(statistic,
                          frequency = tapply(mydata[ , pollutant], list(wd, x), function(x)
@@ -654,6 +661,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                  col.regions = col,
                  region = TRUE,
                  aspect = 1,
+                 sub = sub,
                  at = col.scale,
                  par.strip.text = list(cex = 0.8),
                  scales = list(draw = FALSE),
