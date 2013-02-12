@@ -10,7 +10,7 @@
 ##' each trajectory, if no \code{pollutant} is supplied.
 ##'
 ##' If a pollutant is given, by merging the trajectory data with
-##' concentration data (see example below) the trajectories are
+##' concentration data (see example below), the trajectories are
 ##' colour-coded by the concentration of \code{pollutant}. With a long
 ##' time series there can be lots of overplotting making it difficult
 ##' to gauge the overall concentration pattern. In these cases setting
@@ -23,16 +23,16 @@
 ##' location, whereas lines do not.
 ##'
 ##' An alternative way of showing the trajectories is to bin the
-##' points into latitude/longitude intervals and average the
-##' corresponding concentrations. For these purposes \code{trajLevel}
-##' should be used. There are several trajectory statistics that can
-##' be plotted as gridded surfaces. First, \code{statistic} can be set
-##' to \dQuote{frequency} to show the number of back trajectory points
-##' in a grid square. Grid squares are by default at 1 degree
-##' intervals, controlled by \code{lat.inc} and \code{lon.inc}. Such
-##' plots are useful for showing the frequency of air mass
-##' locations. Note that it is also possible to set \code{method =
-##' "hexbin"}, which will produce a plot by hexagonal binning.
+##' points into latitude/longitude intervals For these purposes
+##' \code{trajLevel} should be used. There are several trajectory
+##' statistics that can be plotted as gridded surfaces. First,
+##' \code{statistic} can be set to \dQuote{frequency} to show the
+##' number of back trajectory points in a grid square. Grid squares
+##' are by default at 1 degree intervals, controlled by \code{lat.inc}
+##' and \code{lon.inc}. Such plots are useful for showing the
+##' frequency of air mass locations. Note that it is also possible to
+##' set \code{method = "hexbin"}, which will produce a plot by
+##' hexagonal binning.
 ##'
 ##' If \code{statistic = "difference"} the trajectories associated
 ##' with a concentration greater than \code{percentile} are compared
@@ -65,7 +65,11 @@
 ##' slightly higher or much higher than the criterion. As a result, it
 ##' can be difficult to distinguish moderate sources from strong
 ##' ones. Seibert et al. (1994) computed concentration fields to
-##' identify source areas of pollutants.
+##' identify source areas of pollutants. The Concentration Weighted
+##' Trajectory (CWT) approach considers the concentration of a species
+##' together with its residence time in a grid cell. The CWT approach
+##' has been shown to yield similar results to the PSCF approach. The
+##' openair manual has more details and examples of these approaches.
 ##'
 ##' A further useful refinement is to smooth the resulting surface,
 ##' which is possible by setting \code{smooth = TRUE}.
@@ -121,7 +125,10 @@
 ##'
 ##' If \code{statistic = "pscf"} then a Potential Source Contribution
 ##' Function map is produced. If \code{statistic = "cwt"} then
-##' concentration weighted trajectories are plotted. See details.
+##' concentration weighted trajectories are plotted.
+##'
+##' If \code{statistic = "cwt"} then the Concentration Weighted
+##' Trajectory approach is used. See details.
 ##' @param percentile For \code{trajLevel}. The percentile
 ##' concentration of \code{pollutant} against which the all
 ##' trajectories are compared.
@@ -132,9 +139,8 @@
 ##' @param lat.inc The latitude-interval to be used for binning data
 ##' when \code{trajLevel}.
 ##' @param min.bin For \code{trajLevel} the minimum number of unique
-##' \emph{trajectories} in a grid cell. Counts below \code{min.bin} are set as
-##' missing. For \code{statistic = "frequency"} or \code{statistic =
-##' "frequency"}
+##' points in a grid cell. Counts below \code{min.bin} are set as
+##' missing. For \code{trajLevel} gridded outputs.
 ##' @param map.fill Should the base map be a filled polygon? Default
 ##' is to fill countries.
 ##' @param map.cols If \code{map.fill = TRUE} \code{map.cols} controls
@@ -207,15 +213,17 @@
 ##' lond <- merge(lond, kc1, by = "date")
 ##'
 ##' # trajectory plot, no smoothing - and limit lat/lon area of interest
-##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm10")
+##' # use PSCF
+##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20),
+##' pollutant = "pm10", statistic = "pscf")
 ##'
-##' # can smooth surface:
-##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
-##' smooth = TRUE)
+##' # can smooth surface, suing CWT approach:
+##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20),
+##' pollutant = "pm2.5", statistic = "cwt",  smooth = TRUE)
 ##'
 ##' # plot by season:
 ##' trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
-##' smooth = TRUE, type = "season")
+##' statistic = "pscf", type = "season")
 ##' }
 trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       pollutant = "pm10", type = "default", smooth = FALSE,
@@ -279,7 +287,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     mydata <- mydata[ , c("date", "xgrid", "ygrid", type, pollutant)]
     ids <- which(names(mydata) %in% c("xgrid", "ygrid", type))
 
-    ## plot mean concentration
+    ## plot mean concentration - CWT method
     if (statistic %in% c("cwt", "median")) {
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
                              function (x)  length(x))
@@ -439,8 +447,9 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 ##' @param group For \code{trajPlot} it is sometimes useful to group
 ##' and colour trajectories according to a grouping variable. See example below.
 ##' @export
-trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10", type = "default",
-                     smooth = FALSE, statistic = "mean", percentile = 90, map = TRUE, lon.inc = 1.0,
+trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "pm10",
+                     type = "default", smooth = FALSE, statistic = "mean",
+                     percentile = 90, map = TRUE, lon.inc = 1.0,
                      lat.inc = 1.0, min.bin = 1, group = NA, map.fill = TRUE,
                      map.cols = "grey40", map.alpha = 0.4, ...)
 {
