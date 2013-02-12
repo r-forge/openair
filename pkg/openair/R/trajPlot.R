@@ -10,11 +10,11 @@
 ##' each trajectory, if no \code{pollutant} is supplied.
 ##'
 ##' If a pollutant is given, by merging the trajectory data with
-##' concentration data (see example below) the trajectories are colour-coded by the
-##' concentration of \code{pollutant}. With a long time series there
-##' can be lots of overplotting making it difficult to gauge the
-##' overall concentration pattern. In these cases setting \code{alpha}
-##' to a low value e.g. 0.1 can help.
+##' concentration data (see example below) the trajectories are
+##' colour-coded by the concentration of \code{pollutant}. With a long
+##' time series there can be lots of overplotting making it difficult
+##' to gauge the overall concentration pattern. In these cases setting
+##' \code{alpha} to a low value e.g. 0.1 can help.
 ##'
 ##' For the investigation of a few days it can be useful to use
 ##' \code{plot.type = "l"}, which shows the back trajectories as
@@ -25,9 +25,50 @@
 ##' An alternative way of showing the trajectories is to bin the
 ##' points into latitude/longitude intervals and average the
 ##' corresponding concentrations. For these purposes \code{trajLevel}
-##' should be used. A further useful refinement is to smooth the
-##' resulting surface, which is possible by setting \code{smooth =
-##' TRUE}.
+##' should be used. There are several trajectory statistics that can
+##' be plotted as gridded surfaces. First, \code{statistic} can be set
+##' to \dQuote{frequency} to show the number of back trajectory points
+##' in a grid square. Grid squares are by default at 1 degree
+##' intervals, controlled by \code{lat.inc} and \code{lon.inc}. Such
+##' plots are useful for showing the frequency of air mass
+##' locations. Note that it is also possible to set \code{method =
+##' "hexbin"}, which will produce a plot by hexagonal binning.
+##'
+##' If \code{statistic = "difference"} the trajectories associated
+##' with a concentration greater than \code{percentile} are compared
+##' with the the full set of trajectories to understand the
+##' differences in freqeuncies of the origin of air masses of the
+##' highest concentration trajectories compared with the trajectories
+##' on average. The comparsion is made by comparing the percentage
+##' change in gridded frequencies. For example, such a plot could show
+##' that the top 10\% of concentrations of PM10 tend to orginate from
+##' air-mass origins to the east.
+##'
+##' If \code{statistic = "pscf"} then the Potential Source
+##' Contribution Function is plotted. The PSCF calculates the
+##' probability that a source is located at latitude \eqn{i} and
+##' longitude \eqn{j} (Pekney et al., 2006).The basis of PSCF is that
+##' if a source is located at (i,j), an air parcel back trajectory
+##' passing through that location indicates that material from the
+##' source can be collected and transported along the trajectory to
+##' the receptor site. PSCF solves \deqn{PSCF = m_{ij}/n_{ij}} where
+##' \eqn{n_{ij}} is the number of times that the trajectories passed
+##' through the cell (i,j) and \eqn{m_{ij}} is the number of times
+##' that a source concentration was high when the trajectories passed
+##' through the cell (i,j). The criterion for de-termining
+##' \eqn{m_{ij}} is controlled by \code{percentile}, which by default
+##' is 90. Note also that cells with few data have a weighting factor
+##' applied to reduce their effect.
+##'
+##' A limitation of the PSCF method is that grid cells can have the
+##' same PSCF value when sample concentrations are either only
+##' slightly higher or much higher than the criterion. As a result, it
+##' can be difficult to distinguish moderate sources from strong
+##' ones. Seibert et al. (1994) computed concentration fields to
+##' identify source areas of pollutants.
+##'
+##' A further useful refinement is to smooth the resulting surface,
+##' which is possible by setting \code{smooth = TRUE}.
 ##'
 ##' @note This function is under active development and is likely to change
 ##'
@@ -59,10 +100,7 @@
 ##'
 ##' @param smooth Should the trajectory surface be smoothed?
 ##' @param statistic For \code{trajLevel}. By default the function
-##' will plot the mean concentration of a pollutant. If
-##' \code{statistic = "frequency"}, a plot will be shown for gridded
-##' trajectory frequencies. This is useful to understand where air
-##' masses tend to orginate.
+##' will plot the trajectory frequencies.
 ##'
 ##' For \code{trajLevel}, the argument \code{method = "hexbin"} can be
 ##' used. In this case hexagonal binning of the trajectory
@@ -82,7 +120,8 @@
 ##' orginate from air-mass origins to the east.
 ##'
 ##' If \code{statistic = "pscf"} then a Potential Source Contribution
-##' Function map is produced. See details.
+##' Function map is produced. If \code{statistic = "cwt"} then
+##' concentration weighted trajectories are plotted. See details.
 ##' @param percentile For \code{trajLevel}. The percentile
 ##' concentration of \code{pollutant} against which the all
 ##' trajectories are compared.
@@ -118,6 +157,22 @@
 ##' @seealso \code{\link{importTraj}} to import trajectory data from the King's
 ##' College server.
 ##' @author David Carslaw
+##' @references
+##'
+##' Pekney, N. J., Davidson, C. I., Zhou, L., & Hopke,
+##' P. K. (2006). Application of PSCF and CPF to PMF-Modeled Sources
+##' of PM 2.5 in Pittsburgh. Aerosol Science and Technology, 40(10),
+##' 952-961.
+##'
+##' Seibert, P., Kromp-Kolb, H., Baltensperger, U., Jost, D.,
+##' 1994. Trajectory analysis of high-alpine air pollution data. NATO
+##' Challenges of Modern Society 18, 595-595.
+##'
+##' Xie, Y., & Berkowitz, C. M. (2007). The use of conditional
+##' probability functions and potential source contribution functions
+##' to identify source regions and advection pathways of hydrocarbon
+##' emissions in Houston, Texas. Atmospheric Environment, 41(28),
+##' 5831-5847.
 ##' @examples
 ##'
 ##' # show a simple case with no pollutant i.e. just the trajectories
@@ -164,7 +219,7 @@
 ##' }
 trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       pollutant = "pm10", type = "default", smooth = FALSE,
-                      statistic = "mean", percentile = 90,
+                      statistic = "frequency", percentile = 90,
                       map = TRUE, lon.inc = 1.0, lat.inc = 1.0, min.bin = 1,
                       map.fill = TRUE, map.cols = "grey40",
                       map.alpha = 0.3, ...)  {
@@ -174,6 +229,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     ## extra.args
     extra.args <- list(...)
+
+    statistic <- tolower(statistic)
 
     if(!"ylab" %in% names(extra.args))
         extra.args$ylab <- "latitude"
@@ -186,6 +243,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     if(!"key.header" %in% names(extra.args)) {
         if (statistic == "frequency") extra.args$key.header <- "% trajectories"
+        if (statistic == "pscf") extra.args$key.header <- "PSCF \nprobability"
         if (statistic == "difference") extra.args$key.header <- quickText(paste("gridded differences", "\n(", percentile, "th percentile)", sep = ""))
     }
 
@@ -222,12 +280,25 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ids <- which(names(mydata) %in% c("xgrid", "ygrid", type))
 
     ## plot mean concentration
-    if (statistic %in% c("mean", "median")) {
+    if (statistic %in% c("cwt", "median")) {
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
-                             function (x)  length(unique(x)))
-        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], get(statistic), na.rm = TRUE)
+                             function (x)  length(x))
+        if (statistic == "cwt") stat.name <- "mean" else stat.name <- "median"
+        mydata <- aggregate(mydata[ , -ids], mydata[ , ids], get(stat.name), na.rm = TRUE)
         mydata$count <- counts$date
+
         mydata <- subset(mydata, count >= min.bin)
+
+        ## adjust at edges
+
+        id <- which(mydata$count > 20 & mydata$count <= 80)
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.7
+
+        id <- which(mydata$count > 10 & mydata$count <= 20)
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.42
+
+        id <- which(mydata$count <= 10)
+        mydata[id, pollutant] <- mydata[id, pollutant] * 0.05
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
     }
 
@@ -255,7 +326,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     }
 
     ## Poential Source Contribution Function
-    if (tolower(statistic) == "pscf") {
+    if (statistic == "pscf") {
          ## count % of times a cell contains a trajectory
         n1 <- length(unique(mydata$date))
         dat1 <- aggregate(mydata[ , -ids], mydata[ , ids],
