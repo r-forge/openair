@@ -50,7 +50,10 @@ Changes in openair 0.8-0 [2012-11-30]
 *	Fix scaling bug in polarPlot when radial variable was negative
 	and small
 *	Update 'mydata' to set negative data to NA
-*	Add method = CPF to percentile rose
+*	Add method = CPF to percentile rose and polarPlot
+*	Update trajectory analysis to allow Potential Source
+	Contribution Function (PSCF) and Concentration Weighted
+	Trajectory (CWT) to be considered
 
 Changes in openair 0.7-0 [2012-05-30]
 =====================================

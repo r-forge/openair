@@ -77,7 +77,10 @@
   If \code{statistic = "pscf"} then a Potential Source
   Contribution Function map is produced. If \code{statistic
   = "cwt"} then concentration weighted trajectories are
-  plotted. See details.}
+  plotted.
+
+  If \code{statistic = "cwt"} then the Concentration
+  Weighted Trajectory approach is used. See details.}
 
   \item{percentile}{For \code{trajLevel}. The percentile
   concentration of \code{pollutant} against which the all
@@ -93,9 +96,9 @@
   binning data when \code{trajLevel}.}
 
   \item{min.bin}{For \code{trajLevel} the minimum number of
-  unique \emph{trajectories} in a grid cell. Counts below
-  \code{min.bin} are set as missing. For \code{statistic =
-  "frequency"} or \code{statistic = "frequency"}}
+  unique points in a grid cell. Counts below \code{min.bin}
+  are set as missing. For \code{trajLevel} gridded
+  outputs.}
 
   \item{map.fill}{Should the base map be a filled polygon?
   Default is to fill countries.}
@@ -140,7 +143,7 @@
   \code{pollutant} is supplied.
 
   If a pollutant is given, by merging the trajectory data
-  with concentration data (see example below) the
+  with concentration data (see example below), the
   trajectories are colour-coded by the concentration of
   \code{pollutant}. With a long time series there can be
   lots of overplotting making it difficult to gauge the
@@ -155,11 +158,10 @@
   not.
 
   An alternative way of showing the trajectories is to bin
-  the points into latitude/longitude intervals and average
-  the corresponding concentrations. For these purposes
-  \code{trajLevel} should be used. There are several
-  trajectory statistics that can be plotted as gridded
-  surfaces. First, \code{statistic} can be set to
+  the points into latitude/longitude intervals For these
+  purposes \code{trajLevel} should be used. There are
+  several trajectory statistics that can be plotted as
+  gridded surfaces. First, \code{statistic} can be set to
   \dQuote{frequency} to show the number of back trajectory
   points in a grid square. Grid squares are by default at 1
   degree intervals, controlled by \code{lat.inc} and
@@ -203,7 +205,12 @@
   criterion. As a result, it can be difficult to
   distinguish moderate sources from strong ones. Seibert et
   al. (1994) computed concentration fields to identify
-  source areas of pollutants.
+  source areas of pollutants. The Concentration Weighted
+  Trajectory (CWT) approach considers the concentration of
+  a species together with its residence time in a grid
+  cell. The CWT approach has been shown to yield similar
+  results to the PSCF approach. The openair manual has more
+  details and examples of these approaches.
 
   A further useful refinement is to smooth the resulting
   surface, which is possible by setting \code{smooth =
@@ -246,15 +253,17 @@ kc1 <- importAURN("kc1", year = 2010)
 lond <- merge(lond, kc1, by = "date")
 
 # trajectory plot, no smoothing - and limit lat/lon area of interest
-trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm10")
+# use PSCF
+trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20),
+pollutant = "pm10", statistic = "pscf")
 
-# can smooth surface:
-trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
-smooth = TRUE)
+# can smooth surface, suing CWT approach:
+trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20),
+pollutant = "pm2.5", statistic = "cwt",  smooth = TRUE)
 
 # plot by season:
 trajLevel(subset(lond, lat > 40 & lat < 70 & lon >-20 & lon <20), pollutant = "pm2.5",
-smooth = TRUE, type = "season")
+statistic = "pscf", type = "season")
 }
 }
 \author{
