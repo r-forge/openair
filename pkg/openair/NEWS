@@ -1,3 +1,7 @@
+Changes in openair 0.9-0 [2013-02-13]
+=====================================
+*	Fix bug introduced in 0.8-0 for scatterPlot surfaces
+
 Changes in openair 0.8-0 [2012-11-30]
 =====================================
 *	make sure missing dates are plotted properly in scatterPlot
