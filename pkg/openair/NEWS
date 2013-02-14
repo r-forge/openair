@@ -1,6 +1,8 @@
 Changes in openair 0.9-0 [2013-02-13]
 =====================================
 *	Fix bug introduced in 0.8-0 for scatterPlot surfaces
+*	Add statistic and percentile option to polarAnnulus; allow
+	Conditional Probability Functions
 
 Changes in openair 0.8-0 [2012-11-30]
 =====================================
