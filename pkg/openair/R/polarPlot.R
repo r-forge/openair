@@ -473,12 +473,12 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                              na.rm = TRUE)
             Pval2 <- quantile(mydata[, pollutant], probs = percentile[2] / 100,
                              na.rm = TRUE)
-            sub <- paste("CPF probability for the ", percentile[1], " to ",
+            sub <- paste("CPF for the ", percentile[1], " to ",
                          percentile[2], "th", " percentile", sep = "")
 
         } else {
             Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
-            sub <- paste("CPF probability at the ", percentile,
+            sub <- paste("CPF at the ", percentile,
                          "th percentile (=", round(Pval, 1), ")", sep = "")
         }
     } else {
