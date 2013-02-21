@@ -86,7 +86,9 @@
   default a wind direction, wind speed interval) with
   mixing ratios greater than the \emph{overall} percentile
   concentration, and ny is the total number of samples in
-  the same wind sector (see Ashbaugh et al., 1985).}
+  the same wind sector (see Ashbaugh et al., 1985). Note
+  that percentile intervals can also be considered; see
+  \code{percentile} for details.}
 
   \item{resolution}{Two plot resolutions can be set:
   \dQuote{normal} (the default) and \dQuote{fine}, for a

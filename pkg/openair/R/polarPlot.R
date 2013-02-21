@@ -125,7 +125,9 @@
 ##' number of samples in the y bin (by default a wind direction, wind
 ##' speed interval) with mixing ratios greater than the \emph{overall}
 ##' percentile concentration, and ny is the total number of samples in
-##' the same wind sector (see Ashbaugh et al., 1985).
+##' the same wind sector (see Ashbaugh et al., 1985). Note that
+##' percentile intervals can also be considered; see \code{percentile}
+##' for details.
 ##' @param resolution Two plot resolutions can be set: \dQuote{normal} (the
 ##' default) and \dQuote{fine}, for a smoother plot. It should be noted that
 ##' plots with a \dQuote{fine} resolution can take longer to render and the
@@ -502,9 +504,9 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                          stdev = tapply(mydata[, pollutant], list(wd, x), function(x)
                          sd(x, na.rm = TRUE)),
                          cpf =  tapply(mydata[, pollutant], list(wd, x),
-                         function(x) (length(which(x >= Pval)) / length(x))),
+                         function(x) (length(which(x > Pval)) / length(x))),
                          cpfi =  tapply(mydata[, pollutant], list(wd, x),
-                         function(x) (length(which(x >= Pval1 & x <= Pval2)) / length(x))),
+                         function(x) (length(which(x > Pval1 & x <= Pval2)) / length(x))),
                          weighted.mean = tapply(mydata[, pollutant], list(wd, x),
                          function(x) (mean(x) * length(x) / nrow(mydata))),
                          percentile = tapply(mydata[, pollutant], list(wd, x), function(x)
