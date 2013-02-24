@@ -85,7 +85,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
                     transpose = FALSE, ...) {
 
     ## get rid of R check annoyances
-    year = site = NULL
+    year = site <- NULL; daylight <- NULL
 
     ## check data and add 'ste' filed if not there
     if (!"site" %in% names(mydata)) mydata$site <- "site"

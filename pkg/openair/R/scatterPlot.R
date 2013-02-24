@@ -681,7 +681,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
 
                             if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
-                                                  lty = 1, lwd = 1, se = ci, ...)
+                                                  lty = 1, lwd = 1, se = ci, Args, ...)
                             if (spline) panel.smooth.spline(x, y, col = myColors[group.number],
                                                             lwd = lwd, ...)
 
