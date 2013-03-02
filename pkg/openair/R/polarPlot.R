@@ -592,6 +592,12 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     results.grid <- ddply(mydata, type, prepare.grid)
 
+    ## with CPF make sure not >1 due to surface fitting
+    if (any(results.grid$z > 1, na.rm = TRUE) & statistic %in% c("cpf", "cpfi")) {
+        id <- which(results.grid$z > 1)
+        results.grid$z[id] <- 1
+    }
+
     ## remove wind speeds > upper to make a circle
     if (clip) results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
