@@ -9,6 +9,8 @@ Changes in openair 0.9-0 [2013-02-13]
 	daylight hours and growing season (Apr. to Sep.). Can use
 	latitude/longitude, if supplied
 *	Fix bug in aqStats when non predefined pollutant used
+*	Don't try and pad-out missing data in rollingMean when
+	returning results
 
 Changes in openair 0.8-0 [2012-11-30]
 =====================================

@@ -183,6 +183,10 @@ decimalDate <- function(x, date = "date") {
 ##' display rolling mean values in flexible ways e.g. with the rolling
 ##' window width left, right or centre aligned.
 ##'
+##' The function will try and fill in missing time gaps to get a full
+##' time sequence but return a data frame with the same number of rows
+##' supplied.
+##'
 ##' @param mydata A data frame containing a \code{date}
 ##' field. \code{mydata} must contain a \code{date} field in
 ##' \code{Date} or \code{POSIXct} format. The input time series must
@@ -231,14 +235,25 @@ rollingMean <- function(mydata, pollutant = "o3", width = 8, new.name = "rolling
 
     calc.rolling <- function(mydata, ...) {
 
+        ## need to know whether dates added
+        dates <- mydata$date
+
         ## pad missing hours
         mydata <- openair:::date.pad(mydata)
 
         ## make sure function is not called with window width longer than data
         if (width > nrow(mydata)) return(mydata)
 
-        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant], width, data.thresh, align,
+        mydata[, new.name] <- .Call("rollingMean", mydata[, pollutant],
+                                    width, data.thresh, align,
                                     PACKAGE = "openair")
+
+        if (length(dates) != nrow(mydata)) {
+            ## return what was put in
+            ## avoids adding missing data e.g. for factors
+            mydata <- mydata[mydata$date %in% dates, ]
+        }
+
         mydata
     }
 
