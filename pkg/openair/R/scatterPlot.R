@@ -116,13 +116,13 @@
 ##'   and R2 value is also shown.
 ##' @param ci Should the confidence intervals for the smooth/linear fit be
 ##'   shown?
-##' @param mod.line If \code{TRUE} three lines are added to the scatter plot to
-##'   help inform model evaluation. The 1:1 line is solid and the 1:0.5 and 1:2
-##'   lines are dashed. Together these lines help show how close a group of
-##'   points are to a 1:1 relationship and also show the points that are within
-##'   a factor of two (FAC2). Also, for \code{method = "scatter"} (the default)
-##'   the scales are made to be isometric. In time, more comprehensive model
-##'   evaluation statistics will be considered.
+##' @param mod.line If \code{TRUE} three lines are added to the
+##' scatter plot to help inform model evaluation. The 1:1 line is
+##' solid and the 1:0.5 and 1:2 lines are dashed. Together these lines
+##' help show how close a group of points are to a 1:1 relationship
+##' and also show the points that are within a factor of two
+##' (FAC2). \code{mod.line} is appropriately transformed when x or y
+##' axes are on a log scale.
 ##' @param cols Colours to be used for plotting. Options include
 ##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
 ##' and \code{RColorBrewer} colours --- see the \code{openair}
@@ -174,18 +174,28 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2} in NO2.
-##' @param ... Other graphical parameters are passed onto \code{cutData} and
-##'   an appropriate \code{lattice} plot function (\code{xyplot}, \code{levelplot}
-##'   or \code{hexbinplot} depending on \code{method}). For example,
-##'   \code{scatterPlot} passes the option \code{hemisphere = "southern"} on to
-##'   \code{cutData} to provide southern (rather than default northern) hemisphere
-##'   handling of \code{type = "season"}. Similarly, for the default case
-##'   \code{method = "scatter"} common axis and title labelling options (such
-##'   as \code{xlab}, \code{ylab}, \code{main}) are passed to \code{xyplot} via
-##'   \code{quickText} to handle routine formatting. Other common graphical
-##'   parameters, e.g. \code{layout} for panel arrangement,
-##'   \code{pch} for plot symbol and \code{lwd} and \code{lty}
-##'   for line width and type, as also available (see examples below).
+##' @param ... Other graphical parameters are passed onto
+##' \code{cutData} and an appropriate \code{lattice} plot function
+##' (\code{xyplot}, \code{levelplot} or \code{hexbinplot} depending on
+##' \code{method}). For example, \code{scatterPlot} passes the option
+##' \code{hemisphere = "southern"} on to \code{cutData} to provide
+##' southern (rather than default northern) hemisphere handling of
+##' \code{type = "season"}. Similarly, for the default case
+##' \code{method = "scatter"} common axis and title labelling options
+##' (such as \code{xlab}, \code{ylab}, \code{main}) are passed to
+##' \code{xyplot} via \code{quickText} to handle routine
+##' formatting. Other common graphical parameters, e.g. \code{layout}
+##' for panel arrangement, \code{pch} for plot symbol and \code{lwd}
+##' and \code{lty} for line width and type, as also available (see
+##' examples below).
+##'
+##' For \code{method = "hexbin"} it can be useful to transform the
+##' scale if it is dominated by a few very high values. This is
+##' possible by supplying two functions: one that that applies the
+##' transformation and the other that inverses it. For log scaling for
+##' example, \code{trans = function(x) log(x)} and \code{inv =
+##' function(x) exp(x)}. For a square root transform use \code{trans =
+##' sqrt} and \code{inv = function(x) x^2}.
 ##' @export
 ##' @return As well as generating the plot itself, \code{scatterPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -310,13 +320,6 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ##Args setup
     Args <- list(...)
 
-                                        #label controls
-    ##(main handled deferred to plot
-    ##because of unique by-method handling)
-    ##(pch handled specific at different points in code)
-
-                                        #note why is this different for pch, lty, lwd?
-
     Args$xlab <- if("xlab" %in% names(Args))
         quickText(Args$xlab, auto.text) else quickText(x, auto.text)
     Args$ylab <- if("ylab" %in% names(Args))
@@ -329,7 +332,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         Args$lty <- 1
     if (!"layout" %in% names(Args))
         Args$layout <- NULL
-    if ("trajStat" %in% names(Args)) trajStat <- Args$trajStat else trajStat <- "mean"
+    if ("trajStat" %in% names(Args))
+        trajStat <- Args$trajStat else trajStat <- "mean"
 
     Args$map.cols <- if ("map.cols" %in% names(Args)) Args$map.cols else "grey20"
     Args$map.alpha <- if ("map.alpha" %in% names(Args)) Args$map.alpha else 0.2
@@ -387,7 +391,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (avg.time != "default")  {
 
         ## can't have a type or group that is date-based
-        if (group %in% openair:::dateTypes | type  %in% openair:::dateTypes) stop ("Can't have an averging period set and a time-based 'type' or 'group'.")
+        if (group %in% openair:::dateTypes | type  %in% openair:::dateTypes)
+            stop ("Can't have an averging period set and a time-based 'type' or 'group'.")
         if ("default" %in% types) mydata$default <- 0 ## FIX ME
 
         mydata <- ddply(mydata, types, timeAverage, avg.time = avg.time,
@@ -397,9 +402,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     ## the following makes sure all variables are present, which depends on 'group'
     ## and 'type'
-    if (is.na(z) & method == "level") stop("Need to specify 'z' when using method = 'level'")
+    if (is.na(z) & method == "level")
+        stop("Need to specify 'z' when using method = 'level'")
 
-    ## ######################################################################################
+    ## #######################################################################
     if (any(type %in%  openair:::dateTypes) | !missing(avg.time)) {
 
         vars <- c("date", x, y)
@@ -427,7 +433,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         }
     }
 
-    if (!is.na(group)) if (group %in% type) stop ("Can't have 'group' also in 'type'.")
+    if (!is.na(group)) if (group %in% type)
+        stop ("Can't have 'group' also in 'type'.")
 
     ## decide if a trajectory plot is being drawn AND if a line is required rather
     ## than points
@@ -459,10 +466,12 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## continuous colors ####################################################################
 
     if (!is.na(z) & method == "scatter") {
-        if (z %in% openair:::dateTypes) stop("Colour coding requires 'z' to be continuous numeric variable'")
+        if (z %in% openair:::dateTypes)
+            stop("Colour coding requires 'z' to be continuous numeric variable'")
 
         ## check to see if type is numeric/integer
-        if (class(mydata[, z]) %in% c("integer", "numeric") == FALSE) stop(paste("Continuous colour coding requires ", z , " to be numeric", sep = ""))
+        if (class(mydata[, z]) %in% c("integer", "numeric") == FALSE)
+            stop(paste("Continuous colour coding requires ", z , " to be numeric", sep = ""))
 
         ## don't need a key with this
         key <- NULL
@@ -536,7 +545,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (is.na(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
 
     ## number of groups
-    npol <- length(levels(mydata[ ,group]))
+    npol <- length(levels(mydata[ , group]))
 
     if (!"pch" %in% names(Args)) Args$pch <- seq(npol)
 
@@ -569,9 +578,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             }
 
             if (plot.type %in% c("l", "s", "S", "spline")) {
-                key <- list(lines = list(col = myColors[1:npol], lty = Args$lty, lwd = Args$lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = key.position,
-                            columns = key.columns,
+                key <- list(lines = list(col = myColors[1:npol], lty = Args$lty,
+                            lwd = Args$lwd), text = list(lab = pol.name, cex = 0.8),
+                            space = key.position, columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
@@ -581,12 +590,11 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             pch = if("pch" %in% names(Args)) Args$pch else 1,
                             lines = list(col = myColors[1:npol],
                             lty = Args$lty, lwd = Args$lwd),
-                            text = list(lab = pol.name, cex = 0.8),  space = key.position,
+                            text = list(lab = pol.name, cex = 0.8), space = key.position,
                             columns = key.columns,
                             title = quickText(key.title, auto.text), cex.title = 1,
                             border = "grey")
             }
-
 
         } else {
 
@@ -641,9 +649,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             xscale.components = xscale.components.log10,
                             legend = legend,
                             panel =  panel.superpose,...,
-                            panel.groups = function(x, y, col.symbol, col, type, col.line,
+                            panel.groups = function(x, y, col.symbol, col,
+                            type, col.line,
                             lty, lwd, group.number,
-                            subscripts,...)
+                            subscripts, ...)
                         {
 
                             ## specific treatemt of trajectory lines
@@ -665,30 +674,37 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                             }
 
-                            if (!is.na(z) & !traj) panel.xyplot(x, y,
-                                                                col.symbol = thecol[subscripts],
+                            if (!is.na(z) & !traj)
+                                panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                                 as.table = TRUE, ...)
 
-                            if (is.na(z) & !traj) panel.xyplot(x, y, type = plot.type,
-                                                               col.symbol = myColors[group.number],
-                                                               col.line = myColors[group.number],
-                                                               lty = lty, lwd = lwd,
-                                                               as.table = TRUE,...)
+                            if (is.na(z) & !traj)
+                                panel.xyplot(x, y, type = plot.type,
+                                             col.symbol = myColors[group.number],
+                                             col.line = myColors[group.number],
+                                             lty = lty, lwd = lwd,
+                                             as.table = TRUE,...)
 
-                            if (linear & npol == 1) panel.linear(x, y, col = "black",
-                                         myColors[group.number], lwd = 1, lty = 5,
-                                         x.nam = x.nam, y.nam = y.nam, se = ci,  ...)
+                            if (linear & npol == 1)
+                                panel.linear(x, y, col = "black", myColors[group.number],
+                                             lwd = 1, lty = 5, x.nam = x.nam,
+                                             y.nam = y.nam, se = ci,  ...)
 
 
-                            if (smooth) panel.gam(x, y, col = "grey20", col.se = "black",
-                                                  lty = 1, lwd = 1, se = ci, Args, ...)
-                            if (spline) panel.smooth.spline(x, y, col = myColors[group.number],
-                                                            lwd = lwd, ...)
+                            if (smooth)
+                                panel.gam(x, y, col = "grey20", col.se = "black",
+                                          lty = 1, lwd = 1, se = ci, Args, ...)
+
+                            if (spline)
+                                panel.smooth.spline(x, y, col = myColors[group.number],
+                                                    lwd = lwd, ...)
 
                             ## add base map
-                            if (map && group.number == groupMax)  add.map(Args, ...)
+                            if (map && group.number == groupMax)
+                                add.map(Args, ...)
 
-                            if (mod.line && group.number == 1) panel.modline(...)
+                            if (mod.line && group.number == 1)
+                                panel.modline(log.x, log.y)
 
                             ## add reference lines
                             panel.abline(v = ref.x, lty = 5)
@@ -718,24 +734,27 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (method == "hexbin") {
         require(hexbin)
 
-        ##hexbin via ... handler
-
         hexbinplot.args <- list(x = myform, data = mydata,
                                 strip = strip,
+                                scales = scales,
                                 strip.left = strip.left,
                                 as.table = TRUE,
+                                yscale.components = yscale.components.log10,
+                                xscale.components = xscale.components.log10,
                                 par.strip.text = list(cex = 0.8),
                                 colorkey = TRUE,
                                 colramp = function(n) {openColours(method.col, n)},
-                                trans = function(x) log(x), inv = function(x) exp(x), ...,
+                                ...,
                                 panel = function(x,...) {
                                     panel.grid(-1, -1)
                                     panel.hexbinplot(x,...)
 
-                                    if (mod.line) panel.modline(...)
+                                    if (mod.line)
+                                        panel.modline(log.x, log.y)
 
                                     ## base map
-                                    if (map) add.map(Args, ...)
+                                    if (map)
+                                        add.map(Args, ...)
 
                                     ## add reference lines
                                     panel.abline(v = ref.x, lty = 5)
@@ -864,7 +883,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
             if (trajStat == "difference") {
                 breaks <- c(-15000, -10, -5, -1, 1, 5, 10, 15000)
-                labels <- c("<-10", "-10 to -5", "-5 to -1", "-1 to 1", "1 to 5", "5 to 10", ">10")
+                labels <- c("<-10", "-10 to -5", "-5 to -1", "-1 to 1",
+                            "1 to 5", "5 to 10", ">10")
             }
 
 
@@ -884,6 +904,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                strip = strip,
                                as.table = TRUE,
                                region = TRUE,
+                               scales = scales,
+                               yscale.components = yscale.components.log10,
+                               xscale.components = xscale.components.log10,
                                col.regions = col,
                                at = col.scale,
                                par.strip.text = list(cex = 0.8),
@@ -894,14 +917,12 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                    panel.levelplot(x, y, z, subscripts,
                                                    labels = FALSE, ...)
 
-                                   if (mod.line) {
-                                       panel.abline(a = c(0, 0.5), lty = 5)
-                                       panel.abline(a = c(0, 2), lty = 5)
-                                       panel.abline(a = c(0, 1), lty = 1)
-                                   }
+                                   if (mod.line)
+                                       panel.modline(log.x, log.y)
 
                                    ## add base map
-                                   if (map) add.map(Args, ...)
+                                   if (map)
+                                       add.map(Args, ...)
 
                                    ## add reference lines
                                    panel.abline(v = ref.x, lty = 5)
@@ -909,7 +930,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                                })
 
-                                        #z must exist to get here
+        ## z must exist to get here
         Args$main <- if("main" %in% names(Args))
             quickText(Args$main, auto.text) else
         quickText(paste(x, "vs.", y, "by levels of", z), auto.text)
@@ -947,7 +968,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
             grid <- expand.grid(x = xm, y = ym)
 
-            results <- data.frame(x = grid$x, y = grid$y, z = as.vector(dens))#, cond = subdata$site[1])
+            results <- data.frame(x = grid$x, y = grid$y, z = as.vector(dens))
             results
         }
 
@@ -969,26 +990,28 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         temp <- paste(type, collapse = "+")
         myform <- formula(paste("z ~ x * y", "|", temp, sep = ""))
 
-                                        #plot via ... handler
+
         levelplot.args <- list(x = myform, data = results.grid,
                                as.table = TRUE,
+                               scales = scales,
                                strip = strip,
+                               yscale.components = yscale.components.log10,
+                               xscale.components = xscale.components.log10,
                                strip.left = strip.left,
                                par.strip.text = list(cex = 0.8),
                                col.regions = col,
                                region = TRUE,
                                at = col.scale,
-                               colorkey = FALSE,
+                               colorkey = FALSE,...,
 
                                panel = function(x, y, z, subscripts,...) {
                                    panel.grid(-1, -1)
                                    panel.levelplot(x, y, z,
                                                    subscripts,
-                                                   at = col.scale,
                                                    pretty = TRUE,
-                                                   col.regions = col,
-                                                   labels = FALSE)
-                                   if (mod.line) panel.modline(...)
+                                                   labels = FALSE, ...)
+
+                                   if (mod.line) panel.modline(log.x, log.y)
 
                                    ## add reference lines
                                    panel.abline(v = ref.x, lty = 5)
@@ -1036,10 +1059,33 @@ add.map <- function (Args, ...) {
 }
 
 ## add simple FAC2 lines #################################################################
-panel.modline <- function (...) {
-    panel.abline(a = c(0, 0.5), lty = 5)
-    panel.abline(a = c(0, 2), lty = 5)
-    panel.abline(a = c(0, 1), lty = 1)
+## takes account of log-scaling for x/y, x and y
+panel.modline <- function (log.x = FALSE, log.y = FALSE) {
+
+    if (!log.x && !log.y) {
+        panel.curve(x * 1, lty = 1)
+        panel.curve(x * 2, lty = 5)
+        panel.curve(x / 2, lty = 5)
+    }
+
+    if (log.x && log.y) {
+        panel.curve(x * 1, lty = 1)
+        panel.curve(x + log10(2), lty = 5)
+        panel.curve(x - log10(2), lty = 5)
+    }
+
+    if (!log.x && log.y) {
+        panel.curve(log10(x), lty = 1)
+        panel.curve(log10(x) + log10(2), lty = 5)
+        panel.curve(log10(x) - log10(2), lty = 5)
+    }
+
+    if (log.x && !log.y) {
+        panel.curve(10^(x), lty = 1)
+        panel.curve(10^(x) / 2, lty = 5)
+        panel.curve(10^(x) * 2, lty = 5)
+    }
+
 }
 
 panel.linear <- function (x, y, form = y ~ x, method = "loess", x.nam, y.nam, ...,
