@@ -1061,6 +1061,7 @@ add.map <- function (Args, ...) {
 ## add simple FAC2 lines #################################################################
 ## takes account of log-scaling for x/y, x and y
 panel.modline <- function (log.x = FALSE, log.y = FALSE) {
+    x <- NULL ## silence R check
 
     if (!log.x && !log.y) {
         panel.curve(x * 1, lty = 1)
