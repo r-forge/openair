@@ -261,27 +261,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
 
     ## # EXPERIMENTAL LOG SCALING###############################################
     if(log) nlog <- 10 else nlog <- FALSE
-    yscale.components.log10 <- function(lim, ...) {
-        ans <- yscale.components.default(lim = lim, ...)
-        if(!log) return(ans)
-        tick.at <- logTicks(10^lim, loc = 1:9)
-        tick.at.major <- logTicks(10^lim, loc = 1)
-        major <- tick.at %in% tick.at.major
-        ans$left$ticks$at <- log(tick.at, 10)
-        ans$left$ticks$tck <- ifelse(major, 1.5, 0.75)
-        ans$left$labels$at <- log(tick.at, 10)
-        ans$left$labels$labels <- as.character(tick.at)
-        ans$left$labels$labels[!major] <- ""
-        ans$left$labels$check.overlap <- FALSE
-        ans
-    }
 
-    logTicks <- function (lim, loc = c(1, 5)) {
-        ii <- floor(log10(range(lim))) + c(-1, 2)
-        main <- 10^(ii[1]:ii[2])
-        r <- as.numeric(outer(loc, main, "*"))
-        r[lim[1] <= r & r <= lim[2]]
-    }
     ## #################################################################################
 
     vars <- c("date", pollutant)
@@ -570,7 +550,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
                         xlim = xlim,
                         strip = strip,
                         strip.left = strip.left,
-                        yscale.components = yscale.components.log10,
+                        yscale.components = yscale.components.log10ticks,
                         panel =  panel.superpose,
                         panel.groups = function(x, y, col.line, col.symbol, col, col.se, type,
                         group.number, lty, lwd, pch, subscripts,...) {

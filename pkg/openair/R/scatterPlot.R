@@ -343,46 +343,6 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## For Log scaling (adapted from lattice book ####################################
     if(log.x) nlog.x <- 10 else nlog.x <- FALSE
     if(log.y) nlog.y <- 10 else nlog.y <- FALSE
-    yscale.components.log10 <- function(lim, ...) {
-        ## adpated from lattice book
-        ans <- yscale.components.default(lim = lim, ...)
-        if(!log.y) return(ans)
-        tick.at <- logTicks(10^lim, loc = 1:9)
-        tick.at.major <- logTicks(10^lim, loc = 1)
-        major <- tick.at %in% tick.at.major
-        ans$left$ticks$at <- log(tick.at, 10)
-        ans$left$ticks$tck <- ifelse(major, 1.5, 0.75)
-        ans$left$labels$at <- log(tick.at, 10)
-        ans$left$labels$labels <- as.character(tick.at)
-        ans$left$labels$labels[!major] <- ""
-        ans$left$labels$check.overlap <- FALSE
-        ans
-    }
-
-    xscale.components.log10 <- function(lim, ...) {
-        ## adpated from lattice book
-        ans <- xscale.components.default(lim = lim, ...)
-        if(!log.x) return(ans)
-        tick.at <- logTicks(10^lim, loc = 1:9)
-        tick.at.major <- logTicks(10^lim, loc = 1)
-        major <- tick.at %in% tick.at.major
-        ans$bottom$ticks$at <- log(tick.at, 10)
-        ans$bottom$ticks$tck <- ifelse(major, 1.5, 0.75)
-        ans$bottom$labels$at <- log(tick.at, 10)
-        ans$bottom$labels$labels <- as.character(tick.at)
-        ans$bottom$labels$labels[!major] <- ""
-        ans$bottom$labels$check.overlap <- FALSE
-        ans
-    }
-
-
-    logTicks <- function (lim, loc = c(1, 5)) {
-        ii <- floor(log10(range(lim))) + c(-1, 2)
-        main <- 10^(ii[1]:ii[2])
-        r <- as.numeric(outer(loc, main, "*"))
-        r[lim[1] <= r & r <= lim[2]]
-    }
-
 
     ## average the data if necessary (default does nothing)
     ## note - need to average before cutting data up etc
@@ -645,8 +605,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             par.strip.text = list(cex = 0.8),
                             strip = strip,
                             strip.left = strip.left,
-                            yscale.components = yscale.components.log10,
-                            xscale.components = xscale.components.log10,
+                            yscale.components = yscale.components.log10ticks,
+                            xscale.components = xscale.components.log10ticks,
                             legend = legend,
                             panel =  panel.superpose,...,
                             panel.groups = function(x, y, col.symbol, col,
@@ -731,6 +691,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     }
 
+    ## ######################################################################################
     if (method == "hexbin") {
         require(hexbin)
 
@@ -739,8 +700,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 scales = scales,
                                 strip.left = strip.left,
                                 as.table = TRUE,
-                                yscale.components = yscale.components.log10,
-                                xscale.components = xscale.components.log10,
+                                yscale.components = yscale.components.log10ticks,
+                                xscale.components = xscale.components.log10ticks,
                                 par.strip.text = list(cex = 0.8),
                                 colorkey = TRUE,
                                 colramp = function(n) {openColours(method.col, n)},
@@ -769,14 +730,14 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        hexbinplot.args<- openair:::listUpdate(hexbinplot.args, Args)
+        hexbinplot.args <- openair:::listUpdate(hexbinplot.args, Args)
 
         ## plot
         plt <- do.call(hexbinplot, hexbinplot.args)
 
     }
 
-
+    ## ######################################################################################
     if (method == "level") {
 
         ## bin data
@@ -905,8 +866,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                as.table = TRUE,
                                region = TRUE,
                                scales = scales,
-                               yscale.components = yscale.components.log10,
-                               xscale.components = xscale.components.log10,
+                               yscale.components = yscale.components.log10ticks,
+                               xscale.components = xscale.components.log10ticks,
                                col.regions = col,
                                at = col.scale,
                                par.strip.text = list(cex = 0.8),
@@ -938,14 +899,15 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         if(!"pch" %in% names(Args))
             Args$pch <- 1
 
-                                        #reset for Args
+        ## reset for Args
         levelplot.args<- openair:::listUpdate(levelplot.args, Args)
 
-                                        #plot
+        ## plot
         plt <- do.call(levelplot, levelplot.args)
 
     }
 
+    ## ######################################################################################
     ## kernel density
 
     if (method == "density") {
@@ -995,8 +957,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                as.table = TRUE,
                                scales = scales,
                                strip = strip,
-                               yscale.components = yscale.components.log10,
-                               xscale.components = xscale.components.log10,
+                               yscale.components = yscale.components.log10ticks,
+                               xscale.components = xscale.components.log10ticks,
                                strip.left = strip.left,
                                par.strip.text = list(cex = 0.8),
                                col.regions = col,

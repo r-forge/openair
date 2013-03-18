@@ -14,6 +14,11 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Don't apply transformation for hexbinplot - users can add this
 *	Don't try and pad-out missing data in rollingMean when
 	returning results
+*	Make latticeExtra a 'depends'
+*	Don't copy-down data by default in timeAverage when requested
+	averaging time is < original. Better handling when 'site' is
+	present
+
 
 Changes in openair 0.8-0 [2012-11-30]
 =====================================
