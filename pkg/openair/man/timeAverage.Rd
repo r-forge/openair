@@ -140,7 +140,7 @@ daily <- timeAverage(mydata, avg.time = "day")
 
 ## make a 15-minute time series from an hourly one
 \dontrun{
-min15 <-  timeAverage(mydata, avg.time = "15 min")
+min15 <-  timeAverage(mydata, avg.time = "15 min", fill = TRUE)
 }
 }
 \author{
