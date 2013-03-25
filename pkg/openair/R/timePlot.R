@@ -138,9 +138,9 @@
 ##' for the variables plotted. Instead of taking the column headings
 ##' as names, the user can supply replacements. For example, if a
 ##' column had the name \dQuote{nox} and the user wanted a different
-##' description, then setting \code{pol.name = "nox before change"}
+##' description, then setting \code{name.pol = "nox before change"}
 ##' can be used. If more than one pollutant is plotted then use
-##' \code{c} e.g. \code{pol.name = c("nox here", "o3 there")}.
+##' \code{c} e.g. \code{name.pol = c("nox here", "o3 there")}.
 ##' @param date.breaks Number of major x-axis intervals to use. The function
 ##'   will try and choose a sensible number of dates/times as well as
 ##'   formatting the date/time appropriately to the range being considered.

@@ -11,7 +11,7 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Fix bug in aqStats when non predefined pollutant used
 *	Allow log10 factor of 2 lines in scatterPlot when x and/or
 	y are on a log scale
-*	Don't apply transformation for hexbinplot - users can add this
+*	Allow users to supply own transform/inverse functions to hexbin
 *	Don't try and pad-out missing data in rollingMean when
 	returning results
 *	Make latticeExtra a 'depends'

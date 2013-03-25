@@ -235,10 +235,12 @@
   transform the scale if it is dominated by a few very high
   values. This is possible by supplying two functions: one
   that that applies the transformation and the other that
-  inverses it. For log scaling for example, \code{trans =
-  function(x) log(x)} and \code{inv = function(x) exp(x)}.
-  For a square root transform use \code{trans = sqrt} and
-  \code{inv = function(x) x^2}.}
+  inverses it. For log scaling (the default) for example,
+  \code{trans = function(x) log(x)} and \code{inv =
+  function(x) exp(x)}. For a square root transform use
+  \code{trans = sqrt} and \code{inv = function(x) x^2}. To
+  not carry out any transformation the options \code{trans
+  = NULL} and \code{inv = NULL} should be used.}
 }
 \value{
   As well as generating the plot itself, \code{scatterPlot}
