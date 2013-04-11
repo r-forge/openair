@@ -184,6 +184,10 @@
 ##' using a value > 1 because of the risk of removing real data
 ##' points. It is recommended to consider your data with care. Also,
 ##' the \code{polarFreq} function can be of use in such circumstances.
+##' @param mis.col When \code{min.bin} is > 1 it can be useful to show
+##' where data are removed on the plots. This is done by shading the
+##' missing data in \code{mis.col}. To not highlight missing data when
+##' \code{min.bin} > 1 choose \code{mis.col = "transparent"}.
 ##' @param upper This sets the upper limit wind speed to be
 ##' used. Often there are only a relatively few data points at very
 ##' high wind speeds and plotting all of them can reduce the useful
@@ -338,7 +342,7 @@
 polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "default",
                       statistic = "mean", resolution = "normal", limits = NA,
                       exclude.missing = TRUE, uncertainty = FALSE, percentile = NA,
-                      cols = "default", min.bin = 1, upper = NA, angle.scale = 315,
+                      cols = "default", min.bin = 1, mis.col = "grey30", upper = NA, angle.scale = 315,
                       units = x, force.positive = TRUE, k = 100, normalise = FALSE,
                       key.header = "", key.footer = pollutant, key.position = "right",
                       key = TRUE, auto.text = TRUE, ...) {
@@ -521,6 +525,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         binned.len <- as.vector(bin.len)
 
         ids <- which(binned.len < min.bin)
+
         binned[ids] <- NA
         ## ####################Smoothing#################################################
         if (force.positive) n <- 0.5 else n <- 1
@@ -590,7 +595,23 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     ## #################################################################
 
-    results.grid <- ddply(mydata, type, prepare.grid)
+    ## if min.bin >1 show the missing data. Work this out by running twice:
+    ## first time with no missings, second with min.bin.
+    ## Plot one surface on top of the other.
+
+    if (!missing(min.bin)) {
+        tmp <- min.bin
+        min.bin <- 0
+        results.grid1 <- ddply(mydata, type, prepare.grid)
+
+        min.bin <- tmp
+        results.grid <- ddply(mydata, type, prepare.grid)
+        results.grid$miss <- results.grid1$z
+
+    } else {
+
+        results.grid <- ddply(mydata, type, prepare.grid)
+    }
 
     ## with CPF make sure not >1 due to surface fitting
     if (any(results.grid$z > 1, na.rm = TRUE) & statistic %in% c("cpf", "cpfi")) {
@@ -696,13 +717,21 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                  ylim = c(-upper * 1.025, upper * 1.025),
                  colorkey = FALSE, legend = legend,
 
-                 panel = function(x, y, z,subscripts,...) {
+                 panel = function(x, y, z, subscripts,...) {
+
+                     ## show missing data due to min.bin
+                     if (min.bin > 1) {
+                         panel.levelplot(x, y, results.grid$miss,
+                                         subscripts,
+                                         col.regions = mis.col,
+                                         labels = FALSE)
+                     }
                      panel.levelplot(x, y, z,
                                      subscripts,
                                      at = col.scale,
                                      pretty = TRUE,
                                      col.regions = col,
-                                     labels = FALSE)
+                                    labels = FALSE)
 
                      angles <- seq(0, 2 * pi, length = 360)
 

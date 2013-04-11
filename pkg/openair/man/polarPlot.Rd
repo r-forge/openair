@@ -7,11 +7,11 @@
     resolution = "normal", limits = NA,
     exclude.missing = TRUE, uncertainty = FALSE,
     percentile = NA, cols = "default", min.bin = 1,
-    upper = NA, angle.scale = 315, units = x,
-    force.positive = TRUE, k = 100, normalise = FALSE,
-    key.header = "", key.footer = pollutant,
-    key.position = "right", key = TRUE, auto.text = TRUE,
-    ...)
+    mis.col = "grey30", upper = NA, angle.scale = 315,
+    units = x, force.positive = TRUE, k = 100,
+    normalise = FALSE, key.header = "",
+    key.footer = pollutant, key.position = "right",
+    key = TRUE, auto.text = TRUE, ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing
@@ -163,6 +163,12 @@
   to consider your data with care. Also, the
   \code{polarFreq} function can be of use in such
   circumstances.}
+
+  \item{mis.col}{When \code{min.bin} is > 1 it can be
+  useful to show where data are removed on the plots. This
+  is done by shading the missing data in \code{mis.col}. To
+  not highlight missing data when \code{min.bin} > 1 choose
+  \code{mis.col = "transparent"}.}
 
   \item{upper}{This sets the upper limit wind speed to be
   used. Often there are only a relatively few data points

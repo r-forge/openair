@@ -19,6 +19,7 @@ Changes in openair 0.9-0 [2013-02-13]
 	averaging time is < original. Better handling when 'site' is
 	present
 *	Update AURN help file site information; add site type
+*	Show where data removed when min.bin > 1 for polarPlot
 
 
 Changes in openair 0.8-0 [2012-11-30]
