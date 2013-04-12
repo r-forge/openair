@@ -720,12 +720,12 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                  panel = function(x, y, z, subscripts,...) {
 
                      ## show missing data due to min.bin
-                     if (min.bin > 1) {
+                     if (min.bin > 1)
                          panel.levelplot(x, y, results.grid$miss,
                                          subscripts,
                                          col.regions = mis.col,
                                          labels = FALSE)
-                     }
+
                      panel.levelplot(x, y, z,
                                      subscripts,
                                      at = col.scale,
