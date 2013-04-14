@@ -7,7 +7,7 @@
     resolution = "normal", limits = NA,
     exclude.missing = TRUE, uncertainty = FALSE,
     percentile = NA, cols = "default", min.bin = 1,
-    mis.col = "grey30", upper = NA, angle.scale = 315,
+    mis.col = "grey", upper = NA, angle.scale = 315,
     units = x, force.positive = TRUE, k = 100,
     normalise = FALSE, key.header = "",
     key.footer = pollutant, key.position = "right",
@@ -138,8 +138,8 @@
   percentiles are calculated.
 
   \code{percentile} is also used for the Conditional
-  Probaility Function (CPF) plots. \code{percentile} can be
-  of length two, in which case the percentile
+  Probability Function (CPF) plots. \code{percentile} can
+  be of length two, in which case the percentile
   \emph{interval} is considered for use with CPF. For
   example, \code{percentile = c(90, 100)} will plot the CPF
   for concentrations between the 90 and 100th percentiles.
