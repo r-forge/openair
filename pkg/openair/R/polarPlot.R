@@ -487,20 +487,16 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
             if (length(percentile) == 3) {
                 ## in this case there is a trim value as a proprtion of the mean
                 Mean <- mean(mydata[, pollutant], na.rm = TRUE)
-                Pval1 <- quantile(subset(mydata[[pollutant]], mydata[[pollutant]] >= Mean * percentile[3]),
-                                  probs = percentile[1] / 100, na.rm = TRUE)
-
-                Pval2 <- quantile(subset(mydata[[pollutant]], mydata[[pollutant]] >= Mean * percentile[3]),
-                                   probs = percentile[2] / 100, na.rm = TRUE)
+                Pval <- quantile(subset(mydata[[pollutant]], mydata[[pollutant]] >= Mean * percentile[3]),
+                                  probs = percentile[1:2] / 100, na.rm = TRUE)
 
             } else {
-                Pval1 <- quantile(mydata[, pollutant], probs = percentile[1] / 100,
-                                  na.rm = TRUE)
-                Pval2 <- quantile(mydata[, pollutant], probs = percentile[2] / 100,
-                                  na.rm = TRUE)
+
+                Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+
             }
-            sub <- paste("CPF (", Pval1, " to ",
-                         Pval2, ")", sep = "")
+            sub <- paste("CPF (", Pval[1], " to ",
+                         Pval[2], ")", sep = "")
 
         } else {
             Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
@@ -510,6 +506,8 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     } else {
         sub <- NULL
     }
+
+    ## ######################################################################
 
     prepare.grid <- function(mydata) {
         ## identify which ws and wd bins the data belong
@@ -530,7 +528,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                          cpf =  tapply(mydata[, pollutant], list(wd, x),
                          function(x) (length(which(x > Pval)) / length(x))),
                          cpfi =  tapply(mydata[, pollutant], list(wd, x),
-                         function(x) (length(which(x > Pval1 & x <= Pval2)) / length(x))),
+                         function(x) (length(which(x > Pval[1] & x <= Pval[2])) / length(x))),
                          weighted.mean = tapply(mydata[, pollutant], list(wd, x),
                          function(x) (mean(x) * length(x) / nrow(mydata))),
                          percentile = tapply(mydata[, pollutant], list(wd, x), function(x)
