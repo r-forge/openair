@@ -446,7 +446,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         }
     }
 
-    ## ##############################################################################
+    ## ####################################################################
 
 
     ## cutData depending on type
@@ -469,8 +469,15 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     if (resolution == "ultra.fine") int <- 401  ## very large files!
 
     ## binning wd data properly
+    ## use 10 degree binning of wd if already binned, else 5
+    if (all(mydata[, wd] %% 10 == 0, na.rm = TRUE)) {
+        wd.int <- 10
+    } else {
+        wd.int <- 5 ## how to split wd
+    }
+
     ws.seq <- seq(min.ws, max.ws, length = 30)
-    wd.seq <- seq(from = 10, to = 360, by = 10) ## wind directions from 10 to 360
+    wd.seq <- seq(from = wd.int, to = 360, by = wd.int) ## wind directions from wd.int to 360
     ws.wd <- expand.grid(x = ws.seq, wd = wd.seq)
 
     u <- with(ws.wd, x * sin(pi * wd / 180))  ## convert to polar coords
@@ -525,7 +532,9 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     prepare.grid <- function(mydata) {
         ## identify which ws and wd bins the data belong
-        wd <- cut(mydata[ , wd], breaks = seq(0, 360, 10), include.lowest = TRUE)
+        wd <- cut(wd.int * ceiling(mydata[, wd] / wd.int - 0.5),
+                  breaks = seq(0, 360, wd.int), include.lowest = TRUE)
+
         x <- cut(mydata[ , x], breaks = seq(0, max.ws, length = 31), include.lowest = TRUE)
 
         binned <- switch(statistic,
@@ -559,7 +568,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         ids <- which(binned.len < min.bin)
 
         binned[ids] <- NA
-        ## ####################Smoothing#################################################
+        ## ####################Smoothing#######################################
         if (force.positive) n <- 0.5 else n <- 1
 
         ## no uncertainty to calculate
