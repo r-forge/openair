@@ -152,7 +152,10 @@
   greater than or equal to the trim * mean value are
   considered \emph{before} the percentile intervals are
   calculated. The effect is to extract more detail from
-  many source signatures. See the manual for examples.}
+  many source signatures. See the manual for examples.
+  Finally, if the trim value is less than zero the
+  percentile range is interpreted as absolute concentration
+  values and subsetting is carried out directly.}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},

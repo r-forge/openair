@@ -177,7 +177,9 @@
 ##' ensures that values greater than or equal to the trim * mean value
 ##' are considered \emph{before} the percentile intervals are
 ##' calculated. The effect is to extract more detail from many source
-##' signatures. See the manual for examples.
+##' signatures. See the manual for examples. Finally, if the trim
+##' value is less than zero the percentile range is interpreted as
+##' absolute concentration values and subsetting is carried out directly.
 ##' @param cols Colours to be used for plotting. Options include
 ##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet}
 ##' and \code{RColorBrewer} colours --- see the \code{openair}
@@ -486,13 +488,25 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
             if (length(percentile) == 3) {
                 ## in this case there is a trim value as a proprtion of the mean
+                ## if this value <0 use absolute values as range
                 Mean <- mean(mydata[, pollutant], na.rm = TRUE)
-                Pval <- quantile(subset(mydata[[pollutant]], mydata[[pollutant]] >= Mean * percentile[3]),
-                                  probs = percentile[1:2] / 100, na.rm = TRUE)
+
+                if (percentile[3] < 0) {
+
+                    Pval <- percentile[1:2]
+
+                } else  {
+                    Pval <- quantile(subset(mydata[[pollutant]],
+                                            mydata[[pollutant]] >= Mean *
+                                            percentile[3]),
+                                     probs = percentile[1:2] / 100,
+                                     na.rm = TRUE)
+                }
 
             } else {
 
-                Pval <- quantile(mydata[, pollutant], probs = percentile / 100, na.rm = TRUE)
+                Pval <- quantile(mydata[, pollutant],
+                                 probs = percentile / 100, na.rm = TRUE)
 
             }
             sub <- paste("CPF (", format(Pval[1], digits = 2), " to ",
