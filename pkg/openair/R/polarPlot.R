@@ -187,6 +187,18 @@
 ##' user can supply a list of colour names recognised by R (type
 ##' \code{colours()} to see the full list). An example would be
 ##' \code{cols = c("yellow", "green", "blue")}
+##' @param weights At the edges of the plot there may only be a few
+##' data points in each wind speed-direction interval, which could in
+##' some situations distort the plot if the concentrations are
+##' high. \code{weights} applies a weighting to reduce their
+##' influence. For example and by default if only a single data point
+##' exists then the weighting factor is 0.25 and for two points
+##' 0.5. To not apply any weighting and use the data as is, use
+##' \code{weights = c(1, 1, 1)}.
+##'
+##' An alternative to down-weighting these points they can be removed
+##' altogether using \code{min.bin}.
+##'
 ##' @param min.bin The minimum number of points allowed in a wind
 ##' speed/wind direction bin.  The default is 1. A value of two
 ##' requires at least 2 valid records in each bin an so on; bins with
@@ -352,7 +364,8 @@
 polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "default",
                       statistic = "mean", resolution = "normal", limits = NA,
                       exclude.missing = TRUE, uncertainty = FALSE, percentile = NA,
-                      cols = "default", min.bin = 1, mis.col = "grey", upper = NA, angle.scale = 315,
+                      cols = "default", weights = c(0.25, 0.5, 0.75), min.bin = 1,
+                      mis.col = "grey", upper = NA, angle.scale = 315,
                       units = x, force.positive = TRUE, k = 100, normalise = FALSE,
                       key.header = "", key.footer = pollutant, key.position = "right",
                       key = TRUE, auto.text = TRUE, ...) {
@@ -376,6 +389,8 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                           "weighted.mean", "percentile", "cpf")) {
         stop (paste("statistic '", statistic, "' not recognised", sep = ""))
     }
+
+    if (length(weights) != 3) stop ("weights should be of length 3.")
 
     if (missing(key.header)) key.header <- statistic
     if (key.header == "weighted.mean") key.header <- c("weighted", "mean")
@@ -565,8 +580,17 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         bin.len <- tapply(mydata[, pollutant], list(x, wd), length)
         binned.len <- as.vector(bin.len)
 
-        ids <- which(binned.len < min.bin)
+        ## apply weights
+        W <- rep(1, times = length(binned))
+        ids <- which(binned.len == 1)
+        W[ids] <- W[ids] * weights[1]
+        ids <- which(binned.len == 2)
+        W[ids] <- W[ids] * weights[2]
+        ids <- which(binned.len == 3)
+        W[ids] <- W[ids] * weights[3]
 
+        ## set missing to NA
+        ids <- which(binned.len < min.bin)
         binned[ids] <- NA
         ## ####################Smoothing#######################################
         if (force.positive) n <- 0.5 else n <- 1
@@ -574,7 +598,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         ## no uncertainty to calculate
         if (!uncertainty) {
             ## catch errors when not enough data to calculate surface
-            Mgam <- try(gam(binned ^ n ~ s(u, v, k = k)), TRUE)
+            Mgam <- try(gam(binned ^ n ~ s(u, v, k = k), weights = W), TRUE)
             if (!inherits(Mgam, "try-error")) {
                 pred <- predict.gam(Mgam, input.data)
                 pred <- pred ^ (1 / n)

@@ -22,6 +22,10 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Show where data removed when min.bin > 1 for polarPlot
 *	Add 'trim' value to percentiles in polarPlot to extract more
 	source information.
+*	Add 'weights' argument to polarPlot to down-weight bins with
+	few data points - alternative to min.bin
+*	Use more wd sectors for surface modelling when wd is not
+	already rounded to 10 degree intervals in polarPlot
 
 
 Changes in openair 0.8-0 [2012-11-30]
