@@ -565,12 +565,13 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
                                 panel.grid(-1, 0)
                             }
 
-                            panel.xyplot(x, y, type = plot.type, lty = lty, lwd = lwd,
+                            panel.xyplot(x, y, type = plot.type, lty = lty, lwd = lwd, pch = pch,
                                          col.line = myColors[group.number],...)
                             ## deal with points separately - useful if missing data where line
                             ## does not join consequtive points
                             if (any(!is.na(extra.args$pch))) {
-                                lpoints(x, y, type = "p", pch = extra.args$pch,
+
+                                lpoints(x, y, type = "p", pch = extra.args$pch[group.number],
                                         col.symbol = myColors[group.number],...)
                             }
                             if (smooth) panel.gam(x, y, col = myColors[group.number] ,

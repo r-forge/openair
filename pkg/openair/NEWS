@@ -26,6 +26,7 @@ Changes in openair 0.9-0 [2013-02-13]
 	few data points - alternative to min.bin
 *	Use more wd sectors for surface modelling when wd is not
 	already rounded to 10 degree intervals in polarPlot
+*	Fix bug in timePlot when pch supplied and group = TRUE.
 
 
 Changes in openair 0.8-0 [2012-11-30]
