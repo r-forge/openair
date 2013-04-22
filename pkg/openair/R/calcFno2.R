@@ -237,10 +237,14 @@ calcFno2 <- function(input,
 
         hourly <- cbind(date = input.all$date, nox = input.all$nox, hourly)
 
-        gaps <- data.frame(date = input$date[-ids], nox = input$nox[-ids],
-                           no2 = input$no2[-ids], o3 = NA)
+        if (length(input$date[-ids]) > 0) {
+            gaps <- data.frame(date = input$date[-ids], nox = input$nox[-ids],
+                               no2 = input$no2[-ids], o3 = NA)
+            hourly <- rbind(hourly, gaps)
 
-        hourly <- rbind(hourly, gaps)
+        }
+
+
         hourly <- hourly[order(hourly$date), ]
 
         plot.fno2(results,...)

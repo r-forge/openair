@@ -471,7 +471,9 @@
 ##'
 ##'
 ##'
-importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE, units = "mass", extra = FALSE) {
+##'
+importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE,
+                      units = "mass", extra = FALSE) {
 
     ## get rid of R check annoyances
     sites <- NULL; v10 <- NULL; v2.5 <- NULL
@@ -504,12 +506,13 @@ importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE,
      }
 
     thedata <- lapply(files, loadData)
-    thedata <- do.call(rbind.fill, thedata)
+
+    thedata <- ldply(thedata, rbind.fill)
 
     if (is.null(thedata)) stop("No data to import - check site codes and year.", call. = FALSE)
 
     ## pad missing data
-    thedata <- date.pad(thedata)
+    thedata <- openair:::date.pad(thedata)
 
     thedata$code <- thedata$site
 
