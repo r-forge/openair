@@ -38,7 +38,12 @@
 ##' percentiles can be calculated.
 ##'
 ##' \item \bold{roll.8.O3.gt.100} --- number of days when the daily
-##' maximum rolling 8-hour mean ozone concentration is >100 ug/m3.
+##' maximum rolling 8-hour mean ozone concentration is >100
+##' ug/m3. This is the target value.
+##'
+##'  \item \bold{roll.8.O3.gt.120} --- number of days when the daily
+##' maximum rolling 8-hour mean ozone concentration is >120
+##' ug/m3. This is the Limit Value not to be exceeded > 10 days a year.
 ##'
 ##' \item \bold{AOT40} --- is the accumulated amount of ozone over the
 ##' threshold value of 40 ppb for daylight hours in the growing season
@@ -126,13 +131,13 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
             days
         }
 
-        ozoneRolling <- function(mydata, ...) {
+        ozoneRolling <- function(mydata, threshold, ...) {
             ## first calculate rolling hourly means
 
             mydata[, "rolling"] <- .Call("rollingMean", mydata[, pollutant], 8, data.thresh, "right",
                                          PACKAGE = "openair")
             daily <- timeAverage(mydata, avg.time = "day", statistic = "max", data.thresh)
-            days <- length(which(daily[ , "rolling"] > 100))
+            days <- length(which(daily[ , "rolling"] > threshold))
             days
         }
 
@@ -239,15 +244,19 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
 
         if (length(grep("o3", pollutant, ignore.case = TRUE)) == 1) {
             rollingO3 <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
-                               ozoneRolling, ...)
+                               ozoneRolling, threshold = 100, ...)
             names(rollingO3)[2] <- "roll.8.O3.gt.100"
+
+            rollingO3b <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
+                               ozoneRolling, threshold = 120, ...)
+            names(rollingO3b)[2] <- "roll.8.O3.gt.120"
 
             AOT40 <- ddply(mydata[ , c("date", "year", pollutant)], .(year),
                            AOT40, ...)
             names(AOT40)[2] <- "AOT40"
 
             o3.results <- list(dataCapture, Mean, Min, Max, Median, maxDaily, rollMax8, rollMax24,
-                               Percentile, rollingO3, AOT40)
+                               Percentile, rollingO3, rollingO3b, AOT40)
             o3.results <- Reduce(function(x, y, by = 'year') merge(x, y, by = 'year',
                                                 all = TRUE), o3.results)
             o3.results$pollutant <- "O3"
