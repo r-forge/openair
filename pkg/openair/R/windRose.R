@@ -79,15 +79,16 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' direction bias is colour-coded to show negative bias in one colour
 ##' and positive bias in another.
 ##'
-##' @usage windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int = 2,
-##' angle = 30, type = "default", cols = "default", grid.line = NULL, width = 1,
-##' seg = NULL, auto.text = TRUE, breaks = 4, offset = 10, paddle = TRUE,
-##' key.header = NULL, key.footer = "(m/s)", key.position = "bottom",
-##' key = TRUE, dig.lab = 5, statistic = "prop.count", pollutant = NULL,
-##' annotate = TRUE, border = NA, ...)
+##' @usage windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
+##' ws.int = 2, angle = 30, type = "default", cols = "default",
+##' grid.line = NULL, width = 1, seg = NULL, auto.text = TRUE, breaks
+##' = 4, offset = 10, max.freq = NULL, paddle = TRUE, key.header =
+##' NULL, key.footer = "(m/s)", key.position = "bottom", key = TRUE,
+##' dig.lab = 5, statistic = "prop.count", pollutant = NULL, annotate
+##' = TRUE, border = NA, ...)
 ##'
 ##'
-##'     pollutionRose(mydata, pollutant = "nox", key.footer = pollutant,
+##'     pollutionRose(mydata,y pollutant = "nox", key.footer = pollutant,
 ##'        key.position = "right", key = TRUE, breaks = 6, paddle = FALSE, seg = 0.9, ...)
 ##'
 ##'
@@ -153,6 +154,9 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##'   the data into segments <1, 1-10, 10-100, >100.
 ##' @param offset The size of the 'hole' in the middle of the plot, expressed
 ##'   as a percentage of the polar axis scale, default 10.
+##' @param max.freq Controls the scaling used by setting the maximum
+##' value for the radial limits. This is useful to ensure several
+##' plots use the same radial limits.
 ##' @param paddle Either \code{TRUE} (default) or \code{FALSE}. If \code{TRUE}
 ##'   plots rose using `paddle' style spokes. If \code{FALSE} plots rose using
 ##'   `wedge' style spokes.
@@ -258,14 +262,14 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##'
 ##' ## results show postive bias in wd and ws
 ##' pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
-windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int = 2,
-                      angle = 30, type = "default",
+windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
+                      ws.int = 2, angle = 30, type = "default",
                       cols = "default", grid.line = NULL, width = 1, seg = NULL,
                       auto.text = TRUE, breaks = 4, offset = 10,
-                      paddle = TRUE, key.header = NULL, key.footer = "(m/s)",
-                      key.position = "bottom", key = TRUE, dig.lab = 5,
-                      statistic = "prop.count", pollutant = NULL, annotate = TRUE,
-                      border = NA,
+                      max.freq = NULL, paddle = TRUE, key.header = NULL,
+                      key.footer = "(m/s)", key.position = "bottom",
+                      key = TRUE, dig.lab = 5, statistic = "prop.count",
+                      pollutant = NULL, annotate = TRUE, border = NA,
                       ...)
 {
 
@@ -543,7 +547,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
     results.grid$calm <- stat.labcalm(results.grid$calm)
     results.grid$mean.wd <- stat.labcalm(results.grid$mean.wd)
 
-    ## proper names of labelling ###################################################
+    ## proper names of labelling###########################################
     strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
@@ -555,10 +559,17 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA, ws.int =
         col <- openColours(cols, length(theLabels))
     }
 
-    max.freq <- max(results.grid[, (length(type) + 1) : (length(theLabels) +
-                                                         length(type))], na.rm = TRUE)
+    if (is.null(max.freq)) {
+        max.freq <- max(results.grid[, (length(type) + 1):(length(theLabels) +
+                                                             length(type))],
+                        na.rm = TRUE)
+    } else {
+        max.freq <- max.freq
+    }
+
     off.set <- max.freq * (offset / 100)
-    box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25, length.out = length(theLabels)) ^ 4
+    box.widths <- seq(0.002 ^ 0.25, 0.016 ^ 0.25,
+                      length.out = length(theLabels)) ^ 4
     box.widths <- box.widths * max.freq * angle / 5
 
     ## key, colorkey, legend

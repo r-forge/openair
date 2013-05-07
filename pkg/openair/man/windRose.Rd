@@ -6,11 +6,11 @@
   windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 =
     NA, ws.int = 2, angle = 30, type = "default", cols =
     "default", grid.line = NULL, width = 1, seg = NULL,
-    auto.text = TRUE, breaks = 4, offset = 10, paddle =
-    TRUE, key.header = NULL, key.footer = "(m/s)",
-    key.position = "bottom", key = TRUE, dig.lab = 5,
-    statistic = "prop.count", pollutant = NULL, annotate =
-    TRUE, border = NA, ...)
+    auto.text = TRUE, breaks = 4, offset = 10, max.freq =
+    NULL, paddle = TRUE, key.header = NULL, key.footer =
+    "(m/s)", key.position = "bottom", key = TRUE, dig.lab =
+    5, statistic = "prop.count", pollutant = NULL, annotate
+    = TRUE, border = NA, ...)
 
   pollutionRose(mydata, pollutant = "nox", key.footer =
     pollutant, key.position = "right", key = TRUE, breaks =
@@ -107,6 +107,10 @@
   \item{offset}{The size of the 'hole' in the middle of the
   plot, expressed as a percentage of the polar axis scale,
   default 10.}
+
+  \item{max.freq}{Controls the scaling used by setting the
+  maximum value for the radial limits. This is useful to
+  ensure several plots use the same radial limits.}
 
   \item{paddle}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} plots rose using `paddle'
