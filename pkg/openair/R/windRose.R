@@ -88,12 +88,9 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' = TRUE, border = NA, ...)
 ##'
 ##'
-<<<<<<< .mine
 ##'     pollutionRose(mydata, pollutant = "nox", key.footer = pollutant,
-=======
-##' pollutionRose(mydata, pollutant = "nox", key.footer = pollutant,
->>>>>>> .r759
-##'        key.position = "right", key = TRUE, breaks = 6, paddle = FALSE, seg = 0.9, ...)
+##'        key.position = "right", key = TRUE, breaks = 6, paddle = FALSE,
+##' seg = 0.9, ...)
 ##'
 ##'
 ##' @aliases windRose pollutionRose

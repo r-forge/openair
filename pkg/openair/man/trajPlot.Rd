@@ -4,14 +4,14 @@
 \title{Trajectory plots with conditioning}
 \usage{
   trajLevel(mydata, lon = "lon", lat = "lat",
-    pollutant = "pm10", type = "default", smooth = FALSE,
+    pollutant = "height", type = "default", smooth = FALSE,
     statistic = "frequency", percentile = 90, map = TRUE,
     lon.inc = 1, lat.inc = 1, min.bin = 1, map.fill = TRUE,
     map.res = "default", map.cols = "grey40",
     map.alpha = 0.3, ...)
 
   trajPlot(mydata, lon = "lon", lat = "lat",
-    pollutant = "pm10", type = "default", smooth = FALSE,
+    pollutant = "height", type = "default", smooth = FALSE,
     statistic = "mean", percentile = 90, map = TRUE,
     lon.inc = 1, lat.inc = 1, min.bin = 1, group = NA,
     map.fill = TRUE, map.res = "default",
@@ -26,7 +26,8 @@
 
   \item{lat}{Column containing the latitude, as a decimal.}
 
-  \item{pollutant}{Pollutant to be plotted.}
+  \item{pollutant}{Pollutant to be plotted. By default the
+  trajectory height is used.}
 
   \item{type}{\code{type} determines how the data are split
   i.e. conditioned, and then plotted. The default is will
