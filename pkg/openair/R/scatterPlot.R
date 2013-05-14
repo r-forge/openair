@@ -340,6 +340,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$map.cols <- if ("map.cols" %in% names(Args)) Args$map.cols else "grey20"
     Args$map.alpha <- if ("map.alpha" %in% names(Args)) Args$map.alpha else 0.2
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.fill else TRUE
+    Args$map.res <- if ("map.res" %in% names(Args)) Args$map.res else "default"
 
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
@@ -1013,13 +1014,18 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 ## function to add base map ##############################################################
 add.map <- function (Args, ...) {
     require(mapdata)
+    if (Args$map.res == "default") {
+        res <- "world"
+    } else {
+        res <- "worldHires"
+    }
 
     if (Args$map.fill) {
-        mp <- map(database="worldHires", plot = FALSE, fill = TRUE)
+         mp <- map(database = res, plot = FALSE, fill = TRUE)
         panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
                       alpha = Args$map.alpha)
     } else {
-        mp <- map(database="worldHires", plot = FALSE)
+        mp <- map(database = res, plot = FALSE)
         llines(mp$x, mp$y, col = "black")
 
     }

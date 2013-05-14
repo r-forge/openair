@@ -31,6 +31,8 @@ Changes in openair 0.9-0 [2013-02-13]
 	not to be exceeded more than 10 days a year.
 *	Add max.freq option to windRose/pollutionRose to control
 	extent of radial limits
+*	Add map.res option to trajPlot and trajLevel and make default
+	lower resolution. Make default pollutant 'height' (always present)
 
 Changes in openair 0.8-0 [2012-11-30]
 =====================================
