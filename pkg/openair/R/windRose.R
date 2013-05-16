@@ -4,13 +4,13 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
                           ...)
 {
 
-    ## extra.args setup
-    extra.args <- list(...)
+    ## extra args setup
+    extra <- list(...)
 
     ## check to see if two met data sets are being compared.
     ## if so, set pollutant to one of the names
-    if ("ws2" %in% names(extra.args)) {
-        pollutant <-  extra.args$ws
+    if ("ws2" %in% names(extra)) {
+        pollutant <-  extra$ws
         if (missing(breaks)) breaks <- NA
     }
 
@@ -301,16 +301,16 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         angle <- 3
     }
 
-    ## extra.args setup
-    extra.args <- list(...)
+    ## extra args setup
+    extra <- list(...)
 
-                                        #label controls
-    extra.args$xlab <- if("xlab" %in% names(extra.args))
-        quickText(extra.args$xlab, auto.text) else quickText("", auto.text)
-    extra.args$ylab <- if("ylab" %in% names(extra.args))
-        quickText(extra.args$ylab, auto.text) else quickText("", auto.text)
-    extra.args$main <- if("main" %in% names(extra.args))
-        quickText(extra.args$main, auto.text) else quickText("", auto.text)
+    ## label controls
+    extra$xlab <- if("xlab" %in% names(extra))
+        quickText(extra$xlab, auto.text) else quickText("", auto.text)
+    extra$ylab <- if("ylab" %in% names(extra))
+        quickText(extra$ylab, auto.text) else quickText("", auto.text)
+    extra$main <- if("main" %in% names(extra))
+        quickText(extra$main, auto.text) else quickText("", auto.text)
 
     ## preset statitistics
 
@@ -669,8 +669,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
                                 }
                         }, legend = legend)
 
-    ## reset for extra.args
-    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+    ## reset for extra
+    xyplot.args <- openair:::listUpdate(xyplot.args, extra)
 
     ## plot
     plt <- do.call(xyplot, xyplot.args)
