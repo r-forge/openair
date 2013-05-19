@@ -56,6 +56,11 @@
 ##' @param pollutant Mandatory. A pollutant name corresponding to a variable in
 ##'   a data frame should be supplied e.g. \code{pollutant = "nox". }
 ##' @param year Year to plot e.g. \code{year = 2003}.
+##' @param month If only certain month are required. By default the
+##' function will plot an entire year even if months are missing. To
+##' only plot certain months use the \code{month} option where month
+##' is a numeric 1:12 e.g. \code{month = c(1, 12)} to only plot
+##' January and December.
 ##' @param type Not yet implemented.
 ##' @param annotate This option controls what appears on each day of
 ##' the calendar. Can be: \dQuote{date} --- shows day of the month;
@@ -168,7 +173,7 @@
 ##' labels = c("Very low", "Low", "High", "Very High"),
 ##' cols = c("lightblue", "green", "yellow",  "red"), statistic = "max")
 ##'
-calendarPlot <- function(mydata, pollutant = "nox", year = 2003, type = "default",
+calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, type = "default",
                          annotate = "date", statistic = "mean", cols = "heat", limits = c(0, 100),
                          lim = NULL, col.lim = c("grey30", "black"),
                          font.lim = c(1, 2), cex.lim = c(0.6, 1),
@@ -201,6 +206,11 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, type = "default
     if (annotate == "ws") vars <- c("wd", "ws", "date", pollutant)
 
     ## select year first, then check variables
+    if (missing(year)) {
+        year <- as.numeric(format(mydata$date[1], "%Y"))
+        warning (paste("'year not supplied, using'", year))
+    }
+
     mydata <- selectByDate(mydata, year = year)
     if (nrow(mydata) == 0 ) stop("No data to plot - check year chosen")
     mydata <- openair:::checkPrep(mydata, vars, "default", remove.calm = FALSE)
@@ -294,6 +304,10 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, type = "default
     mydata <- cutData(mydata, type = type, ...)
     baseData <- mydata
 
+    ## subset months if necessary
+    mydata <- mydata[mydata$month %in% month.name[month], ]
+    mydata$month <- factor(mydata$month)
+
     strip.dat <- openair:::strip.fun(mydata, type, auto.text)
     strip <- strip.dat[[1]]
 
@@ -342,19 +356,44 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, type = "default
 
     } else { ## continuous colour scale
         nlev <- 200
+
+        ## handle missing breaks arguments
+
         if (missing(limits)) {
-            breaks <- pretty(mydata$conc.mat, n = nlev)
+            breaks <- pretty(mydata$value, n = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
         } else {
+
             breaks <- pretty(limits, n = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+
+            if (max(limits) < max(mydata$value, na.rm = TRUE)) {
+                ## if clipping highest, then annotate differently
+                id <- which(mydata$value > max(limits))
+                mydata$value[id] <- max(limits)
+                labs <- pretty(breaks, 7)
+                labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+                labs[length(labs)] <- paste(">", labs[length(labs)])
+            }
         }
+
+
         nlev2 <- length(breaks)
         col <- openColours(cols, (nlev2 - 1))
         col.scale <- breaks
-        legend <- list(col = col, at = col.scale, space = key.position,
-                       auto.text = auto.text, footer = key.footer, header = key.header,
-                       height = 1, width = 1.5, fit = "all")
+
+        legend <- list(col = col, at = col.scale, labels = list(labels = labs),
+                   space = key.position, auto.text = auto.text,
+                   footer = key.footer, header = key.header,
+                   height = 1, width = 1.5, fit = "all")
+
         legend <- openair:::makeOpenKeyLegend(key, legend, "calendarPlot")
     }
+
+
 
 
     lv.args <- list(x = value ~ x * y | month, data = mydata,

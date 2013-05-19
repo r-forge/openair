@@ -35,6 +35,9 @@ Changes in openair 0.9-0 [2013-02-13]
 	lower resolution. Make default pollutant 'height' (always
 	present)
 *	Add Oslo and Rotterdam to trajectory database for 2010-2012
+*	Better limits control on calendarPlot, use first year if not
+	supplied, add option month to allow only selected month(s)
+
 
 Changes in openair 0.8-0 [2012-11-30]
 =====================================
