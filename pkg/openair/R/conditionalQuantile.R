@@ -354,7 +354,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                        }
                        )
 
-    thePlot <- doubleYScale(scatter, histo, add.ylab2 = TRUE)
+    ## supress scaling warnings
+    thePlot <- suppressWarnings(doubleYScale(scatter, histo, add.ylab2 = TRUE))
     thePlot <- update(thePlot, par.settings = simpleTheme(col = c("black", "black")))
 
     if (length(type) == 1) plot(thePlot) else plot(useOuterStrips(thePlot, strip = strip,

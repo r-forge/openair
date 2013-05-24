@@ -433,7 +433,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     if (!is.na(z) & method == "scatter") {
         if (z %in% openair:::dateTypes)
-            stop("Colour coding requires 'z' to be continuous numeric variable'")
+            stop("You tried to use a date type for the 'z' variable. \nColour coding requires 'z' to be continuous numeric variable'")
 
         ## check to see if type is numeric/integer
         if (class(mydata[, z]) %in% c("integer", "numeric") == FALSE)
