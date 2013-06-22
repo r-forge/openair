@@ -38,6 +38,7 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Better limits control on calendarPlot, use first year if not
 	supplied, add option month to allow only selected month(s)
 *	Fix bug when type = "wd" and some are missing (remove them)
+*	Don't open up graphic window in timeAverage
 
 
 Changes in openair 0.8-0 [2012-11-30]

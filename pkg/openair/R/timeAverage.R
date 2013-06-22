@@ -134,7 +134,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     ## extract variables of interest
     vars <- names(mydata)
 
-    mydata <- openair:::checkPrep(mydata, vars, type = "default", remove.calm = FALSE)
+    mydata <- openair:::checkPrep(mydata, vars, type = "default", remove.calm = FALSE, strip.white = FALSE)
 
     ## time zone of data
     TZ <- attr(mydata$date, "tzone")
