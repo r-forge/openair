@@ -239,9 +239,10 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
 
         mydata <- na.omit(mydata)
 
-        mydata <- transform(mydata, u = get(x) * sin(wd * pi / 180), v = get(x) * cos(wd * pi / 180))
-        mydata$u.id <- findInterval(mydata$u, uv.id)
-        mydata$v.id <- findInterval(mydata$v, uv.id)
+        mydata <- transform(mydata, u = get(x) * sin(wd * pi / 180),
+                            v = get(x) * cos(wd * pi / 180))
+        mydata$u.id <- findInterval(mydata$u, uv.id, all.inside = TRUE)
+        mydata$v.id <- findInterval(mydata$v, uv.id, all.inside = TRUE)
 
         ## convert to matrix for direct lookup
         ## need to do this because some data are missing due to exclude.missing in polarPlot
@@ -256,7 +257,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
 
         mydata <- mydata[ , c("date", "cluster")] ## just need date/cluster
         mydata <- merge(data.orig, mydata, by = "date")
-
+        results <- mydata
         myform <- formula("cluster ~ u * v")
 
     }
@@ -342,6 +343,6 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
     ## change cluster output to C1, C2 etc
     mydata$cluster <- paste("C", mydata$cluster, sep = "")
 
-    output <- list(plot = plt, data = mydata, call = match.call())
+    output <- list(plot = plt, data = results, call = match.call())
     invisible(output)
 }
