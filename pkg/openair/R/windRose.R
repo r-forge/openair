@@ -678,8 +678,12 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
     ## output ################################################################################
 
-    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip,
-              strip.left = strip.left))
+    if (length(type) == 1) {
+        plot(plt)
+    } else {
+        plt <- useOuterStrips(plt, strip = strip, strip.left = strip.left)
+        plot(plt)
+    }
 
 
     newdata <- results.grid

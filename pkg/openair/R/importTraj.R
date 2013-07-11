@@ -139,6 +139,9 @@ importTraj <- function(site = "london", year = 2009, local = NA) {
             if (is.na(local)) {
                 fileName <- paste("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/Traj/", x, ".RData",
                                   sep = "")
+                ##:ess-bp-start::browser@nil:##
+browser(expr=is.null(.ESSR_Env[['.ESSBP.']][["@3@"]]))##:ess-bp-end:##
+
                 con <- url(fileName)
                 load(con)
                 close(con)
