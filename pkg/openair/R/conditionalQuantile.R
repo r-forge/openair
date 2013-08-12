@@ -35,12 +35,14 @@
 ##' function in openair allows conditional quantiles to be considered in a
 ##' flexible way e.g. by considering how they vary by season.
 ##'
-##' The function requires a data frame consisting of a column of observations
-##' and a column of predictions. The observations are split up into \code{bins}
-##' according to values of the predictions. The median prediction line together
-##' with the 25/75th and 10/90th quantile values are plotted together with a
-##' line showing a \dQuote{perfect} model. Also shown is a histogram of predicted
-##' values.
+##' The function requires a data frame consisting of a column of
+##' observations and a column of predictions. The observations are
+##' split up into \code{bins} according to values of the
+##' predictions. The median prediction line together with the 25/75th
+##' and 10/90th quantile values are plotted together with a line
+##' showing a \dQuote{perfect} model. Also shown is a histogram of
+##' predicted values (shaded grey) and a histogram of observed values
+##' (shown as a blue line).
 ##'
 ##' Far more insight can be gained into model performance through conditioning
 ##' using \code{type}. For example, \code{type = "season"} will plot
