@@ -531,7 +531,7 @@ panel.smooth.spline <-
 
 ### panel functions for plots based on lattice ####################################################
 
-panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FALSE, n.sim = 200,
+panel.gam <- function (x, y, form = y ~ x, method = "loess", k = k, Args, ..., simulate = FALSE, n.sim = 200,
                        autocor = FALSE, se = TRUE,
                        level = 0.95, n = 100, col = plot.line$col, col.se = col,
                        lty = plot.line$lty, lwd = plot.line$lwd, alpha = plot.line$alpha,
@@ -552,7 +552,13 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
     tryCatch({
 
         if (!simulate) {
-            mod <- gam(y ~ s(x), select = TRUE, data = thedata, ...)
+
+            if (is.null(k)) {
+                mod <- gam(y ~ s(x), select = TRUE, data = thedata, ...)
+
+            } else {
+                mod <- gam(y ~ s(x, k = k), select = TRUE, data = thedata, ...)
+            }
 
 
             lims <- current.panel.limits()
@@ -589,7 +595,11 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", ..., simulate = FAL
             index <- samp.boot.block(sam.size, n.sim, block.length)
 
             ## predict first
-            mod <- gam(y ~ s(x), data = thedata, ...)
+            if (is.null(k)) {
+                mod <- gam(y ~ s(x), data = thedata, ...)
+            } else {
+                 mod <- gam(y ~ s(x, k = k), data = thedata, ...)
+            }
 
             residuals <- residuals(mod) ## residuals of the model
 

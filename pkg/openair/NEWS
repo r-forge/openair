@@ -41,6 +41,9 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Don't open up graphic window in timeAverage
 *	Fix indexing problem in polarCluster which sometimes caused
 	the function to trip up
+*	Only plot full length trajectories in trajPlot
+*	Allow smoothing parameter k to be used when smooth = TRUE for
+	more control in scatterPlot
 
 
 Changes in openair 0.8-0 [2012-11-30]

@@ -603,6 +603,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     if (method == "scatter") {
 
+        if (missing(k)) k <- NULL ## auto-smoothing by default
+
         xyplot.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
                             type = c("p", "g"),
                             as.table = TRUE,
@@ -659,10 +661,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                             if (smooth)
                                 panel.gam(x, y, col = "grey20", col.se = "black",
-                                          lty = 1, lwd = 1, se = ci, Args, ...)
+                                          lty = 1, lwd = 1, se = ci, k = k, ...)
 
                             if (spline)
-                                panel.smooth.spline(x, y, col = myColors[group.number],
+                                panel.smooth.spline(x, y, col = "grey20", #myColors[group.number],
                                                     lwd = lwd, ...)
 
                             ## add base map

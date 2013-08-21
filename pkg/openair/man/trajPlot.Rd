@@ -160,12 +160,12 @@
   overall concentration pattern. In these cases setting
   \code{alpha} to a low value e.g. 0.1 can help.
 
-  For the investigation of a few days it can be useful to
-  use \code{plot.type = "l"}, which shows the back
-  trajectories as continuous lines rather than individual
-  points. Note that points help to show the duration an air
-  mass spend in a particular location, whereas lines do
-  not.
+  The user can aslo show points instead of lines by
+  \code{plot.type = "p"}.
+
+  Note that \code{trajPlot} will plot only the full length
+  trajectories. This should be remembered when selecting
+  only part of a year to plot.
 
   An alternative way of showing the trajectories is to bin
   the points into latitude/longitude intervals For these

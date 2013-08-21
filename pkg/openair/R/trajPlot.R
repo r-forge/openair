@@ -16,11 +16,12 @@
 ##' to gauge the overall concentration pattern. In these cases setting
 ##' \code{alpha} to a low value e.g. 0.1 can help.
 ##'
-##' For the investigation of a few days it can be useful to use
-##' \code{plot.type = "l"}, which shows the back trajectories as
-##' continuous lines rather than individual points. Note that points
-##' help to show the duration an air mass spend in a particular
-##' location, whereas lines do not.
+##' The user can aslo show points instead of lines by \code{plot.type
+##' = "p"}.
+##'
+##' Note that \code{trajPlot} will plot only the full length
+##' trajectories. This should be remembered when selecting only part
+##' of a year to plot.
 ##'
 ##' An alternative way of showing the trajectories is to bin the
 ##' points into latitude/longitude intervals For these purposes
@@ -463,6 +464,18 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                      map.res = "default", map.cols = "grey40",
                      map.alpha = 0.4, ...)
 {
+
+    ## slect only full length trajectories
+    mydata <- mydata[order(mydata$date, mydata$hour.inc), ]
+
+    ## length of back mydataectories
+    mydata$len <- ave(mydata$lat, mydata$date, FUN = length)
+
+    ## find length of back mydataectories
+    ## 96-hour back mydataectories with origin: length should be 97
+    n <- max(abs(mydata$hour.inc)) + 1
+
+    mydata <- subset(mydata, len == n)
 
     ##extra.args
     extra.args <- list(...)
