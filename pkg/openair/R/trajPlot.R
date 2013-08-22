@@ -464,6 +464,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                      map.res = "default", map.cols = "grey40",
                      map.alpha = 0.4, ...)
 {
+    len <- NULL ## silence R check
 
     ## slect only full length trajectories
     mydata <- mydata[order(mydata$date, mydata$hour.inc), ]
