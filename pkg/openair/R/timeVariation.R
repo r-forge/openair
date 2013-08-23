@@ -630,7 +630,7 @@ alpha = 0.4, ...)  {
 
     if (type == "default") {
         strip.left <- FALSE
-        layout <- c(7, 1)
+        layout <- c(length(unique(mydata$wkday)), 1)
 
     } else { ## two conditioning variables
 
