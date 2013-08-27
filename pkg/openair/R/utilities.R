@@ -94,7 +94,7 @@ date.pad <- function(mydata) {
         if (class(mydata$date)[1] == "Date") {
             interval <- "day"
         } else {
-            interval <- openair:::find.time.interval(mydata$date)
+            interval <- find.time.interval(mydata$date)
         }
 
         ## only pad if there are missing data
@@ -239,7 +239,7 @@ rollingMean <- function(mydata, pollutant = "o3", width = 8, new.name = "rolling
         dates <- mydata$date
 
         ## pad missing hours
-        mydata <- openair:::date.pad(mydata)
+        mydata <- date.pad(mydata)
 
         ## make sure function is not called with window width longer than data
         if (width > nrow(mydata)) return(mydata)
@@ -807,4 +807,14 @@ strip.fun <- function(results.grid, type, auto.text) {
     }
     if (length(type) == 1 & type[1] == "default") strip <- FALSE ## remove strip
     list(strip, strip.left, pol.name)
+}
+
+
+
+## from lattice
+chooseFace <- function (fontface = NULL, font = 1)
+{
+    if (is.null(fontface))
+        font
+    else fontface
 }

@@ -213,7 +213,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
 
     mydata <- selectByDate(mydata, year = year)
     if (nrow(mydata) == 0 ) stop("No data to plot - check year chosen")
-    mydata <- openair:::checkPrep(mydata, vars, "default", remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, "default", remove.calm = FALSE)
 
     main <- quickText(main, auto.text)
 
@@ -308,7 +308,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
     mydata <- mydata[mydata$month %in% month.name[month], ]
     mydata$month <- factor(mydata$month)
 
-    strip.dat <- openair:::strip.fun(mydata, type, auto.text)
+    strip.dat <- strip.fun(mydata, type, auto.text)
     strip <- strip.dat[[1]]
 
     mydata <- ddply(mydata, type, function(x) prepare.grid(x, pollutant))
@@ -352,7 +352,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
                        plot.style = "other")
 
         col.scale <- breaks
-        legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
+        legend <- makeOpenKeyLegend(key, legend, "windRose")
 
     } else { ## continuous colour scale
         nlev <- 200
@@ -390,7 +390,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
                    footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
 
-        legend <- openair:::makeOpenKeyLegend(key, legend, "calendarPlot")
+        legend <- makeOpenKeyLegend(key, legend, "calendarPlot")
     }
 
 
@@ -476,7 +476,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
                     })
 
     ## reset for extra.args
-    lv.args <- openair:::listUpdate(lv.args, extra.args)
+    lv.args <- listUpdate(lv.args, extra.args)
 
     ## plot
     print(do.call(levelplot, lv.args))

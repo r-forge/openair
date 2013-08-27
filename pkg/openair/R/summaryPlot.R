@@ -189,7 +189,7 @@ summaryPlot <- function(mydata,
     }
 
     ## for plot
-    dateBreaks <- openair:::dateBreaks(mydata$date, date.breaks)$major
+    dateBreaks <- dateBreaks(mydata$date, date.breaks)$major
 
     ## print data types - helps with debugging
     print(unlist(sapply(mydata, class)))
@@ -248,11 +248,11 @@ summaryPlot <- function(mydata,
     ## round the dates depending on period
     min.year <- as.numeric(min(format(mydata$date, "%Y")))
     max.year <- as.numeric(max(format(mydata$date, "%Y")))
-    start.date <- as.POSIXct(openair:::dateTrunc(min(mydata$date), period))
-    end.date <- as.POSIXct(openair:::dateCeil(max(mydata$date), period) - 3600)
+    start.date <- as.POSIXct(dateTrunc(min(mydata$date), period))
+    end.date <- as.POSIXct(dateCeil(max(mydata$date), period) - 3600)
 
     ## find time interval of data and pad any missing times
-    interval <- openair:::find.time.interval(mydata$date)
+    interval <- find.time.interval(mydata$date)
     all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
     mydata <- merge(mydata, all.dates, all = TRUE)
 
@@ -334,8 +334,8 @@ summaryPlot <- function(mydata,
 
                    ## override scaling for more sensible date/time breaks
                    scales = list(y = list(draw = FALSE),
-                   x = list(at = openair:::dateBreaks(mydata$date, date.breaks)$major,
-                   format = openair:::dateBreaks(mydata$date, date.breaks)$format)),
+                   x = list(at = dateBreaks(mydata$date, date.breaks)$major,
+                   format = dateBreaks(mydata$date, date.breaks)$format)),
                    layout = c(1, length(unique(mydata$variable))),
                    strip = FALSE,
                    strip.left = strip.custom(horizontal = FALSE, factor.levels = pol.name),
@@ -382,7 +382,7 @@ summaryPlot <- function(mydata,
                    })
 
     #reset for extra.args
-    xyplot.args<- openair:::listUpdate(xyplot.args, extra.args)
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
 
     #plot
     plt1 <- do.call(xyplot, xyplot.args)

@@ -185,10 +185,10 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
     vars <- c(mod, obs)
 
-    if (any(type %in%  openair:::dateTypes)) vars <- c("date", vars)
+    if (any(type %in%  dateTypes)) vars <- c("date", vars)
 
     ## check the data
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
     mydata <- na.omit(mydata)
     mydata <- cutData(mydata, type)
 
@@ -325,7 +325,8 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
                       })
 
     #reset for extra.args
-    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+
+    xyplot.args <- listUpdate(xyplot.args, extra.args)
 
     #plot
     scatter <- do.call(xyplot, xyplot.args)

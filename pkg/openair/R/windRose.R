@@ -409,11 +409,11 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         seg <- 1
     }
 
-    if (any(type %in% openair:::dateTypes)) vars <- c(vars, "date")
+    if (any(type %in% dateTypes)) vars <- c(vars, "date")
 
     if (!is.null(pollutant)) vars <- c(vars, pollutant)
 
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE, remove.neg = rm.neg)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE, remove.neg = rm.neg)
 
     mydata <- na.omit(mydata)
 
@@ -549,7 +549,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
     results.grid$mean.wd <- stat.labcalm(results.grid$mean.wd)
 
     ## proper names of labelling###########################################
-    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
+    strip.dat <- strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -579,7 +579,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
                    height = 0.60, width = 1.5, fit = "scale",
                    plot.style = if (paddle) "paddle" else "other")
 
-    legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
+    legend <- makeOpenKeyLegend(key, legend, "windRose")
 
 
     temp <- paste(type, collapse = "+")
@@ -670,7 +670,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
                         }, legend = legend)
 
     ## reset for extra
-    xyplot.args <- openair:::listUpdate(xyplot.args, extra)
+    xyplot.args <- listUpdate(xyplot.args, extra)
 
     ## plot
     plt <- do.call(xyplot, xyplot.args)

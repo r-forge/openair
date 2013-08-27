@@ -97,7 +97,7 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
 
     vars <- c("date", pollutant, "site")
 
-    mydata <- openair:::checkPrep(mydata, vars, "default", remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, "default", remove.calm = FALSE)
 
     ## pre-defined lits of pollutants that need special treatment
     thePolls <- c("no2", "o3", "pm10", "co")
@@ -105,11 +105,11 @@ aqStats <- function(mydata, pollutant = "no2", data.thresh = 75, percentile = c(
     calcStats <- function(mydata, pollutant, percentile, ...) {
 
         ## file any missing hours
-        start.date <- as.POSIXct(openair:::dateTrunc(min(mydata$date), "year"))
-        end.date <- as.POSIXct(openair:::dateCeil(max(mydata$date), "year") - 3600)
+        start.date <- as.POSIXct(dateTrunc(min(mydata$date), "year"))
+        end.date <- as.POSIXct(dateCeil(max(mydata$date), "year") - 3600)
 
         ## find time interval of data and pad any missing times
-        interval <- openair:::find.time.interval(mydata$date)
+        interval <- find.time.interval(mydata$date)
         all.dates <- data.frame(date = seq(start.date, end.date, by = interval))
         mydata <- merge(mydata, all.dates, all = TRUE)
         mydata$year <- format(mydata$date, "%Y")

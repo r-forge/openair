@@ -329,7 +329,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
     ## #######################################################################################
 
     ## data checks
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## pad out any missing date/times so that line don't extend between areas of missing data
 
@@ -434,11 +434,11 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
 
     strip.left <- FALSE
 
-    dates <- openair:::dateBreaks(mydata$date, date.breaks)$major ## for date scale
+    dates <- dateBreaks(mydata$date, date.breaks)$major ## for date scale
 
     ## date axis formating
     if (is.null(date.format)) {
-        formats <- openair:::dateBreaks(mydata$date, date.breaks)$format
+        formats <- dateBreaks(mydata$date, date.breaks)$format
     } else {
         formats <- date.format
     }
@@ -585,7 +585,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
                         })
 
     ## reset for extra.args
-    xyplot.args<- openair:::listUpdate(xyplot.args, extra.args)
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
 
     #plot
     plt <- do.call(xyplot, xyplot.args)

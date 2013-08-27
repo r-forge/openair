@@ -176,7 +176,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
     vars <- c("wd", x, pollutant)
     vars <- c(vars, "date")
 
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     max.x <- ceiling(max(mydata[ , x], na.rm = TRUE))
     min.ws <- floor(min(mydata[[x]], na.rm = TRUE))
@@ -331,7 +331,7 @@ polarCluster <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", n.clust
                            })
 
     ## reset for extra.args
-    levelplot.args <- openair:::listUpdate(levelplot.args, extra.args)
+    levelplot.args <- listUpdate(levelplot.args, extra.args)
 
     ## plot
     plt <- do.call(levelplot, levelplot.args)

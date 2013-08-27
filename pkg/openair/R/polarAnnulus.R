@@ -286,7 +286,7 @@ polarAnnulus <- function(mydata,
 
 
     ## check data
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## if more than one pollutant, need to stack the data and set type = "variable"
     ## this case is most relevent for model-measurement compasrions where data are in columns
@@ -542,7 +542,7 @@ polarAnnulus <- function(mydata,
     }
 
     ## proper names of labelling ###################################################
-    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
+    strip.dat <- strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -565,7 +565,7 @@ polarAnnulus <- function(mydata,
     legend <- list(col = col, at = col.scale, space = key.position,
                    auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    legend <- openair:::makeOpenKeyLegend(key, legend, "polarAnnulus")
+    legend <- makeOpenKeyLegend(key, legend, "polarAnnulus")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("z ~ u * v | ", temp, sep = ""))
@@ -686,7 +686,7 @@ polarAnnulus <- function(mydata,
                      })
 
     #reset for extra.args
-    levelplot.args<- openair:::listUpdate(levelplot.args, extra.args)
+    levelplot.args<- listUpdate(levelplot.args, extra.args)
 
     #plot
     plt <- do.call(levelplot, levelplot.args)

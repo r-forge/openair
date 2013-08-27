@@ -357,7 +357,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (avg.time != "default")  {
 
         ## can't have a type or group that is date-based
-        if (group %in% openair:::dateTypes | type  %in% openair:::dateTypes)
+        if (group %in% dateTypes | type  %in% dateTypes)
             stop ("Can't have an averging period set and a time-based 'type' or 'group'.")
         if ("default" %in% types) mydata$default <- 0 ## FIX ME
 
@@ -372,7 +372,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         stop("Need to specify 'z' when using method = 'level'")
 
     ## #######################################################################
-    if (any(type %in%  openair:::dateTypes) | !missing(avg.time)) {
+    if (any(type %in%  dateTypes) | !missing(avg.time)) {
 
         vars <- c("date", x, y)
 
@@ -385,9 +385,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## pre-defined date-based one
     if (!is.na(group)){
 
-        if (group %in%  openair:::dateTypes | !missing(avg.time) |
-            any(type %in% openair:::dateTypes)) {
-            if (group %in%  openair:::dateTypes) {
+        if (group %in%  dateTypes | !missing(avg.time) |
+            any(type %in% dateTypes)) {
+            if (group %in%  dateTypes) {
                 vars <- unique(c(vars, "date")) ## don't need group because it is
                 ## defined by date
             } else {
@@ -414,7 +414,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## data checks
 
     if (!is.na(z)) vars <- c(vars, z)
-    mydata <- openair:::checkPrep(mydata, vars, type)
+    mydata <- checkPrep(mydata, vars, type)
 
     ## remove missing data except for time series where we want to show gaps
     ## this also removes missing factors
@@ -432,7 +432,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## continuous colors ####################################################################
 
     if (!is.na(z) & method == "scatter") {
-        if (z %in% openair:::dateTypes)
+        if (z %in% dateTypes)
             stop("You tried to use a date type for the 'z' variable. \nColour coding requires 'z' to be continuous numeric variable'")
 
         ## check to see if type is numeric/integer
@@ -491,7 +491,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                            auto.text = auto.text, footer = Args$key.footer,
                            header = Args$key.header,
                            height = 1, width = 1.5, fit = "all")
-            legend <- openair:::makeOpenKeyLegend(TRUE, legend, "other")
+            legend <- makeOpenKeyLegend(TRUE, legend, "other")
 
         } else {
             legend <- NULL
@@ -586,7 +586,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     ## proper names of stripName
     ## ############################################################################
-    strip.dat <- openair:::strip.fun(mydata, type, auto.text)
+    strip.dat <- strip.fun(mydata, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -692,7 +692,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        xyplot.args<- openair:::listUpdate(xyplot.args, Args)
+        xyplot.args<- listUpdate(xyplot.args, Args)
 
         ## plot
         plt <- do.call(xyplot, xyplot.args)
@@ -738,7 +738,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        hexbinplot.args <- openair:::listUpdate(hexbinplot.args, Args)
+        hexbinplot.args <- listUpdate(hexbinplot.args, Args)
 
         ## plot
         plt <- do.call(hexbinplot, hexbinplot.args)
@@ -840,7 +840,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                            auto.text = auto.text, footer = Args$key.footer,
                            header = Args$key.header,
                            height = 1, width = 1.5, fit = "all")
-            legend <- openair:::makeOpenKeyLegend(key, legend, "other")
+            legend <- makeOpenKeyLegend(key, legend, "other")
         }
 
         if (trajStat %in% c("frequency", "difference")) {
@@ -866,7 +866,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                            plot.style = "other")
 
             col.scale <- breaks
-            legend <- openair:::makeOpenKeyLegend(key, legend, "windRose")
+            legend <- makeOpenKeyLegend(key, legend, "windRose")
         }
 
         levelplot.args <- list(x = myform, data = mydata,
@@ -908,7 +908,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        levelplot.args<- openair:::listUpdate(levelplot.args, Args)
+        levelplot.args<- listUpdate(levelplot.args, Args)
 
         ## plot
         plt <- do.call(levelplot, levelplot.args)
@@ -996,7 +996,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        levelplot.args<- openair:::listUpdate(levelplot.args, Args)
+        levelplot.args<- listUpdate(levelplot.args, Args)
 
         ## plot
         plt <- do.call(levelplot, levelplot.args)

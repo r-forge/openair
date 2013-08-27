@@ -210,7 +210,7 @@ smoothTrend <- function(mydata,
 
     vars <- c("date", pollutant)
 
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     if (!missing(percentile)) statistic <- "percentile"
 
@@ -223,14 +223,14 @@ smoothTrend <- function(mydata,
     if (!avg.time %in% c("year", "season", "month")) stop("Averaging period must be 'month' or 'year'.")
 
     ## for overall data and graph plotting
-    start.year <- openair:::startYear(mydata$date)
-    end.year <-  openair:::endYear(mydata$date)
-    start.month <- openair:::startMonth(mydata$date)
-    end.month <-  openair:::endMonth(mydata$date)
+    start.year <- startYear(mydata$date)
+    end.year <-  endYear(mydata$date)
+    start.month <- startMonth(mydata$date)
+    end.month <-  endMonth(mydata$date)
 
     ## date formatting for plot
-    date.at <- openair:::dateBreaks(mydata$date, date.breaks)$major
-    date.format <- openair:::dateBreaks(mydata$date)$format
+    date.at <- dateBreaks(mydata$date, date.breaks)$major
+    date.format <- dateBreaks(mydata$date)$format
 
     ## cutData depending on type
     mydata <- cutData(mydata, type, ...)
@@ -270,10 +270,10 @@ smoothTrend <- function(mydata,
         mydata <- mydata[min.idx:max.idx, ]
 
         ## these subsets may have different dates to overall
-        start.year <- openair:::startYear(mydata$date)
-        end.year <-  openair:::endYear(mydata$date)
-        start.month <- openair:::startMonth(mydata$date)
-        end.month <-  openair:::endMonth(mydata$date)
+        start.year <- startYear(mydata$date)
+        end.year <-  endYear(mydata$date)
+        start.month <- startMonth(mydata$date)
+        end.month <-  endMonth(mydata$date)
 
         ## can't deseason less than 2 years of data
         if (nrow(mydata) < 24) deseason <- FALSE
@@ -375,7 +375,7 @@ smoothTrend <- function(mydata,
 
                       if (group.number == 1) {  ## otherwise this is called every time
 
-                          openair:::panel.shade(split.data, start.year, end.year,
+                          panel.shade(split.data, start.year, end.year,
                                                 ylim = current.panel.limits()$ylim)
                           panel.grid(-1, 0)
 
@@ -385,14 +385,14 @@ smoothTrend <- function(mydata,
                                    col.line = myColors[group.number],
                                    col.symbol = myColors[group.number], ...)
 
-                      openair:::panel.gam(x, y, col =  myColors[group.number], col.se =  "black",
+                      panel.gam(x, y, col =  myColors[group.number], col.se =  "black",
                                 simulate = simulate, n.sim = n,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
                   })
 
     #reset for extra.args
-    xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+    xyplot.args <- listUpdate(xyplot.args, extra.args)
 
     #plot
     plt <- do.call(xyplot, xyplot.args)

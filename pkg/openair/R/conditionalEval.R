@@ -197,9 +197,9 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     on.exit(trellis.par.set("strip.background", current.strip))
 
     ## statistic is date-based
-    if (any(statistic %in% openair:::dateTypes)) {
+    if (any(statistic %in% dateTypes)) {
         ## choose only one statistic
-        statistic <- statistic[which(statistic %in% openair:::dateTypes)][1]
+        statistic <- statistic[which(statistic %in% dateTypes)][1]
         mydata <- cutData(mydata, type = statistic)
         vars <- c(vars, statistic)
         other <- TRUE ## i.e. statistic other than var.obs/var.mod is present
@@ -257,10 +257,10 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
     pltCondQ <- conditionalQuantile(mydata, obs = obs, mod = mod, type = type, bins = bins,
                                     key.position = "left", key.columns = 1, layout = c(1, NA), ...)$plot
 
-    if (any(type %in% openair:::dateTypes)) vars <- c("date", vars)
+    if (any(type %in% dateTypes)) vars <- c("date", vars)
 
     ## check the data
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     mydata <- na.omit(mydata)
 
@@ -455,7 +455,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                             if (results$statistic[subscripts][1] == "IOA")
                                 panel.abline(h = 1, lty = 5)
 
-                            openair:::poly.na(x, results$lower[subscripts], x,
+                            poly.na(x, results$lower[subscripts], x,
                                               results$upper[subscripts], group.number, myColors)
 
                             panel.lines(results$.id[subscripts], results$mean[subscripts],
@@ -464,7 +464,7 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
                         })
 
         ## reset for extra.args
-        xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+        xyplot.args <- listUpdate(xyplot.args, extra.args)
 
     }
 

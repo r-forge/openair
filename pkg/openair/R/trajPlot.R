@@ -445,7 +445,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              map.cols = map.cols, map.alpha = map.alpha)
 
     ## reset for extra.args
-    scatterPlot.args <- openair:::listUpdate(scatterPlot.args, extra.args)
+    scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)
 
     ## plot
     do.call(scatterPlot, scatterPlot.args)
@@ -524,7 +524,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
     }
 
     #reset for extra.args
-    scatterPlot.args <- openair:::listUpdate(scatterPlot.args, extra.args)
+    scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)
 
     #plot
     do.call(scatterPlot, scatterPlot.args)

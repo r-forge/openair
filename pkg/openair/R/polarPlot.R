@@ -425,9 +425,9 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     ## extract variables of interest
 
     vars <- c(wd, x, pollutant)
-    if (any(type %in%  openair:::dateTypes)) vars <- c(vars, "date")
+    if (any(type %in%  dateTypes)) vars <- c(vars, "date")
 
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     mydata <- na.omit(mydata)
 
@@ -688,7 +688,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     if (clip) results.grid$z[(results.grid$u ^ 2 + results.grid$v ^ 2) ^ 0.5 > upper] <- NA
 
     ## proper names of labelling ###################################################
-    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
+    strip.dat <- strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -744,7 +744,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                    space = key.position, auto.text = auto.text,
                    footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    legend <- openair:::makeOpenKeyLegend(key, legend, "polarPlot")
+    legend <- makeOpenKeyLegend(key, legend, "polarPlot")
 
     ## ##############################################################################
 
@@ -821,7 +821,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                  })
 
     ## reset for extra.args
-    Args<- openair:::listUpdate(Args, extra.args)
+    Args<- listUpdate(Args, extra.args)
 
     plt <- do.call(levelplot, Args)
 

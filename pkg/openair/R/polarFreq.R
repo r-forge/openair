@@ -199,7 +199,7 @@ polarFreq <- function(mydata,
 
     ## extract necessary data
     vars <- c("wd", "ws")
-    if (any(type %in%  openair:::dateTypes)) vars <- c(vars, "date")
+    if (any(type %in%  dateTypes)) vars <- c(vars, "date")
 
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -225,7 +225,7 @@ polarFreq <- function(mydata,
     if (!missing(pollutant)) vars <- c(vars, pollutant)
 
     ## data checks
-    mydata <- openair:::checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
     ## to make first interval easier to work with, set ws = 0 + e
     ids <- which(mydata$ws == 0)
@@ -338,7 +338,7 @@ polarFreq <- function(mydata,
     results.grid <- na.omit(results.grid)
 
     ## proper names of labelling ###################################################
-    strip.dat <- openair:::strip.fun(results.grid, type, auto.text)
+    strip.dat <- strip.fun(results.grid, type, auto.text)
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
@@ -375,7 +375,7 @@ polarFreq <- function(mydata,
                    space = key.position,
                    auto.text = auto.text, footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
-    legend <- openair:::makeOpenKeyLegend(key, legend, "polarFreq")
+    legend <- makeOpenKeyLegend(key, legend, "polarFreq")
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("ws ~ wd | ", temp, sep = ""))
@@ -434,7 +434,7 @@ polarFreq <- function(mydata,
                   )
 
     #reset for extra.args
-    xyplot.args<- openair:::listUpdate(xyplot.args, extra.args)
+    xyplot.args<- listUpdate(xyplot.args, extra.args)
 
     #plot
     plt <- do.call(xyplot, xyplot.args)
@@ -443,7 +443,7 @@ polarFreq <- function(mydata,
 #################
     ## output
 #################
-    if (length(type) == 1) plot(plt) else plot(openair:::useOuterStrips(plt, strip = strip, strip.left = strip.left))
+    if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"

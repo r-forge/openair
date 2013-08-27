@@ -512,7 +512,7 @@ importKCL <- function(site = "my1", year = 2009, pollutant = "all", met = FALSE,
     if (is.null(thedata)) stop("No data to import - check site codes and year.", call. = FALSE)
 
     ## pad missing data
-    thedata <- openair:::date.pad(thedata)
+    thedata <- date.pad(thedata)
 
     thedata$code <- thedata$site
 
