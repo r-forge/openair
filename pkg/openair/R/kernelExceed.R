@@ -200,7 +200,7 @@ kernelExceed <- function(polar,
         xlim <- range(x[, 1])
         ylim <- range(x[, 2])
 
-        map <- grDevices:::.smoothScatterCalcDensity(x, nbin)
+        map <- .smoothScatterCalcDensity(x, nbin)
         xm <- map$x1
         ym <- map$x2
 

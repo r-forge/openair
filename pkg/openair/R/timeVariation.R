@@ -134,6 +134,7 @@
 ##' @param ... Other graphical parameters passed onto \code{lattice:xyplot}
 ##'   and \code{cutData}. For example, in the case of \code{cutData} the option
 ##'   \code{hemisphere = "southern"}.
+##' @import lattice
 ##' @export
 ##' @return As well as generating the plot itself, \code{timeVariation} also
 ##'   returns an object of class ``openair''. The object includes three main

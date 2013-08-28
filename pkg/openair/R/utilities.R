@@ -818,3 +818,31 @@ chooseFace <- function (fontface = NULL, font = 1)
         font
     else fontface
 }
+
+
+## .smoothScatterCalcDensity() is also in graphics, but not exported.
+.smoothScatterCalcDensity <- function(x, nbin, bandwidth, range.x)
+{
+    if (!("KernSmooth" %in% loadedNamespaces())) {
+        ns <- try(loadNamespace("KernSmooth"))
+        if (isNamespace(ns))
+            message("(loaded the KernSmooth namespace)")
+        else stop("panel.smoothScatter() requires the KernSmooth package, but unable to load KernSmooth namespace")
+    }
+    if (length(nbin) == 1)
+        nbin <- c(nbin, nbin)
+    if (!is.numeric(nbin) || (length(nbin)!=2)) stop("'nbin' must be numeric of length 1 or 2")
+    if (missing(bandwidth)) {
+        bandwidth <- diff(apply(x, 2, quantile, probs=c(0.05, 0.95), na.rm=TRUE)) / 25
+    } else {
+        if(!is.numeric(bandwidth)) stop("'bandwidth' must be numeric")
+    }
+    bandwidth[bandwidth==0] <- 1
+    ## create density map
+    if(missing(range.x))
+        rv <- KernSmooth::bkde2D(x, gridsize=nbin, bandwidth=bandwidth)
+    else
+        rv <- KernSmooth::bkde2D(x, gridsize=nbin, bandwidth=bandwidth, range.x=range.x)
+    rv$bandwidth <- bandwidth
+    return(rv)
+}

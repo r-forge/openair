@@ -26,7 +26,8 @@ Suggests:
     hexbin,
     RgoogleMaps,
     png,
-    mapdata
+    mapdata,
+    KernSmooth
 LinkingTo: Rcpp
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 Description: Tools to analyse, interpret and understand air

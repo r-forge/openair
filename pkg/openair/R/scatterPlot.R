@@ -930,7 +930,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             xlim <- range(x[, 1])
             ylim <- range(x[, 2])
 
-            map <- grDevices:::.smoothScatterCalcDensity(x, 256)
+            map <- .smoothScatterCalcDensity(x, 256)
             xm <- map$x1
             ym <- map$x2
 
