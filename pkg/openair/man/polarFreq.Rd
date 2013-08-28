@@ -226,7 +226,8 @@ type = "year", cols = "jet")}
 # user defined breaks from 0-700 in intervals of 100 (note linear scale)
 \dontrun{polarFreq(mydata, breaks = seq(0, 700, 100))}
 
-# more complicated user-defined breaks - useful for highlighting bins with a certain number of data points
+# more complicated user-defined breaks - useful for highlighting bins
+# with a certain number of data points
 \dontrun{polarFreq(mydata, breaks = c(0, 10, 50, 100, 250, 500, 700))}
 
 # source contribution plot and use of offset option

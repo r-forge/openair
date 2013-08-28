@@ -11,7 +11,6 @@ Author: David Carslaw and Karl Ropkins
 Depends:
     R (>= 2.15.1),
 Imports:
-    Matrix,
     utils,
     grid,
     plyr,
@@ -20,7 +19,6 @@ Imports:
     lattice,
     latticeExtra,
     cluster,
-    Rcpp,
     RColorBrewer
 Suggests:
     hexbin,
