@@ -289,14 +289,15 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
                            quickText(extra.args$ylab, auto.text) else NULL
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
+
     xlim <- if ("xlim" %in% names(extra.args))
-        xlim else NULL
+        extra.args$xlim else  NULL
 
     if(!"pch" %in% names(extra.args))
         extra.args$pch <- NA
     if(!"lwd" %in% names(extra.args))
         extra.args$lwd <- 1
-    if(!"lty" %in% names(extra.args))
+    if(!"lty" %in% names(extra.args))c
         extra.args$lty <- NULL
 
     ## layout
