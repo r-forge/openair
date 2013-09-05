@@ -152,25 +152,13 @@
 ##' \dontrun{smoothTrend(mydata, pollutant = "o3", statistic = "percentile",
 ##' percentile = c(5, 50, 95), lwd = c(1, 2, 1), lty = c(5, 1, 5))}
 ##'
-smoothTrend <- function(mydata,
-                        pollutant = "nox",
-                        deseason = FALSE,
-                        type = "default",
-                        statistic = "mean",
-                        avg.time = "month",
-                        percentile = NA,
-                        data.thresh = 0,
-                        simulate = FALSE,
-                        n = 200, #bootstrap simulations
-                        autocor = FALSE,
-                        cols = "brewer1",
-                        xlab = "year",
-                        y.relation = "same",
-                        key.columns = length(percentile),
-                        ci = TRUE,
-                        alpha = 0.2,
-                        date.breaks = 7,
-                        auto.text = TRUE,...)  {
+smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
+                        type = "default", statistic = "mean", avg.time = "month",
+                        percentile = NA, data.thresh = 0, simulate = FALSE,
+                        n = 200, autocor = FALSE, cols = "brewer1", xlab = "year",
+                        y.relation = "same", key.columns = length(percentile),
+                        ci = TRUE, alpha = 0.2, date.breaks = 7,
+                        auto.text = TRUE, ...)  {
 
     ## get rid of R check annoyances
     variable = NULL
@@ -194,6 +182,9 @@ smoothTrend <- function(mydata,
     extra.args$main <- if("main" %in% names(extra.args))
                            quickText(extra.args$main, auto.text) else quickText("", auto.text)
 
+    xlim <- if ("xlim" %in% names(extra.args))
+        extra.args$xlim else  NULL
+
     #lty, lwd, pch, cex handling
     if(!"lty" %in% names(extra.args))
         extra.args$lty <- 1
@@ -201,8 +192,10 @@ smoothTrend <- function(mydata,
         extra.args$lwd <- 1
     if(!"pch" %in% names(extra.args))
         extra.args$pch <- 1
-    if(!"cex" %in% names(extra.args))
+    if (!"cex" %in% names(extra.args))
         extra.args$cex <- 1
+    extra.args$k <- if ("k" %in% names(extra.args))
+                           k else NULL
 
     #layout default
     if(!"layout" %in% names(extra.args))
@@ -358,11 +351,15 @@ smoothTrend <- function(mydata,
     extra.args$ylab <- if("ylab" %in% names(extra.args))
                            quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
 
+    gap <- difftime(max(mydata$date), min(mydata$date), units = "secs") / 80
+    if (is.null(xlim)) xlim <- range(mydata$date) + c(-1 * gap, gap)
+
     xyplot.args <- list(x = myform, data = split.data, groups = split.data$variable,
                   as.table = TRUE,
                   strip = strip,
                   strip.left = strip.left,
                   key = key,
+                        xlim = xlim,
                   par.strip.text = list(cex = 0.8),
                   xlab = quickText(xlab, auto.text),
                   scales = list(x = list(at = date.at, format = date.format),
@@ -385,7 +382,7 @@ smoothTrend <- function(mydata,
                                    col.line = myColors[group.number],
                                    col.symbol = myColors[group.number], ...)
 
-                      panel.gam(x, y, col =  myColors[group.number], col.se =  "black",
+                      panel.gam(x, y, col =  myColors[group.number], k = extra.args$k, myColors[group.number], #col.se =  "black",
                                 simulate = simulate, n.sim = n,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 

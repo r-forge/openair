@@ -145,7 +145,6 @@ summaryPlot <- function(mydata,
     if (length(cols) == 1 && cols == "greyscale") {
         #strip
         current.strip <- trellis.par.get("strip.background")
-        suppressWarnings(trellis.par.set(list(strip.background = list(col = "white"))))
         #other local colours
         col.trend <- "lightgrey"
         col.data <- "lightgrey"
@@ -173,7 +172,7 @@ summaryPlot <- function(mydata,
     extra.args <- extra.args[!names(extra.args) %in% c("xlab", "ylab", "main")]
 
     ## set panel strip to white
-    trellis.par.set(list(strip.background = list(col = "white")))
+    suppressWarnings(trellis.par.set(list(strip.background = list(col = "white"))))
 
 #the above might be a better retro fix for more complex functions?
 
