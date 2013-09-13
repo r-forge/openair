@@ -297,7 +297,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
         extra.args$pch <- NA
     if(!"lwd" %in% names(extra.args))
         extra.args$lwd <- 1
-    if(!"lty" %in% names(extra.args))c
+    if(!"lty" %in% names(extra.args))
         extra.args$lty <- NULL
 
     ## layout
