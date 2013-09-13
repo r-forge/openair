@@ -51,7 +51,7 @@
 ##' @param statistic Statistic used for calculating monthly values. Default is
 ##'   \dQuote{mean}, but can also be \dQuote{percentile}. See
 ##'   \code{timeAverage} for more details.
-##' @param avg.time  Can be \dQuote{month} (the default), \dQuote{season} or
+##' @param avg.time Can be \dQuote{month} (the default), \dQuote{season} or
 ##' \dQuote{year}. Determines the time over which data should be
 ##' averaged. Note that for \dQuote{year}, six or more years are
 ##' required. For \dQuote{season} the data are plit up into spring: March,
@@ -100,7 +100,11 @@
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
 ##'   in NO2.
-##' @param \dots Other graphical parameters are passed onto \code{cutData} and
+##' @param k This is the smoothing parameter used by the \code{gam}
+##' function in package \code{mgcv}. By default it is not used and the
+##' amount of smoothing is optimised automatically. However, sometimes
+##' it is useful to set the smoothing amount manually using \code{k}.
+##' @param ... Other graphical parameters are passed onto \code{cutData} and
 ##'   \code{lattice:xyplot}. For example, \code{smoothTrend} passes the option
 ##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
 ##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
@@ -158,10 +162,10 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                         n = 200, autocor = FALSE, cols = "brewer1", xlab = "year",
                         y.relation = "same", key.columns = length(percentile),
                         ci = TRUE, alpha = 0.2, date.breaks = 7,
-                        auto.text = TRUE, ...)  {
+                        auto.text = TRUE, k = NULL, ...)  {
 
     ## get rid of R check annoyances
-    variable = NULL
+    variable <- NULL
 
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale") {
@@ -194,8 +198,6 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
         extra.args$pch <- 1
     if (!"cex" %in% names(extra.args))
         extra.args$cex <- 1
-    extra.args$k <- if ("k" %in% names(extra.args))
-                           k else NULL
 
     #layout default
     if(!"layout" %in% names(extra.args))
@@ -382,7 +384,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                                    col.line = myColors[group.number],
                                    col.symbol = myColors[group.number], ...)
 
-                      panel.gam(x, y, col =  myColors[group.number], k = extra.args$k, myColors[group.number], #col.se =  "black",
+                      panel.gam(x, y, col =  myColors[group.number], k = k, myColors[group.number], #col.se =  "black",
                                 simulate = simulate, n.sim = n,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
 
