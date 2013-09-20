@@ -128,7 +128,7 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' @param bias.corr When \code{angle} does not divide exactly into
 ##' 360 a bias is introduced in the frequencies when the wind
 ##' direction is already supplied rounded to the nearest 10 degrees,
-##' as is often the case. For example, if \code{angle == 22.5}, N, E,
+##' as is often the case. For example, if \code{angle = 22.5}, N, E,
 ##' S, W will include 3 wind sectors and all other angles will be
 ##' two. A bias correction can made to correct for this problem. A
 ##' simple method according to Applequist (2012) is used to adjust the
@@ -572,7 +572,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         tmp <- angle * ceiling(wd / angle - 0.5)
         tmp[1] <- 360
         tmp <- table(tmp) ## number of sectors spanned
-        results.grid[, 2:5] <- results.grid[, 2:5] * mean(tmp) /tmp
+        vars <- grep("x", names(results.grid)) ## the frequencies
+        results.grid[, vars] <- results.grid[, vars] * mean(tmp) /tmp
     }
 
     ## proper names of labelling###########################################
