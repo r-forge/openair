@@ -44,6 +44,8 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Only plot full length trajectories in trajPlot
 *	Allow smoothing parameter k to be used when smooth = TRUE for
 	more control in scatterPlot
+*	Add a bias correction to windRose (thanks to Philippe Barneoud
+	from Environment Canada for pointing out the need and solution)
 
 
 Changes in openair 0.8-0 [2012-11-30]

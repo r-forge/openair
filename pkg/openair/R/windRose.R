@@ -80,7 +80,7 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' and positive bias in another.
 ##'
 ##' @usage windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
-##' ws.int = 2, angle = 30, type = "default", cols = "default",
+##' ws.int = 2, angle = 30, type = "default", bias.corr = TRUE, cols = "default",
 ##' grid.line = NULL, width = 1, seg = NULL, auto.text = TRUE, breaks
 ##' = 4, offset = 10, max.freq = NULL, paddle = TRUE, key.header =
 ##' NULL, key.footer = "(m/s)", key.position = "bottom", key = TRUE,
@@ -125,6 +125,14 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' Type can be up length two e.g. \code{type = c("season", "weekday")} will
 ##'   produce a 2x2 plot split by season and day of the week. Note, when two
 ##'   types are provided the first forms the columns and the second the rows.
+##' @param bias.corr When \code{angle} does not divide exactly into
+##' 360 a bias is introduced in the frequencies when the wind
+##' direction is already supplied rounded to the nearest 10 degrees,
+##' as is often the case. For example, if \code{angle == 22.5}, N, E,
+##' S, W will include 3 wind sectors and all other angles will be
+##' two. A bias correction can made to correct for this problem. A
+##' simple method according to Applequist (2012) is used to adjust the
+##' frequencies.
 ##' @param cols Colours to be used for plotting. Options include
 ##' \dQuote{default}, \dQuote{increment}, \dQuote{heat}, \dQuote{jet},
 ##' \dQuote{hue} and user defined. For user defined the user can
@@ -229,6 +237,10 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' See \code{\link{polarFreq}} for a more flexible version that considers
 ##'   other statistics and pollutant concentrations.
 ##' @keywords methods
+##' @references
+##'
+##' Applequist, S, 2012: Wind Rose Bias
+##' Correction. J. Appl. Meteor. Climatol., 51, 1305-1309.
 ##' @examples
 ##'
 ##' # load example data from package data(mydata)
@@ -264,7 +276,7 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' ## results show postive bias in wd and ws
 ##' pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
 windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
-                      ws.int = 2, angle = 30, type = "default",
+                      ws.int = 2, angle = 30, type = "default", bias.corr = TRUE,
                       cols = "default", grid.line = NULL, width = 1, seg = NULL,
                       auto.text = TRUE, breaks = 4, offset = 10,
                       max.freq = NULL, paddle = TRUE, key.header = NULL,
@@ -311,6 +323,9 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         quickText(extra$ylab, auto.text) else quickText("", auto.text)
     extra$main <- if("main" %in% names(extra))
         quickText(extra$main, auto.text) else quickText("", auto.text)
+
+    rounded <- FALSE ## is the wd already rounded to 10 degrees, if so need to correct bias later
+    if (all(mydata[, wd] %% 10 == 0, na.rm = TRUE)) rounded <- TRUE
 
     ## preset statitistics
 
@@ -442,6 +457,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
     labs <- gsub("[(]|[)]|[[]|[]]", "", levels(mydata$x))
     labs <- gsub("[,]", " to ", labs)
 
+
+
     ## statistic handling
 
     prepare.grid <- function(mydata) {
@@ -458,6 +475,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
         weights <- tapply(mydata[, pollutant], list(mydata[ , wd], mydata$x),
                           stat.fun)
+        freqs <- tapply(mydata[, pollutant], mydata[ , wd], length)
 
         ## scaling
         if (stat.scale == "all") {
@@ -496,7 +514,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
 
         weights <- cbind(data.frame(weights), wd = as.numeric(row.names(weights)),
-                         calm = calm, panel.fun = panel.fun, mean.wd = mean.wd)
+                         calm = calm, panel.fun = panel.fun, mean.wd = mean.wd, freqs = freqs)
 
         weights
     }
@@ -547,6 +565,15 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
     ## format
     results.grid$calm <- stat.labcalm(results.grid$calm)
     results.grid$mean.wd <- stat.labcalm(results.grid$mean.wd)
+
+    ## correction for bias when angle does not divide exactly into 360
+    if (bias.corr & rounded) {
+        wd <- seq(10, 360, 10)
+        tmp <- angle * ceiling(wd / angle - 0.5)
+        tmp[1] <- 360
+        tmp <- table(tmp) ## number of sectors spanned
+        results.grid[, 2:5] <- results.grid[, 2:5] * mean(tmp) /tmp
+    }
 
     ## proper names of labelling###########################################
     strip.dat <- strip.fun(results.grid, type, auto.text)

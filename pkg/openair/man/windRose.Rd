@@ -4,13 +4,13 @@
 \title{Traditional wind rose plot and pollution rose variation}
 \usage{
   windRose(mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 =
-    NA, ws.int = 2, angle = 30, type = "default", cols =
-    "default", grid.line = NULL, width = 1, seg = NULL,
-    auto.text = TRUE, breaks = 4, offset = 10, max.freq =
-    NULL, paddle = TRUE, key.header = NULL, key.footer =
-    "(m/s)", key.position = "bottom", key = TRUE, dig.lab =
-    5, statistic = "prop.count", pollutant = NULL, annotate
-    = TRUE, border = NA, ...)
+    NA, ws.int = 2, angle = 30, type = "default", bias.corr
+    = TRUE, cols = "default", grid.line = NULL, width = 1,
+    seg = NULL, auto.text = TRUE, breaks = 4, offset = 10,
+    max.freq = NULL, paddle = TRUE, key.header = NULL,
+    key.footer = "(m/s)", key.position = "bottom", key =
+    TRUE, dig.lab = 5, statistic = "prop.count", pollutant
+    = NULL, annotate = TRUE, border = NA, ...)
 
   pollutionRose(mydata, pollutant = "nox", key.footer =
     pollutant, key.position = "right", key = TRUE, breaks =
@@ -63,6 +63,16 @@
   "weekday")} will produce a 2x2 plot split by season and
   day of the week. Note, when two types are provided the
   first forms the columns and the second the rows.}
+
+  \item{bias.corr}{When \code{angle} does not divide
+  exactly into 360 a bias is introduced in the frequencies
+  when the wind direction is already supplied rounded to
+  the nearest 10 degrees, as is often the case. For
+  example, if \code{angle == 22.5}, N, E, S, W will include
+  3 wind sectors and all other angles will be two. A bias
+  correction can made to correct for this problem. A simple
+  method according to Applequist (2012) is used to adjust
+  the frequencies.}
 
   \item{cols}{Colours to be used for plotting. Options
   include \dQuote{default}, \dQuote{increment},
@@ -292,6 +302,10 @@ pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
 \author{
   David Carslaw (with some additional contributions by Karl
   Ropkins)
+}
+\references{
+  Applequist, S, 2012: Wind Rose Bias Correction. J. Appl.
+  Meteor. Climatol., 51, 1305-1309.
 }
 \seealso{
   See \code{\link{drawOpenKey}} for fine control of the
