@@ -241,6 +241,13 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##'
 ##' Applequist, S, 2012: Wind Rose Bias
 ##' Correction. J. Appl. Meteor. Climatol., 51, 1305-1309.
+##'
+##' This paper seems to be the original?
+##'
+##' Droppo,  J.G. and B.A. Napier (2008) Wind Direction Bias in
+##' Generating Wind Roses and Conducting Sector-Based Air Dispersion
+##' Modeling, Journal of the Air & Waste Management Association, 58:7, 913-918.
+##'
 ##' @examples
 ##'
 ##' # load example data from package data(mydata)
@@ -570,7 +577,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
     if (bias.corr & rounded) {
         wd <- seq(10, 360, 10)
         tmp <- angle * ceiling(wd / angle - 0.5)
-        tmp[1] <- 360
+        id <- which(tmp == 0)
+        if (length(id > 0)) tmp[id] <- 360
         tmp <- table(tmp) ## number of sectors spanned
         vars <- grep("x", names(results.grid)) ## the frequencies
         results.grid[, vars] <- results.grid[, vars] * mean(tmp) /tmp
