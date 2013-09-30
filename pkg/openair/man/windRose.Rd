@@ -306,6 +306,13 @@ pollutionRose(mydata, ws = "ws", wd = "wd", ws2 = "ws2", wd2 = "wd2")
 \references{
   Applequist, S, 2012: Wind Rose Bias Correction. J. Appl.
   Meteor. Climatol., 51, 1305-1309.
+
+  This paper seems to be the original?
+
+  Droppo, J.G. and B.A. Napier (2008) Wind Direction Bias
+  in Generating Wind Roses and Conducting Sector-Based Air
+  Dispersion Modeling, Journal of the Air & Waste
+  Management Association, 58:7, 913-918.
 }
 \seealso{
   See \code{\link{drawOpenKey}} for fine control of the
