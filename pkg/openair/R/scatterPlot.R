@@ -511,7 +511,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (is.na(group)) {mydata$MyGroupVar <- factor("MyGroupVar"); group <-  "MyGroupVar"}
 
     ## number of groups
-    npol <- length(levels(mydata[ , group]))
+    npol <- length(unique(mydata[ , group]))
 
     if (!"pch" %in% names(Args)) Args$pch <- seq(npol)
 

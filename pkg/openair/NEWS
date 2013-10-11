@@ -45,7 +45,12 @@ Changes in openair 0.9-0 [2013-02-13]
 *	Allow smoothing parameter k to be used when smooth = TRUE for
 	more control in scatterPlot
 *	Add a bias correction to windRose (thanks to Philippe Barneoud
-	from Environment Canada for pointing out the need and solution)
+	from Environment Canada for pointing out the need and
+	solution)
+*	Better treatment of pollutionRose when comparing two met
+	datasets when ws bias is zero
+*	Fix conditionalEval to use COE, not IOA and other minor changes
+
 
 
 Changes in openair 0.8-0 [2012-11-30]
