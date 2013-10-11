@@ -779,12 +779,12 @@ makeOpenKeyLegend <- function(key, default.key, fun.name = "function"){
 }
 
  ## polygon that can deal with missing data for use in lattice plots with groups
-    poly.na <- function(x1, y1, x2, y2, group.number, myColors) {
+    poly.na <- function(x1, y1, x2, y2, group.number, myColors, alpha = 0.4) {
         for(i in seq(2, length(x1)))
             if (!any(is.na(y2[c(i - 1, i)])))
                 lpolygon(c(x1[i - 1], x1[i], x2[i], x2[i - 1]),
                          c(y1[i - 1], y1[i], y2[i], y2[i - 1]),
-                         col = myColors[group.number], border = NA, alpha = 0.4)
+                         col = myColors[group.number], border = NA, alpha = alpha)
     }
 
 

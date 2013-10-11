@@ -480,7 +480,8 @@ alpha = 0.4, ...)  {
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
                             if (ci) {poly.na(x, data.hour$Lower[subscripts], x,
-                                             data.hour$Upper[subscripts], group.number, myColors)}
+                                             data.hour$Upper[subscripts], group.number, myColors,
+                                             alpha = alpha)}
 
                         })
 
@@ -678,7 +679,8 @@ alpha = 0.4, ...)  {
                             panel.xyplot(x, y, type = "l", col.line = myColors[group.number],...)
 
                             if (ci) {poly.na(x, data.day.hour$Lower[subscripts], x,
-                                             data.day.hour$Upper[subscripts], group.number, myColors)}
+                                             data.day.hour$Upper[subscripts], group.number, myColors,
+                                             alpha = alpha)}
                         })
 
     ## reset for extra.args

@@ -259,17 +259,7 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
         pol.name <- sapply(levels(results[ , type[2]]), function(x) quickText(x, auto.text))
         strip.left <- strip.custom(factor.levels = pol.name)
     }
-#######################################################################################
-
-
-    ## polygon that can deal with missing data
-    poly.na <- function(x1, y1, x2, y2, col) {
-        for(i in seq(2, length(x1)))
-            if (!any(is.na(y2[c(i - 1, i)])))
-                lpolygon(c(x1[i - 1], x1[i], x2[i], x2[i - 1]),
-                         c(y1[i - 1], y1[i], y2[i], y2[i - 1]),
-                         col = col, border = NA, alpha = 1)
-    }
+    ## #####################################################################################
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("x ~ med | ", temp, sep = ""))
@@ -297,10 +287,10 @@ conditionalQuantile <- function(mydata, obs = "obs", mod = "mod",
 
                           poly.na(results$x[subscripts], results$q3[subscripts],
                                   results$x[subscripts],
-                                  results$q4[subscripts], col = col.2)
+                                  results$q4[subscripts], myColors = col.2, alpha = 1)
                           poly.na(results$x[subscripts], results$q1[subscripts],
                                   results$x[subscripts],
-                                  results$q2[subscripts], col = col.1)
+                                  results$q2[subscripts], myColors = col.1, alpha = 1)
 
                           ## match type and get limits for obs
                           theType <- results[subscripts[1], type]

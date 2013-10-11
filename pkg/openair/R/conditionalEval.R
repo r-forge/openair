@@ -430,49 +430,49 @@ conditionalEval <- function(mydata, obs = "obs", mod = "mod",
 
         myform <- formula(paste("mean ~ .id | ", temp, sep = ""))
 
-        xyplot.args <- list(x = myform, data = results, groups = results$group,
-                            ylim = dlply(results, .(statistic), function(x) c(min(x$lower, na.rm = TRUE),
-                            max(x$upper, na.rm = TRUE))),
-                            xlim = c(lo, hi * 1.05),
-                            ylab = quickText(ylab, auto.text),
-                            xlab = quickText(xlab, auto.text),
-                            as.table = TRUE,
-                            key = key,
-                            aspect = 1,
-                            strip = strip,
-                            strip.left = strip.left,
-                            scales = list(y = list(relation = "free", rot = 0)),
+        p.args <- list(x = myform, data = results, groups = results$group,
+                       ylim = dlply(results, .(statistic), function(x) c(min(x$lower, na.rm = TRUE),
+                       max(x$upper, na.rm = TRUE))),
+                       xlim = c(lo, hi * 1.05),
+                       ylab = quickText(ylab, auto.text),
+                       xlab = quickText(xlab, auto.text),
+                       as.table = TRUE,
+                       key = key,
+                       aspect = 1,
+                       strip = strip,
+                       strip.left = strip.left,
+                       scales = list(y = list(relation = "free", rot = 0)),
 
-                            par.strip.text = list(cex = 0.8),
-                            panel = panel.superpose, ...,
-                            panel.groups = function(x, y, group.number, subscripts, ...)
-                        {
-                            if (group.number == 1) {
+                       par.strip.text = list(cex = 0.8),
+                       panel = panel.superpose, ...,
+                       panel.groups = function(x, y, group.number, subscripts, ...)
+                   {
+                       if (group.number == 1) {
 
-                                panel.grid (-1, -1, col = "grey95")
-                                if (results$statistic[subscripts][1] %in% c("r", "COE", "FAC2"))
-                                    panel.abline(h = 1, lty = 5)
-                                if (results$statistic[subscripts][1] %in% c("MB", "NMB"))
-                                    panel.abline(h = 0, lty = 5)
-                            }
+                           panel.grid (-1, -1, col = "grey95")
+                           if (results$statistic[subscripts][1] %in% c("r", "COE", "FAC2"))
+                               panel.abline(h = 1, lty = 5)
+                           if (results$statistic[subscripts][1] %in% c("MB", "NMB"))
+                               panel.abline(h = 0, lty = 5)
+                       }
 
-                            openair:::poly.na(x, results$lower[subscripts], x,
-                                              results$upper[subscripts], group.number, myColors)
+                       poly.na(x, results$lower[subscripts], x,
+                               results$upper[subscripts], group.number, myColors)
 
-                            panel.lines(results$.id[subscripts], results$mean[subscripts],
-                                        col.line = myColors[group.number], lwd = 2)
+                       panel.lines(results$.id[subscripts], results$mean[subscripts],
+                                   col.line = myColors[group.number], lwd = 2)
 
-                        })
+                   })
 
         ## reset for extra.args
-        xyplot.args <- openair:::listUpdate(xyplot.args, extra.args)
+        p.args <- listUpdate(p.args, extra.args)
 
     }
 
     if (other) {
         thePlot <- clust.plt
     } else {
-        thePlot <- do.call(xyplot, xyplot.args)
+        thePlot <- do.call(xyplot, p.args)
     }
 
     ## how wide to set plots,  base is "2" units
