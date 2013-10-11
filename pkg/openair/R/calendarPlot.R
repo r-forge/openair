@@ -305,7 +305,7 @@ calendarPlot <- function(mydata, pollutant = "nox", year = 2003, month = 1:12, t
     baseData <- mydata
 
     ## subset months if necessary
-    mydata <- mydata[mydata$month %in% month.name[month], ]
+    mydata <- mydata[mydata$month %in% unique(format(all.dates, "%B")), ]
     mydata$month <- factor(mydata$month)
 
     strip.dat <- strip.fun(mydata, type, auto.text)
