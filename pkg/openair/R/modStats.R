@@ -117,7 +117,8 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", rank.n
     if (any(type %in%  dateTypes)) vars <- c("date", vars)
 
     ## check the data
-    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+    mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE,
+                        strip.white = FALSE)
 
     mydata <- cutData(mydata, type, ...)
 
