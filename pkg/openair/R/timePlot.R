@@ -577,7 +577,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
                             }
                             if (smooth) panel.gam(x, y, col = myColors[group.number] ,
                                                   col.se =  myColors[group.number],
-                                                  lty = 1, lwd = 1, se = ci, ...)
+                                                  lty = 1, lwd = 1, se = ci, k = NULL, ...)
 
                             ## add reference lines
                             panel.abline(v = ref.x, lty = 5)
