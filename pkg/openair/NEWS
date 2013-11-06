@@ -49,7 +49,9 @@ Changes in openair 0.9-0 [2013-02-13]
 	solution)
 *	Better treatment of pollutionRose when comparing two met
 	datasets when ws bias is zero
-*	Fix conditionalEval to use COE, not IOA and other minor changes
+*	Fix conditionalEval to use COE, not IOA and other minor
+	changes
+*	Allow method = "density" in trajLevel
 
 
 

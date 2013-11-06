@@ -930,11 +930,11 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             xlim <- range(x[, 1])
             ylim <- range(x[, 2])
 
-            map <- .smoothScatterCalcDensity(x, 256)
-            xm <- map$x1
-            ym <- map$x2
+            Map <- .smoothScatterCalcDensity(x, 256)
+            xm <- Map$x1
+            ym <- Map$x2
 
-            dens <- map$fhat
+            dens <- Map$fhat
 
             grid <- expand.grid(x = xm, y = ym)
 
@@ -982,6 +982,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                                    labels = FALSE, ...)
 
                                    if (mod.line) panel.modline(log.x, log.y)
+
+                                   ## base map
+                                   if (map)
+                                       add.map(Args, ...)
 
                                    ## add reference lines
                                    panel.abline(v = ref.x, lty = 5)
