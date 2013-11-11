@@ -253,9 +253,9 @@ polarAnnulus <- function(mydata,
     }
 
     if (missing(key.header)) key.header <- statistic
-    if (key.header == "weighted.mean") key.header <- c("weighted", "mean")
-    if (key.header == "percentile") key.header <- c(paste(percentile, "th", sep = ""), "percentile")
-    if (key.header == "cpf") key.header <- c("CPF", "probability")
+    if (key.header[1] == "weighted.mean") key.header <- c("weighted", "mean")
+    if (key.header[1] == "percentile") key.header <- c(paste(percentile, "th", sep = ""), "percentile")
+    if (key.header[1] == "cpf") key.header <- c("CPF", "probability")
 
     ## extract variables of interest
     vars <- c("wd", "date", pollutant)
