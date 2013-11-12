@@ -7,7 +7,6 @@ Authors@R: c(person("David", "Carslaw", role = c("aut", "cre"), email =
     "david.carslaw@kcl.ac.uk"), person("Karl", "Ropkins", role =
     "aut", email = "K.Ropkins@its.leeds.ac.uk"))
 ByteCompile: true
-Author: David Carslaw and Karl Ropkins
 Depends:
     R (>= 2.15.1),
 Imports:
