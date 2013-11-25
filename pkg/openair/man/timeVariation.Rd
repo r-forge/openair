@@ -6,7 +6,8 @@
     local.time = FALSE, normalise = FALSE,
     xlab = c("hour", "hour", "month", "weekday"),
     name.pol = pollutant, type = "default", group = NULL,
-    difference = FALSE, B = 100, ci = TRUE, cols = "hue",
+    difference = FALSE, statistic = "mean",
+    conf.int = 0.95, B = 100, ci = TRUE, cols = "hue",
     key = NULL, key.columns = 1, start.day = 1,
     auto.text = TRUE, alpha = 0.4, ...)
 }
@@ -76,6 +77,20 @@
   \code{pollutant[2] - pollutant[1]}. Bootstrap 95\%
   confidence intervals of the difference in means are also
   calculated. A horizontal dashed line is shown at y = 0.}
+
+  \item{statistic}{Can be "mean" (default) or "median". If
+  the statistic is 'mean' then the mean line and the 95\%
+  confidence interval in the mean are plotted by default.
+  If the statistic is 'median' then the median line is
+  plotted together with the 5/95 and 25/75th quantiles are
+  plotted. Users can control the confidence intervals with
+  \code{conf.int}.}
+
+  \item{conf.int}{The confidence intervals to be plotted.
+  If \code{statistic = "mean"} then the confidence
+  intervals in the mean are plotted. If \code{statistic =
+  "median"} then the \code{conf.int} and \code{1 -
+  conf.int} \emph{quantiles} are plotted.}
 
   \item{B}{Number of bootstrap replicates to use. Can be
   useful to reduce this value when there are a large number
@@ -214,6 +229,11 @@
   In addition, \code{timeVariation} will work well with
   other variables if available. Examples include
   meteorological and traffic flow data.
+
+  Depending on the choice of statistic, a subheading is
+  added. Users can control the text in the subheading
+  through the use of \code{sub} e.g. \code{sub = ""} will
+  remove any subheading.
 }
 \examples{
 # basic use

@@ -1,3 +1,9 @@
+Changes in openair 1.0-0 [2013-11-21]
+=====================================
+*	Pass all arguments in corPlot
+*	Update timeVariation to consider median + quantiles through
+	option 'statistic'
+
 Changes in openair 0.9-0 [2013-02-13]
 =====================================
 *	Fix bug introduced in 0.8-0 for scatterPlot surfaces
