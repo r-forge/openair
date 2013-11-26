@@ -153,8 +153,7 @@ modStats <- function(mydata,  mod = "mod", obs = "obs", type = "default", rank.n
 
     }
 
-    results <- na.omit(results)
-    results
+     results
 
 }
 
@@ -240,7 +239,8 @@ RMSE <- function(x, mod = "mod", obs = "obs") {
 r <- function(x, mod = "mod", obs = "obs", ...) {
 
     x <- na.omit(x[ , c(mod, obs)])
-    res <- suppressWarnings(cor(x[ , mod], x[ , obs], ...)) ## when SD=0
+    res <- suppressWarnings(cor(x[ , mod], x[ , obs], ...)) ## when SD=0; will return NA
+
     data.frame(r = res)
 }
 

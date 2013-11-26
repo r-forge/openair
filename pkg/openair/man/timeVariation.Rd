@@ -78,19 +78,24 @@
   confidence intervals of the difference in means are also
   calculated. A horizontal dashed line is shown at y = 0.}
 
-  \item{statistic}{Can be "mean" (default) or "median". If
-  the statistic is 'mean' then the mean line and the 95\%
-  confidence interval in the mean are plotted by default.
-  If the statistic is 'median' then the median line is
-  plotted together with the 5/95 and 25/75th quantiles are
-  plotted. Users can control the confidence intervals with
+  \item{statistic}{Can be \dQuote{mean} (default) or
+  \dQuote{median}. If the statistic is \sQuote{mean} then
+  the mean line and the 95\% confidence interval in the
+  mean are plotted by default. If the statistic is
+  \sQuote{median} then the median line is plotted together
+  with the 5/95 and 25/75th quantiles are plotted. Users
+  can control the confidence intervals with
   \code{conf.int}.}
 
   \item{conf.int}{The confidence intervals to be plotted.
   If \code{statistic = "mean"} then the confidence
   intervals in the mean are plotted. If \code{statistic =
   "median"} then the \code{conf.int} and \code{1 -
-  conf.int} \emph{quantiles} are plotted.}
+  conf.int} \emph{quantiles} are plotted. \code{conf.int}
+  can be of length 2, which is most useful for showing
+  quantiles. For example \code{conf.int = c(0.75, 0.99)}
+  will yield a plot showing the median, 25/75 and 5/95th
+  quantiles.}
 
   \item{B}{Number of bootstrap replicates to use. Can be
   useful to reduce this value when there are a large number
@@ -301,6 +306,15 @@ plot(myplot, subset = "day.hour") # top weekday and plot
 ## summary(myplot, subset = "hour") #summary of hour data set
 ## head(myplot, subset = "day") #head/top of day data set
 ## tail(myplot, subset = "month") #tail/top of month data set
+
+## plot quantiles and median
+\dontrun{
+timeVariation(mydata, stati="median", poll="pm10", col = "firebrick")
+
+## with different intervals
+timeVariation(mydata, stati="median", poll="pm10", conf.int = c(0.75, 0.99),
+col = "firebrick")
+}
 }
 \author{
   David Carslaw
