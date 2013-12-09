@@ -81,7 +81,8 @@
 ##' "site" splits the data by site and therefore requires a column \code{site}.
 ##'
 ##' @aliases cutData cutDaylight
-##' @usage cutData(x, type = "default", hemisphere = "northern", n.levels = 4, start.day, is.axis = FALSE, ...)
+##' @usage cutData(x, type = "default", hemisphere = "northern", n.levels = 4,
+##' start.day, is.axis = FALSE, ...)
 ##'
 ##' cutDaylight(x, local.hour.offset = 0,
 ##'                  latitude = 51.522393, longitude = -0.154700, ...)
