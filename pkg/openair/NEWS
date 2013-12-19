@@ -5,6 +5,8 @@ Changes in openair 1.0-0 [2013-11-21]
 	option 'statistic'
 *	Do not remove NA results from modStats
 *	Better scaling in polarCluster; consitent with polarPlot
+*	Fix importKCL where dates were filled if two non contiguous
+	years were chosen
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================
