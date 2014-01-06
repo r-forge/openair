@@ -3,7 +3,8 @@
 \alias{cutDaylight}
 \title{Function to split data in different ways for conditioning}
 \usage{
-cutData(x, type = "default", hemisphere = "northern", n.levels = 4, start.day, is.axis = FALSE, ...)
+cutData(x, type = "default", hemisphere = "northern", n.levels = 4,
+start.day, is.axis = FALSE, ...)
 
 cutDaylight(x, local.hour.offset = 0,
                  latitude = 51.522393, longitude = -0.154700, ...)

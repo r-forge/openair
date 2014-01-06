@@ -9,9 +9,9 @@ timeProp(mydata, pollutant = "nox", proportion = "cluster",
   auto.text = TRUE, ...)
 }
 \arguments{
-  \item{mydata}{A data frame containing the field
-  \code{obs} and \code{mod} representing observed and
-  modelled values.}
+  \item{mydata}{A data frame containing the fields
+  \code{date}, \code{pollutant} and a splitting variable
+  \code{proportion}}
 
   \item{pollutant}{Name of the pollutant to plot contained
   in \code{mydata}.}

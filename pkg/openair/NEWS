@@ -7,6 +7,7 @@ Changes in openair 1.0-0 [2013-11-21]
 *	Better scaling in polarCluster; consitent with polarPlot
 *	Fix importKCL where dates were filled if two non contiguous
 	years were chosen
+*	Refine scaling of ws in polarPlot when upper is set
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

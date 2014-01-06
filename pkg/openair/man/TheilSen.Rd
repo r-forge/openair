@@ -3,12 +3,12 @@
 \alias{TheilSen}
 \title{Tests for trends using Theil-Sen estimates}
 \usage{
-TheilSen(mydata, pollutant = "nox", deseason = FALSE, type = "default", avg.time = "month",
-                     statistic = "mean", percentile = NA, data.thresh = 0, alpha = 0.05,
-                     dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
-                     x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
-                     line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
-                     autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
+TheilSen(mydata, pollutant = "nox", deseason = FALSE, type = "default",
+avg.time = "month", statistic = "mean", percentile = NA, data.thresh = 0,
+alpha = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
+x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
+line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
+autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
 
       MannKendall(mydata,...)
 }
