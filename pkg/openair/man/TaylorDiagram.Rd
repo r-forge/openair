@@ -5,8 +5,9 @@
 TaylorDiagram(mydata, obs = "obs", mod = "mod", group = NULL,
   type = "default", normalise = FALSE, cols = "brewer1",
   rms.col = "darkgoldenrod", cor.col = "black", arrow.lwd = 3,
-  key = TRUE, key.title = group, key.columns = 1, key.pos = "right",
-  strip = TRUE, auto.text = TRUE, ...)
+  annotate = "centred\\nRMS error", key = TRUE, key.title = group,
+  key.columns = 1, key.pos = "right", strip = TRUE, auto.text = TRUE,
+  ...)
 }
 \arguments{
   \item{mydata}{A data frame minimally containing a column
@@ -92,6 +93,8 @@ TaylorDiagram(mydata, obs = "obs", mod = "mod", group = NULL,
   \item{arrow.lwd}{Width of arrow used when used for
   comparing two model outputs.}
 
+  \item{annotate}{Annotation shown for RMS error.}
+
   \item{key}{Should the key be shown?}
 
   \item{key.title}{Title for the key.}
@@ -113,6 +116,8 @@ TaylorDiagram(mydata, obs = "obs", mod = "mod", group = NULL,
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
+
+  \item{...}{}
 
   \item{\dots}{Other graphical parameters are passed onto
   \code{cutData} and \code{lattice:xyplot}. For example,
