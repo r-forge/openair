@@ -134,17 +134,19 @@
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the `2' in NO2.
-##' @param ... 
-##' @param \dots Other graphical parameters are passed onto \code{cutData} and
-##'   \code{lattice:xyplot}. For example, \code{TaylorDiagram} passes the option
-##'   \code{hemisphere = "southern"} on to \code{cutData} to provide southern
-##'   (rather than default northern) hemisphere handling of \code{type = "season"}.
-##'   Similarly, common graphical parameters, such as \code{layout} for panel
-##'   arrangement and \code{pch} and \code{cex} for plot symbol type and size,
-##'   are passed on to \code{xyplot}. Most are passed unmodified, although there are
-##'   some special cases where \code{openair} may locally manage this process. For
-##'   example, common axis and title labelling options (such as \code{xlab}, \code{ylab},
-##'   \code{main}) are passed via \code{quickText} to handle routine formatting.
+##' @param ... Other graphical parameters are passed onto
+##' \code{cutData} and \code{lattice:xyplot}. For example,
+##' \code{TaylorDiagram} passes the option \code{hemisphere =
+##' "southern"} on to \code{cutData} to provide southern (rather than
+##' default northern) hemisphere handling of \code{type = "season"}.
+##' Similarly, common graphical parameters, such as \code{layout} for
+##' panel arrangement and \code{pch} and \code{cex} for plot symbol
+##' type and size, are passed on to \code{xyplot}. Most are passed
+##' unmodified, although there are some special cases where
+##' \code{openair} may locally manage this process. For example,
+##' common axis and title labelling options (such as \code{xlab},
+##' \code{ylab}, \code{main}) are passed via \code{quickText} to
+##' handle routine formatting.
 ##' @export
 ##' @return As well as generating the plot itself, \code{TaylorDiagram} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -237,7 +239,7 @@
 TaylorDiagram <- function(mydata, obs = "obs", mod = "mod", group = NULL, type = "default",
                           normalise = FALSE,  cols = "brewer1",
                           rms.col = "darkgoldenrod", cor.col = "black", arrow.lwd = 3,
-                          annotate = "centred\nRMS error", 
+                          annotate = "centred\nRMS error",
                           key = TRUE, key.title = group, key.columns = 1,
                           key.pos = "right", strip = TRUE, auto.text = TRUE, ...)
 {

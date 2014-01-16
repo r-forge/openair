@@ -117,14 +117,12 @@ TaylorDiagram(mydata, obs = "obs", mod = "mod", group = NULL,
   automatically try and format pollutant names and units
   properly e.g.  by subscripting the `2' in NO2.}
 
-  \item{...}{}
-
-  \item{\dots}{Other graphical parameters are passed onto
+  \item{...}{Other graphical parameters are passed onto
   \code{cutData} and \code{lattice:xyplot}. For example,
   \code{TaylorDiagram} passes the option \code{hemisphere =
   "southern"} on to \code{cutData} to provide southern
   (rather than default northern) hemisphere handling of
-  \code{type = "season"}.  Similarly, common graphical
+  \code{type = "season"}. Similarly, common graphical
   parameters, such as \code{layout} for panel arrangement
   and \code{pch} and \code{cex} for plot symbol type and
   size, are passed on to \code{xyplot}. Most are passed
