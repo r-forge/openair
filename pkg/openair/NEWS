@@ -11,6 +11,7 @@ Changes in openair 1.0-0 [2013-11-21]
 *	Fix bug when type = "weekday" but not all days of the week
 	are present
 *	Add annotate option to TaylorDiagram
+*	Allow modStat statistics to be chosen by user
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

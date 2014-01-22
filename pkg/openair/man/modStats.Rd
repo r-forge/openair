@@ -2,7 +2,8 @@
 \alias{modStats}
 \title{Calculate common model evaluation statistics}
 \usage{
-modStats(mydata, mod = "mod", obs = "obs", type = "default",
+modStats(mydata, mod = "mod", obs = "obs", statistic = c("n", "FAC2",
+  "MB", "MGE", "NMB", "NMGE", "RMSE", "r", "COE"), type = "default",
   rank.name = NULL, ...)
 }
 \arguments{
@@ -13,6 +14,9 @@ modStats(mydata, mod = "mod", obs = "obs", type = "default",
 
   \item{obs}{Name of a variable in \code{mydata} that
   respresents measured values.}
+
+  \item{statistic}{The statistic to be calculated. See
+  details below for a description of each.}
 
   \item{type}{\code{type} determines how the data are split
   i.e. conditioned, and then plotted. The default is will
