@@ -12,6 +12,8 @@ Changes in openair 1.0-0 [2013-11-21]
 	are present
 *	Add annotate option to TaylorDiagram
 *	Allow modStat statistics to be chosen by user
+*	Needs to be >24 months to deseason in smoothTrend/TheilSen
+	(was >=)
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

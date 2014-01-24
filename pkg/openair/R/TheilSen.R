@@ -338,7 +338,6 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
         start.month <-  startMonth(mydata$date)
         end.month <-   endMonth(mydata$date)
 
-
         if (avg.time == "month") {
 
             mydata$date <- as.Date(mydata$date)
@@ -346,7 +345,7 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
             deseas <- mydata[, pollutant]
 
             ## can't deseason less than 2 years of data
-            if (nrow(mydata) < 24) deseason <- FALSE
+            if (nrow(mydata) <= 24) deseason <- FALSE
 
             if (deseason) {
                 ## interpolate missing data
