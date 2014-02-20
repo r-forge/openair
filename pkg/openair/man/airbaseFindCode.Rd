@@ -1,12 +1,12 @@
 \name{airbaseFindCode}
 \alias{airbaseFindCode}
-\title{Helper function to find EEA airbase codes}
+\title{Helper function to find EEA airbase site codes}
 \usage{
 airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU", "IE", "IS", "IT",
   "LI", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS",
-  "SE", "SI", "SK", "TR"), site.type = c("Background", "Traffic",
-  "Industrial", "Unknown"), local.code = NA, lat = c(-90, 90),
+  "SE", "SI", "SK", "TR"), site.type = c("background", "traffic",
+  "industrial", "unknown"), local.code = NA, lat = c(-90, 90),
   lon = c(-180, 180))
 }
 \arguments{
@@ -32,7 +32,7 @@ A vector of airbase site codes that can be used directly in
 \code{\link{importAirbase}}.
 }
 \description{
-Helper function to find airbase codes
+Helper function to find airbase site codes
 }
 \details{
 This function helps to identify airbase site codes based on
@@ -41,10 +41,10 @@ site type, local site code and latitude/longitude ranges.
 }
 \examples{
 ## select all sites in Denmark
-sites <- airbaseFindCode(country = "DK")
+\dontrun{sites <- airbaseFindCode(country = "DK")
 
 ## traffic sites in Germany and the UK
-sites <- airbaseFindCode(country = c("DE", "GB"), site.type = "Background")
+sites <- airbaseFindCode(country = c("DE", "GB"), site.type = "traffic")}
 }
 \author{
 David Carslaw

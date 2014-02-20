@@ -1,9 +1,9 @@
-##' Helper function to find airbase codes
+##' Helper function to find airbase site codes
 ##'
 ##' This function helps to identify airbase site codes based on one or
 ##' more criteria. The criteria include country code, site type, local
 ##' site code and latitude/longitude ranges.
-##' @title Helper function to find EEA airbase codes
+##' @title Helper function to find EEA airbase site codes
 ##' @param country A character or vector of characters representing country code.
 ##' @param site.type One of \dQuote{Background}, \dQuote{Traffic},
 ##' \dQuote{Industrial}, \dQuote{Unknown} representing the type of
@@ -20,29 +20,31 @@
 ##' @examples
 ##'
 ##' ## select all sites in Denmark
-##' sites <- airbaseFindCode(country = "DK")
+##' \dontrun{sites <- airbaseFindCode(country = "DK")
 ##'
 ##' ## traffic sites in Germany and the UK
-##' sites <- airbaseFindCode(country = c("DE", "GB"), site.type = "Background")
+##' sites <- airbaseFindCode(country = c("DE", "GB"), site.type = "traffic")}
 airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
                                 "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU",
                                 "IE", "IS", "IT", "LI", "LT", "LU","LV", "ME", "MK", "MT",
                                 "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SK", "TR"),
-                            site.type = c("Background", "Traffic", "Industrial", "Unknown"),
+                            site.type = c("background", "traffic", "industrial", "unknown"),
                             local.code = NA, 
                             lat = c(-90, 90), lon = c(-180, 180)) {
 
     all <- url("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData")
     load(all)
+
+    site.info <- NULL
                 
     all <- site.info
 
     ## country
-    id <- which(all$country.code %in% country)
+    id <- which(all$country.code %in% toupper(country))
     res <- all[id, ]
 
     ## site type
-    res <- res[res$site.type %in% site.type, ]
+    res <- res[toupper(res$site.type) %in% toupper(site.type) , ]
 
     ## lat/lon
     id <- which(res$lat >= lat[1] & res$lat <= lat[2] & res$lon >= lon[1] &
