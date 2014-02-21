@@ -5,9 +5,12 @@
 ##' site code and latitude/longitude ranges.
 ##' @title Helper function to find EEA airbase site codes
 ##' @param country A character or vector of characters representing country code.
-##' @param site.type One of \dQuote{Background}, \dQuote{Traffic},
-##' \dQuote{Industrial}, \dQuote{Unknown} representing the type of
+##' @param site.type One of \dQuote{background}, \dQuote{traffic},
+##' \dQuote{industrial}, \dQuote{unknown} representing the type of
 ##' site.
+##' @param area.type The type of area in which the site is
+##' located. Can be \dQuote{rural}, \dQuote{urban}, \dQuote{suburban},
+##' \dQuote{unknown}.
 ##' @param local.code A character or vector of characters representing
 ##' the local site code. For example \dQuote{MY1} is the UK code for
 ##' Marylebone Road.
@@ -29,22 +32,27 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
                                 "IE", "IS", "IT", "LI", "LT", "LU","LV", "ME", "MK", "MT",
                                 "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SK", "TR"),
                             site.type = c("background", "traffic", "industrial", "unknown"),
+                            area.type = c("rural", "urban", "suburban", "unknown"), 
                             local.code = NA, 
                             lat = c(-90, 90), lon = c(-180, 180)) {
 
-    all <- url("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData")
-    load(all)
 
     site.info <- NULL
+    
+    all <- url("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData")
+    load(all)
                 
     all <- site.info
 
     ## country
-    id <- which(all$country.code %in% toupper(country))
+    id <- which(toupper(all$country.code) %in% toupper(country))
     res <- all[id, ]
 
     ## site type
     res <- res[toupper(res$site.type) %in% toupper(site.type) , ]
+
+    ## area type
+    res <- res[toupper(res$station_type_of_area) %in% toupper(area.type) , ]
 
     ## lat/lon
     id <- which(res$lat >= lat[1] & res$lat <= lat[2] & res$lon >= lon[1] &

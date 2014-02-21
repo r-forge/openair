@@ -54,7 +54,8 @@ If \code{drop = TRUE} then the original columns are not
 retained. For example, given original columns NOX|101,
 NOX|102 the new data frame will have only one column NOX.
 Conversely, if \code{drop = FALSE} then the final data
-frame will have three species: NOX|101, NOX|102 and NOX.
+frame will have three species: NOX|101, NOX|102 and a new
+combined field NOX.
 }
 \author{
 David Carslaw

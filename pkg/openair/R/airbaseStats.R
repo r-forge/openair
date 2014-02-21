@@ -11,10 +11,13 @@
 ##' data in various ways e.g. by extracting a particular species with
 ##' a defined data capture threshold.
 ##' @title Import pre-calculated airbase statistics
-##' @param statistic A \emph{single} choice from "P50", "Mean", "P95",
-##' "P98", "Max", "Max36", "Max8", "Days.c.50.", "Max26",
-##' "Days.c.120.","SOMO35", "AOT40", "Max19", "Hours.c.200.", "Max4",
-##' "Days.c.125.", "P99_9", "Max25", "Hours.c.350.".
+##' @param statistic A \emph{single} choice from \dQuote{P50},
+##' \dQuote{Mean}, \dQuote{P95}, \dQuote{P98}, \dQuote{Max},
+##' \dQuote{Max36}, \dQuote{Max8}, \dQuote{Days.c.50.},
+##' \dQuote{Max26}, \dQuote{Days.c.120.},\dQuote{SOMO35},
+##' \dQuote{AOT40}, \dQuote{Max19}, \dQuote{Hours.c.200.},
+##' \dQuote{Max4}, \dQuote{Days.c.125.}, \dQuote{P99_9},
+##' \dQuote{Max25}, \dQuote{Hours.c.350.}.
 ##' @param add Additional fields to add to the returned data frame. So
 ##' far only the latitutde and longitude of the site will be returned.
 ##' @return A data frame of airbase sites with the statsitics chosen

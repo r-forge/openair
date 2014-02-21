@@ -63,8 +63,12 @@ importTraj(site = "london", year = 2009, local = NA)
   To import several specfic years use \code{year = c(1990,
   1995, 2000)} for example.}
 
-  \item{local}{Used for testing purposes on a local file
-  system.}
+  \item{local}{File path to .RData trajectory files run by
+  user and not stored on the KCL web server. These files
+  would have been generated from the Hysplit trajectory
+  code shown in the appendix of the openair manual. An
+  example would be \code{local =
+  'c:/users/david/TrajFiles/'}.}
 }
 \value{
 Returns a data frame with pre-calculated back trajectories.

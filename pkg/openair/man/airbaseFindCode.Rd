@@ -6,16 +6,20 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU", "IE", "IS", "IT",
   "LI", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS",
   "SE", "SI", "SK", "TR"), site.type = c("background", "traffic",
-  "industrial", "unknown"), local.code = NA, lat = c(-90, 90),
-  lon = c(-180, 180))
+  "industrial", "unknown"), area.type = c("rural", "urban", "suburban",
+  "unknown"), local.code = NA, lat = c(-90, 90), lon = c(-180, 180))
 }
 \arguments{
   \item{country}{A character or vector of characters
   representing country code.}
 
-  \item{site.type}{One of \dQuote{Background},
-  \dQuote{Traffic}, \dQuote{Industrial}, \dQuote{Unknown}
+  \item{site.type}{One of \dQuote{background},
+  \dQuote{traffic}, \dQuote{industrial}, \dQuote{unknown}
   representing the type of site.}
+
+  \item{area.type}{The type of area in which the site is
+  located. Can be \dQuote{rural}, \dQuote{urban},
+  \dQuote{suburban}, \dQuote{unknown}.}
 
   \item{local.code}{A character or vector of characters
   representing the local site code. For example
