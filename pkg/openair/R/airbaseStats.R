@@ -26,6 +26,8 @@
 ##' @author David Carslaw
 airbaseStats <- function(statistic = "mean", add = c("lat", "lon")) {
 
+    site.info <- code <- lat <- lon <- NULL
+
     stat.name <- match.arg(statistic, c("P50", "Mean", "P95", "P98", "Max", "Max36",
                                         "Max8", "Days.c.50.", "Max26", "Days.c.120.",
                                         "SOMO35", "AOT40", "Max19", "Hours.c.200.",

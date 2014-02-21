@@ -14,7 +14,7 @@
 airbaseInfo <- function(site = "gb0620a") {
 
     ## get rid of R check annoyances
-    meas.config <- NULL
+    meas.config <- NULL; code <- NULL
 
     site <- toupper(site)
 

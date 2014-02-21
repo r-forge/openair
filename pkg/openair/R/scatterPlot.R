@@ -463,21 +463,28 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
         } else {
-
+            ## handle user limits and clipping
             breaks <- pretty(limits, n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
-            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
-                ## if clipping highest, then annotate differently
+            ## case where user max is < data max
+            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {             
                 id <- which(mydata[[z]] > max(limits))
                 mydata[[z]][id] <- max(limits)
-                thecol <- openColours(cols, 100)[cut(mydata[, z], 100, label = FALSE)]
-                mydata$col <- thecol
-                labs <- pretty(breaks, 7)
-                labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
                 labs[length(labs)] <- paste(">", labs[length(labs)])
             }
+
+            ## case where user min is > data min
+            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {              
+                id <- which(mydata[[z]] < min(limits))
+                mydata[[z]][id] <- min(limits)
+                labs[1] <- paste("<", labs[1])
+            }
+            
+            thecol <- openColours(cols, 100)[cut(mydata[, z], 100, label = FALSE)]
+            mydata$col <- thecol
+                              
         }
 
         if (thekey) {
@@ -642,6 +649,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                             }
 
+                            ## add base map
+                            if (map && group.number == groupMax)
+                                add.map(Args, ...)
+
                             if (!is.na(z) & !traj)
                                 panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                                 as.table = TRUE, ...)
@@ -667,9 +678,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 panel.smooth.spline(x, y, col = "grey20", #myColors[group.number],
                                                     lwd = lwd, ...)
 
-                            ## add base map
-                            if (map && group.number == groupMax)
-                                add.map(Args, ...)
+                            
 
                             if (mod.line && group.number == 1)
                                 panel.modline(log.x, log.y)
@@ -809,19 +818,27 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
         } else {
-
+            
+           ## handle user limits and clipping
             breaks <- pretty(limits, n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
-            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
-                ## if clipping highest, then annotate differently
+            ## case where user max is < data max
+            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {             
                 id <- which(mydata[[z]] > max(limits))
                 mydata[[z]][id] <- max(limits)
-                labs <- pretty(breaks, 7)
-                labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
                 labs[length(labs)] <- paste(">", labs[length(labs)])
             }
+
+            ## case where user min is > data min
+            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {              
+                id <- which(mydata[[z]] < min(limits))
+                mydata[[z]][id] <- min(limits)
+                labs[1] <- paste("<", labs[1])
+            }
+            
+           
         }
 
 

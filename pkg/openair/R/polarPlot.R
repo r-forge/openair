@@ -712,19 +712,26 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
     } else {
-
+        
+        ## handle user limits and clipping
         breaks <- pretty(limits, n = nlev)
         labs <- pretty(breaks, 7)
         labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
-
-        if (max(limits) < max(results.grid$z, na.rm = TRUE)) {
-            ## if clipping highest, then annotate differently
-            id <- which(results.grid$z > max(limits))
-            results.grid$z[id] <- max(limits)
-            labs <- pretty(breaks, 7)
-            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+        
+        ## case where user max is < data max
+        if (max(limits) < max(results.grid[["z"]], na.rm = TRUE)) {             
+            id <- which(results.grid[["z"]] > max(limits))
+            results.grid[["z"]][id] <- max(limits)
             labs[length(labs)] <- paste(">", labs[length(labs)])
         }
+
+        ## case where user min is > data min
+        if (min(limits) > min(results.grid[["z"]], na.rm = TRUE)) {              
+            id <- which(results.grid[["z"]] < min(limits))
+            results.grid[["z"]][id] <- min(limits)
+            labs[1] <- paste("<", labs[1])
+        }
+               
     }
 
     nlev2 <- length(breaks)
