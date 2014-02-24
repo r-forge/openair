@@ -13,7 +13,7 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE
 
     varNames <- c(Names, type) ## names we want to be there
     matching <- varNames %in% all.vars
-
+    
     if (any(!matching)) {
         ## not all variables are present
         stop(cat("Can't find the variable(s)", varNames[!matching], "\n"))
@@ -116,9 +116,13 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE
         ## daylight saving time can cause terrible problems - best avoided!!
         z <- as.POSIXlt(mydata$date[1])
         zz <- attr(z, "tzone")
+        
         if (length(zz) == 3L) {
-            warning("Detected data with Daylight Saving Time, converting to UTC/GMT")
-            attr(mydata$date, "tzone") <- "GMT"
+            if (zz[3] != "WILDABBR") ## means that no DST e.g. for tz = Etc/GMT+5
+                {
+                    warning("Detected data with Daylight Saving Time, converting to UTC/GMT")
+                    attr(mydata$date, "tzone") <- "GMT"
+                }
 
         }
     }

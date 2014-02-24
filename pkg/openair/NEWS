@@ -19,6 +19,8 @@ Changes in openair 1.0-0 [2013-11-21]
 	arguments were not passed)
 *	Better user defined limits scaling in polarPlot, scatterPlot
 	when limits within data range
+*	Clarify time zone for importing data to openair and checking
+	(see manual for details)
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

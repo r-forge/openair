@@ -36,6 +36,7 @@
 ##' @param sep Allows user to specify a delimiter if not \sQuote{,} (csv) or
 ##' TAB (txt). For example \sQuote{;} is sometimes used to delineate separate
 ##' columns.
+##' @param " 
 ##' @param header.at The file row holding header information or \code{NULL} if
 ##'   no header to be used.
 ##' @param data.at The file row to start reading data from. When generating the
@@ -55,9 +56,16 @@
 ##' time format must be supplied. Common examples include \dQuote{\%H:\%M}
 ##' (like 07:00) or an integer giving the hour, in which case the
 ##' format is \dQuote{\%H}. Again, see examples below.
-##' @param na.strings Strings of any terms that are to be interpreted
-##' as missing (\code{NA}). For example, this might be \dQuote{-999}, or
-##' \dQuote{n/a} and can be of several items.
+##' @param tzone The time zone for the data. In order to avoid the
+##' complexities of DST (daylight savings time), openair assumes the
+##' data are in GMT (UTC) or a constant offset from GMT. Users can set
+##' a positive or negative offset in hours from GMT. For example, to
+##' set the time zone of the data to the time zone in New York (EST, 5
+##' hours behind GMT) set \code{tzone = "Etc/GMT+5"}. To set the time
+##' zone of the data to Central European Time (CET, 1 hour ahead of
+##' GMT) set \code{tzone = "Etc/GMT-1"}. \emph{Note that the positive
+##' and negative offsets are opposite to what most users expect.}
+##' @param a.strings 
 ##' @param quote String of characters (or character equivalents) the imported
 ##'   file may use to represent a character field.
 ##' @param ws Name of wind speed field if present if different from
@@ -71,6 +79,9 @@
 ##' hour.
 ##' @param ... Other arguments passed to \code{read.table}.
 ##'
+##' @param na.strings Strings of any terms that are to be interpreted
+##' as missing (\code{NA}). For example, this might be \dQuote{-999}, or
+##' \dQuote{n/a} and can be of several items.
 ##' @return A data frame formatted for openair use.
 ##' @author David Carslaw
 ##' @export
@@ -98,7 +109,7 @@
 ##'
 import <- function (file = file.choose(), file.type = "csv", sep = ",", header.at = 1,
                     data.at = 2,  date = "date", date.format = "%d/%m/%Y %H:%M",
-                    time = NULL,  time.format = NULL, na.strings = c("", "NA"),
+                    time = NULL,  time.format = NULL, tzone = "GMT", na.strings = c("", "NA"),
                     quote = "\"", ws = NULL, wd = NULL,
                     correct.time = NULL, ...)
 {
@@ -141,7 +152,8 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
     ## set date format - if no time column use date format directly
     if (is.null(time)) {
 
-        thedata$date <- as.POSIXct(strptime(thedata$date, format = date.format, tz = "GMT"), tz = "GMT")
+        thedata$date <- as.POSIXct(strptime(thedata$date, format = date.format, tz = tzone),
+                                   tz = tzone)
 
         ## if all dates are NA, there is a problem...
         if (all(is.na(thedata$date))) stop ("Date conversion problems, check that date.format is correct")
@@ -157,7 +169,7 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
         ## time is in a separate column
         thedata$date <- as.POSIXct(strptime(paste(thedata$date, thedata[, time]),
                                             format = paste(date.format, time.format),
-                                            tz = "GMT"), tz = "GMT")
+                                            tz = tzone), tz = tzone)
 
         ## if all dates are NA, there is a problem...
         if (all(is.na(thedata$date))) stop ("Date conversion problems, check that date.format and/or time.format is correct")
@@ -165,7 +177,7 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
 
     if (!is.null(correct.time)) thedata$date <- thedata$date + correct.time
 
-    attr(thedata$date, "tzone") <- "GMT"
+    attr(thedata$date, "tzone") <- tzone
 
     ## deal with missing dates
     ids <- which(is.na(thedata$date))

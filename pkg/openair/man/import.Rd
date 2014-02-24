@@ -5,7 +5,7 @@
 import(file = file.choose(), file.type = "csv", sep = ",",
   header.at = 1, data.at = 2, date = "date",
   date.format = "\%d/\%m/\%Y \%H:\%M", time = NULL, time.format = NULL,
-  na.strings = c("", "NA"),
+  tzone = "GMT", na.strings = c("", "NA"),
   quote = "\\"", ws = NULL, wd = NULL, correct.time = NULL, ...)
 }
 \arguments{
@@ -22,6 +22,8 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   \item{sep}{Allows user to specify a delimiter if not
   \sQuote{,} (csv) or TAB (txt). For example \sQuote{;} is
   sometimes used to delineate separate columns.}
+
+  \item{"}{}
 
   \item{header.at}{The file row holding header information
   or \code{NULL} if no header to be used.}
@@ -53,10 +55,19 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   giving the hour, in which case the format is
   \dQuote{\%H}. Again, see examples below.}
 
-  \item{na.strings}{Strings of any terms that are to be
-  interpreted as missing (\code{NA}). For example, this
-  might be \dQuote{-999}, or \dQuote{n/a} and can be of
-  several items.}
+  \item{tzone}{The time zone for the data. In order to
+  avoid the complexities of DST (daylight savings time),
+  openair assumes the data are in GMT (UTC) or a constant
+  offset from GMT. Users can set a positive or negative
+  offset in hours from GMT. For example, to set the time
+  zone of the data to the time zone in New York (EST, 5
+  hours behind GMT) set \code{tzone = "Etc/GMT+5"}. To set
+  the time zone of the data to Central European Time (CET,
+  1 hour ahead of GMT) set \code{tzone = "Etc/GMT-1"}.
+  \emph{Note that the positive and negative offsets are
+  opposite to what most users expect.}}
+
+  \item{a.strings}{}
 
   \item{quote}{String of characters (or character
   equivalents) the imported file may use to represent a
@@ -75,6 +86,11 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   \code{correct.time = -3600} will correct the hour.}
 
   \item{...}{Other arguments passed to \code{read.table}.}
+
+  \item{na.strings}{Strings of any terms that are to be
+  interpreted as missing (\code{NA}). For example, this
+  might be \dQuote{-999}, or \dQuote{n/a} and can be of
+  several items.}
 }
 \value{
 A data frame formatted for openair use.
