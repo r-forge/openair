@@ -24,7 +24,7 @@
 ##' and for all species.
 ##' @export
 ##' @author David Carslaw
-airbaseStats <- function(statistic = "mean", add = c("lat", "lon")) {
+airbaseStats <- function(statistic = "Mean", add = c("lat", "lon")) {
 
     site.info <- code <- lat <- lon <- NULL
 
