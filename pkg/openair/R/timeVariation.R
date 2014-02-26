@@ -375,7 +375,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
     if (!missing(group))  mydata <- cutData(mydata, group, local.tz = local.tz, ...)
     mydata <- cutData(mydata, type, local.tz = local.tz, ...)
-
+    
     ## put in local time if needed
     if (!is.null(local.tz)) attr(mydata$date, "tzone") <- local.tz
 
@@ -497,7 +497,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
         data.hour <- errorDiff(mydata, vars = "hour", type = type, poll1 = poll1,
                                poll2 = poll2, B = B, conf.int = conf.int)
     } else {
-
+        
         data.hour <- ldply(conf.int, proc, mydata, vars = "hour", pollutant, type, B = B,
                              statistic = statistic)
     }
@@ -762,7 +762,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
     } else {
         y.upp <- 0.975; y.dwn <- 0.025
     }
-
+    
     main.plot <- function(...) {
         if (type == "default") {
             print(update(day.hour, key = list(rectangles = list(col = myColors[1:npol], border = NA),
@@ -806,7 +806,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
 proc <- function(conf.int = conf.int, mydata, vars = "day.hour", pollutant, type, B = B,
                  statistic = statistic) {
-
+    
     ## get rid of R check annoyances
     variable = value = NULL
 
@@ -818,7 +818,7 @@ proc <- function(conf.int = conf.int, mydata, vars = "day.hour", pollutant, type
 
     summary.values <- function(conf.int = conf.int, mydata, vars = vars, FUN, type = type, B = B,
                                statistic = statistic) {
-
+        
         if (vars == "hour")  myform <- formula(paste("value ~ variable + hour +", type))
 
         if (vars == "day.hour")  myform <- formula(paste("value ~ variable + wkday + hour +", type))
@@ -840,10 +840,11 @@ proc <- function(conf.int = conf.int, mydata, vars = "day.hour", pollutant, type
                                  conf.int = conf.int)
         data1 <- data.frame(subset(data1, select = -value), data1$value)
     }
-
+    
     if ("wd" %in% pollutant) {
-        data2 <-  subset(mydata, variable == "wd")
-        data2 <-  summary.values(conf.int, data2, vars, wd.smean.normal, type, B = B, statistic = statistic)
+        if (length(pollutant) > 1) mydata <- subset(mydata, variable == "wd")
+        data2 <-  summary.values(conf.int, mydata, vars, wd.smean.normal, type,
+                                 B = B, statistic = statistic)
         data2 <- data.frame(subset(data2, select = -value), data2$value)
     }
 

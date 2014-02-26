@@ -359,6 +359,7 @@ cutData <- function(x, type = "default", hemisphere = "northern", n.levels = 4,
 
             x[id.nondst, type] <- "Non-DST"
             x[id.dst, type] <- "DST"
+            x[, type] <- factor(x[, type])
                         
         }
 
