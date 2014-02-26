@@ -2,7 +2,7 @@
 \alias{airbaseStats}
 \title{Import pre-calculated airbase statistics}
 \usage{
-airbaseStats(statistic = "mean", add = c("lat", "lon"))
+airbaseStats(statistic = "Mean", add = c("lat", "lon", "site.type"))
 }
 \arguments{
   \item{statistic}{A \emph{single} choice from

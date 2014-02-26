@@ -23,8 +23,6 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   \sQuote{,} (csv) or TAB (txt). For example \sQuote{;} is
   sometimes used to delineate separate columns.}
 
-  \item{"}{}
-
   \item{header.at}{The file row holding header information
   or \code{NULL} if no header to be used.}
 
@@ -67,7 +65,10 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   \emph{Note that the positive and negative offsets are
   opposite to what most users expect.}}
 
-  \item{a.strings}{}
+  \item{na.strings}{Strings of any terms that are to be
+  interpreted as missing (NA). For example, this might be
+  \dQuote{-999}, or \dQuote{n/a} and can be of several
+  items.}
 
   \item{quote}{String of characters (or character
   equivalents) the imported file may use to represent a
@@ -77,7 +78,7 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   different from \dQuote{ws} e.g. \code{ws = "WSPD"}.}
 
   \item{wd}{Name of wind direction field if present if
-  different from "wd" e.g. \code{wd = "WDIR"}.}
+  different from \dQuote{wd} e.g. \code{wd = "WDIR"}.}
 
   \item{correct.time}{Numerical correction (in seconds) for
   imported date.  Default \code{NULL} turns this option
@@ -86,11 +87,6 @@ import(file = file.choose(), file.type = "csv", sep = ",",
   \code{correct.time = -3600} will correct the hour.}
 
   \item{...}{Other arguments passed to \code{read.table}.}
-
-  \item{na.strings}{Strings of any terms that are to be
-  interpreted as missing (\code{NA}). For example, this
-  might be \dQuote{-999}, or \dQuote{n/a} and can be of
-  several items.}
 }
 \value{
 A data frame formatted for openair use.

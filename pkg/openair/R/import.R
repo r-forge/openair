@@ -36,7 +36,6 @@
 ##' @param sep Allows user to specify a delimiter if not \sQuote{,} (csv) or
 ##' TAB (txt). For example \sQuote{;} is sometimes used to delineate separate
 ##' columns.
-##' @param " 
 ##' @param header.at The file row holding header information or \code{NULL} if
 ##'   no header to be used.
 ##' @param data.at The file row to start reading data from. When generating the
@@ -65,13 +64,15 @@
 ##' zone of the data to Central European Time (CET, 1 hour ahead of
 ##' GMT) set \code{tzone = "Etc/GMT-1"}. \emph{Note that the positive
 ##' and negative offsets are opposite to what most users expect.}
-##' @param a.strings 
-##' @param quote String of characters (or character equivalents) the imported
-##'   file may use to represent a character field.
+##' @param na.strings Strings of any terms that are to be interpreted
+##' as missing (NA). For example, this might be \dQuote{-999}, or
+##' \dQuote{n/a} and can be of several items.
+##' @param quote String of characters (or character equivalents) the
+##' imported file may use to represent a character field.
 ##' @param ws Name of wind speed field if present if different from
 ##' \dQuote{ws} e.g. \code{ws = "WSPD"}.
 ##' @param wd Name of wind direction field if present if different
-##' from "wd" e.g. \code{wd = "WDIR"}.
+##' from \dQuote{wd} e.g. \code{wd = "WDIR"}.
 ##' @param correct.time Numerical correction (in seconds) for imported
 ##' date.  Default \code{NULL} turns this option off. This can be useful if
 ##' the hour is represented as 1 to 24 (rather than 0 to 23 assumed by
@@ -79,9 +80,6 @@
 ##' hour.
 ##' @param ... Other arguments passed to \code{read.table}.
 ##'
-##' @param na.strings Strings of any terms that are to be interpreted
-##' as missing (\code{NA}). For example, this might be \dQuote{-999}, or
-##' \dQuote{n/a} and can be of several items.
 ##' @return A data frame formatted for openair use.
 ##' @author David Carslaw
 ##' @export

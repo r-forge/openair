@@ -8,7 +8,7 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE
     ## deal with conditioning variable if present, if user-defined, must exist in data
     ## pre-defined types
     ## existing conditioning variables that only depend on date (which is checked)
-    conds <- c("default", "year", "hour", "month", "season", "weekday", "weekend", "monthyear", "gmtbst", "bstgmt", "daylight")
+    conds <- c("default", "year", "hour", "month", "season", "weekday", "weekend", "monthyear", "gmtbst", "bstgmt", "dst", "daylight")
     all.vars <- unique(c(names(mydata), conds))
 
     varNames <- c(Names, type) ## names we want to be there

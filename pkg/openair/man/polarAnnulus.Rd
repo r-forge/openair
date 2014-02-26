@@ -3,7 +3,7 @@
 \title{Bivariate polarAnnulus plot}
 \usage{
 polarAnnulus(mydata, pollutant = "nox", resolution = "fine",
-  local.time = FALSE, period = "hour", type = "default",
+  local.tz = NULL, period = "hour", type = "default",
   statistic = "mean", percentile = NA, limits = c(0, 100),
   cols = "default", width = "normal", min.bin = 1,
   exclude.missing = TRUE, date.pad = FALSE, force.positive = TRUE,
@@ -31,20 +31,25 @@ polarAnnulus(mydata, pollutant = "nox", resolution = "fine",
   \item{resolution}{Two plot resolutions can be set:
   \dQuote{normal} and \dQuote{fine} (the default).}
 
-  \item{local.time}{Should the results be calculated in
-  local time? The default is \code{FALSE}. Emissions
-  activity tends to occur at local time e.g. rush hour is
-  at 8 am every day. When the clocks go forward in spring,
-  the emissions are effectively released into the
-  atmosphere at BST --- 1 hour during the summer. When
-  plotting diurnal profiles, this has the effect of
-  \dQuote{smearing-out} the concentrations. A better
-  approach is to express time as local time, which here is
-  defined as BST (British Summer Time). This correction
-  tends to produce better-defined diurnal profiles of
-  concentration (or other variables) and allows a better
-  comparison to be made with emissions/activity data. If
-  set to \code{FALSE} then GMT is used.}
+  \item{local.tz}{Should the results be calculated in local
+  time that includes a treatment of daylight savings time
+  (DST)? The default is not to consider DST issues,
+  provided the data were imported without a DST offset.
+  Emissions activity tends to occur at local time e.g. rush
+  hour is at 8 am every day. When the clocks go forward in
+  spring, the emissions are effectively released into the
+  atmosphere typically 1 hour earlier during the summertime
+  i.e. when DST applies. When plotting diurnal profiles,
+  this has the effect of \dQuote{smearing-out} the
+  concentrations. Sometimes, a useful approach is to
+  express time as local time. This correction tends to
+  produce better-defined diurnal profiles of concentration
+  (or other variables) and allows a better comparison to be
+  made with emissions/activity data. If set to \code{FALSE}
+  then GMT is used. Examples of usage include
+  \code{local.tz = "Europe/London"}, \code{local.tz =
+  "America/New_York"}. See \code{cutData} and \code{import}
+  for more details.}
 
   \item{period}{This determines the temporal period to
   consider. Options are \dQuote{hour} (the default, to plot

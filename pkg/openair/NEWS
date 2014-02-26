@@ -23,6 +23,9 @@ Changes in openair 1.0-0 [2013-11-21]
 	(see manual for details)
 *	Initial versions of functions to import EEA airbase data - see
 	newsletter/manual for details
+*	Better treatment of daylight saving time in cutData,
+	timeVariation and polarAnnulus (allow any local time zone to be used;
+	was just GMT/BST befote)
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

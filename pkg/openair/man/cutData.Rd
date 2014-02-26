@@ -4,7 +4,7 @@
 \title{Function to split data in different ways for conditioning}
 \usage{
 cutData(x, type = "default", hemisphere = "northern", n.levels = 4,
-start.day, is.axis = FALSE, ...)
+start.day, is.axis = FALSE, local.tz = NULL, ...)
 
 cutDaylight(x, local.hour.offset = 0,
                  latitude = 51.522393, longitude = -0.154700, ...)
@@ -17,7 +17,7 @@ cutDaylight(x, local.hour.offset = 0,
   \dQuote{default}, \dQuote{year}, \dQuote{hour},
   \dQuote{month}, \dQuote{season}, \dQuote{weekday},
   \dQuote{site}, \dQuote{weekend}, \dQuote{monthyear},
-  \dQuote{daylight}, \dQuote{gmtbst} or \dQuote{bstgmt}.
+  \dQuote{daylight}, \dQuote{dst} (daylight saving time).
 
   \code{type} can also be the name of a numeric or factor.
   If a numeric column name is supplied \code{cutData} will
@@ -39,6 +39,17 @@ cutDaylight(x, local.hour.offset = 0,
 
   \item{is.axis}{A logical (\code{TRUE}/\code{FALSE}), used
   to request shortened cut labels for axes.}
+
+  \item{local.tz}{Used for identifying whether a date has
+  daylight savings time (DST) applied or not. Examples
+  include \code{local.tz = "Europe/London"}, \code{local.tz
+  = "America/New_York"} i.e. time zones that assume DST.
+  \url{http://en.wikipedia.org/wiki/List_of_zoneinfo_time_zones}
+  shows time zones that should be valid for most systems.
+  It is important that the original data are in GMT (UTC)
+  or a fixed offset from GMT. See \code{import} and the
+  openair manual for information on how to import data and
+  ensure no DST is applied.}
 
   \item{...}{All additional parameters are passed on to
   next function(s).  For example, with \code{cutData} all
@@ -117,24 +128,27 @@ for local time zones corrections. Measurement location
 should be set using \code{latitude} (+ to North; - to
 South) and \code{longitude} (+ to East; - to West).
 
-"gmtbst" or "bstgmt" will split the data by hours that are
-in GMT i.e. mostly winter months) and hours in British
-summertime. Each of the two periods will be in \emph{local
-time}. The main purpose of this option is to test whether
-there is a shift in the diurnal profile when GMT and BST
-hours are compared. This option is particularly useful with
-the \code{timeVariation} function. For example, close to
-the source of road vehicle emissions, `rush-hour' will tend
-to occur at the same \emph{local time} throughout the year
-e.g. 8 am and 5 pm. Therefore, comparing GMT hours with BST
-hours will tend to show similar diurnal patterns (at least
-in the timing of the peaks, if not magnitude) when
+"dst" will split the data by hours that are in daylight
+saving time (DST) and hours that are not for appropriate
+time zones. The option "dst" also requires that the local
+time zone is given e.g. \code{local.tz = "Europe/London"},
+\code{local.tz = "America/New_York"}. Each of the two
+periods will be in \emph{local time}. The main purpose of
+this option is to test whether there is a shift in the
+diurnal profile when DST and non-DST hours are compared.
+This option is particularly useful with the
+\code{timeVariation} function. For example, close to the
+source of road vehicle emissions, `rush-hour' will tend to
+occur at the same \emph{local time} throughout the year
+e.g. 8 am and 5 pm. Therefore, comparing non-DST hours with
+DST hours will tend to show similar diurnal patterns (at
+least in the timing of the peaks, if not magnitude) when
 expressed in local time. By contrast a variable such as
 wind speed or temperature should show a clear shift when
-expressed in local time for BST vs. GMT. In essence, this
-option when used with \code{timeVariation} may help
-determine whether the variation in a pollutant is driven by
-man-made emissions or natural processes.
+expressed in local time. In essence, this option when used
+with \code{timeVariation} may help determine whether the
+variation in a pollutant is driven by man-made emissions or
+natural processes.
 
 "wd" splits the data by 8 wind sectors and requires a
 column \code{wd}: "NE", "E", "SE", "S", "SW", "W", "NW",

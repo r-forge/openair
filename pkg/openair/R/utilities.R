@@ -12,7 +12,7 @@ endMonth <- function(dat) as.numeric(format(max(dat[order(dat)]), "%m"))
 
 ## these are pre-defined type that need a field "date"; used by cutData
 dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthyear",
-                   "gmtbst", "bstgmt", "daylight")
+                   "gmtbst", "bstgmt", "dst", "daylight")
 
 ###############################################################################
 

@@ -2,7 +2,7 @@
 \alias{timeVariation}
 \title{Diurnal, day of the week and monthly variation}
 \usage{
-timeVariation(mydata, pollutant = "nox", local.time = FALSE,
+timeVariation(mydata, pollutant = "nox", local.tz = NULL,
   normalise = FALSE, xlab = c("hour", "hour", "month", "weekday"),
   name.pol = pollutant, type = "default", group = NULL,
   difference = FALSE, statistic = "mean", conf.int = 0.95, B = 100,
@@ -18,20 +18,25 @@ timeVariation(mydata, pollutant = "nox", local.time = FALSE,
   pollutants can be plotted, in which case a form like
   \code{pollutant = c("nox", "co")} should be used.}
 
-  \item{local.time}{Should the results be calculated in
-  local time? The default is \code{FALSE}. Emissions
-  activity tends to occur at local time e.g. rush hour is
-  at 8 am every day. When the clocks go forward in spring,
-  the emissions are effectively released into the
-  atmosphere at BST --- 1 hour during the summer. When
-  plotting diurnal profiles, this has the effect of
-  \dQuote{smearing-out} the concentrations. Sometimes, a
-  better approach is to express time as local time, which
-  here is defined as BST (British Summer Time). This
-  correction tends to produce better-defined diurnal
-  profiles of concentration (or other variables) and allows
-  a better comparison to be made with emissions/activity
-  data. If set to \code{FALSE} then GMT is used.}
+  \item{local.tz}{Should the results be calculated in local
+  time that includes a treatment of daylight savings time
+  (DST)? The default is not to consider DST issues,
+  provided the data were imported without a DST offset.
+  Emissions activity tends to occur at local time e.g. rush
+  hour is at 8 am every day. When the clocks go forward in
+  spring, the emissions are effectively released into the
+  atmosphere typically 1 hour earlier during the summertime
+  i.e. when DST applies. When plotting diurnal profiles,
+  this has the effect of \dQuote{smearing-out} the
+  concentrations. Sometimes, a useful approach is to
+  express time as local time. This correction tends to
+  produce better-defined diurnal profiles of concentration
+  (or other variables) and allows a better comparison to be
+  made with emissions/activity data. If set to \code{FALSE}
+  then GMT is used. Examples of usage include
+  \code{local.tz = "Europe/London"}, \code{local.tz =
+  "America/New_York"}. See \code{cutData} and \code{import}
+  for more details.}
 
   \item{normalise}{Should variables be normalised? The
   default is \code{FALSE}. If \code{TRUE} then the
@@ -254,16 +259,16 @@ pollutant = "pm10", ylab = "pm10 (ug/m3)")
 # local time, showing that the profile is dominated by a local source
 # that varies by local time and not by GMT i.e. road vehicle emissions
 
-\dontrun{timeVariation(mydata, pollutant = "nox", type = "gmtbst")}
+\dontrun{timeVariation(mydata, pollutant = "nox", type = "dst", local.tz = "Europe/London")}
 
 ## In this case it is better to group the results for clarity:
-\dontrun{timeVariation(mydata, pollutant = "nox", group = "gmtbst")}
+\dontrun{timeVariation(mydata, pollutant = "nox", group = "dst", local.tz = "Europe/London")}
 
 # By contrast, a variable such as wind speed shows a clear shift when
 #  expressed in local time. These two plots can help show whether the
 #  variation is dominated by man-made influences or natural processes
 
-\dontrun{timeVariation(mydata, pollutant = "ws", group = "gmtbst")}
+\dontrun{timeVariation(mydata, pollutant = "ws", group = "dst", local.tz = "Europe/London")}
 
 ## It is also possible to plot several variables and set type. For
 ## example, consider the NOx and NO2 split by levels of O3:
