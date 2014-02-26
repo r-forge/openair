@@ -24,7 +24,7 @@
 ##' and for all species.
 ##' @export
 ##' @author David Carslaw
-airbaseStats <- function(statistic = "Mean", add = c("lat", "lon")) {
+airbaseStats <- function(statistic = "Mean", add = c("lat", "lon", "site.type")) {
 
     site.info <- code <- lat <- lon <- NULL
 
@@ -35,7 +35,8 @@ airbaseStats <- function(statistic = "Mean", add = c("lat", "lon")) {
                                         "Hours.c.350."))
     
 
-    fileName <- paste0("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/", stat.name, ".RData")
+    fileName <- paste0("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/",
+                       stat.name, ".RData")
 
     con <- url(fileName)
     load(con) ## brings in data frame dat
@@ -49,7 +50,8 @@ airbaseStats <- function(statistic = "Mean", add = c("lat", "lon")) {
         load(con) ## brings in data frame site.info
         close(con)
         
-        dat <- merge(dat, subset(site.info, select = c(code, lat, lon)), by = "code")
+        dat <- merge(dat, subset(site.info, select = c(code, lat, lon, site.type)),
+                     by = "code")
     }
     
     dat
