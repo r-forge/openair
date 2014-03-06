@@ -7,7 +7,7 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   "LI", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS",
   "SE", "SI", "SK", "TR"), site.type = c("background", "traffic",
   "industrial", "unknown"), area.type = c("rural", "urban", "suburban",
-  "unknown"), local.code = NA, city = NA, lat = c(-90, 90),
+  "unknown"), local.code = NA, city = NA, emep = NA, lat = c(-90, 90),
   lon = c(-180, 180))
 }
 \arguments{
@@ -30,8 +30,8 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   matching (\code{grep}). The search string can be upper or
   lower case e.g. \code{city = "london"}. It is also
   possible to use regular expressions. For example, to
-  extract sites in Copenhagen or Barcelona use \code{city =
-  "copenhagen|barcelona"}. Note that by default any
+  extract sites in Copenhagen and Barcelona use \code{city
+  = "copenhagen|barcelona"}. Note that by default any
   matching characters are returned, so \code{city =
   "london"} would also return Londonderry (Northern
   Ireland).
@@ -40,12 +40,17 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   potentially complicated. However there are a few useful
   tips. To match the beginning of a name use \sQuote{^}. So
   \code{city = "^london"} would return London and
-  Londonderry (both begin with \sQuote{london}. To match
+  Londonderry (both begin with \sQuote{london}). To match
   the end of a name use \sQuote{$}, so \code{city =
   "london$"} would just return London but not Londonderry.
 
   The cities chosen are printed to screen to make it easy
-  to check (and refine) the selected sites.}
+  to check (and refine the search string) of the selected
+  sites.}
+
+  \item{emep}{Select an EMEP station. Can be \dQuote{yes},
+  \dQuote{no} or \code{NA} (the default, selects
+  everything).}
 
   \item{lat}{The latitude range to select in the form
   c(lower, upper).}

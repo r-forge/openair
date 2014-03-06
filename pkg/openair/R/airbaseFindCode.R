@@ -17,7 +17,7 @@
 ##' @param city A city name to search --- using character matching
 ##' (\code{grep}). The search string can be upper or lower case
 ##' e.g. \code{city = "london"}. It is also possible to use
-##' regular expressions. For example, to extract sites in Copenhagen or
+##' regular expressions. For example, to extract sites in Copenhagen and
 ##' Barcelona use \code{city = "copenhagen|barcelona"}. Note that by
 ##' default any matching characters are returned, so \code{city =
 ##' "london"} would also return Londonderry (Northern Ireland).
@@ -26,12 +26,14 @@
 ##' complicated. However there are a few useful tips. To match the
 ##' beginning of a name use \sQuote{^}. So \code{city = "^london"}
 ##' would return London and Londonderry (both begin with
-##' \sQuote{london}. To match the end of a name use \sQuote{$}, so
+##' \sQuote{london}). To match the end of a name use \sQuote{$}, so
 ##' \code{city = "london$"} would just return London but not
 ##' Londonderry.
 ##'
 ##' The cities chosen are printed to screen to make it easy to check
-##' (and refine) the selected sites.
+##' (and refine the search string) of the selected sites.
+##' @param emep Select an EMEP station. Can be \dQuote{yes},
+##' \dQuote{no} or \code{NA} (the default, selects everything).
 ##' @param lat The latitude range to select in the form c(lower, upper).
 ##' @param lon The longitude range to select in the form c(lower, upper).
 ##' @return A vector of airbase site codes that can be used directly
@@ -51,11 +53,25 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
                                 "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SK", "TR"),
                             site.type = c("background", "traffic", "industrial", "unknown"),
                             area.type = c("rural", "urban", "suburban", "unknown"), 
-                            local.code = NA, city = NA, 
+                            local.code = NA, city = NA, emep = NA, 
                             lat = c(-90, 90), lon = c(-180, 180)) {
+    ##keep R check quiet
+    site.info <- EMEP_station <- NULL
+    
+    ## initial checks
+    airbase.count <-  c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ", "DE", "DK",
+                        "EE", "ES", "FI", "FR", "GB", "GR", "HR", "HU", "IE", "IS",
+                        "IT", "LI", "LT", "LU","LV", "ME", "MK", "MT", "NL", "NO",
+                        "PL", "PT", "RO", "RS", "SE", "SI", "SK", "TR")
+    
+    country <- sapply(toupper(country), function (x) match.arg(x, airbase.count))
 
+    site.type <- sapply(toupper(site.type), function (x)
+                        match.arg(x, toupper(c("background", "traffic", "industrial", "unknown"))))
 
-    site.info <- NULL
+    area.type <- sapply(toupper(area.type), function (x)
+                        match.arg(x, toupper(c("rural", "urban", "suburban", "unknown"))))
+    
     
     all <- url("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData")
     load(all)
@@ -68,17 +84,7 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
 
     ## site type
     res <- res[toupper(res$site.type) %in% toupper(site.type) , ]
-
-    ## city, using grep
-    if (!is.na(city)) {
-        id <- grep(city, res$city, ignore.case = TRUE)
-        cities <- data.frame(code = res$code[id], city = res$city[id])
-        print(cities)
-        res <- res[id, ]
-        
-        
-    }
-
+    
     ## area type
     res <- res[toupper(res$station_type_of_area) %in% toupper(area.type) , ]
 
@@ -92,6 +98,21 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
         id <- which(toupper(res$station_local_code) %in% toupper(local.code))
         res <- res[id, ]
     }
+
+    ## EMEP sites
+   if (!is.na(emep)) {
+       
+       res <- subset(res, EMEP_station == emep)
+   }
+
+    ## city, using grep - last because it prints city names
+    if (!is.na(city)) {
+        id <- grep(city, res$city, ignore.case = TRUE)
+        cities <- data.frame(code = res$code[id], city = res$city[id])
+        print(cities)
+        res <- res[id, ]              
+    }
+
     
     as.character(res$code)
 
