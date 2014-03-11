@@ -18,8 +18,10 @@
 ##' \dQuote{AOT40}, \dQuote{Max19}, \dQuote{Hours.c.200.},
 ##' \dQuote{Max4}, \dQuote{Days.c.125.}, \dQuote{P99_9},
 ##' \dQuote{Max25}, \dQuote{Hours.c.350.}.
-##' @param add Additional fields to add to the returned data frame. So
-##' far only the latitutde and longitude of the site will be returned.
+##' @param add Additional fields to add to the returned data frame. By
+##' default the site type, latitude and logitude are returned. Other
+##' useful options include \dQuote{city}, \dQuote{site} (site name),
+##' \dQuote{country}, \dQuote{EMEP_station} and \dQuote{altitude}.
 ##' @return A data frame of airbase sites with the statsitics chosen
 ##' and for all species.
 ##' @export
@@ -49,9 +51,10 @@ airbaseStats <- function(statistic = "Mean", add = c("lat", "lon", "site.type"))
         con <- url(fileName)
         load(con) ## brings in data frame site.info
         close(con)
+
+        site.info <- site.info[, c("code", add)] ## just the fields needed
         
-        dat <- merge(dat, subset(site.info, select = c(code, lat, lon, site.type)),
-                     by = "code")
+        dat <- merge(dat, site.info, by = "code")
     }
     
     dat

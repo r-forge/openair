@@ -15,8 +15,10 @@ airbaseStats(statistic = "Mean", add = c("lat", "lon", "site.type"))
   \dQuote{Hours.c.350.}.}
 
   \item{add}{Additional fields to add to the returned data
-  frame. So far only the latitutde and longitude of the
-  site will be returned.}
+  frame. By default the site type, latitude and logitude
+  are returned. Other useful options include \dQuote{city},
+  \dQuote{site} (site name), \dQuote{country},
+  \dQuote{EMEP_station} and \dQuote{altitude}.}
 }
 \value{
 A data frame of airbase sites with the statsitics chosen

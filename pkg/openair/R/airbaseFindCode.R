@@ -22,7 +22,7 @@
 ##' default any matching characters are returned, so \code{city =
 ##' "london"} would also return Londonderry (Northern Ireland).
 ##'
-##' Regular expression searches are very powerfull and potentially
+##' Regular expression searches are very powerful and potentially
 ##' complicated. However there are a few useful tips. To match the
 ##' beginning of a name use \sQuote{^}. So \code{city = "^london"}
 ##' would return London and Londonderry (both begin with
