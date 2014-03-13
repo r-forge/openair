@@ -26,6 +26,8 @@ Changes in openair 1.0-0 [2013-11-21]
 *	Better treatment of daylight saving time in cutData,
 	timeVariation and polarAnnulus (allow any local time zone to be used;
 	was just GMT/BST befote)
+*	Remove existing date-based columns in cutData to ensure date
+	is used instead
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================
