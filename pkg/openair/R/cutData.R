@@ -84,6 +84,10 @@
 ##'
 ##' "site" splits the data by site and therefore requires a column \code{site}.
 ##'
+##' Note that all the date-based types e.g. month/year are derived
+##' from a column \code{date}. If a user already has a column with a
+##' name of one of the date-based types it will not be used.
+##'
 ##' @aliases cutData cutDaylight
 ##' @usage cutData(x, type = "default", hemisphere = "northern", n.levels = 4,
 ##' start.day, is.axis = FALSE, local.tz = NULL, ...)

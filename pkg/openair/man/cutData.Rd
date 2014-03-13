@@ -159,6 +159,11 @@ requires a column \code{ws}.
 
 "site" splits the data by site and therefore requires a
 column \code{site}.
+
+Note that all the date-based types e.g. month/year are
+derived from a column \code{date}. If a user already has a
+column with a name of one of the date-based types it will
+not be used.
 }
 \examples{
 ## split data by day of the week
