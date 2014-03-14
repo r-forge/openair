@@ -1,6 +1,6 @@
 \name{importSAQN}
 \alias{importSAQN}
-\title{SAQN data import for openair}
+\title{Scottish Air Quality Network data import for openair}
 \usage{
 importSAQN(site = "gla4", year = 2009, pollutant = "all")
 }

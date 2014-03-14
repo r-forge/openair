@@ -1,6 +1,6 @@
 \name{importMeta}
 \alias{importMeta}
-\title{Import monitoring site meta data}
+\title{Import monitoring site meta data for the AURN, KCL and SAQN networks}
 \usage{
 importMeta(source = "aurn", all = FALSE)
 }

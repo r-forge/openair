@@ -4,7 +4,7 @@
 \alias{importADMSMet}
 \alias{importADMSMop}
 \alias{importADMSPst}
-\title{ADMS data import function(s) for openair}
+\title{CERC Atmospheric Dispersion Modelling System (ADMS) data import function(s) for openair}
 \usage{
 importADMS(file = file.choose(), file.type = "unknown", drop.case = TRUE,
   drop.input.dates = TRUE, keep.units = TRUE, simplify.names = TRUE,

@@ -1,4 +1,4 @@
-##' ADMS data import function(s) for openair
+##' CERC Atmospheric Dispersion Modelling System (ADMS) data import function(s) for openair
 ##'
 ##' Function(s) to import various ADMS file types into openair. Currently
 ##' handles ".met", ".bgd", ".mop" and ".pst" file structures. Uses
