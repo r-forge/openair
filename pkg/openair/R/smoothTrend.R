@@ -131,7 +131,7 @@
 ##'   including \code{print}, \code{plot} and \code{summarise}. See
 ##'   \code{\link{openair.generics}} for further details.
 ##' @author David Carslaw
-##' @seealso \code{\link{MannKendall}} for an alternative method of calculating
+##' @seealso \code{\link{TheilSen}} for an alternative method of calculating
 ##'   trends.
 ##' @keywords methods
 ##' @examples
