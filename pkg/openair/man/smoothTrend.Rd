@@ -1,6 +1,6 @@
 \name{smoothTrend}
 \alias{smoothTrend}
-\title{Calculate smoothTrends}
+\title{Calculate nonparametric smooth trends}
 \usage{
 smoothTrend(mydata, pollutant = "nox", deseason = FALSE, type = "default",
   statistic = "mean", avg.time = "month", percentile = NA,

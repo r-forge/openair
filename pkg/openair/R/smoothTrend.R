@@ -1,4 +1,4 @@
-##' Calculate smoothTrends
+##' Calculate nonparametric smooth trends
 ##'
 ##' Use non-parametric methods to calculate time series trends
 ##'
