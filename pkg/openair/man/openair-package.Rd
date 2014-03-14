@@ -4,10 +4,10 @@
 \docType{package}
 \title{Tools for the analysis of air pollution data}
 
-\description{ This is a UK Natural Environment Research Council (NERC)
+\description{This is a UK Natural Environment Research Council (NERC)
 funded knowledge exchange project that aims to make available innovative
 analysis tools for air pollution data; with additional support from
-Defra.  The tools have generally been developed to analyse data of
+Defra. The tools have generally been developed to analyse data of
 hourly resolution (or at least a regular time series) both for air
 pollution monitoring and dispersion modelling. The availability of
 meteorological data at the same time resolution greatly enhances the
@@ -20,8 +20,8 @@ The project code is also developed using R-Forge
   \tabular{ll}{
     Package: \tab openair\cr
     Type: \tab Package\cr
-    Version: \tab 0.4-15\cr
-    Date: \tab 2011-04-12\cr
+    Version: \tab 0.9-3\cr
+    Date: \tab 2014-03-14\cr
     License: \tab GPL\cr
     LazyLoad: \tab yes\cr }
 
@@ -33,11 +33,18 @@ model output would not normally have access to. The functions consist of
 those developed by the authors and a growing number from other
 researchers.
 
+The package also provides access to a wide range of data
+sources including the UK Automatic Urban and Rural Network (AURN),
+networks run by King's College London (e.g. the LAQN), the Scottish Air
+Quality Network (SAQN) and the European Environment Agency
+\emph{airbase} database with over 8,00 sites.
+
 The package has a number of requirements for input data and these are
-discussed in the manual (available on the openair website). The key
-requirements are that a date or date-time field must have the name
-`date' (and can be \code{Date} or \code{POSIXct} format), that wind
-speed is represented as `ws' and that wind direction is `wd'.
+discussed in the manual (available on the \code{openair} website at
+\url{http://www.openair-project.org}). The key requirements are that a
+date or date-time field must have the name `date' (and can be
+\code{Date} or \code{POSIXct} format), that wind speed is represented as
+`ws' and that wind direction is `wd'.
 
 Most functions work in a very straightforward way, but offer many
 options for finer control and perhaps more in-depth analysis.
@@ -54,8 +61,9 @@ with the automatic download of these packages, see
 NOTE: openair assumes that data are not expressed in local time where
 'Daylight Saving Time' is used. All functions check that this is the
 case and issue a warning if TRUE. It is recommended that data are
-expressed in UTC/GMT to avoid potential problems with R and openair
-functions.
+expressed in UTC/GMT (or a fixed offset from) to avoid potential
+problems with R and \code{openair} functions. The \code{openair} manual
+provides advice on these issues (available on teh website).
 
 To check to see if \code{openair} has been correctly installed, try some
 of the examples below. In case of any problems, contact David Carslaw
@@ -63,7 +71,7 @@ of the examples below. In case of any problems, contact David Carslaw
 
 }
 \author{
-David Carslaw and Karl Ropkins
+David Carslaw with initial support from Karl Ropkins
 
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
 

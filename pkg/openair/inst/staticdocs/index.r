@@ -1,4 +1,10 @@
 sd_section(
+  "Package overview",
+  "General information about the openair package",
+  c("openair-package")
+)
+
+sd_section(
   "Data",
   "Data that comes with openair",
   c("mydata")
