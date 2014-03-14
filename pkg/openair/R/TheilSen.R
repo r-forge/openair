@@ -7,10 +7,6 @@
 ## Rand Wilcox
 ###############################################################################
 
-MannKendall <- function(mydata, ...) {
-    TheilSen(mydata, ...)
-}
-
 
 ##' Tests for trends using Theil-Sen estimates
 ##'
@@ -37,11 +33,7 @@ MannKendall <- function(mydata, ...) {
 ##' Note! that since version 0.5-11 openair uses Theil-Sen to derive
 ##' the p values also. This is to ensure there is consistency between
 ##' the calculated p value and other trend parameters i.e. slope
-##' estimates and uncertainties. This change may slightly affect some
-##' of the p-estimates previously given by openair because the p
-##' estimates are now calculated using bootstrap resampling by default
-##' and previously they were not. However, users can still for the
-##' moment call the \code{TheilSen} function using \code{MannKendall}.
+##' estimates and uncertainties. 
 ##'
 ##' Note that the symbols shown next to each trend estimate relate to
 ##' how statistically significant the trend estimate is: p $<$ 0.001 =
@@ -65,10 +57,9 @@ MannKendall <- function(mydata, ...) {
 ##' x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
 ##' line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
 ##' autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
+##'     
 ##'
-##'       MannKendall(mydata,...)
-##'
-##' @aliases TheilSen MannKendall
+##' @aliases TheilSen
 ##' @param mydata A data frame containing the field \code{date} and at least
 ##'   one other parameter for which a trend test is required; typically (but
 ##'   not necessarily) a pollutant.
@@ -178,7 +169,7 @@ MannKendall <- function(mydata, ...) {
 ##'   Similarly, common axis and title labelling options (such as \code{xlab},
 ##'   \code{ylab}, \code{main}) are passed to \code{xyplot} via \code{quickText}
 ##'   to handle routine formatting.
-##' @export TheilSen MannKendall
+##' @export TheilSen
 ##' @return As well as generating the plot itself, \code{TheilSen} also
 ##'   returns an object of class ``openair''. The object includes three main
 ##'   components: \code{call}, the command used to generate the plot;

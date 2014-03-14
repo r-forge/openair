@@ -11,7 +11,7 @@
 ##' \code{smoothTrend} uses a Generalized Additive Model (GAM) from the
 ##' \code{\link{gam}} package to find the most appropriate level of smoothing.
 ##' The function is particularly suited to situations where trends are not
-##' monotonic (see discussion with \code{\link{MannKendall}} for more details
+##' monotonic (see discussion with \code{\link{TheilSen}} for more details
 ##' on this). The \code{smoothTrend} function is particularly useful as an
 ##' exploratory technique e.g. to check how linear or non-linear trends are.
 ##'

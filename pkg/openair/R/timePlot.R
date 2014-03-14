@@ -182,7 +182,7 @@
 ##'   including \code{print}, \code{plot} and \code{summary}. See
 ##'   \code{\link{openair.generics}} for further details.
 ##' @author David Carslaw
-##' @seealso \code{\link{MannKendall}}, \code{\link{smoothTrend}},
+##' @seealso \code{\link{TheilSen}}, \code{\link{smoothTrend}},
 ##'   \code{\link{linearRelation}}, \code{\link{selectByDate}} and
 ##'   \code{\link{timeAverage}} for details on selecting averaging times and
 ##'   other statistics in a flexible way

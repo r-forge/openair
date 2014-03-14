@@ -1,5 +1,4 @@
 \name{TheilSen}
-\alias{MannKendall}
 \alias{TheilSen}
 \title{Tests for trends using Theil-Sen estimates}
 \usage{
@@ -9,8 +8,6 @@ alpha = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
 x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
 line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
 autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
-
-      MannKendall(mydata,...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -217,13 +214,7 @@ use \code{\link{smoothTrend}}.
 Note! that since version 0.5-11 openair uses Theil-Sen to
 derive the p values also. This is to ensure there is
 consistency between the calculated p value and other trend
-parameters i.e. slope estimates and uncertainties. This
-change may slightly affect some of the p-estimates
-previously given by openair because the p estimates are now
-calculated using bootstrap resampling by default and
-previously they were not. However, users can still for the
-moment call the \code{TheilSen} function using
-\code{MannKendall}.
+parameters i.e. slope estimates and uncertainties.
 
 Note that the symbols shown next to each trend estimate
 relate to how statistically significant the trend estimate

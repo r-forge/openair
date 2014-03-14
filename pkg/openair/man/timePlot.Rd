@@ -315,7 +315,7 @@ c("nox", "no2"), lwd = c(1, 2), col = "black")
 David Carslaw
 }
 \seealso{
-\code{\link{MannKendall}}, \code{\link{smoothTrend}},
+\code{\link{TheilSen}}, \code{\link{smoothTrend}},
 \code{\link{linearRelation}}, \code{\link{selectByDate}}
 and \code{\link{timeAverage}} for details on selecting
 averaging times and other statistics in a flexible way
