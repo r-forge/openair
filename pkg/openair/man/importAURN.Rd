@@ -1,6 +1,6 @@
 \name{importAURN}
 \alias{importAURN}
-\title{AURN data import for openair}
+\title{Import data from the UK Automatic Urban and Rural Network (AURN)}
 \usage{
 importAURN(site = "my1", year = 2009, pollutant = "all", hc = FALSE)
 }
