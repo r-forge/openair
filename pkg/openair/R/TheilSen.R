@@ -281,6 +281,9 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
         quickText(extra.args$ylab, auto.text) else quickText(pollutant, auto.text)
     extra.args$main <- if("main" %in% names(extra.args))
         quickText(extra.args$main, auto.text) else quickText("", auto.text)
+    
+    xlim <- if ("xlim" %in% names(extra.args))
+      extra.args$xlim else  NULL
 
     ## layout default
     if(!"layout" %in% names(extra.args))
@@ -448,10 +451,14 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("conc ~ date| ", temp, sep = ""))
 
+    gap <- (max(split.data$date) - min(split.data$date)) / 80
+    if (is.null(xlim)) xlim <- range(split.data$date) + c(-1 * gap, gap)
+
     xyplot.args <- list(x = myform, data = split.data,
                         xlab = quickText(xlab, auto.text),
                         par.strip.text = list(cex = 0.8),
                         as.table = TRUE,
+                        xlim = xlim,
                         strip = strip,
                         strip.left = strip.left,
                         scales = list(x = list(at = date.at, format = date.format,
