@@ -5,9 +5,9 @@
 smoothTrend(mydata, pollutant = "nox", deseason = FALSE, type = "default",
   statistic = "mean", avg.time = "month", percentile = NA,
   data.thresh = 0, simulate = FALSE, n = 200, autocor = FALSE,
-  cols = "brewer1", xlab = "year", y.relation = "same",
-  key.columns = length(percentile), ci = TRUE, alpha = 0.2,
-  date.breaks = 7, auto.text = TRUE, k = NULL, ...)
+  cols = "brewer1", shade = "grey95", xlab = "year",
+  y.relation = "same", key.columns = length(percentile), ci = TRUE,
+  alpha = 0.2, date.breaks = 7, auto.text = TRUE, k = NULL, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -92,6 +92,10 @@ smoothTrend(mydata, pollutant = "nox", deseason = FALSE, type = "default",
   e.g. \code{cols = c("black", "green")} or pre-defined
   openair colours --- see \code{openColours} for more
   details.}
+
+  \item{shade}{The colour used for marking alternate years.
+  Use \dQuote{white} or \dQuote{transparent} to remove
+  shading.}
 
   \item{xlab}{x-axis label, by default \dQuote{year}.}
 

@@ -3,26 +3,20 @@
 ## The block bootstrap used should be regarded as an ongoing development
 ## see http://www-rcf.usc.edu/~rwilcox/
 ##
-## Author: DCC with Mann-Kendall and Sen-Theil functions from
-## Rand Wilcox
+## Author: David Carslaw with Sen-Theil functions from Rand Wilcox
 ###############################################################################
-
-
 ##' Tests for trends using Theil-Sen estimates
 ##'
 ##' Theil-Sen slope estimates and tests for trend.
 ##'
 ##' The \code{TheilSen} function provides a collection of functions to
-##' analyse trends in air pollution data. The Mann-Kendall test is a
-##' commonly used test in environmental sciences to detect the
-##' presence of a trend. It is often used with the Theil-Sen (or just
-##' Sen) estimate of slope. See references.  The \code{TheilSen}
-##' function is flexible in the sense that it can be applied to data
-##' in many ways e.g. by day of the week, hour of day and wind
-##' direction. This flexibility makes it much easier to draw
-##' inferences from data e.g. why is there a strong downward trend in
-##' concentration from one wind sector and not another, or why trends
-##' on one day of the week or a certain time of day are unexpected.
+##' analyse trends in air pollution data. The \code{TheilSen} function
+##' is flexible in the sense that it can be applied to data in many
+##' ways e.g. by day of the week, hour of day and wind direction. This
+##' flexibility makes it much easier to draw inferences from data
+##' e.g. why is there a strong downward trend in concentration from
+##' one wind sector and not another, or why trends on one day of the
+##' week or a certain time of day are unexpected.
 ##'
 ##' For data that are strongly seasonal, perhaps from a background
 ##' site, or a pollutant such as ozone, it will be important to
@@ -31,9 +25,9 @@
 ##' sharp changes it may be better to use \code{\link{smoothTrend}}.
 ##'
 ##' Note! that since version 0.5-11 openair uses Theil-Sen to derive
-##' the p values also. This is to ensure there is consistency between
-##' the calculated p value and other trend parameters i.e. slope
-##' estimates and uncertainties. 
+##' the p values also for the slope. This is to ensure there is
+##' consistency between the calculated p value and other trend
+##' parameters i.e. slope estimates and uncertainties.
 ##'
 ##' Note that the symbols shown next to each trend estimate relate to
 ##' how statistically significant the trend estimate is: p $<$ 0.001 =
@@ -51,14 +45,7 @@
 ##'
 ##' The slope estimate and confidence intervals in the slope are plotted and
 ##' numerical information presented.
-##' @usage TheilSen(mydata, pollutant = "nox", deseason = FALSE, type = "default",
-##' avg.time = "month", statistic = "mean", percentile = NA, data.thresh = 0,
-##' alpha = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
-##' x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
-##' line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
-##' autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
-##'     
-##'
+##' 
 ##' @aliases TheilSen
 ##' @param mydata A data frame containing the field \code{date} and at least
 ##'   one other parameter for which a trend test is required; typically (but
@@ -129,6 +116,8 @@
 ##' @param text.col Colour name for the slope/uncertainty numeric estimates
 ##' @param cols Predefined colour scheme, currently only enabled for
 ##'   \code{"greyscale"}.
+##' @param shade The colour used for marking alternate years. Use
+##' \dQuote{white} or \dQuote{transparent} to remove shading.
 ##' @param auto.text Either \code{TRUE} (default) or \code{FALSE}. If
 ##'   \code{TRUE} titles and axis labels will automatically try and format
 ##'   pollutant names and units properly e.g.  by subscripting the \sQuote{2}
@@ -248,7 +237,8 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
                      statistic = "mean", percentile = NA, data.thresh = 0, alpha = 0.05,
                      dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
                      x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
-                     line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
+                     line.col = "red", text.col = "darkgreen", cols = NULL, 
+                     shade = "grey95", auto.text = TRUE,
                      autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)  {
 
     ## get rid of R check annoyances
@@ -468,7 +458,7 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
                         panel = function(x, y, subscripts,...){
                             ## year shading
                             panel.shade(split.data, start.year, end.year,
-                                                  ylim = current.panel.limits()$ylim)
+                                                  ylim = current.panel.limits()$ylim, shade)
                             panel.grid(-1, 0)
 
                             panel.xyplot(x, y, type = "b", col = data.col, ...)
@@ -531,7 +521,7 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
 
 
 
-panel.shade <- function(split.data, start.year, end.year, ylim) {
+panel.shade <- function(split.data, start.year, end.year, ylim, shade = "grey95") {
 
      x1 <- as.POSIXct(seq(ISOdate(start.year - 6, 1, 1),
                          ISOdate(end.year + 5, 1, 1), by = "2 years"), "GMT")
@@ -556,7 +546,7 @@ panel.shade <- function(split.data, start.year, end.year, ylim) {
 
     sapply(seq_along(x1), function(x) lpolygon(c(x1[x], x1[x], x2[x], x2[x]),
                                                c(y1, y2, y2, y1),
-                                               col = "grey95", border = "grey95"))
+                                               col = shade, border = "grey95"))
 }
 
 MKstats <- function(x, y, alpha, autocor) {

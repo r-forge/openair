@@ -79,6 +79,8 @@
 ##' @param cols Colours to use. Can be a vector of colours e.g. \code{cols =
 ##'   c("black", "green")} or pre-defined openair colours --- see
 ##'   \code{openColours} for more details.
+##' @param shade The colour used for marking alternate years. Use
+##' \dQuote{white} or \dQuote{transparent} to remove shading.
 ##' @param xlab x-axis label, by default \dQuote{year}.
 ##' @param y.relation This determines how the y-axis scale is plotted. "same"
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
@@ -159,8 +161,9 @@
 smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                         type = "default", statistic = "mean", avg.time = "month",
                         percentile = NA, data.thresh = 0, simulate = FALSE,
-                        n = 200, autocor = FALSE, cols = "brewer1", xlab = "year",
-                        y.relation = "same", key.columns = length(percentile),
+                        n = 200, autocor = FALSE, cols = "brewer1", shade = "grey95",
+                        xlab = "year", y.relation = "same",
+                        key.columns = length(percentile),
                         ci = TRUE, alpha = 0.2, date.breaks = 7,
                         auto.text = TRUE, k = NULL, ...)  {
 
@@ -375,7 +378,8 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                       if (group.number == 1) {  ## otherwise this is called every time
 
                           panel.shade(split.data, start.year, end.year,
-                                                ylim = current.panel.limits()$ylim)
+                                                ylim = current.panel.limits()$ylim,
+                                      shade)
                           panel.grid(-1, 0)
 
 

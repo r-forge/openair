@@ -3,11 +3,13 @@
 \title{Tests for trends using Theil-Sen estimates}
 \usage{
 TheilSen(mydata, pollutant = "nox", deseason = FALSE, type = "default",
-avg.time = "month", statistic = "mean", percentile = NA, data.thresh = 0,
-alpha = 0.05, dec.place = 2, xlab = "year", lab.frac = 0.99, lab.cex = 0.8,
-x.relation = "same", y.relation = "same", data.col = "cornflowerblue",
-line.col = "red", text.col = "darkgreen", cols = NULL, auto.text = TRUE,
-autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
+  avg.time = "month", statistic = "mean", percentile = NA,
+  data.thresh = 0, alpha = 0.05, dec.place = 2, xlab = "year",
+  lab.frac = 0.99, lab.cex = 0.8, x.relation = "same",
+  y.relation = "same", data.col = "cornflowerblue", line.col = "red",
+  text.col = "darkgreen", cols = NULL, shade = "grey95",
+  auto.text = TRUE, autocor = FALSE, slope.percent = FALSE,
+  date.breaks = 7, ...)
 }
 \arguments{
   \item{mydata}{A data frame containing the field
@@ -108,6 +110,10 @@ autocor = FALSE, slope.percent = FALSE, date.breaks = 7,...)
   \item{cols}{Predefined colour scheme, currently only
   enabled for \code{"greyscale"}.}
 
+  \item{shade}{The colour used for marking alternate years.
+  Use \dQuote{white} or \dQuote{transparent} to remove
+  shading.}
+
   \item{auto.text}{Either \code{TRUE} (default) or
   \code{FALSE}. If \code{TRUE} titles and axis labels will
   automatically try and format pollutant names and units
@@ -192,17 +198,13 @@ Theil-Sen slope estimates and tests for trend.
 \details{
 The \code{TheilSen} function provides a collection of
 functions to analyse trends in air pollution data. The
-Mann-Kendall test is a commonly used test in environmental
-sciences to detect the presence of a trend. It is often
-used with the Theil-Sen (or just Sen) estimate of slope.
-See references.  The \code{TheilSen} function is flexible
-in the sense that it can be applied to data in many ways
-e.g. by day of the week, hour of day and wind direction.
-This flexibility makes it much easier to draw inferences
-from data e.g. why is there a strong downward trend in
-concentration from one wind sector and not another, or why
-trends on one day of the week or a certain time of day are
-unexpected.
+\code{TheilSen} function is flexible in the sense that it
+can be applied to data in many ways e.g. by day of the
+week, hour of day and wind direction. This flexibility
+makes it much easier to draw inferences from data e.g. why
+is there a strong downward trend in concentration from one
+wind sector and not another, or why trends on one day of
+the week or a certain time of day are unexpected.
 
 For data that are strongly seasonal, perhaps from a
 background site, or a pollutant such as ozone, it will be
@@ -212,9 +214,10 @@ then decrease, or show sharp changes it may be better to
 use \code{\link{smoothTrend}}.
 
 Note! that since version 0.5-11 openair uses Theil-Sen to
-derive the p values also. This is to ensure there is
-consistency between the calculated p value and other trend
-parameters i.e. slope estimates and uncertainties.
+derive the p values also for the slope. This is to ensure
+there is consistency between the calculated p value and
+other trend parameters i.e. slope estimates and
+uncertainties.
 
 Note that the symbols shown next to each trend estimate
 relate to how statistically significant the trend estimate
