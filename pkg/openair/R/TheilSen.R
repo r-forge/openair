@@ -27,7 +27,8 @@
 ##' Note! that since version 0.5-11 openair uses Theil-Sen to derive
 ##' the p values also for the slope. This is to ensure there is
 ##' consistency between the calculated p value and other trend
-##' parameters i.e. slope estimates and uncertainties.
+##' parameters i.e. slope estimates and uncertainties. The p value and
+##' all uncertainties are calculated through bootstrap simulations.
 ##'
 ##' Note that the symbols shown next to each trend estimate relate to
 ##' how statistically significant the trend estimate is: p $<$ 0.001 =
