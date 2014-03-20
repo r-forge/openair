@@ -213,6 +213,9 @@ important to deseasonalise the data (using the option
 then decrease, or show sharp changes it may be better to
 use \code{\link{smoothTrend}}.
 
+A minimum of 6 points are required for trend estimates to
+be made.
+
 Note! that since version 0.5-11 openair uses Theil-Sen to
 derive the p values also for the slope. This is to ensure
 there is consistency between the calculated p value and

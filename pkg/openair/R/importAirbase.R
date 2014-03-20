@@ -41,12 +41,14 @@
 ##' 
 ##' @title Import hourly data from the European Environment Agency airbase database
 ##' @param site Site code(s) of the sites to be imported. Can be upper or lower case.
+##' @param year The year or years of interest. For example to select
+##' 2010 to 2012 use \code{year = 2010:2012}.
 ##' @param local Used for tesing local imports.
 ##' @export
 ##' @return Returns an hourly data frame with POSIXct date, EEA site
 ##' code and each individual species.
 ##' @author David Carslaw
-importAirbase <- function(site = "gb0620a", local = NA) {
+importAirbase <- function(site = "gb0620a", year = 1969:2012, local = NA) {
 
     ## get rid of R check annoyances
     dat <- NULL
@@ -79,6 +81,8 @@ importAirbase <- function(site = "gb0620a", local = NA) {
     thedata <- lapply(files, loadData)
     thedata <- thedata[!sapply(thedata, is.null)] ## remove NULL
     thedata <- do.call(rbind.fill, thedata)
+
+    thedata <- selectByDate(thedata, year = year)
 
     thedata
 }

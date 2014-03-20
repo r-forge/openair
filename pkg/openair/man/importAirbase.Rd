@@ -2,11 +2,14 @@
 \alias{importAirbase}
 \title{Import hourly data from the European Environment Agency airbase database}
 \usage{
-importAirbase(site = "gb0620a", local = NA)
+importAirbase(site = "gb0620a", year = 1969:2012, local = NA)
 }
 \arguments{
   \item{site}{Site code(s) of the sites to be imported. Can
   be upper or lower case.}
+
+  \item{year}{The year or years of interest. For example to
+  select 2010 to 2012 use \code{year = 2010:2012}.}
 
   \item{local}{Used for tesing local imports.}
 }

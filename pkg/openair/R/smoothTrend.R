@@ -220,6 +220,11 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
     if (!avg.time %in% c("year", "season", "month")) stop("Averaging period must be 'month' or 'year'.")
 
+    ## if data clearly annual, then assume annual
+    interval <- find.time.interval(mydata$date)
+    interval <- as.numeric(strsplit(interval, split = " ")[[1]][1])   
+    if (round(interval / 8760) == 3600) avg.time <- "year"
+
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
     end.year <-  endYear(mydata$date)
@@ -250,6 +255,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                                                            percentile, sep = ""))
 
     } else {
+        
         mydata <- ddply(mydata, c(type, "variable"), timeAverage, avg.time = avg.time,
                         statistic = statistic, percentile = percentile,
                         data.thresh = data.thresh)
@@ -298,10 +304,10 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
         results
     }
-
+    
     split.data <- ddply(mydata, c(type, "variable"),  process.cond)
 
-
+    
     ## special wd layout
     #(type field in results.grid called type not wd)
     if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
@@ -324,8 +330,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
-
-
+    
     ## colours according to number of percentiles
     npol <- max(length(percentile), length(pollutant)) ## number of pollutants
 
@@ -334,7 +339,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
         openColours(cols, npol+1)[-1] else openColours(cols, npol)
 
     ## information for key
-    npol <- unique(split.data$variable)
+    npol <- na.omit(unique(split.data$variable))
     key.lab <- sapply(seq_along(npol), function(x) quickText(npol[x], auto.text))
 
     if (length(npol) > 1) {

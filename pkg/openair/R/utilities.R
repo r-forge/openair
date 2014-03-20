@@ -14,6 +14,20 @@ endMonth <- function(dat) as.numeric(format(max(dat[order(dat)]), "%m"))
 dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthyear",
                    "gmtbst", "bstgmt", "dst", "daylight")
 
+## sets up how openair graphics look by default and resets on exit
+
+setGraphics <- function(fontsize = 5) {
+    
+  current.strip <- trellis.par.get("strip.background")
+  trellis.par.set(fontsize = list(text = fontsize))
+
+  ## reset graphic parameters
+  font.orig <- trellis.par.get("fontsize")$text
+  on.exit(trellis.par.set(strip.background = current.strip, 
+                          fontsize = list(text = font.orig)))
+  
+}
+
 ###############################################################################
 
 ## function to find averaging period of data, returns "xx sec"

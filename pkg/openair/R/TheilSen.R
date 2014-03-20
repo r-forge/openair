@@ -24,6 +24,8 @@
 ##' TRUE}.Similarly, for data that increase, then decrease, or show
 ##' sharp changes it may be better to use \code{\link{smoothTrend}}.
 ##'
+##' A minimum of 6 points are required for trend estimates to be made.
+##'
 ##' Note! that since version 0.5-11 openair uses Theil-Sen to derive
 ##' the p values also for the slope. This is to ensure there is
 ##' consistency between the calculated p value and other trend
@@ -285,6 +287,11 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
 
     if (!avg.time %in% c("year", "month", "season")) stop ("avg.time can only be 'month', 'season' or 'year'.")
 
+    ## if data clearly annual, then assume annual
+    interval <- find.time.interval(mydata$date)
+    interval <- as.numeric(strsplit(interval, split = " ")[[1]][1])   
+    if (round(interval / 8760) == 3600) avg.time <- "year"
+
     ## data checks
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
 
@@ -306,10 +313,11 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
     mydata <- ddply(mydata, type, timeAverage, avg.time = avg.time,
                          statistic = statistic, percentile = percentile,
                          data.thresh = data.thresh)
+    
 
     process.cond <- function(mydata) {
 
-        if (all(is.na(mydata[ , pollutant]))) return()
+        if (all(is.na(mydata[ , pollutant]))) return()       
 
         ## sometimes data have long trailing NAs, so start and end at
         ## first and last data
@@ -322,7 +330,7 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
         end.year <-   endYear(mydata$date)
         start.month <-  startMonth(mydata$date)
         end.month <-   endMonth(mydata$date)
-
+        
         if (avg.time == "month") {
 
             mydata$date <- as.Date(mydata$date)
@@ -360,15 +368,15 @@ TheilSen <- function(mydata, pollutant = "nox", deseason = FALSE, type = "defaul
             results <- na.omit(all.results)
         }
 
-        ## now calculate trend, uncertainties etc ###############################################
-        if (nrow(results) < 2) return()
+        ## now calculate trend, uncertainties etc ###########################
+        if (nrow(results) < 6) return() ## need enough data to calculate trend
         MKresults <- MKstats(results$date, results$conc, alpha, autocor)
 
         ## make sure missing data are put back in for plotting
         results <- suppressWarnings(merge(all.results, MKresults, by = "date", all = TRUE))
         results
     }
-
+    
     split.data <- ddply(mydata, type,  process.cond)
     if (nrow(split.data) < 2) return()
 

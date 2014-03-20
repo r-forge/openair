@@ -403,10 +403,12 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         trellis.par.set(list(strip.background = list(col = "white")))
     }
 
-    ## reset strip color on exit
+    ## set graphics
     current.strip <- trellis.par.get("strip.background")
-    on.exit(trellis.par.set("strip.background", current.strip))
-
+    
+    ## reset graphic parameters
+    on.exit(trellis.par.set(strip.background = current.strip))
+        
     ## extra.args setup
     extra.args <- list(...)
 
@@ -834,16 +836,19 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
     plt <- do.call(levelplot, Args)
 
     ## output #######################################################################
-
+    
+    
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip,
               strip.left = strip.left))
+    
+    
 
     newdata <- results.grid
     output <- list(plot = plt, data = newdata, call = match.call())
     class(output) <- "openair"
-
+    
     invisible(output)
-
+ 
 }
 
 

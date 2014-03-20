@@ -187,7 +187,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (units == "year") int <- 3600 * 8760 ## approx
 
         seconds <- seconds * int ## interval in seconds
-
+        if (is.na(timeDiff)) timeDiff <- seconds ## when only one row
+        
         ## check to see if we need to expand data rather than aggregate it
         ## i.e. chosen time interval less than that of data
         if (seconds < timeDiff) {
