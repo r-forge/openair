@@ -2,7 +2,8 @@
 \alias{importAirbase}
 \title{Import hourly data from the European Environment Agency airbase database}
 \usage{
-importAirbase(site = "gb0620a", year = 1969:2012, local = NA)
+importAirbase(site = "gb0620a", year = 1969:2012, pollutant = NA,
+  add = c("country", "site.type"), splice = FALSE, local = NA)
 }
 \arguments{
   \item{site}{Site code(s) of the sites to be imported. Can
@@ -10,6 +11,19 @@ importAirbase(site = "gb0620a", year = 1969:2012, local = NA)
 
   \item{year}{The year or years of interest. For example to
   select 2010 to 2012 use \code{year = 2010:2012}.}
+
+  \item{pollutant}{The pollutant(s) to be selected. See the
+  list in \code{airbaseStats}.}
+
+  \item{add}{Additional fields to add to the returned data
+  frame. By default the country and site type are returned.
+  Other useful options include \dQuote{city}, \dQuote{site}
+  (site name), \dQuote{EMEP_station}, \dQuote{lat},
+  \dQuote{lon} and \dQuote{altitude}.}
+
+  \item{splice}{Should the pollutant fields be consolidated
+  when multiple measurements of individual pollutants are
+  available? See \code{airbaseSplice} for details.}
 
   \item{local}{Used for tesing local imports.}
 }
@@ -65,5 +79,9 @@ the author would appreciate any feedback on its use.
 }
 \author{
 David Carslaw
+}
+\seealso{
+\code{\link{airbaseSplice}}, \code{\link{airbaseFindCode}},
+\code{\link{airbaseStats}}
 }
 

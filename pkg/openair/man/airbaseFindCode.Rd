@@ -7,8 +7,8 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   "LI", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS",
   "SE", "SI", "SK", "TR"), site.type = c("background", "traffic",
   "industrial", "unknown"), area.type = c("rural", "urban", "suburban",
-  "unknown"), local.code = NA, city = NA, emep = NA, lat = c(-90, 90),
-  lon = c(-180, 180))
+  "unknown"), local.code = NA, city = NA, site = NA, emep = NA,
+  lat = c(-90, 90), lon = c(-180, 180))
 }
 \arguments{
   \item{country}{A character or vector of characters
@@ -47,6 +47,9 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
   The cities chosen are printed to screen to make it easy
   to check (and refine the search string) of the selected
   sites.}
+
+  \item{site}{The name of the site or sites to search, see
+  \code{city} for details of how to search.}
 
   \item{emep}{Select an EMEP station. Can be \dQuote{yes},
   \dQuote{no} or \code{NA} (the default, selects

@@ -56,7 +56,12 @@ airbaseSplice <- function(dat, drop = TRUE) {
         ## means that there is more than one instrument and need to combine
         if (length(which(poll.nm == poll.nm[j])) != 1) {
             
-            id <- which(poll.nm == poll.nm[j]) 
+            id <- which(poll.nm == poll.nm[j])
+
+            ## if no data, ignore
+            id2 <- sapply(id, function (x) all(is.na(dat[, x])))
+            id <- id[which(id2 == FALSE)]
+            
             new.nm <- poll.nm[id[1]] ## just use first for new name
 
             ## will combine by adding latest measurements last

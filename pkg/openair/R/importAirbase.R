@@ -43,12 +43,24 @@
 ##' @param site Site code(s) of the sites to be imported. Can be upper or lower case.
 ##' @param year The year or years of interest. For example to select
 ##' 2010 to 2012 use \code{year = 2010:2012}.
+##' @param pollutant The pollutant(s) to be selected. See the list in
+##' \code{airbaseStats}. 
+##' @param add Additional fields to add to the returned data frame. By
+##' default the country and site type are returned. Other useful options
+##' include \dQuote{city}, \dQuote{site} (site name),
+##' \dQuote{EMEP_station}, \dQuote{lat}, \dQuote{lon} and \dQuote{altitude}.
+##' @param splice Should the pollutant fields be consolidated when
+##' multiple measurements of individual pollutants are available? See
+##' \code{airbaseSplice} for details.
 ##' @param local Used for tesing local imports.
 ##' @export
 ##' @return Returns an hourly data frame with POSIXct date, EEA site
 ##' code and each individual species.
+##' @seealso \code{\link{airbaseSplice}},
+##' \code{\link{airbaseFindCode}}, \code{\link{airbaseStats}}
 ##' @author David Carslaw
-importAirbase <- function(site = "gb0620a", year = 1969:2012, local = NA) {
+importAirbase <- function(site = "gb0620a", year = 1969:2012, pollutant = NA,
+                          add = c("country", "site.type"), splice = FALSE, local = NA) {
 
     ## get rid of R check annoyances
     dat <- NULL
@@ -73,16 +85,41 @@ importAirbase <- function(site = "gb0620a", year = 1969:2012, local = NA) {
                 load(con)
             }
 
+            ## select years
+            dat <- selectByDate(dat, year = year)            
+
+            ## pollutant
+            if (splice)
+                dat <- airbaseSplice(dat) ## combine to get single names
+
+            if (any(!is.na(pollutant))) {
+                dat <- dat[, c("date", "code", "site",
+                               names(dat)[which(toupper(names(dat)) %in% toupper(pollutant))])]
+            }
+                       
             dat
         },
                  error = function(ex) {cat(x, "does not exist - ignoring that one.\n")})
     }
     
     thedata <- lapply(files, loadData)
+    
     thedata <- thedata[!sapply(thedata, is.null)] ## remove NULL
     thedata <- do.call(rbind.fill, thedata)
 
-    thedata <- selectByDate(thedata, year = year)
+    if (length(add) > 0 ) {
+        ## add other fields
+        fileName <- "http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData"
+
+        con <- url(fileName)
+        load(con) ## brings in data frame site.info
+        close(con)
+
+        site.info <- site.info[, c("code", add)] ## just the fields needed
+        
+        thedata <- merge(thedata, site.info, by = "code")
+    }
+
 
     thedata
 }

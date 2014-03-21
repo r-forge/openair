@@ -32,6 +32,8 @@
 ##'
 ##' The cities chosen are printed to screen to make it easy to check
 ##' (and refine the search string) of the selected sites.
+##' @param site The name of the site or sites to search, see
+##' \code{city} for details of how to search.
 ##' @param emep Select an EMEP station. Can be \dQuote{yes},
 ##' \dQuote{no} or \code{NA} (the default, selects everything).
 ##' @param lat The latitude range to select in the form c(lower, upper).
@@ -53,7 +55,7 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
                                 "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SK", "TR"),
                             site.type = c("background", "traffic", "industrial", "unknown"),
                             area.type = c("rural", "urban", "suburban", "unknown"), 
-                            local.code = NA, city = NA, emep = NA, 
+                            local.code = NA, city = NA, site = NA, emep = NA, 
                             lat = c(-90, 90), lon = c(-180, 180)) {
     ##keep R check quiet
     site.info <- EMEP_station <- NULL
@@ -115,6 +117,15 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
         res <- res[id, ]              
     }
 
+    ## site name, using grep - last because it prints city names
+    if (!any(is.na(site))) {
+        site <- paste0(site, collapse = "|")
+        
+        id <- grep(site, res$site, ignore.case = TRUE)
+        sites <- data.frame(code = res$code[id], site = res$site[id])
+        print(sites)
+        res <- res[id, ]              
+    }
     
     as.character(res$code)
 
