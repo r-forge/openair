@@ -28,21 +28,21 @@ airbaseFindCode(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY", "CZ",
 
   \item{city}{A city name to search --- using character
   matching (\code{grep}). The search string can be upper or
-  lower case e.g. \code{city = "london"}. It is also
-  possible to use regular expressions. For example, to
-  extract sites in Copenhagen and Barcelona use \code{city
-  = "copenhagen|barcelona"}. Note that by default any
-  matching characters are returned, so \code{city =
-  "london"} would also return Londonderry (Northern
-  Ireland).
+  lower case e.g. \code{city = "london"}. To extract
+  several cities e.g. Copenhagen and Barcelona use
+  \code{city = c("copenhagen", "barcelona")}. Note that by
+  default any matching characters are returned, so
+  \code{city = "london"} would also return Londonderry
+  (Northern Ireland).
 
   Regular expression searches are very powerful and
   potentially complicated. However there are a few useful
-  tips. To match the beginning of a name use \sQuote{^}. So
-  \code{city = "^london"} would return London and
-  Londonderry (both begin with \sQuote{london}). To match
-  the end of a name use \sQuote{$}, so \code{city =
-  "london$"} would just return London but not Londonderry.
+  tips. To match the \emph{beginning} of a name use
+  \sQuote{^}. So \code{city = "^london"} would return
+  London and Londonderry (both begin with \sQuote{london}).
+  To match the end of a name use \sQuote{$}, so \code{city
+  = "london$"} would just return London but not
+  Londonderry.
 
   The cities chosen are printed to screen to make it easy
   to check (and refine the search string) of the selected

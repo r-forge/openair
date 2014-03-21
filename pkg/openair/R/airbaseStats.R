@@ -223,7 +223,7 @@
 ##' with it is used. For most pollutants the averaging period will be
 ##' \dQuote{day}. Other common options are \dQuote{hour} and
 ##' \dQuote{week}.
-##' @param site The airbase site code(s) to select. Can be upper or lower case.
+##' @param code The airbase site code(s) to select. Can be upper or lower case.
 ##' @param site.type The type of site(s) to select.
 ##' @param year The year(s) to select e.g. \code{year = 2000:2012} to
 ##' select years 2010, 2011 and 2012.
@@ -243,7 +243,7 @@
 airbaseStats <- function(statistic = "Mean",
                          pollutant = "no2",
                          avg.time = "auto",
-                         site = NULL, 
+                         code = NULL, 
                          site.type = c("background", "traffic", "industrial", "unknown"),
                          year = 1969:2012,
                          data.cap = 0, 
@@ -281,9 +281,9 @@ airbaseStats <- function(statistic = "Mean",
     ## pollutant
     dat <- dat[toupper(dat$component_caption) %in% toupper(pollutant) , ]
 
-    ## site
-    if (!is.null(site)) {
-        dat <- dat[dat$code %in% toupper(site), ]
+    ## site code
+    if (!is.null(code)) {
+        dat <- dat[dat$code %in% toupper(code), ]
     }
     
     ## data capture
@@ -321,16 +321,10 @@ airbaseStats <- function(statistic = "Mean",
     ## year
     dat <- dat[dat$year %in% year, ]
 
-    ## make a field 'date' to allow it to work with other openair functions
-    dat$date <- ISOdatetime(year = dat$year, month = 1, day = 1, hour = 0,
-                            min = 0,  sec = 0,  tz = "GMT")
-
     ## rename some fields
-    dat <- rename(dat, c("component_caption" = "pollutant",
-                         "code" = "site", 
+    dat <- rename(dat, c("component_caption" = "pollutant",                        
                          "value" = pollutant))
     
- #   dat <- padAirbase(dat, pollutant)
     dat
     
 }

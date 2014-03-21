@@ -9,7 +9,7 @@
 ##' the instruments used will be returned.
 ##'
 ##' @title Get information about airbase sites and instruments
-##' @param site Site code(s) of the sites to be imported. Can be upper or lower case.
+##' @param code Site code(s) of the sites to be imported. Can be upper or lower case.
 ##' @param instrument Should species/instrument details also be
 ##' returned. When \code{FALSE} only one row per site is returned with
 ##' other information such as site type, latitude and logitude. When
@@ -20,16 +20,16 @@
 ##' @seealso \code{\link{importAirbase}},
 ##' \code{\link{airbaseFindCode}}, \code{\link{airbaseStats}}
 ##' @author David Carslaw
-airbaseInfo <- function(site = "gb0620a", instrument = FALSE) {
+airbaseInfo <- function(code = "gb0620a", instrument = FALSE) {
 
     ## get rid of R check annoyances
-    meas.config <- NULL; code <- NULL
+    meas.config <- NULL
 
-    site <- toupper(site)
+    code <- toupper(code)
 
     load(url("http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/meas.config.RData"))
 
-    dat <- meas.config[meas.config$code %in% site, ]
+    dat <- meas.config[meas.config$code %in% code, ]
 
     if (instrument) {
         dat

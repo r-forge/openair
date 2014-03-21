@@ -2,10 +2,10 @@
 \alias{airbaseInfo}
 \title{Get information about airbase sites and instruments}
 \usage{
-airbaseInfo(site = "gb0620a", instrument = FALSE)
+airbaseInfo(code = "gb0620a", instrument = FALSE)
 }
 \arguments{
-  \item{site}{Site code(s) of the sites to be imported. Can
+  \item{code}{Site code(s) of the sites to be imported. Can
   be upper or lower case.}
 
   \item{instrument}{Should species/instrument details also

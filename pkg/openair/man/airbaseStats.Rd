@@ -3,7 +3,7 @@
 \title{Import pre-calculated airbase statistics}
 \usage{
 airbaseStats(statistic = "Mean", pollutant = "no2", avg.time = "auto",
-  site = NULL, site.type = c("background", "traffic", "industrial",
+  code = NULL, site.type = c("background", "traffic", "industrial",
   "unknown"), year = 1969:2012, data.cap = 0, add = c("country", "lat",
   "lon", "site.type"))
 }
@@ -28,7 +28,7 @@ airbaseStats(statistic = "Mean", pollutant = "no2", avg.time = "auto",
   Other common options are \dQuote{hour} and
   \dQuote{week}.}
 
-  \item{site}{The airbase site code(s) to select. Can be
+  \item{code}{The airbase site code(s) to select. Can be
   upper or lower case.}
 
   \item{site.type}{The type of site(s) to select.}

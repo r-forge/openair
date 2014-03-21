@@ -219,12 +219,12 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
     }
 
     if (!avg.time %in% c("year", "season", "month")) stop("Averaging period must be 'month' or 'year'.")
-
+    
     ## if data clearly annual, then assume annual
     interval <- find.time.interval(mydata$date)
     interval <- as.numeric(strsplit(interval, split = " ")[[1]][1])   
     if (round(interval / 8760) == 3600) avg.time <- "year"
-
+    
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
     end.year <-  endYear(mydata$date)

@@ -16,16 +16,16 @@
 ##' Marylebone Road.
 ##' @param city A city name to search --- using character matching
 ##' (\code{grep}). The search string can be upper or lower case
-##' e.g. \code{city = "london"}. It is also possible to use
-##' regular expressions. For example, to extract sites in Copenhagen and
-##' Barcelona use \code{city = "copenhagen|barcelona"}. Note that by
-##' default any matching characters are returned, so \code{city =
-##' "london"} would also return Londonderry (Northern Ireland).
+##' e.g. \code{city = "london"}. To extract several cities
+##' e.g. Copenhagen and Barcelona use \code{city = c("copenhagen",
+##' "barcelona")}. Note that by default any matching characters are
+##' returned, so \code{city = "london"} would also return Londonderry
+##' (Northern Ireland).
 ##'
 ##' Regular expression searches are very powerful and potentially
 ##' complicated. However there are a few useful tips. To match the
-##' beginning of a name use \sQuote{^}. So \code{city = "^london"}
-##' would return London and Londonderry (both begin with
+##' \emph{beginning} of a name use \sQuote{^}. So \code{city =
+##' "^london"} would return London and Londonderry (both begin with
 ##' \sQuote{london}). To match the end of a name use \sQuote{$}, so
 ##' \code{city = "london$"} would just return London but not
 ##' Londonderry.
@@ -106,7 +106,9 @@ airbaseFindCode <- function(country = c("AL", "AT", "BA", "BE", "BG", "CH", "CY"
    }
 
     ## city, using grep - last because it prints city names
-    if (!is.na(city)) {
+    if (!any(is.na(city))) {
+        city <- paste0(city, collapse = "|")
+        
         id <- grep(city, res$city, ignore.case = TRUE)
         cities <- data.frame(code = res$code[id], city = res$city[id])
         print(cities)
