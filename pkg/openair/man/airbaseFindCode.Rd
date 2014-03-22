@@ -71,7 +71,8 @@ Helper function to find airbase site codes
 \details{
 This function helps to identify airbase site codes based on
 one or more criteria. The criteria include country code,
-site type, local site code and latitude/longitude ranges.
+site type, local site code, city, site name and
+latitude/longitude ranges.
 }
 \examples{
 ## select all sites in Denmark
@@ -82,5 +83,9 @@ sites <- airbaseFindCode(country = c("DE", "GB"), site.type = "traffic")}
 }
 \author{
 David Carslaw
+}
+\seealso{
+\code{\link{importAirbase}}, \code{\link{airbaseFindCode}},
+\code{\link{airbaseStats}} and \code{\link{airbaseInfo}}
 }
 

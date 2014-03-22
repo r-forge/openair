@@ -2,7 +2,7 @@
 ##'
 ##' This function helps to identify airbase site codes based on one or
 ##' more criteria. The criteria include country code, site type, local
-##' site code and latitude/longitude ranges.
+##' site code, city, site name and latitude/longitude ranges.
 ##' @title Helper function to find EEA airbase site codes
 ##' @param country A character or vector of characters representing country code.
 ##' @param site.type One of \dQuote{background}, \dQuote{traffic},
@@ -40,6 +40,9 @@
 ##' @param lon The longitude range to select in the form c(lower, upper).
 ##' @return A vector of airbase site codes that can be used directly
 ##' in \code{\link{importAirbase}}.
+##' @seealso \code{\link{importAirbase}},
+##' \code{\link{airbaseFindCode}}, \code{\link{airbaseStats}} and
+##' \code{\link{airbaseInfo}}
 ##' @export
 ##' @author David Carslaw
 ##' @examples

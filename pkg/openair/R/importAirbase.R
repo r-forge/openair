@@ -57,7 +57,7 @@
 ##' @return Returns an hourly data frame with POSIXct date, EEA site
 ##' code and each individual species.
 ##' @seealso \code{\link{airbaseSplice}},
-##' \code{\link{airbaseFindCode}}, \code{\link{airbaseStats}}
+##' \code{\link{airbaseFindCode}}, \code{\link{airbaseStats}}, \code{\link{airbaseInfo}}
 ##' @author David Carslaw
 importAirbase <- function(site = "gb0620a", year = 1969:2012, pollutant = NA,
                           add = c("country", "site.type"), splice = FALSE, local = NA) {

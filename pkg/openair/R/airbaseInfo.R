@@ -2,10 +2,12 @@
 ##'
 ##' This function compiles key information about airbase sites
 ##' including the site type, species measured and the instruments and
-##' techniques used. By default the function returns one row per sites with basic information concerning the site e.g. its type, latitude and logitude.
+##' techniques used. By default the function returns one row per site
+##' with basic information concerning the site e.g. its type, latitude
+##' and longitude.
 ##'
 ##' More comprehensive information is returned if \code{instrument =
-##' TRUE}. In this case the species measured at teh site together with
+##' TRUE}. In this case the species measured at the site together with
 ##' the instruments used will be returned.
 ##'
 ##' @title Get information about airbase sites and instruments

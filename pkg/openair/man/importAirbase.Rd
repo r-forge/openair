@@ -82,6 +82,6 @@ David Carslaw
 }
 \seealso{
 \code{\link{airbaseSplice}}, \code{\link{airbaseFindCode}},
-\code{\link{airbaseStats}}
+\code{\link{airbaseStats}}, \code{\link{airbaseInfo}}
 }
 
