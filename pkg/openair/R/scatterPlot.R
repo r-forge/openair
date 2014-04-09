@@ -796,7 +796,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             ## data with gaps caused by min.bin
             all.data <- na.omit(data.frame(xgrid = mydata$xgrid, ygrid = mydata$ygrid, z))
             ind <- with(all.data, exclude.too.far(wsp, wdp, mydata$xgrid,
-                                                  mydata$ygrid, dist = 0.05))
+                                                  mydata$ygrid, dist = 0.02))
 
             new.data[ind, z] <- NA
 

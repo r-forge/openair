@@ -109,15 +109,25 @@ importAirbase <- function(site = "gb0620a", year = 1969:2012, pollutant = NA,
 
     if (length(add) > 0 ) {
         ## add other fields
-        fileName <- "http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData"
 
-        con <- url(fileName)
-        load(con) ## brings in data frame site.info
-        close(con)
+        if (is.na(local)) {
+            fileName <- "http://www.erg.kcl.ac.uk/downloads/Policy_Reports/airbase/site.info.RData"
 
-        site.info <- site.info[, c("code", add)] ## just the fields needed
-        
-        thedata <- merge(thedata, site.info, by = "code")
+            con <- url(fileName)
+            load(con) ## brings in data frame site.info
+
+        } else {
+
+            con <- paste(local, "site.info.RData", sep = "")
+            load(con)
+           
+        }
+
+        if (!is.null(thedata)) {
+            site.info <- site.info[, c("code", add)] ## just the fields needed
+            
+            thedata <- merge(thedata, site.info, by = "code")
+        }
     }
 
 
