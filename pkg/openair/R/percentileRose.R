@@ -187,7 +187,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   
   ## make sure all wds are present
   ids <- which(!seq(10, 360, by = 10) %in% unique(mydata$wd))
-  if (length(ids) > 0) {
+  if (length(ids) > 0 & smooth != TRUE) {
     
     extra <- mydata[rep(1, length(ids)), ]
     extra$wd <- seq(10, 360, by = 10)[ids]
@@ -240,7 +240,10 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   if (!"lwd" %in% names(extra.args))
     extra.args$lwd <- 2
   
-  #mydata <- na.omit(mydata)
+  ## mydata <- na.omit(mydata)
+  id <- which(is.na(mydata$wd))
+  if (length(id) > 0)
+      mydata <- mydata[-id, ]
   
   ## greyscale handling
   if (length(cols) == 1 && cols == "greyscale") {
@@ -277,7 +280,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
       
       
       if (smooth) {
-        min.dat <- min(thedata)
+          min.dat <- min(thedata)
         
         ## fit a spline through the data; making sure it goes through each wd value
         spline.res <- spline(x = thedata[ , "wd"], y = thedata[, pollutant], n = 361,
@@ -455,9 +458,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                               value2 <- percentile[i - 1]
                               subdata2 <- subset(results.grid[subscripts, ],
                                                  percentile == value2)
-                              lpolygon(c(subdata1$x, rev(subdata2$x)),  c(subdata1$y, rev(subdata2$y)),
-                                       col = col[i - 1], border = NA)
-                             
+                          
+                              poly.na(x1 = subdata1$x, x2 = subdata2$x, y1 = subdata1$y, y2 = subdata2$y,
+                                       myColors = col[i - 1], alpha = 1, border = col[i - 1])                            
                               
                             }
                           }
