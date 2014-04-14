@@ -260,13 +260,13 @@
 ##'
 timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                           normalise = FALSE, xlab = c("hour", "hour", "month",
-                                             "weekday"), name.pol = pollutant,
+                                                 "weekday"), name.pol = pollutant,
                           type = "default", group = NULL, difference = FALSE,
                           statistic = "mean", conf.int = 0.95, B = 100, ci = TRUE, cols = "hue",
                           key = NULL, key.columns = 1, start.day = 1,
                           auto.text = TRUE, alpha = 0.4, ...)  {
 
-     ## get rid of R check annoyances
+    ## get rid of R check annoyances
     variable = NULL
 
     ## greyscale handling
@@ -499,7 +499,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
     } else {
         
         data.hour <- ldply(conf.int, proc, mydata, vars = "hour", pollutant, type, B = B,
-                             statistic = statistic)
+                           statistic = statistic)
     }
 
 
@@ -533,22 +533,26 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                     key = key,
                     scales = list(x = list(at = c(0, 6, 12, 18, 23))),
                     par.settings = simpleTheme(col = myColors),
-                    panel = panel.superpose,
-                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                        if (group.number == 1) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
-                        }
+                    panel = function(x, y, ...) {
+                        panel.grid(-1, 0)
+                        panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
+                        panel.superpose(x, y, ...,
+                                        panel.groups = function(x, y, col.line, type,
+                                            group.number, subscripts,...) {
+                                            
+                                            if (difference) panel.abline(h = 0, lty = 5)
+                                            ## plot once
+                                            id <- which(data.hour$ci[subscripts] == data.hour$ci[1]) 
+                                            panel.xyplot(x[id], y[id], type = "l",
+                                                         col.line = myColors[group.number],...)
 
-                        if (difference) panel.abline(h = 0, lty = 5)
+                                            if (ci) {mkpoly(data.hour[subscripts, ], x = "hour", y = "Mean",
+                                                            group.number, myColors, alpha)}
 
-                        id <- which(data.hour$ci[subscripts] == data.hour$ci[1]) ## plot once
-                        panel.xyplot(x[id], y[id], type = "l", col.line = myColors[group.number],...)
-
-                        if (ci) {mkpoly(data.hour[subscripts, ], x = "hour", y = "Mean",
-                                        group.number, myColors, alpha)}
-
-                    })
+                                        }
+                                        )
+                    }
+                    )
 
     ## reset for extra.args
     xy.args <- listUpdate(xy.args, extra.args)
@@ -590,22 +594,26 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                     strip = strip,
                     par.strip.text = list(cex = 0.8),
                     key = key,
-                    panel =  panel.superpose,
-                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                        if (group.number == 1) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = 1:7, col = "grey85")
-                        }
+                    panel = function(x, y, ...) {
+                        panel.grid(-1, 0)
+                        panel.abline(v = 1:7, col = "grey85")
+                        panel.superpose(x, y, ...,
+                                        panel.groups = function(x, y, col.line, type, group.number,
+                                            subscripts,...) {
+                                            
+                                            if (difference) panel.abline(h = 0, lty = 5)
 
-                        if (difference) panel.abline(h = 0, lty = 5)
+                                            ## only plot median once if 2 conf.int
+                                            id <- which(data.weekday$ci[subscripts] == data.weekday$ci[1])
+                                            panel.xyplot(x[id], y[id], type = "l",
+                                                         col.line = myColors[group.number],...)
 
-                        ## only plot median once if 2 conf.int
-                        id <- which(data.weekday$ci[subscripts] == data.weekday$ci[1])
-                        panel.xyplot(x[id], y[id], type = "l", col.line = myColors[group.number],...)
-
-                        if (ci) {mkrect(data.weekday[subscripts, ], x = "wkday", y = "Mean",
-                                        group.number, myColors, alpha)}
-                    })
+                                            if (ci) {mkrect(data.weekday[subscripts, ], x = "wkday",
+                                                            y = "Mean", group.number, myColors, alpha)}
+                                        }
+                                        )
+                    }
+                    )
 
     ## reset for extra.args
     xy.args <- listUpdate(xy.args, extra.args)
@@ -644,22 +652,27 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                     par.strip.text = list(cex = 0.8),
                     par.settings = simpleTheme(col = myColors, pch = 16),
                     scales = list(x = list(at = 1:12, labels = substr(format(seq(as.Date("2000-01-01"),
-                                                      as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
-                    panel =  panel.superpose,
-                    panel.groups = function(x, y, col.line, type, group.number, subscripts,...) {
-                        if (group.number == 1) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = 1:12, col = "grey85")
-                        }
-                        if (difference) panel.abline(h = 0, lty = 5)
+                                                          as.Date("2000-12-31"), "month"), "%B"), 1, 1))),
+                    panel = function(x, y, ...) {
+                        panel.grid(-1, 0)
+                        panel.abline(v = 1:12, col = "grey85")
+                        panel.superpose(x, y, ...,
+                                        panel.groups = function(x, y, col.line, type,
+                                            group.number, subscripts,...) {
+                                            
+                                            if (difference) panel.abline(h = 0, lty = 5)
 
-                        ## only plot median once if 2 conf.int
-                        id <- which(data.month$ci[subscripts] == data.month$ci[1])
-                        panel.xyplot(x[id], y[id], type = "l", col.line = myColors[group.number],...)
+                                            ## only plot median once if 2 conf.int
+                                            id <- which(data.month$ci[subscripts] == data.month$ci[1])
+                                            panel.xyplot(x[id], y[id], type = "l",
+                                                         col.line = myColors[group.number],...)
 
-                        if (ci) {mkrect(data.month[subscripts, ], x = "mnth", y = "Mean",
-                                        group.number, myColors, alpha)}
-                    })
+                                            if (ci) {mkrect(data.month[subscripts, ], x = "mnth", y = "Mean",
+                                                            group.number, myColors, alpha)}
+                                        }
+                                        )
+                    }
+                    )
 
     ## reset for extra.args
     xy.args <- listUpdate(xy.args, extra.args)
@@ -687,7 +700,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
     if (is.null(xlab[1]) | is.na(xlab[1])) xlab[1] <- "hour"
 
-    ## proper names of labelling ##############################################################################
+    ## proper names of labelling #####################################################################
 
     strip <- strip.custom(par.strip.text = list(cex = 0.8))
 
@@ -702,7 +715,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
         strip.left <- strip.custom(factor.levels =  stripName)
         layout <- NULL
     }
-    ## ########################################################################################################
+    ## #################################################################################################
 
     temp <- paste(type, collapse = "+")
     if (type == "default") {
@@ -728,25 +741,32 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                     strip = strip,
                     strip.left = strip.left,
                     par.strip.text = list(cex = 0.8),
-                    panel =  panel.superpose,
-                    panel.groups = function(x, y, col.line, type, group.number,
-                    subscripts,...) {
-                        ## add grid lines once (otherwise they overwrite the data)
-                        if (group.number == 1) {
-                            panel.grid(-1, 0)
-                            panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
-                        }
+                    panel = function(x, y, ...) {
+                        panel.grid(-1, 0)
+                        panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
+                        panel.superpose(x, y, ...,
+                                        panel.groups = function(x, y, col.line, type, group.number,
+                                            subscripts,...) {
+                                            ## add grid lines once (otherwise they overwrite the data)
+                                            if (group.number == 1) {
+                                                panel.grid(-1, 0)
+                                                panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
+                                            }
 
-                        if (difference) panel.abline(h = 0, lty = 5)
+                                            if (difference) panel.abline(h = 0, lty = 5)
 
-                        ## only plot median once if 2 conf.int
-                        id <- which(data.day.hour$ci[subscripts] == data.day.hour$ci[1])
+                                            ## only plot median once if 2 conf.int
+                                            id <- which(data.day.hour$ci[subscripts] == data.day.hour$ci[1])
 
-                        panel.xyplot(x[id], y[id], type = "l", col.line = myColors[group.number],...)
+                                            panel.xyplot(x[id], y[id], type = "l",
+                                                         col.line = myColors[group.number],...)
 
-                        if (ci) {mkpoly(data.day.hour[subscripts, ], x = "hour", y = "Mean",
-                                        group.number, myColors, alpha)}
-                    })
+                                            if (ci) {mkpoly(data.day.hour[subscripts, ], x = "hour",
+                                                            y = "Mean", group.number, myColors, alpha)}
+                                        }
+                                        )
+                    }
+                    )
 
     ## reset for extra.args
     xy.args <- listUpdate(xy.args, extra.args)
@@ -766,14 +786,14 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
     main.plot <- function(...) {
         if (type == "default") {
             print(update(day.hour, key = list(rectangles = list(col = myColors[1:npol], border = NA),
-                                   text = list(lab = mylab), space = "bottom", columns = key.columns,
-                                   title = "", lines.title = 1)
+                                       text = list(lab = mylab), space = "bottom", columns = key.columns,
+                                       title = "", lines.title = 1)
                          ), position = c(0, 0.5, 1, y.upp), more = TRUE)
         } else {
             print(update(useOuterStrips(day.hour, strip = strip, strip.left = strip.left),
                          key = list(rectangles = list(col = myColors[1:npol], border = NA),
-                         text = list(lab = mylab), space = "bottom", columns = key.columns,
-                         title = "", lines.title = 1)
+                             text = list(lab = mylab), space = "bottom", columns = key.columns,
+                             title = "", lines.title = 1)
                          ), position = c(0, 0.5, 1, y.upp), more = TRUE)
         }
         print(hour, position = c(0, y.dwn, 0.33, 0.53), more = TRUE)
@@ -786,8 +806,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
     ind.plot = function(x, ...){
         plot(update(x, key = list(
-                       rectangles = list(col = myColors[1:npol], border = NA),
-                       text = list(lab = mylab), space = "top", columns = key.columns)
+                           rectangles = list(col = myColors[1:npol], border = NA),
+                           text = list(lab = mylab), space = "top", columns = key.columns)
                     ), ...)
     }
 
@@ -910,7 +930,7 @@ errorDiff <- function(mydata, vars = "day.hour", poll1, poll2, type, B = B, conf
 ## function to calculate median and lower/upper quantiles
 median.hilow <- function (x, conf.int = 0.95, na.rm = TRUE, ...) {
     quant <- quantile(x, probs = c(0.5, (1 - conf.int) / 2, (1 +
-                         conf.int) / 2), na.rm = na.rm)
+                             conf.int) / 2), na.rm = na.rm)
     names(quant) <- c("Mean", "Lower", "Upper")
     quant
 }
@@ -934,7 +954,7 @@ mkpoly <- function(dat, x = "hour", y = "Mean", group.number, myColors, alpha) {
             group.number, myColors, alpha = fac * alpha / 2)
 
     if (len == 2L) poly.na(dat[id2, x], dat$Lower[id2], dat[id2, x], dat$Upper[id2],
-        group.number, myColors, alpha = alpha)
+            group.number, myColors, alpha = alpha)
 }
 
 mkrect <- function(dat, x = "wkday", y = "Mean", group.number, myColors, alpha) {
@@ -956,6 +976,6 @@ mkrect <- function(dat, x = "wkday", y = "Mean", group.number, myColors, alpha) 
                border = NA, alpha = fac * alpha / 2)
 
     if (len == 2L) panel.rect(dat[id2, x] - 0.3, dat$Lower[id2], dat[id2, x] + 0.3,
-        dat$Upper[id2], fill = myColors[group.number],
-        border = NA, alpha = alpha)
+            dat$Upper[id2], fill = myColors[group.number],
+            border = NA, alpha = alpha)
 }

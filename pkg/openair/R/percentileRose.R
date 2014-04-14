@@ -262,7 +262,6 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     theLabels <- paste(values[ , 1], "-", values[ , 2], sep = "")
   }
   
-  
   prepare.grid <- function(mydata, stat) {
     wd = NULL
     ## add zero wind angle = same as 360 for cyclic spline
