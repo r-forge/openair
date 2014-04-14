@@ -437,7 +437,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                             
                             if (i == 1) {
                               subdata <- subset(results.grid[subscripts, ], percentile == value)
-                              lpolygon(subdata$x, subdata$y, col = "white", border = NA)
+                             lpolygon(subdata$x, subdata$y, col = "white", border = NA)
                               
                             } else {
                               
@@ -445,8 +445,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
                               value2 <- percentile[i - 1]
                               subdata2 <- subset(results.grid[subscripts, ],
                                                  percentile == value2)
-                              lpolygon(c(subdata1$x, subdata2$x),  c(subdata1$y, subdata2$y),
+                              lpolygon(c(subdata1$x, rev(subdata2$x)),  c(subdata1$y, rev(subdata2$y)),
                                        col = col[i - 1], border = NA)
+                             
                               
                             }
                           }
