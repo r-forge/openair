@@ -28,7 +28,9 @@ Changes in openair 1.0-0 [2013-11-21]
 	was just GMT/BST befote)
 *	Remove existing date-based columns in cutData to ensure date
 	is used instead
-* Allow users to shade/not shade alternate years in smoothTrend and TheilSen
+* 	Allow users to shade/not shade alternate years in smoothTrend
+	and TheilSen
+*	Do not smooth percentileRose by wind direction by default.
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

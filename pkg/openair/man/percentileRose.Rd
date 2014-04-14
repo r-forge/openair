@@ -3,7 +3,7 @@
 \title{Function to plot percentiles by wind direction}
 \usage{
 percentileRose(mydata, pollutant = "nox", type = "default",
-  percentile = c(25, 50, 75, 90, 95), method = "default",
+  percentile = c(25, 50, 75, 90, 95), smooth = FALSE, method = "default",
   cols = "default", mean = TRUE, mean.lty = 1, mean.lwd = 3,
   mean.col = "grey", fill = TRUE, intervals = NULL, angle.scale = 45,
   auto.text = TRUE, key.header = NULL, key.footer = "percentile",
@@ -44,6 +44,9 @@ percentileRose(mydata, pollutant = "nox", type = "default",
   \item{percentile}{The percentile value(s) to plot. Must
   be between 0--100. If \code{percentile = NA} then only a
   mean line will be shown.}
+
+  \item{smooth}{Should the wind direction data be smoothed
+  using a cyclic spline?}
 
   \item{method}{When \code{method = "default"} the supplied
   percentiles by wind direction are calculated. When
@@ -154,10 +157,12 @@ pollutant and plots them by wind direction. One or more
 percentile levels can be calculated and these are displayed
 as either filled areas or as lines.
 
-The levels by wind direction are calculated using a cyclic
-smooth cubic spline. The wind directions are rounded to the
-nearest 10 degrees, consistent with surface data from the
-UK Met Office before a smooth is fitted.
+The wind directions are rounded to the nearest 10 degrees,
+consistent with surface data from the UK Met Office before
+a smooth is fitted. The levels by wind direction are
+optionally calculated using a cyclic smooth cubic spline
+using the option \code{smooth}. If \code{smooth = FALSE}
+then the data are shown in 10 degree sectors.
 
 The \code{percentileRose} function compliments other
 similar functions including \code{\link{windRose}},
