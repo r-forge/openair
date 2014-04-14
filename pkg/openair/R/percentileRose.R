@@ -185,6 +185,16 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   ## round wd
   mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
   
+  ## make sure all wds are present
+  ids <- which(!seq(10, 360, by = 10) %in% unique(mydata$wd))
+  if (length(ids) > 0) {
+    
+    extra <- mydata[rep(1, length(ids)), ]
+    extra$wd <- seq(10, 360, by = 10)[ids]
+    extra[, pollutant] <- NA
+    mydata <- rbind(mydata, extra)
+  }
+  
   ## need lowest value if shading
   if (fill) percentile <- unique(c(0, percentile))
   
@@ -230,7 +240,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   if (!"lwd" %in% names(extra.args))
     extra.args$lwd <- 2
   
-  mydata <- na.omit(mydata)
+  #mydata <- na.omit(mydata)
   
   ## greyscale handling
   if (length(cols) == 1 && cols == "greyscale") {
@@ -388,20 +398,20 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   results.grid <- transform(results.grid, x = pollutant * sin(wd * pi / 180),
                             y = pollutant * cos(wd * pi / 180))
   
-  min.res <- min(results.grid$pollutant)
+  min.res <- min(results.grid$pollutant, na.rm = TRUE)
   
   newdata <- results.grid ## data to return
   
   ## nice intervals for pollutant concentrations
   tmp <- (results.grid$x ^ 2 + results.grid$y ^ 2) ^ 0.5
-  if (missing(intervals)) intervals <- pretty(c(min(tmp), max(tmp)))
+  if (missing(intervals)) intervals <- pretty(c(min(tmp, na.rm = TRUE), max(tmp, na.rm = TRUE)))
   
   
   
   labs <- intervals ## the labels
   
   ## if negative data, add to make all postive to plot properly
-  min.int <- min(intervals)
+  min.int <- min(intervals, na.rm = TRUE)
   zero <- NA
   
   if (min.int < 0 ) {
