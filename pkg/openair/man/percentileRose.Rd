@@ -2,7 +2,7 @@
 \alias{percentileRose}
 \title{Function to plot percentiles by wind direction}
 \usage{
-percentileRose(mydata, pollutant = "nox", type = "default",
+percentileRose(mydata, pollutant = "nox", wd = "wd", type = "default",
   percentile = c(25, 50, 75, 90, 95), smooth = FALSE, method = "default",
   cols = "default", mean = TRUE, mean.lty = 1, mean.lwd = 3,
   mean.col = "grey", fill = TRUE, intervals = NULL, angle.scale = 45,
@@ -18,6 +18,8 @@ percentileRose(mydata, pollutant = "nox", type = "default",
   supplied e.g. \code{pollutant = "nox"}. More than one
   pollutant can be supplied e.g. \code{pollutant = c("no2",
   "o3")} provided there is only one \code{type}.}
+
+  \item{wd}{Name of the wind direction field.}
 
   \item{type}{\code{type} determines how the data are split
   i.e. conditioned, and then plotted. The default is will

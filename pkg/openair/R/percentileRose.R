@@ -35,6 +35,7 @@
 ##'   a data frame should be supplied e.g. \code{pollutant = "nox"}. More than
 ##'   one pollutant can be supplied e.g. \code{pollutant = c("no2", "o3")}
 ##'   provided there is only one \code{type}.
+##' @param wd Name of the wind direction field.
 ##' @param type \code{type} determines how the data are split
 ##' i.e. conditioned, and then plotted. The default is will produce a
 ##' single plot using the entire data. Type can be one of the built-in
@@ -151,7 +152,7 @@
 ##' }
 ##'
 ##'
-percentileRose <- function (mydata, pollutant = "nox", type = "default",
+percentileRose <- function (mydata, pollutant = "nox", wd = "wd", type = "default",
                             percentile = c(25, 50, 75, 90, 95), smooth = FALSE, 
                             method = "default", cols = "default",
                             mean = TRUE, mean.lty = 1, mean.lwd = 3, mean.col = "grey",
@@ -163,7 +164,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
 {
   
   ## get rid of R check annoyances
-  wd <- NULL; sub <- NULL
+  sub <- NULL
   
   ## calculate percetiles or just show mean?
   if (is.na(percentile[1])) {
@@ -178,19 +179,19 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     if (length(percentile) > 1) stop ("Only one percentile should be supplied when method = 'CPF'.")
   }
   
-  vars <- c("wd", pollutant)
+  vars <- c(wd, pollutant)
   if (any(type %in%  dateTypes)) vars <- c(vars, "date")
   
-  mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE)
+  mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE, wd = wd)
   ## round wd
-  mydata$wd <- 10 * ceiling(mydata$wd / 10 - 0.5)
+  mydata[, wd] <- 10 * ceiling(mydata[, wd] / 10 - 0.5)
   
   ## make sure all wds are present
-  ids <- which(!seq(10, 360, by = 10) %in% unique(mydata$wd))
+  ids <- which(!seq(10, 360, by = 10) %in% unique(mydata[, wd]))
   if (length(ids) > 0 & smooth != TRUE) {
     
     extra <- mydata[rep(1, length(ids)), ]
-    extra$wd <- seq(10, 360, by = 10)[ids]
+    extra[, wd] <- seq(10, 360, by = 10)[ids]
     extra[, pollutant] <- NA
     mydata <- rbind(mydata, extra)
   }
@@ -241,7 +242,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     extra.args$lwd <- 2
   
   ## mydata <- na.omit(mydata)
-  id <- which(is.na(mydata$wd))
+  id <- which(is.na(mydata[, wd]))
   if (length(id) > 0)
       mydata <- mydata[-id, ]
   
@@ -263,13 +264,13 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   }
   
   prepare.grid <- function(mydata, stat) {
-    wd = NULL
+    #wd = NULL
     ## add zero wind angle = same as 360 for cyclic spline
-    ids <- which(mydata$wd == 360)
+    ids <- which(mydata[ , wd] == 360)
     
     if (length(ids) > 0) {
       zero.wd <- mydata[ids, ]
-      zero.wd$wd <- 0
+      zero.wd[, wd] <- 0
       mydata <- rbind.fill(mydata, zero.wd)
     }
     
@@ -282,7 +283,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
           min.dat <- min(thedata)
         
         ## fit a spline through the data; making sure it goes through each wd value
-        spline.res <- spline(x = thedata[ , "wd"], y = thedata[, pollutant], n = 361,
+        spline.res <- spline(x = thedata[ , wd], y = thedata[, pollutant], n = 361,
                              method = "natural")
         
         pred <- data.frame(percentile = i, wd = 0:360, pollutant = spline.res$y)
@@ -291,34 +292,36 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
         pred$pollutant[pred$pollutant < min.dat] <- min.dat
         
         ## only plot where there are valid wd
-        wd <- unique(percentiles$wd)
-        ids <- lapply(wd, function(x) seq(from = x - 5, to = x + 5))
+        wds <- unique(percentiles[, wd])
+        ids <- lapply(wds, function(x) seq(from = x - 5, to = x + 5))
         ids <- unique(do.call(c, ids))
         ids[ids < 0] <- ids[ids < 0] + 360
         pred$pollutant[-ids] <- min(c(0, min(percentiles[ , pollutant], na.rm = TRUE)))
         
       } else {
         ## do not smooth
-        dat1 <- transform(thedata, wd = wd - 5)
-        dat2 <- transform(thedata, wd = wd + 5)
+          dat1 <- thedata
+          dat2 <- thedata
+        dat1[, wd] <- thedata[, wd] - 5
+        dat2[, wd] <- thedata[, wd] + 5
         dat1$id <- 2 * 1:nrow(dat1) - 1
         dat2$id <- 2 * 1:nrow(dat2)
         thedata <- rbind(dat1, dat2)
-        id <- which(thedata$wd == -5)
-        thedata$wd[id] <- 0
-        id <- which(thedata$wd == 365)
-        thedata$wd[id] <- 0
+        id <- which(thedata[, wd] == -5)
+        thedata[, wd][id] <- 0
+        id <- which(thedata[, wd] == 365)
+        thedata[, wd][id] <- 0
        
         thedata <- thedata[order(thedata$id), ]
         thedata$pollutant <- thedata[, eval(pollutant)]
-        pred <- thedata
+          pred <- thedata
         
       }
       pred
     }
     if (method == "default") {
       ## calculate percentiles
-      percentiles <- ddply(mydata, .(wd), numcolwise(function (x) 
+      percentiles <- ddply(mydata, wd, numcolwise(function (x) 
         quantile(x, probs = percentile / 100, na.rm = TRUE)))
       percentiles$percentile <- percentile
       
@@ -330,10 +333,10 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
       overall.upper <- quantile(mydata[, pollutant], probs = max(percentile) / 100, na.rm = TRUE)
       overall.lower <- quantile(mydata[, pollutant], probs = min(percentile) / 100, na.rm = TRUE)
       
-      percentiles1 <- ddply(mydata, .(wd), numcolwise(function (x) length(which(x < overall.lower)) / length(x)))
+      percentiles1 <- ddply(mydata, wd, numcolwise(function (x) length(which(x < overall.lower)) / length(x)))
       percentiles1$percentile <- min(percentile)
       
-      percentiles2 <- ddply(mydata, .(wd), numcolwise(function (x) length(which(x > overall.upper)) / length(x)))
+      percentiles2 <- ddply(mydata, wd, numcolwise(function (x) length(which(x > overall.upper)) / length(x)))
       percentiles2$percentile <- max(percentile)
       
       if (fill) {
@@ -348,7 +351,7 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     results <- ldply(percentile, mod.percentiles)
     
     ## calculate mean; assume a percentile of 999 to flag it later
-    percentiles <- ddply(mydata, .(wd), numcolwise(function (x) mean(x, na.rm = TRUE)))
+    percentiles <- ddply(mydata, wd, numcolwise(function (x) mean(x, na.rm = TRUE)))
     percentiles$percentile <- 999
     Mean <- ldply(999, mod.percentiles)
     
@@ -397,8 +400,9 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
   ## keep unstransformed copy in case data are negative
   results <- results.grid
   
-  results.grid <- transform(results.grid, x = pollutant * sin(wd * pi / 180),
-                            y = pollutant * cos(wd * pi / 180))
+  results.grid$x <- results.grid$pollutant * sin(results.grid[, wd] * pi / 180)
+  results.grid$y <- results.grid$pollutant * cos(results.grid[, wd] * pi / 180)
+ 
   
   min.res <- min(results.grid$pollutant, na.rm = TRUE)
   
@@ -420,8 +424,8 @@ percentileRose <- function (mydata, pollutant = "nox", type = "default",
     zero <- which(intervals == 0) ## the zero line
     intervals <- intervals + -1 * min.int
     results$pollutant <- results$pollutant + -1 * min.int
-    results.grid <- transform(results, x = pollutant * sin(wd * pi / 180),
-                              y = pollutant * cos(wd * pi / 180))
+    results.grid <- transform(results, x = pollutant * sin(eval(wd) * pi / 180),
+                              y = pollutant * cos(eval(wd) * pi / 180))
   }
   
   ## re-label if CPF plot
