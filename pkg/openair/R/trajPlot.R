@@ -472,9 +472,9 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
     ## length of back mydataectories
     mydata$len <- ave(mydata$lat, mydata$date, FUN = length)
 
-    ## find length of back mydataectories
-    ## 96-hour back mydataectories with origin: length should be 97
-    n <- max(abs(mydata$hour.inc)) + 1
+    ## find length of back trajectories, choose most frequent
+    ## so that partial trajectories are not plotted
+    n <- as.numeric(names(which.max(table(abs(mydata$len))))) 
 
     mydata <- subset(mydata, len == n)
 
