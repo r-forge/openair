@@ -3,7 +3,7 @@
 \title{Calculate common model evaluation statistics}
 \usage{
 modStats(mydata, mod = "mod", obs = "obs", statistic = c("n", "FAC2",
-  "MB", "MGE", "NMB", "NMGE", "RMSE", "r", "COE"), type = "default",
+  "MB", "MGE", "NMB", "NMGE", "RMSE", "r", "COE", "IOA"), type = "default",
   rank.name = NULL, ...)
 }
 \arguments{
@@ -100,7 +100,24 @@ advantage.
 
 For negative values of COE, the model is less effective
 than the observed mean in predicting the variation in the
-observations. }
+observations. \item \eqn{IOA}, the Index of Agreement based
+on Willmott et al. (2011), which spans between -1 and +1
+with values approaching +1 representing better model
+performance.
+
+An IOA of 0.5, for example, indicates that the sum of the
+error-magnitudes is one half of the sum of the
+observed-deviation magnitudes.  When IOA = 0.0, it
+signifies that the sum of the magnitudes of the errors and
+the sum of the observed-deviation magnitudes are
+equivalent. When IOA = -0.5, it indicates that the sum of
+the error-magnitudes is twice the sum of the perfect
+model-deviation and observed-deviation magnitudes. Values
+of IOA near -1.0 can mean that the model-estimated
+deviations about O are poor estimates of the observed
+deviations; but, they also can mean that there simply is
+little observed variability - so some caution is needed
+when the IOA approaches -1. }
 
 All statistics are based on complete pairs of \code{mod}
 and \code{obs}.
@@ -131,6 +148,10 @@ model validation. Water Resources Research 35(1): 233-241.
 Legates DR, McCabe GJ. (2012). A refined index of model
 performance: a rejoinder, International Journal of
 Climatology.
+
+Willmott, C.J., Robeson, S.M., Matsuura, K., 2011. A
+refined index of model performance. International Journal
+of Climatology.
 }
 \keyword{methods}
 

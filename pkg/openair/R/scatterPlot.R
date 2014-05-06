@@ -937,6 +937,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     if (method == "density") {
         prepare.grid <- function(subdata) {
+          n <- nrow(subdata) ## for intensity estimate
             x <- subdata[, x]
             y <- subdata[, y]
             xy <- xy.coords(x, y, "xlab", "ylab")
@@ -955,16 +956,16 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
             grid <- expand.grid(x = xm, y = ym)
 
-            results <- data.frame(x = grid$x, y = grid$y, z = as.vector(dens))
+            results <- data.frame(x = grid$x, y = grid$y, z = as.vector(dens) * n)
             results
         }
 
         ## ###########################################################################
 
         results.grid <-  ddply(mydata, type, prepare.grid)
-
+        
         ## auto-scaling
-        nlev <- 200  ## preferred number of intervals
+        nlev <- nrow(mydata)  ## preferred number of intervals
         breaks <- pretty(results.grid$z, n = nlev)
 
         nlev2 <- length(breaks)
@@ -972,6 +973,14 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         col <- openColours(method.col, (nlev2 - 1)) #was "default"??
         col <- c("transparent", col) ## add white at bottom
         col.scale <- breaks
+        
+        legend <- list(col = col, at = col.scale, 
+                       space = key.position,
+                       auto.text = auto.text, footer = "intensity",
+                       header = Args$key.header,
+                       height = 1, width = 1.5, fit = "all")
+        legend <- makeOpenKeyLegend(TRUE, legend, "other")
+        
 
         ## basic function for lattice call + defaults
         temp <- paste(type, collapse = "+")
@@ -987,6 +996,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                strip.left = strip.left,
                                par.strip.text = list(cex = 0.8),
                                col.regions = col,
+                               legend = legend,
                                region = TRUE,
                                at = col.scale,
                                colorkey = FALSE,...,

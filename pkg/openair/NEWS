@@ -11,7 +11,7 @@ Changes in openair 1.0-0 [2013-11-21]
 *	Fix bug when type = "weekday" but not all days of the week
 	are present
 *	Add annotate option to TaylorDiagram
-*	Allow modStat statistics to be chosen by user
+*	Allow modStat statistics to be chosen by user and add Index of Agreement
 *	Needs to be >24 months to deseason in smoothTrend/TheilSen
 	(was >=)
 * 	Refine names returned by importADMS when used with .pst file
@@ -33,6 +33,7 @@ Changes in openair 1.0-0 [2013-11-21]
 *	Do not smooth percentileRose by wind direction by default.
 * Add option 'wd' to percentileRose
 * Fix trajPlot bug when trajectory data was not at 3-hour intervals
+* Return data and smooth fit information in smoothTrend
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================

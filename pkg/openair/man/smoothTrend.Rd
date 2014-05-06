@@ -159,7 +159,10 @@ also returns an object of class ``openair''. The object
 includes three main components: \code{call}, the command
 used to generate the plot; \code{data}, the data frame of
 summarised information used to make the plot; and
-\code{plot}, the plot itself. If retained, e.g. using
+\code{plot}, the plot itself. Note that \code{data} is a
+list of two data frames: \code{data} (the original data)
+and \code{fit} (the smooth fit that has details of the fit
+and teh uncertainties). If retained, e.g. using
 \code{output <- smoothTrend(mydata, "nox")}, this output
 can be used to recover the data, reproduce or rework the
 original plot or undertake further analysis.

@@ -120,14 +120,17 @@
 ##'   \code{statistic = "percentile"} and a vector of \code{percentile} values,
 ##'   see examples below.
 ##' @export
-##' @return As well as generating the plot itself, \code{smoothTrend} also
-##'   returns an object of class ``openair''. The object includes three main
-##'   components: \code{call}, the command used to generate the plot;
-##'   \code{data}, the data frame of summarised information used to make the
-##'   plot; and \code{plot}, the plot itself. If retained, e.g. using
-##'   \code{output <- smoothTrend(mydata, "nox")}, this output can be used to
-##'   recover the data, reproduce or rework the original plot or undertake
-##'   further analysis.
+##' @return As well as generating the plot itself, \code{smoothTrend}
+##' also returns an object of class ``openair''. The object includes
+##' three main components: \code{call}, the command used to generate
+##' the plot; \code{data}, the data frame of summarised information
+##' used to make the plot; and \code{plot}, the plot itself. Note that
+##' \code{data} is a list of two data frames: \code{data} (the
+##' original data) and \code{fit} (the smooth fit that has details of
+##' the fit and teh uncertainties). If retained, e.g. using
+##' \code{output <- smoothTrend(mydata, "nox")}, this output can be
+##' used to recover the data, reproduce or rework the original plot or
+##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
 ##'   including \code{print}, \code{plot} and \code{summarise}. See
@@ -175,7 +178,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
         trellis.par.set(list(strip.background = list(col = "white")))
     }
-
+    
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
@@ -301,12 +304,17 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
             results <- data.frame(date = mydata$date, conc = mydata[, "value"])
 
         }
-
+                              
         results
+       
     }
     
     split.data <- ddply(mydata, c(type, "variable"),  process.cond)
 
+    ## smooth fits so that they can be returned to the user
+    fit <- ddply(split.data, c(type, "variable"), fitGam, x = "date", y = "conc",
+                 k = k, ...)
+    class(fit$date) <- c("POSIXt", "POSIXct")
     
     ## special wd layout
     #(type field in results.grid called type not wd)
@@ -386,17 +394,17 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                                                 ylim = current.panel.limits()$ylim,
                                       shade)
                           panel.grid(-1, 0)
-
-
+                          
                       }
                       panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
                                    col.line = myColors[group.number],
                                    col.symbol = myColors[group.number], ...)
 
-                      panel.gam(x, y, col =  myColors[group.number], k = k, myColors[group.number], #col.se =  "black",
+                      panel.gam(x, y, col =  myColors[group.number], k = k, myColors[group.number], 
                                 simulate = simulate, n.sim = n,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
-
+                                           
+                      
                   })
 
     #reset for extra.args
@@ -404,13 +412,11 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
     #plot
     plt <- do.call(xyplot, xyplot.args)
-
-#################
-    ## output
-#################
+   
+    ## output ########################################################################
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- split.data
-    output <- list(plot = plt, data = newdata, call = match.call())
+    output <- list(plot = plt, data = list(data = newdata, fit = fit), call = match.call())
     class(output) <- "openair"
 
     invisible(output)
