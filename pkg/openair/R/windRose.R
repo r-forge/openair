@@ -217,8 +217,7 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summarise}. See
-##'   \code{\link{openair.generics}} for further details.
+##'   including \code{print}, \code{plot} and \code{summarise}. 
 ##'
 ##' Summarised proportions can also be extracted directly using the
 ##'   \code{$data} operator, e.g.  \code{object$data} for \code{output <-

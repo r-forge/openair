@@ -291,8 +291,7 @@
 ##'
 ##' An openair output can be manipulated using a number of generic
 ##' operations, including \code{print}, \code{plot} and
-##' \code{summary}. See \code{\link{openair.generics}} for further
-##' details.
+##' \code{summary}. 
 ##'
 ##' \code{polarPlot} surface data can also be extracted directly using
 ##' the \code{results}, e.g.  \code{results(object)} for \code{output

@@ -133,8 +133,7 @@
 ##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summarise}. See
-##'   \code{\link{openair.generics}} for further details.
+##'   including \code{print}, \code{plot} and \code{summarise}. 
 ##' @author David Carslaw
 ##' @seealso \code{\link{TheilSen}} for an alternative method of calculating
 ##'   trends.

@@ -169,8 +169,7 @@
 ##'   undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summary}. See
-##'   \code{\link{openair.generics}} for further details.
+##'   including \code{print}, \code{plot} and \code{summary}. 
 ##'
 ##' The four components of timeVariation are: \code{day.hour}, \code{hour},
 ##'   \code{day} and \code{month}. Associated data.frames can be extracted
