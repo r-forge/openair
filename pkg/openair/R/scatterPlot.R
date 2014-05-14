@@ -340,6 +340,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$map.alpha <- if ("map.alpha" %in% names(Args)) Args$map.alpha else 0.2
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.fill else TRUE
     Args$map.res <- if ("map.res" %in% names(Args)) Args$map.res else "default"
+    Args$traj <- if ("traj" %in% names(Args)) Args$traj else FALSE
 
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
@@ -401,14 +402,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (!is.na(group)) if (group %in% type)
         stop ("Can't have 'group' also in 'type'.")
 
-    ## decide if a trajectory plot is being drawn AND if a line is required rather
-    ## than points
-    traj <- FALSE
-    if (all(c("date", "lat", "lon", "height", "pressure") %in% names(mydata)) &
-        plot.type == "l") traj <- TRUE
-
     ## will need date so that trajectory groups can be coloured
-    if (traj)  vars <- c(vars, "date")
+    if (Args$traj)  vars <- c(vars, "date")
 
     ## data checks
 
@@ -632,7 +627,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             ## specific treatemt of trajectory lines
                             ## in order to avoid a line back to the origin, need to process
                             ## in batches
-                            if (traj) {
+                            if (Args$traj) {
 
                                 if (!is.na(z)) {
                                     ## colour by z
@@ -652,11 +647,11 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             if (map && group.number == groupMax)
                                 add.map(Args, ...)
 
-                            if (!is.na(z) & !traj)
+                            if (!is.na(z) & !Args$traj)
                                 panel.xyplot(x, y, col.symbol = thecol[subscripts],
                                                                 as.table = TRUE, ...)
 
-                            if (is.na(z) & !traj)
+                            if (is.na(z) & !Args$traj)
                                 panel.xyplot(x, y, type = plot.type,
                                              col.symbol = myColors[group.number],
                                              col.line = myColors[group.number],
@@ -792,10 +787,12 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             wsp <- rep(x, res)
             wdp <- rep(y, rep(res, res))
 
+            if (Args$traj) d <- 0.05 else d <- 0.02
+
             ## data with gaps caused by min.bin
             all.data <- na.omit(data.frame(xgrid = mydata$xgrid, ygrid = mydata$ygrid, z))
             ind <- with(all.data, exclude.too.far(wsp, wdp, mydata$xgrid,
-                                                  mydata$ygrid, dist = 0.02))
+                                                  mydata$ygrid, dist = d))
 
             new.data[ind, z] <- NA
 

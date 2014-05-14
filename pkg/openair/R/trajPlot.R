@@ -442,7 +442,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              type = type, method = method, smooth = smooth,
                              map = map, x.inc = lon.inc, y.inc = lat.inc,
                              map.fill = map.fill, map.res = map.res,
-                             map.cols = map.cols, map.alpha = map.alpha)
+                             map.cols = map.cols, map.alpha = map.alpha, traj = TRUE)
 
     ## reset for extra.args
     scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)
@@ -508,7 +508,8 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                                  smooth = smooth, map = map, x.inc = lon.inc,
                                  y.inc = lat.inc, key = key, group = group,
                                  map.fill = map.fill, map.res = map.res,
-                                 map.cols = map.cols, map.alpha = map.alpha)
+                                 map.cols = map.cols, map.alpha = map.alpha, 
+                                 traj = TRUE)
 
     } else {
          if(!"main" %in% names(extra.args))
@@ -520,7 +521,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                                  y.inc = lat.inc, group = group,
                                  map.fill = map.fill, map.res = map.res,
                                  map.cols = map.cols,
-                                 map.alpha = map.alpha)
+                                 map.alpha = map.alpha, traj = TRUE)
     }
 
     #reset for extra.args
