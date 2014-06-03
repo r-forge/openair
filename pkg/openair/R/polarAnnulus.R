@@ -540,12 +540,41 @@ polarAnnulus <- function(mydata, pollutant = "nox", resolution = "fine",
 
 
     ## auto-scaling
-    nlev = 200  #preferred number of intervals
+    nlev <- 200  #preferred number of intervals
     ## handle missing breaks arguments
-    if(missing(limits)) breaks <- pretty(results.grid$z, n = nlev) else breaks <- pretty(limits,
-                                                         n = nlev)
+    if (missing(limits)) {
+       # breaks <- pretty(results.grid$z, n = nlev)
+        breaks <- seq(min(results.grid$z, na.rm = TRUE), max(results.grid$z, na.rm = TRUE),
+                          length.out = nlev)
+        labs <- pretty(breaks, 7)
+        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+        at <- labs
+        
+    } else {
+        
+        ## handle user limits and clipping
+        breaks <- seq(min(limits), max(limits), length.out = nlev)
+        labs <- pretty(breaks, 7)
+        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+        at <- labs
+        
+        ## case where user max is < data max
+        if (max(limits) < max(results.grid[["z"]], na.rm = TRUE)) {             
+            id <- which(results.grid[["z"]] > max(limits))
+            results.grid[["z"]][id] <- max(limits)
+            labs[length(labs)] <- paste(">", labs[length(labs)])          
+        }
 
-    nlev2 = length(breaks)
+        ## case where user min is > data min
+        if (min(limits) > min(results.grid[["z"]], na.rm = TRUE)) {              
+            id <- which(results.grid[["z"]] < min(limits))
+            results.grid[["z"]][id] <- min(limits)
+            labs[1] <- paste("<", labs[1])
+        }
+               
+    }
+
+    nlev2 <- length(breaks)
 
     col <- openColours(cols, (nlev2 - 1))
     col.scale = breaks
@@ -553,9 +582,11 @@ polarAnnulus <- function(mydata, pollutant = "nox", resolution = "fine",
 #################
     ## scale key setup
 #################
-    legend <- list(col = col, at = col.scale, space = key.position,
-                   auto.text = auto.text, footer = key.footer, header = key.header,
+    legend <- list(col = col, at = col.scale, labels = list(labels = labs, at = at),
+                   space = key.position, auto.text = auto.text,
+                   footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")
+    
     legend <- makeOpenKeyLegend(key, legend, "polarAnnulus")
 
     temp <- paste(type, collapse = "+")

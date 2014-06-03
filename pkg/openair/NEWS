@@ -17,8 +17,8 @@ Changes in openair 1.0-0 [2013-11-21]
 * 	Refine names returned by importADMS when used with .pst file
 *	Fix trajectory code in appendix D in the manual (some function
 	arguments were not passed)
-*	Better user defined limits scaling in polarPlot, scatterPlot
-	when limits within data range
+*	Better user defined limits scaling in polarPlot, scatterPlot,
+	polarAnnulus when limits within data range
 *	Clarify time zone for importing data to openair and checking
 	(see manual for details)
 *	Initial versions of functions to import EEA airbase data - see

@@ -452,14 +452,16 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         
         ## handling of colour scale limits
         if (missing(limits)) {
-            breaks <- pretty(mydata[[z]], n = nlev)
+                      
+            breaks <- seq(min(mydata[[z]], na.rm = TRUE), max(mydata[[z]], na.rm = TRUE),
+                          length.out = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
             at <- labs
 
         } else {
-            ## handle user limits and clipping
-            breaks <- pretty(limits, n = nlev)
+            ## handle user limits and clipping            
+            breaks <- seq(min(limits), max(limits), length.out = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
             at <- labs
@@ -486,8 +488,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         if (thekey) {
             nlev2 <- length(breaks)
             col <- openColours(cols, (nlev2 - 1))
-            breaks <- c(breaks[1:(length(breaks) - 1)], max(mydata[[z]], na.rm = TRUE))
-
+        
             col.scale <- breaks
             legend <- list(col = col, at = col.scale, labels = list(labels = labs, at = at),
                            space = key.position,
