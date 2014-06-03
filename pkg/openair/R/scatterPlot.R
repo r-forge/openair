@@ -341,7 +341,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.fill else TRUE
     Args$map.res <- if ("map.res" %in% names(Args)) Args$map.res else "default"
     Args$traj <- if ("traj" %in% names(Args)) Args$traj else FALSE
-
+    
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
     Args$inv <- if ("inv" %in% names(Args)) Args$inv else function(x) exp(x)
@@ -449,18 +449,20 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         if (!"pch" %in% names(Args)) Args$pch <- 16
 
         nlev <- 200
-
+        
         ## handling of colour scale limits
         if (missing(limits)) {
             breaks <- pretty(mydata[[z]], n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
 
         } else {
             ## handle user limits and clipping
             breaks <- pretty(limits, n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
 
             ## case where user max is < data max
             if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {             
@@ -487,7 +489,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             breaks <- c(breaks[1:(length(breaks) - 1)], max(mydata[[z]], na.rm = TRUE))
 
             col.scale <- breaks
-            legend <- list(col = col, at = col.scale, labels = list(labels = labs),
+            legend <- list(col = col, at = col.scale, labels = list(labels = labs, at = at),
                            space = key.position,
                            auto.text = auto.text, footer = Args$key.footer,
                            header = Args$key.header,

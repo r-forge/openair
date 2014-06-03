@@ -711,19 +711,21 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
         breaks <- pretty(results.grid$z, n = nlev)
         labs <- pretty(breaks, 7)
         labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
-
+        at <- labs
+        
     } else {
         
         ## handle user limits and clipping
         breaks <- pretty(limits, n = nlev)
         labs <- pretty(breaks, 7)
         labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+        at <- labs
         
         ## case where user max is < data max
         if (max(limits) < max(results.grid[["z"]], na.rm = TRUE)) {             
             id <- which(results.grid[["z"]] > max(limits))
             results.grid[["z"]][id] <- max(limits)
-            labs[length(labs)] <- paste(">", labs[length(labs)])
+            labs[length(labs)] <- paste(">", labs[length(labs)])          
         }
 
         ## case where user min is > data min
@@ -748,7 +750,7 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
 
     ## scale key setup ##############################################################
 
-    legend <- list(col = col, at = col.scale, labels = list(labels = labs),
+    legend <- list(col = col, at = col.scale, labels = list(labels = labs, at = at),
                    space = key.position, auto.text = auto.text,
                    footer = key.footer, header = key.header,
                    height = 1, width = 1.5, fit = "all")

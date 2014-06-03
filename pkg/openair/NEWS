@@ -31,9 +31,9 @@ Changes in openair 1.0-0 [2013-11-21]
 * 	Allow users to shade/not shade alternate years in smoothTrend
 	and TheilSen
 *	Do not smooth percentileRose by wind direction by default.
-* Add option 'wd' to percentileRose
-* Fix trajPlot bug when trajectory data was not at 3-hour intervals
-* Return data and smooth fit information in smoothTrend
+* 	Add option 'wd' to percentileRose
+* 	Fix trajPlot bug when trajectory data was not at 3-hour intervals
+* 	Return data and smooth fit information in smoothTrend
 
 Changes in openair 0.9-0 [2013-02-13]
 =====================================
