@@ -448,7 +448,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
     ## y range taking account of expanded uncertainties
     rng <- function(x) {
-
+        
         ## if no CI information, just return
         if (all(is.na(x[, c("Lower", "Upper")]))) {
             lims <- NULL
@@ -463,6 +463,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
             lims <- range(c(x$Mean, x$Mean), na.rm = TRUE)
             inc <- 0.04 * abs(lims[2] - lims[1])
             lims <- c(lims[1] - inc, lims[2] + inc)
+            if (diff(lims) == 0) lims <- NULL 
         }
         lims
     }
@@ -636,7 +637,7 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
     temp <- paste(type, collapse = "+")
     myform <- formula(paste("Mean ~ mnth | ", temp, sep = ""))
-
+    
     ## ylim hander
     if (ylim.handler)
         extra.args$ylim <- rng(data.month)
@@ -661,13 +662,17 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                                             
                                             if (difference) panel.abline(h = 0, lty = 5)
 
+                                            ## a line won't work for a single point
+                                            pltType <- "l"
+                                            if (length(subscripts) == 1) pltType <- "p"
+                                            
                                             ## only plot median once if 2 conf.int
                                             id <- which(data.month$ci[subscripts] == data.month$ci[1])
-                                            panel.xyplot(x[id], y[id], type = "l",
+                                            panel.xyplot(x[id], y[id], type = pltType,
                                                          col.line = myColors[group.number],...)
 
-                                            if (ci) {mkrect(data.month[subscripts, ], x = "mnth", y = "Mean",
-                                                            group.number, myColors, alpha)}
+                                            if (ci) {mkrect(data.month[subscripts, ], x = "mnth",
+                                                            y = "Mean", group.number, myColors, alpha)}
                                         }
                                         )
                     }
