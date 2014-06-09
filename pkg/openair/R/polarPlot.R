@@ -788,7 +788,6 @@ polarPlot <- function(mydata, pollutant = "nox", x = "ws", wd = "wd", type = "de
                  region = TRUE,
                  aspect = 1,
                  sub = sub,
-                 at = col.scale,
                  par.strip.text = list(cex = 0.8),
                  scales = list(draw = FALSE),
                  xlim = c(-upper * 1.025, upper * 1.025),
