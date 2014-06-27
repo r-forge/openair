@@ -7,8 +7,8 @@ timeVariation(mydata, pollutant = "nox", local.tz = NULL,
   normalise = FALSE, xlab = c("hour", "hour", "month", "weekday"),
   name.pol = pollutant, type = "default", group = NULL,
   difference = FALSE, statistic = "mean", conf.int = 0.95, B = 100,
-  ci = TRUE, cols = "hue", key = NULL, key.columns = 1, start.day = 1,
-  auto.text = TRUE, alpha = 0.4, ...)
+  ci = TRUE, cols = "hue", ref.y = NULL, key = NULL, key.columns = 1,
+  start.day = 1, auto.text = TRUE, alpha = 0.4, ...)
 }
 \arguments{
 \item{mydata}{A data frame of hourly (or higher temporal resolution data).
@@ -105,6 +105,8 @@ and \code{RColorBrewer} colours --- see the \code{openair}
 user can supply a list of colour names recognised by R (type
 \code{colours()} to see the full list). An example would be
 \code{cols = c("yellow", "green", "blue")}}
+
+\item{ref.y}{Add a horizontal dashed reference line at this value.}
 
 \item{key}{By default \code{timeVariation} produces four plots on one page.
 While it is useful to see these plots together, it is sometimes necessary

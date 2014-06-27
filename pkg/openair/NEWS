@@ -1,4 +1,8 @@
-Changes in openair 1.0-0 [2013-11-21]
+Changes in openair 1.1=0 [2014-06-27]
+=====================================
+*	Add ref.y option to timeVariation for y references line(s)
+
+Changes in openair 1.0-0 [2014-06-09]
 =====================================
 *	Pass all arguments in corPlot
 *	Enhance timeVariation to consider median + quantiles through
