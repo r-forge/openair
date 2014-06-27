@@ -755,11 +755,6 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
                         panel.superpose(x, y, ...,
                                         panel.groups = function(x, y, col.line, type, group.number,
                                             subscripts,...) {
-                                            ## add grid lines once (otherwise they overwrite the data)
-                                            if (group.number == 1) {
-                                                panel.grid(-1, 0)
-                                                panel.abline(v = c(0, 6, 12, 18, 23), col = "grey85")
-                                            }
 
                                             if (difference) panel.abline(h = 0, lty = 5)
 
