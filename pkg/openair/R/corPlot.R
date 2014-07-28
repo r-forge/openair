@@ -77,7 +77,7 @@
 ##' examples.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summary}. 
+##'   including \code{print}, \code{plot} and \code{summary}.
 ##'
 ##' @author David Carslaw --- but mostly based on code contained in Sarkar
 ##'   (2007)
@@ -253,14 +253,20 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
         if(!"skip" %in% names(extra.args))
             extra.args$skip <- skip
     }
+
     if(!"skip" %in% names(extra.args))
          extra.args$skip <- FALSE
+
+    strip.dat <- strip.fun(results.grid, "type", auto.text)
+    strip <- strip.dat[[1]]
+    strip.left <- strip.dat[[2]]
+    pol.name <- strip.dat[[3]]
 
     ## plot via ... handler
     levelplot.args <- list(x = z ~ x * y | type , data = results.grid,
               at = do.breaks(c(-1.01, 1.01), 100),
-              as.table = TRUE,
               strip = strip,
+              as.table = TRUE,
               aspect = 1,
               colorkey = FALSE,
               col.regions = div.col,
