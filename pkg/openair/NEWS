@@ -2,6 +2,9 @@ Changes in openair 1.1=0 [2014-06-27]
 =====================================
 *	Add ref.y option to timeVariation for y references line(s)
 *	Fix type = "wd" labelling to corPlot
+*	Refine airbaseStats to include site type and city by default
+*	Make trendLevel colour scaling consistent with other functions
+	and allow missing data to be shown in different colour
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================

@@ -11,7 +11,7 @@ trendLevel(mydata, pollutant = "nox", x = "month", y = "hour",
   key.header = "use.stat.name", key.footer = pollutant,
   key.position = "right", key = TRUE, statistic = c("mean", "max",
   "frequency"), stat.args = NULL, stat.safe.mode = TRUE,
-  drop.unused.types = TRUE, ...)
+  drop.unused.types = TRUE, col.na = "white", ...)
 }
 \arguments{
 \item{mydata}{The openair data frame to use to generate the
@@ -103,6 +103,8 @@ and \code{y} cases generate 'holes' in individual plots. However, empty
 \code{type} cases would produce blank panels if plotted. Therefore, the
 default, \code{TRUE}, excludes these empty panels from the plot. The
 alternative \code{FALSE} plots all \code{type} panels.}
+
+\item{col.na}{Colour to be used to show missing data.}
 
 \item{...}{Addition options are passed on to \code{cutData} for
 \code{type} handling and \code{levelplot} in \code{lattice} for finer

@@ -6,7 +6,7 @@
 airbaseStats(statistic = "Mean", pollutant = "no2", avg.time = "auto",
   code = NULL, site.type = c("background", "traffic", "industrial",
   "unknown"), year = 1969:2012, data.cap = 0, add = c("country", "lat",
-  "lon", "site.type"))
+  "lon", "site.type", "site", "city"))
 }
 \arguments{
 \item{statistic}{A \emph{single} choice from \dQuote{P50},
