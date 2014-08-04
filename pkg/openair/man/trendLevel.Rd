@@ -9,9 +9,9 @@ trendLevel(mydata, pollutant = "nox", x = "month", y = "hour",
   type = "year", rotate.axis = c(90, 0), n.levels = c(10, 10, 4),
   limits = c(0, 100), cols = "default", auto.text = TRUE,
   key.header = "use.stat.name", key.footer = pollutant,
-  key.position = "right", key = TRUE, statistic = c("mean", "max",
-  "frequency"), stat.args = NULL, stat.safe.mode = TRUE,
-  drop.unused.types = TRUE, col.na = "white", ...)
+  key.position = "right", key = TRUE, labels = NA, breaks = NA,
+  statistic = c("mean", "max", "frequency"), stat.args = NULL,
+  stat.safe.mode = TRUE, drop.unused.types = TRUE, col.na = "white", ...)
 }
 \arguments{
 \item{mydata}{The openair data frame to use to generate the
@@ -59,29 +59,42 @@ plot via \code{quickText} to provide common text formatting.  The
 alternative \code{auto.text = FALSE} turns this option off and passes any
 supplied labels to the plot without modification.}
 
-\item{key.header,key.footer}{Adds additional text labels above and/or below
-the scale key, respectively. For example, passing the options
-\code{key.header = "", key.footer = c("mean","nox")} adds the addition
-text as a scale footer. If enabled (\code{auto.text = TRUE}), these
-arguments are passed to the scale key (\code{drawOpenKey}) via
-\code{quickText} to handle formatting. The term \code{"get.stat.name"},
-used as the default \code{key.header} setting, is reserved and
-automatically adds statistic function names or defaults to \code{"level"}
-when unnamed functions are requested via \code{statistic}.}
+\item{key.header,key.footer}{Adds additional text labels above
+and/or below the scale key, respectively. For example, passing the
+options \code{key.header = "", key.footer = c("mean","nox")} adds
+the addition text as a scale footer. If enabled (\code{auto.text =
+TRUE}), these arguments are passed to the scale key
+(\code{drawOpenKey}) via \code{quickText} to handle
+formatting. The term \code{"get.stat.name"}, used as the default
+\code{key.header} setting, is reserved and automatically adds
+statistic function names or defaults to \code{"level"} when
+unnamed functions are requested via \code{statistic}.}
 
-\item{key.position}{Location where the scale key should be plotted.
-Allowed arguments currently include \dQuote{top}, \dQuote{right},
-\dQuote{bottom} and \dQuote{left}.}
+\item{key.position}{Location where the scale key should be
+plotted.  Allowed arguments currently include \dQuote{top},
+\dQuote{right}, \dQuote{bottom} and \dQuote{left}.}
 
 \item{key}{Fine control of the scale key via \code{drawOpenKey}. See
 \code{?drawOpenKey} for further details.}
 
-\item{statistic}{The statistic method to be use to summarise locally binned
-\code{pollutant} measurements with. Three options are currently encoded:
-\dQuote{mean} (default), \dQuote{max} and \dQuote{frequency}. (Note:
-Functions can also be sent directly via \code{statistic}.  However, this
-option is still in development and should be used with caution. See
-Details below.)}
+\item{labels}{If a categorical colour scale is required then these
+labels will be used. Note there is one less label than break. For
+example, \code{labels = c("good", "bad", "very
+bad")}. \code{breaks} must also be supplied if labels are given.}
+
+\item{breaks}{If a categorical colour scale is required then these
+breaks will be used. For example, \code{breaks = c(0, 50, 100,
+1000)}. In this case \dQuote{good} corresponds to values berween 0
+and 50 and so on. Users should set the maximum value of
+\code{breaks} to exceed the maximum data value to ensure it is
+within the maximum final range e.g. 100--1000 in this case.}
+
+\item{statistic}{The statistic method to be use to summarise
+locally binned \code{pollutant} measurements with. Three options
+are currently encoded: \dQuote{mean} (default), \dQuote{max} and
+\dQuote{frequency}. (Note: Functions can also be sent directly via
+\code{statistic}.  However, this option is still in development
+and should be used with caution. See Details below.)}
 
 \item{stat.args}{Additional options to be used with \code{statistic} if
 this is a function. The extra options should be supplied as a list of
@@ -91,7 +104,7 @@ named parameters. (see Details below.)}
 direclty with \code{statistic} that most users can ignore. This option
 returns \code{NA} instead of running \code{statistic} on binned
 subsamples that are empty. Many common functions terminate with an error
-meassage when applied to an empty dataset. So, this options provides a
+message when applied to an empty dataset. So, this option provides a
 mechanism to work with such functions. For a very few cases, e.g. for a
 function that counted missing entries, it might need to be set to
 \code{FALSE} (see Details below.)}
@@ -169,7 +182,7 @@ trendLevel(mydata, pollutant = "nox", statistic = my.mean)
 #           stat.args = list(na.rm = TRUE))
 }
 \author{
-Karl Ropkins
+Karl Ropkins and David Carslaw
 }
 \seealso{
 \code{\link{openColours}} and \code{\link{drawOpenKey}} for more

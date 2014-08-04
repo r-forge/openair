@@ -64,26 +64,37 @@
 ##'   plot via \code{quickText} to provide common text formatting.  The
 ##'   alternative \code{auto.text = FALSE} turns this option off and passes any
 ##'   supplied labels to the plot without modification.
-##' @param key.header,key.footer Adds additional text labels above and/or below
-##'   the scale key, respectively. For example, passing the options
-##'   \code{key.header = "", key.footer = c("mean","nox")} adds the addition
-##'   text as a scale footer. If enabled (\code{auto.text = TRUE}), these
-##'   arguments are passed to the scale key (\code{drawOpenKey}) via
-##'   \code{quickText} to handle formatting. The term \code{"get.stat.name"},
-##'   used as the default \code{key.header} setting, is reserved and
-##'   automatically adds statistic function names or defaults to \code{"level"}
-##'   when unnamed functions are requested via \code{statistic}.
-##' @param key.position Location where the scale key should be plotted.
-##'   Allowed arguments currently include \dQuote{top}, \dQuote{right},
-##'   \dQuote{bottom} and \dQuote{left}.
+##' @param key.header,key.footer Adds additional text labels above
+##' and/or below the scale key, respectively. For example, passing the
+##' options \code{key.header = "", key.footer = c("mean","nox")} adds
+##' the addition text as a scale footer. If enabled (\code{auto.text =
+##' TRUE}), these arguments are passed to the scale key
+##' (\code{drawOpenKey}) via \code{quickText} to handle
+##' formatting. The term \code{"get.stat.name"}, used as the default
+##' \code{key.header} setting, is reserved and automatically adds
+##' statistic function names or defaults to \code{"level"} when
+##' unnamed functions are requested via \code{statistic}.
+##' @param key.position Location where the scale key should be
+##' plotted.  Allowed arguments currently include \dQuote{top},
+##' \dQuote{right}, \dQuote{bottom} and \dQuote{left}.
 ##' @param key Fine control of the scale key via \code{drawOpenKey}. See
 ##'   \code{?drawOpenKey} for further details.
-##' @param statistic The statistic method to be use to summarise locally binned
-##'   \code{pollutant} measurements with. Three options are currently encoded:
-##'   \dQuote{mean} (default), \dQuote{max} and \dQuote{frequency}. (Note:
-##'   Functions can also be sent directly via \code{statistic}.  However, this
-##'   option is still in development and should be used with caution. See
-##'   Details below.)
+##' @param labels If a categorical colour scale is required then these
+##' labels will be used. Note there is one less label than break. For
+##' example, \code{labels = c("good", "bad", "very
+##' bad")}. \code{breaks} must also be supplied if labels are given.
+##' @param breaks If a categorical colour scale is required then these
+##' breaks will be used. For example, \code{breaks = c(0, 50, 100,
+##' 1000)}. In this case \dQuote{good} corresponds to values berween 0
+##' and 50 and so on. Users should set the maximum value of
+##' \code{breaks} to exceed the maximum data value to ensure it is
+##' within the maximum final range e.g. 100--1000 in this case.
+##' @param statistic The statistic method to be use to summarise
+##' locally binned \code{pollutant} measurements with. Three options
+##' are currently encoded: \dQuote{mean} (default), \dQuote{max} and
+##' \dQuote{frequency}. (Note: Functions can also be sent directly via
+##' \code{statistic}.  However, this option is still in development
+##' and should be used with caution. See Details below.)
 ##' @param stat.args Additional options to be used with \code{statistic} if
 ##'   this is a function. The extra options should be supplied as a list of
 ##'   named parameters. (see Details below.)
@@ -145,7 +156,8 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
                        type = "year", rotate.axis = c(90, 0), n.levels = c(10, 10, 4),
                        limits = c(0, 100), cols = "default", auto.text = TRUE,
                        key.header = "use.stat.name", key.footer = pollutant,
-                       key.position = "right", key = TRUE,
+                       key.position = "right", key = TRUE, labels = NA,
+                       breaks = NA,
                        statistic = c("mean", "max", "frequency"),
                        stat.args = NULL, stat.safe.mode = TRUE, drop.unused.types = TRUE,
                        col.na = "white",
@@ -166,6 +178,11 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
+
+    category <- FALSE ## assume pollutant is not a categorical value
+
+    if (!is.na(labels) && !is.na(breaks)) category <- TRUE
+
 
     ## check.valid function
     check.valid <- function(a, x, y){
@@ -416,71 +433,97 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     scales <- list(x = list(rot = rotate.axis[1]),
                    y = list(rot = rotate.axis[2]))
 
-    ## auto-scaling
-    nlev <- 200  ## preferred number of intervals
+    ## categorical colour scale or not? #####################################
 
-    ## handle missing breaks arguments
+    if (category) {
+        ## check the breaks and labels are consistent
+        if (length(labels) + 1 != length(breaks)) stop("Need one more break than labels")
 
-    if (missing(limits)) {
+        newdata$cuts <- cut(newdata[, pollutant], breaks = breaks, labels = labels)
+        n <- length(levels(newdata$cuts))
 
-        breaks <- seq(min(newdata[,pollutant], na.rm = TRUE),
-                      max(newdata[,pollutant], na.rm = TRUE),
-                      length.out = nlev)
-        labs <- pretty(breaks, 7)
-        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
-        at <- labs
+        col.regions <- openColours(cols, n)
+        col.scale <- breaks
+        legend <- list(col = col.regions, space = key.position, auto.text = auto.text,
+                       labels = levels(newdata$cuts), footer = key.footer,
+                       header = key.header, height = 0.8, width = 1.5, fit = "scale",
+                       plot.style = "other")
 
-    } else {
+        col.scale <- breaks
+        legend <- makeOpenKeyLegend(key, legend, "windRose")
 
-        ## handle user limits and clipping
-        breaks <- seq(min(limits), max(limits), length.out = nlev)
-        labs <- pretty(breaks, 7)
-        labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
-        at <- labs
+    } else { ## continuous colour scale
 
-        ## case where user max is < data max
-        if (max(limits) < max(newdata[, pollutant], na.rm = TRUE)) {
-            id <- which(newdata[, pollutant] > max(limits))
-            newdata[id, pollutant] <- max(limits)
-            labs[length(labs)] <- paste(">", labs[length(labs)])
+        ## auto-scaling
+        nlev <- 200  ## preferred number of intervals
+
+        ## handle missing breaks arguments
+
+        if (missing(limits)) {
+
+            breaks <- seq(min(newdata[, pollutant], na.rm = TRUE),
+                          max(newdata[, pollutant], na.rm = TRUE),
+                          length.out = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
+
+        } else {
+
+            ## handle user limits and clipping
+            breaks <- seq(min(limits), max(limits), length.out = nlev)
+            labs <- pretty(breaks, 7)
+            labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
+
+            ## case where user max is < data max
+            if (max(limits) < max(newdata[, pollutant], na.rm = TRUE)) {
+                id <- which(newdata[, pollutant] > max(limits))
+                newdata[id, pollutant] <- max(limits)
+                labs[length(labs)] <- paste(">", labs[length(labs)])
+            }
+
+            ## case where user min is > data min
+            if (min(limits) > min(newdata[, pollutant], na.rm = TRUE)) {
+                id <- which(newdata[,pollutant] < min(limits))
+                newdata[id, pollutant] <- min(limits)
+                labs[1] <- paste("<", labs[1])
+            }
+
         }
 
-        ## case where user min is > data min
-        if (min(limits) > min(newdata[, pollutant], na.rm = TRUE)) {
-            id <- which(newdata[,pollutant] < min(limits))
-            newdata[id, pollutant] <- min(limits)
-            labs[1] <- paste("<", labs[1])
-        }
+        nlev2 <- length(breaks)
+
+        col.regions <- openColours(cols, (nlev2 - 1))
+
+        col.scale <- breaks
+
+        legend <- list(col = col.regions, at = col.scale,
+                       labels = list(labels = labs, at = at),
+                       space = key.position, auto.text = auto.text,
+                       footer = key.footer, header = key.header,
+                       height = 1, width = 1.5, fit = "all")
+        legend <- makeOpenKeyLegend(key, legend, "polarPlot")
 
     }
-
-    nlev2 <- length(breaks)
-
-    col.regions <- openColours(cols, (nlev2 - 1))
-
-    col.scale <- breaks
-
-
-    legend <- list(col = col.regions, at = col.scale,
-                   labels = list(labels = labs, at = at),
-                   space = key.position, auto.text = auto.text,
-                   footer = key.footer, header = key.header,
-                   height = 1, width = 1.5, fit = "all")
-    legend <- makeOpenKeyLegend(key, legend, "polarPlot")
 
 
     ## #turn off colorkey
     colorkey <- FALSE
 
-                                        #stop overlapping labels
+    ## stop overlapping labels
     yscale.lp <- function(...){
         ans <- yscale.components.default(...)
         ans$left$labels$check.overlap <- TRUE
+        ans$left$labels$labels <- levels(newdata[, y])
+        ans$left$labels$at <- seq_along(levels(newdata[, y]))
         ans
     }
     xscale.lp <- function(...){
         ans <- xscale.components.default(...)
         ans$bottom$labels$check.overlap <- TRUE
+        ans$bottom$labels$labels <- levels(newdata[, x])
+        ans$bottom$labels$at <- seq_along(levels(newdata[, x]))
         ans
     }
 
@@ -488,9 +531,13 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## plot
     ## ############################
     ## note: The following listUpdate steps are used to stop this falling
-    ##      over with a lattice error if the user passes any of
-    ##      the locally defined options below as part of call.
-    ##      If they do reset it is obviously Caveat emptor...
+    ## over with a lattice error if the user passes any of
+    ## the locally defined options below as part of call.
+    ## If they do reset it is obviously Caveat emptor...
+
+    ## the axes are discrete factors - therefore can define exactly
+    xlim <- range(as.numeric(newdata[, x])) + c(-0.5, 0.5)
+    ylim <- range(as.numeric(newdata[, y])) + c(-0.5, 0.5)
 
     ## openair defaults for plot
     levelplot.args <- list(x = myform, data = newdata, as.table = TRUE,
@@ -501,7 +548,9 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
                            xscale.components = xscale.lp,
                            par.strip.text = list(cex = 0.8),
                            strip = strip, strip.left = strip.left,
+                           xlim = xlim, ylim = ylim,
                            panel = function (x, y, ...) {
+
                                panel.fill(col = col.na)
                                panel.levelplot(x, y, ...)
                            }
