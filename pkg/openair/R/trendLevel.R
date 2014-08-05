@@ -1,69 +1,75 @@
 ##' trendLevel
 ##'
-##' The trendLevel function provides a way of rapidly showing a large amount of
-##' data in a condensed form. In one plot, the variation in the concentration
-##' of one pollutant can to shown as a function of three other properties. The
-##' default version of the plot uses y = time of day, x = month of year and
-##' type = year to provide information on trends, seasonal effects and diurnal
-##' variations. However, x, y and type and summarising statistics can all be
-##' modified to provide a range of other similar plots.
+##' The trendLevel function provides a way of rapidly showing a large
+##' amount of data in a condensed form. In one plot, the variation in
+##' the concentration of one pollutant can to shown as a function of
+##' three other categorical properties. The default version of the
+##' plot uses y = hour of day, x = month of year and type = year to
+##' provide information on trends, seasonal effects and diurnal
+##' variations. However, x, y and type and summarising statistics can
+##' all be modified to provide a range of other similar plots.
 ##'
-##' \code{trendLevel} allows the use of third party summarising functions via
-##' the \code{statistic} option. Any additional function arguments not included
-##' within a function called using \code{statistic} should be supplied as a
-##' list of named parameters and sent using \code{stat.args}. For example, the
-##' encoded option \code{statistic = "mean"} is equivalent to \code{statistic =
-##' mean, stat.args = list(na.rm = TRUE)} or the R command \code{mean(x, na.rm=
-##' TRUE)}.  Many R functions and user`s own code could be applied in a similar
-##' fashion, subject to the following restrictions: the first argument sent to
-##' the function must be the data series to be analysed; the name `x' cannot be
-##' used for any of the extra options supplied in \code{stat.args}; and the
-##' function should return the required answer as a numeric or NA. Note: If the
-##' supplied function returns more than one answer, currently only the first of
-##' these is retained and used by \code{trendLevel}. All other returned
-##' information will be ignored without warning. If the function terminates
-##' with an error when it is sent an empty data series, the option
-##' \code{stat.safe.mode} should not be set to \code{FALSE} or
-##' \code{trendLevel} may fail. Note: The \code{stat.safe.mode = TRUE} option
-##' returns an NA without warning for empty data series.
+##' \code{trendLevel} allows the use of third party summarising
+##' functions via the \code{statistic} option. Any additional function
+##' arguments not included within a function called using
+##' \code{statistic} should be supplied as a list of named parameters
+##' and sent using \code{stat.args}. For example, the encoded option
+##' \code{statistic = "mean"} is equivalent to \code{statistic = mean,
+##' stat.args = list(na.rm = TRUE)} or the R command \code{mean(x,
+##' na.rm= TRUE)}.  Many R functions and user's own code could be
+##' applied in a similar fashion, subject to the following
+##' restrictions: the first argument sent to the function must be the
+##' data series to be analysed; the name `x' cannot be used for any of
+##' the extra options supplied in \code{stat.args}; and the function
+##' should return the required answer as a numeric or \code{NA}. Note:
+##' If the supplied function returns more than one answer, currently
+##' only the first of these is retained and used by
+##' \code{trendLevel}. All other returned information will be ignored
+##' without warning. If the function terminates with an error when it
+##' is sent an empty data series, the option \code{stat.safe.mode}
+##' should not be set to \code{FALSE} or \code{trendLevel} may
+##' fail. Note: The \code{stat.safe.mode = TRUE} option returns an NA
+##' without warning for empty data series.
 ##'
-##' @aliases trendLevel trendLevelHour trendLevelWd
 ##' @param mydata The openair data frame to use to generate the
 ##'   \code{trendLevel} plot.
 ##' @param pollutant The name of the data series in \code{mydata} to sample to
 ##'   produce the \code{trendLevel} plot.
-##' @param x The name of the data series to use as the \code{trendLevel}
-##'   x-axis. This is used with the \code{y} and \code{type} options to bin the
-##'   data before applying \code{statistic} (see below). Allowed options
-##'   currently include \dQuote{hour}, \dQuote{month}, \dQuote{year}, and
-##'   \dQuote{wd}. Other data series in \code{mydata} can also be used. (Note:
-##'   \code{trendLevel} does not allow duplication in \code{x}, \code{y} and
-##'   \code{type} options within a call.)
-##' @param y,type The names of the data series to use as the \code{trendLevel}
-##'   y-axis and for additional conditioning, respectively. As \code{x} above.
-##' @param rotate.axis The rotation to be applied to \code{trendLevel} \code{x}
-##'   and \code{y} axes. The default, \code{c(90, 0)}, rotates the x axis by 90
-##'   degrees but does not rotate the y axis. (Note: If only one value is
-##'   supplied, this is applied to both axes; if more than two values are
-##'   supplied, only the first two are used.)
-##' @param n.levels The number of levels to split \code{x}, \code{y} and
-##'   \code{type} data into if numeric. The default, \code{c(10, 10, 4)}, cuts
-##'   numeric \code{x} and \code{y} data into ten levels and numeric
-##'   \code{type} data into four levels. (Notes: This option is ignored for
-##'   date conditioning and factors.  If less than three values are supplied,
-##'   three values are determined by recursion; if more than three values are
-##'   supplied, only the first three are used.)
+##' @param x The name of the data series to use as the
+##' \code{trendLevel} x-axis. This is used with the \code{y} and
+##' \code{type} options to bin the data before applying
+##' \code{statistic} (see below). Other data series in \code{mydata}
+##' can also be used. (Note: \code{trendLevel} does not allow
+##' duplication in \code{x}, \code{y} and \code{type} options within a
+##' call.)
+##' @param y, type The names of the data series to use as the
+##' \code{trendLevel} y-axis and for additional conditioning,
+##' respectively. As \code{x} above.
+##' @param rotate.axis The rotation to be applied to \code{trendLevel}
+##' \code{x} and \code{y} axes. The default, \code{c(90, 0)}, rotates
+##' the x axis by 90 degrees but does not rotate the y axis. (Note: If
+##' only one value is supplied, this is applied to both axes; if more
+##' than two values are supplied, only the first two are used.)
+##' @param n.levels The number of levels to split \code{x}, \code{y}
+##' and \code{type} data into if numeric. The default, \code{c(10, 10,
+##' 4)}, cuts numeric \code{x} and \code{y} data into ten levels and
+##' numeric \code{type} data into four levels. (Notes: This option is
+##' ignored for date conditioning and factors.  If less than three
+##' values are supplied, three values are determined by recursion; if
+##' more than three values are supplied, only the first three are
+##' used.)
 ##' @param limits The colour scale range to use when generating the
-##'   \code{trendLevel} plot.
-##' @param cols The colour set to use to colour the \code{trendLevel} surface.
-##'   \code{cols} is passed to \code{openColours} for evaluation. See
-##'   \code{?openColours} for more details.
-##' @param auto.text Automatic routine text formatting. \code{auto.text = TRUE}
-##'   passes common \code{lattice} labelling terms (e.g. \code{xlab} for the
-##'   x-axis, \code{ylab} for the y-axis and \code{main} for the title) to the
-##'   plot via \code{quickText} to provide common text formatting.  The
-##'   alternative \code{auto.text = FALSE} turns this option off and passes any
-##'   supplied labels to the plot without modification.
+##' \code{trendLevel} plot.
+##' @param cols The colour set to use to colour the \code{trendLevel}
+##' surface.  \code{cols} is passed to \code{openColours} for
+##' evaluation. See \code{?openColours} for more details.
+##' @param auto.text Automatic routine text
+##' formatting. \code{auto.text = TRUE} passes common \code{lattice}
+##' labelling terms (e.g. \code{xlab} for the x-axis, \code{ylab} for
+##' the y-axis and \code{main} for the title) to the plot via
+##' \code{quickText} to provide common text formatting.  The
+##' alternative \code{auto.text = FALSE} turns this option off and
+##' passes any supplied labels to the plot without modification.
 ##' @param key.header,key.footer Adds additional text labels above
 ##' and/or below the scale key, respectively. For example, passing the
 ##' options \code{key.header = "", key.footer = c("mean","nox")} adds
@@ -88,7 +94,8 @@
 ##' 1000)}. In this case \dQuote{good} corresponds to values berween 0
 ##' and 50 and so on. Users should set the maximum value of
 ##' \code{breaks} to exceed the maximum data value to ensure it is
-##' within the maximum final range e.g. 100--1000 in this case.
+##' within the maximum final range e.g. 100--1000 in this
+##' case. \code{labels} must also be supplied.
 ##' @param statistic The statistic method to be use to summarise
 ##' locally binned \code{pollutant} measurements with. Three options
 ##' are currently encoded: \dQuote{mean} (default), \dQuote{max} and
@@ -164,41 +171,38 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
                        ...)
 {
 
-
-    ## #############################
-    ## setup
-    ## #############################
-
     ## greyscale handling
-    if (length(cols) == 1 && cols == "greyscale") {
-
+    if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set(list(strip.background = list(col = "white")))
-    }
+    
 
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
 
-    category <- FALSE ## assume pollutant is not a categorical value
+    category <- FALSE ## assume pollutant scale is not a categorical value
 
     if (!is.na(labels) && !is.na(breaks)) category <- TRUE
 
 
     ## check.valid function
     check.valid <- function(a, x, y){
-        if(length(x)>1) x <- x[1] #take first as default
-        if(is.null(x)){
+        
+        if (length(x) > 1) x <- x[1] #take first as default
+        
+        if (is.null(x))
             stop(paste0("\ttrendLevel does not allow 'NULL' ", a, " option.",
-                        "\n\t[suggest one of following: ", paste(y, collapse = ", "),"]")
-                 , call.=FALSE)
-        }
+                        "\n\t[suggest one of following: ", paste(y, collapse = ", "), "]"),
+                 call. = FALSE)
+        
         out <- y[pmatch(x, y)] #match to options
-        if(is.na(out)){
+
+        if (is.na(out))
             stop(paste0("\ttrendLevel could not evaluate ", a, " term '", x,
-                        "'.\n\t[suggest one of following: ", paste(y, collapse=", "),"]")
-                 , call.=FALSE)
-        }
-                                        #code here for shorten cases x != out
+                        "'.\n\t[suggest one of following: ", paste(y, collapse=", "), "]"),
+                 call. = FALSE)
+        
+        ## code here for shorten cases x != out
         out
     }
 
@@ -244,25 +248,26 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## #################################
 
     temp <- unique(c(x, y, type)[duplicated(c(x, y, type))])
-    if(length(temp) > 0){
+    
+    if (length(temp) > 0)
         stop(paste0("\ttrendLevel could not rationalise plot structure.",
                     "\n\t[duplicate term(s) in pollutant, x, y, type structure]",
-                    "\n\t[term(s): ", paste(temp, collapse = ", "),"]")
-             , call. = FALSE)
-    }
+                    "\n\t[term(s): ", paste(temp, collapse = ", "), "]"), call. = FALSE)
+    
 
     ## ###############################
     ## number vector handling
     ## ###############################
     ## used for rotate.axis and n.levels
-    ls.check.fun <- function(vector, vector.name, len){
-        if(!is.numeric(vector)){
-            warning(paste("\ttrendLevel ignored unrecognised '", vector.name, "' option.",
-                          "\n\t[check ?trendLevel for details]", sep=""), call.=FALSE)
+    ls.check.fun <- function(vector, vector.name, len) {
+        if (!is.numeric(vector)){
+            warning(paste0("\ttrendLevel ignored unrecognised '", vector.name, "' option.",
+                          "\n\t[check ?trendLevel for details]"), call. = FALSE)
             ## use current default
             vector <- eval(formals(trendLevel)[[vector.name]])
         }
-        if(length(vector)<len) vector <- rep(vector,len)[1:len]
+        
+        if (length(vector) < len) vector <- rep(vector,len)[1:len]
         ## insert default if not given
         ifelse(is.na(vector), eval(formals(trendLevel)[[vector.name]]), vector)
     }
@@ -272,12 +277,12 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## #######################
     ## statistic handling
     ## #######################
-    if(is.character(statistic) | is.function(statistic)){
-        if(is.character(statistic)){
+    if (is.character(statistic) | is.function(statistic)){
+        if (is.character(statistic)) {
             ## ########################
             ## hardcoded statistic options
             ## ########################
-                                        # #update both here and in formals
+                                        
             statistic <- check.valid("statistic", statistic,
                                      eval(formals(trendLevel)$statistic))
             if (statistic == "mean") {
@@ -286,13 +291,13 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             }
             if (statistic == "max") {
                 stat.fun <- function(x, ...){
-                    if(all(is.na(x))) { NA } else  max(x, ...)
+                    if (all(is.na(x))) { NA } else  max(x, ...)
                 }
                 stat.args <- list(na.rm = TRUE)
             }
             if (statistic == "frequency") {
                 stat.fun <- function(x, ...){
-                    if(all(is.na(x))) { NA } else  length(na.omit(x))
+                    if (all(is.na(x))) { NA } else  length(na.omit(x))
                 }
                 stat.args <- NULL
             }
@@ -303,8 +308,10 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             ## user defined function handling
             ## ######################
             ## default unnameed stats to 'level'
+
             stat.name <- substitute(statistic)
-            if(length(stat.name)!=1) stat.name <- "level"
+            if (length(stat.name) != 1) stat.name <- "level"
+
             if(stat.safe.mode){
                 stat.fun <- function(x, ...) {
                     if (all(is.na(x))) NA else statistic(x, ...)[1]
@@ -321,7 +328,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
         stop(paste0("\ttrendLevel could not apply statistic option '", substitute(statistic),
                     "'.\n\t[suggest valid function or character vector]",
                     "\n\t[currect character vectors options: '",
-                    paste(eval(formals(trendLevel)$statistic), collapse = "', '"),"']"),
+                    paste(eval(formals(trendLevel)$statistic), collapse = "', '"), "']"),
              call. = FALSE)
     }
 
@@ -340,8 +347,9 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     temp <- if ("date" %in% names(mydata))
         c("date", pollutant) else
     pollutant
+    
     ## all of x, y, temp need to be handled as type here
-    mydata <- checkPrep(mydata, temp, type=c(x, y, type), remove.calm = FALSE)
+    mydata <- checkPrep(mydata, temp, type = c(x, y, type), remove.calm = FALSE)
 
     ## ##########################
     ## cutData
@@ -362,25 +370,24 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## calculate statistic
     ## ##########################
 
-    temp <- function(...){
-        tapply(newdata[, pollutant], newdata[c(x, y, type)],
-               stat.fun, ...)
-    }
+    calc.stat <- function(...)
+        tapply(newdata[, pollutant], newdata[c(x, y, type)], stat.fun, ...)
+    
 
     if (is.null(stat.args)) {
-        newdata <- try(temp(), silent = TRUE)
+        newdata <- try(calc.stat(), silent = TRUE)
     } else {
-        newdata <- try(do.call(temp, stat.args), silent = TRUE)
+        newdata <- try(do.call(calc.stat, stat.args), silent = TRUE)
     }
 
     ## ####################
     ## error handling for stat
     ## ####################
-    if(is(newdata)[1] == "try-error"){
-        stop(paste0("\ttrendLevel could not complete supplied statistic operation '", stat.name,
-                    "'.\n\t[R error below]", "\n\t", temp[1]),
-             call.=FALSE)
-    }
+    if (is(newdata)[1] == "try-error")
+        stop(paste0("\ttrendLevel could not complete supplied statistic operation '",
+                    stat.name, "'.\n\t[R error below]", "\n\t", temp[1]),
+             call. = FALSE)
+    
 
     ## ############################
     ## restructure new data for plot
@@ -403,23 +410,23 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## layout for wd
     if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(extra.args)) {
         ## re-order to make sensible layout
-        ## starting point code as of ManKendall
+        
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         newdata$wd <- ordered(newdata$wd, levels = wds)
-        wd.ok <- sapply(wds, function (x) {if (x %in% unique(newdata$wd)) FALSE else TRUE })
+        wd.ok <- sapply(wds, function (x) if (x %in% unique(newdata$wd)) FALSE else TRUE )
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
         newdata$wd <- factor(newdata$wd)
         extra.args$layout <- c(3, 3)
-        if(!"skip" %in% names(extra.args))
+        if (!"skip" %in% names(extra.args))
             extra.args$skip <- skip
     }
 
     temp <- if (is.factor(newdata[ , type[1]]))
         levels(newdata[ , type[1]]) else unique(newdata[ , type[1]])
     temp <- sapply(temp, function(x) quickText(x, auto.text))
-    if(is.factor(temp)) temp <- as.character(temp)
+    if (is.factor(temp)) temp <- as.character(temp)
     strip <- strip.custom(factor.levels = temp, strip.levels = c(TRUE, FALSE),
-                          strip.names=FALSE)
+                          strip.names = FALSE)
 
     strip.left <- if (length(type) == 1) {
         FALSE
@@ -439,7 +446,9 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
         ## check the breaks and labels are consistent
         if (length(labels) + 1 != length(breaks)) stop("Need one more break than labels")
 
-        newdata$cuts <- cut(newdata[, pollutant], breaks = breaks, labels = labels)
+        ## cut data into categories
+        newdata$cuts <- cut(newdata[, pollutant], breaks = breaks, labels = labels,
+                            include.lowest = TRUE)
         n <- length(levels(newdata$cuts))
 
         col.regions <- openColours(cols, n)
@@ -464,6 +473,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             breaks <- seq(min(newdata[, pollutant], na.rm = TRUE),
                           max(newdata[, pollutant], na.rm = TRUE),
                           length.out = nlev)
+            
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
             at <- labs
@@ -563,7 +573,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## update for two levels
     ## ############################
     ## uses iseOuterStrips in latticeExtra
-    if(length(type) > 1)
+    if (length(type) > 1)
         plt <- useOuterStrips(plt, strip = strip, strip.left = strip.left)
 
     ## ############################
