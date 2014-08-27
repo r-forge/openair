@@ -325,7 +325,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         n <- length(unique(mydata$date))
         ## number in each bin
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
-                             function (x)  length(unique(x)))
+                             function (x) length(unique(x)))
 
         ## need dates for later processing e.g. for type = "season"
         dates <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
@@ -336,10 +336,11 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
 
         mydata[, pollutant] <- mydata[, "date"]
-        mydata$count <- counts$date
+        mydata$count <-  mydata[, "date"] #counts$date
         mydata$date <- dates
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
-        mydata <- subset(mydata, count >= min.bin)
+                                        #  mydata <- subset(mydata, count >= min.bin)
+
     }
 
     ## Poential Source Contribution Function
@@ -474,7 +475,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
 
     ## find length of back trajectories, choose most frequent
     ## so that partial trajectories are not plotted
-    n <- as.numeric(names(which.max(table(abs(mydata$len))))) 
+    n <- as.numeric(names(which.max(table(abs(mydata$len)))))
 
     mydata <- subset(mydata, len == n)
 
@@ -508,7 +509,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                                  smooth = smooth, map = map, x.inc = lon.inc,
                                  y.inc = lat.inc, key = key, group = group,
                                  map.fill = map.fill, map.res = map.res,
-                                 map.cols = map.cols, map.alpha = map.alpha, 
+                                 map.cols = map.cols, map.alpha = map.alpha,
                                  traj = TRUE)
 
     } else {

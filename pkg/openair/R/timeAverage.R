@@ -1,14 +1,4 @@
-## Function to flexibly calculate different averagring times for data frames with
-## option to also set data.thresh threshold.
-## Note that "period" uses those defined in cut.POSIXct e.g. "days", "5 days", and
-## is therefore extremely flexible.
-## The function will also work with mutiple sites.
-## start.date helps to get data frame into nice time sequence
-## NOTE - will only return numeric data apart from site name
-
-
-
-##' Function to calculate timeAverages for data frames
+##' Function to calculate time averages for data frames
 ##'
 ##' Function to flexibly aggregate or expand data frames by different time
 ##' periods, calculating vector-averaged wind direction where appropriate. The
@@ -30,7 +20,7 @@
 ##' with outputs from instruments where there are a range of time periods used.
 ##'
 ##' It is also very useful for plotting data using \code{\link{timePlot}}.
-##' Often the data are too dense to see patterns and setheiltting different
+##' Often the data are too dense to see patterns and setting different
 ##' averaging periods easily helps with interpretation.
 ##'
 ##' @param mydata A data frame containing a \code{date} field . Can be class
@@ -188,11 +178,11 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         seconds <- seconds * int ## interval in seconds
         if (is.na(timeDiff)) timeDiff <- seconds ## when only one row
-        
+
         ## check to see if we need to expand data rather than aggregate it
         ## i.e. chosen time interval less than that of data
         if (seconds < timeDiff) {
-            
+
             ## orginal dates
             theDates <- mydata$date
 
@@ -206,9 +196,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
             ## merge with orginal data, which leaves gaps to fill
             mydata <- merge(mydata, allData, by = "date", all = TRUE)
-            
+
             if (fill) {
-                
+
                 ## this will copy-down data to next original row of data
                 ## number of additional lines to fill
                 inflateFac <-  timeDiff / seconds
@@ -366,7 +356,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         ## fill missing gaps
         if (avg.time != "season") {
-            
+
             dailymet <- date.pad2(dailymet, interval = avg.time)
         }
 
@@ -375,7 +365,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         dailymet
 
     }
-    
+
     ## split if several sites
     if ("site" %in% names(mydata)) { ## split by site
         mydata$site <- factor(mydata$site)
@@ -384,6 +374,6 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     } else {
         mydata <- calc.mean(mydata, start.date)
     }
-  
+
     mydata
 }

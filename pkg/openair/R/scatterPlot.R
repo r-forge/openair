@@ -209,7 +209,7 @@
 ##'   undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summary}. 
+##'   including \code{print}, \code{plot} and \code{summary}.
 ##' @author David Carslaw
 ##' @seealso \code{\link{linearRelation}}, \code{\link{timePlot}} and
 ##'   \code{\link{timeAverage}} for details on selecting averaging times and
@@ -341,7 +341,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.fill else TRUE
     Args$map.res <- if ("map.res" %in% names(Args)) Args$map.res else "default"
     Args$traj <- if ("traj" %in% names(Args)) Args$traj else FALSE
-    
+
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
     Args$inv <- if ("inv" %in% names(Args)) Args$inv else function(x) exp(x)
@@ -449,10 +449,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         if (!"pch" %in% names(Args)) Args$pch <- 16
 
         nlev <- 200
-        
+
         ## handling of colour scale limits
         if (missing(limits)) {
-                      
+
             breaks <- seq(min(mydata[[z]], na.rm = TRUE), max(mydata[[z]], na.rm = TRUE),
                           length.out = nlev)
             labs <- pretty(breaks, 7)
@@ -460,35 +460,35 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             at <- labs
 
         } else {
-            ## handle user limits and clipping            
+            ## handle user limits and clipping
             breaks <- seq(min(limits), max(limits), length.out = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
             at <- labs
 
             ## case where user max is < data max
-            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {             
+            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
                 id <- which(mydata[[z]] > max(limits))
                 mydata[[z]][id] <- max(limits)
                 labs[length(labs)] <- paste(">", labs[length(labs)])
             }
 
             ## case where user min is > data min
-            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {              
+            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {
                 id <- which(mydata[[z]] < min(limits))
                 mydata[[z]][id] <- min(limits)
                 labs[1] <- paste("<", labs[1])
             }
-            
+
             thecol <- openColours(cols, 100)[cut(mydata[, z], 100, label = FALSE)]
             mydata$col <- thecol
-                              
+
         }
 
         if (thekey) {
             nlev2 <- length(breaks)
             col <- openColours(cols, (nlev2 - 1))
-        
+
             col.scale <- breaks
             legend <- list(col = col, at = col.scale, labels = list(labels = labs, at = at),
                            space = key.position,
@@ -675,7 +675,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 panel.smooth.spline(x, y, col = "grey20", #myColors[group.number],
                                                     lwd = lwd, ...)
 
-                            
+
 
                             if (mod.line && group.number == 1)
                                 panel.modline(log.x, log.y)
@@ -817,27 +817,27 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
         } else {
-            
+
            ## handle user limits and clipping
             breaks <- pretty(limits, n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
 
             ## case where user max is < data max
-            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {             
+            if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
                 id <- which(mydata[[z]] > max(limits))
                 mydata[[z]][id] <- max(limits)
                 labs[length(labs)] <- paste(">", labs[length(labs)])
             }
 
             ## case where user min is > data min
-            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {              
+            if (min(limits) > min(mydata[[z]], na.rm = TRUE)) {
                 id <- which(mydata[[z]] < min(limits))
                 mydata[[z]][id] <- min(limits)
                 labs[1] <- paste("<", labs[1])
             }
-            
-           
+
+
         }
 
 
@@ -962,7 +962,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         ## ###########################################################################
 
         results.grid <-  ddply(mydata, type, prepare.grid)
-        
+
         ## auto-scaling
         nlev <- nrow(mydata)  ## preferred number of intervals
         breaks <- pretty(results.grid$z, n = nlev)
@@ -972,14 +972,14 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         col <- openColours(method.col, (nlev2 - 1)) #was "default"??
         col <- c("transparent", col) ## add white at bottom
         col.scale <- breaks
-        
-        legend <- list(col = col, at = col.scale, 
+
+        legend <- list(col = col, at = col.scale,
                        space = key.position,
                        auto.text = auto.text, footer = "intensity",
                        header = Args$key.header,
                        height = 1, width = 1.5, fit = "all")
         legend <- makeOpenKeyLegend(TRUE, legend, "other")
-        
+
 
         ## basic function for lattice call + defaults
         temp <- paste(type, collapse = "+")
