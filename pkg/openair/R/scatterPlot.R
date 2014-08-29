@@ -166,8 +166,14 @@
 ##'   ensures all panels use the same scale and \dQuote{free} will use panel-specfic
 ##'   scales. The latter is a useful setting when plotting data with very
 ##'   different values.
-##' @param ref.x Add a vertical dashed reference line at this value.
-##' @param ref.y Add a horizontal dashed reference line at this value.
+##' @param ref.x See \code{ref.y} for details.
+##' @param ref.y A list with details of the horizontal lines to be
+##' added representing reference line(s). For example, \code{ref.y =
+##' list(h = 50, lty = 5)} will add a dashed horizontal line at
+##' 50. Several lines can be plotted e.g. \code{ref.y = list(h = c(50,
+##' 100), lty = c(1, 5), col = c("green", "blue"))}. See
+##' \code{panel.abline} in the \code{lattice} package for more details
+##' on adding/controlling lines.
 ##' @param k Smoothing parameter supplied to \code{gam} for fitting a smooth
 ##'   surface when \code{method = "level"}.
 ##' @param map Should a base map be drawn? This option is under development.
@@ -681,8 +687,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 panel.modline(log.x, log.y)
 
                             ## add reference lines
-                            panel.abline(v = ref.x, lty = 5)
-                            panel.abline(h = ref.y, lty = 5)
+                            if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                            if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+
 
                         })
 
@@ -732,8 +739,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                         add.map(Args, ...)
 
                                     ## add reference lines
-                                    panel.abline(v = ref.x, lty = 5)
-                                    panel.abline(h = ref.y, lty = 5)
+                                   if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                                    if (!is.null(ref.y)) do.call(panel.abline, ref.y)
                                 })
 
         ## by default no title ever
@@ -910,8 +917,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                        add.map(Args, ...)
 
                                    ## add reference lines
-                                   panel.abline(v = ref.x, lty = 5)
-                                   panel.abline(h = ref.y, lty = 5)
+                                   if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                                   if (!is.null(ref.y)) do.call(panel.abline, ref.y)
 
                                })
 
@@ -1014,8 +1021,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                        add.map(Args, ...)
 
                                    ## add reference lines
-                                   panel.abline(v = ref.x, lty = 5)
-                                   panel.abline(h = ref.y, lty = 5)
+                                   if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                                   if (!is.null(ref.y)) do.call(panel.abline, ref.y)
                                })
 
         ## by default no title ever

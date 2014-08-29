@@ -170,9 +170,15 @@ ensures all panels use the same scale and \dQuote{free} will use panel-specfic
 scales. The latter is a useful setting when plotting data with very
 different values.}
 
-\item{ref.x}{Add a vertical dashed reference line at this value.}
+\item{ref.x}{See \code{ref.y} for details.}
 
-\item{ref.y}{Add a horizontal dashed reference line at this value.}
+\item{ref.y}{A list with details of the horizontal lines to be
+added representing reference line(s). For example, \code{ref.y =
+list(h = 50, lty = 5)} will add a dashed horizontal line at
+50. Several lines can be plotted e.g. \code{ref.y = list(h = c(50,
+100), lty = c(1, 5), col = c("green", "blue"))}. See
+\code{panel.abline} in the \code{lattice} package for more details
+on adding/controlling lines.}
 
 \item{k}{Smoothing parameter supplied to \code{gam} for fitting a smooth
 surface when \code{method = "level"}.}

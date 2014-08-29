@@ -136,7 +136,13 @@
 ##' user can supply a list of colour names recognised by R (type
 ##' \code{colours()} to see the full list). An example would be
 ##' \code{cols = c("yellow", "green", "blue")}
-##' @param ref.y Add a horizontal dashed reference line at this value.
+##' @param A list with details of the horizontal lines to be
+##' added representing reference line(s). For example, \code{ref.y =
+##' list(h = 50, lty = 5)} will add a dashed horizontal line at
+##' 50. Several lines can be plotted e.g. \code{ref.y = list(h = c(50,
+##' 100), lty = c(1, 5), col = c("green", "blue"))}. See
+##' \code{panel.abline} in the \code{lattice} package for more details
+##' on adding/controlling lines.
 ##' @param key By default \code{timeVariation} produces four plots on one page.
 ##'   While it is useful to see these plots together, it is sometimes necessary
 ##'   just to use one for a report. If \code{key} is \code{TRUE}, a key is
@@ -549,7 +555,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
                                             if (ci) {mkpoly(data.hour[subscripts, ], x = "hour", y = "Mean",
                                                             group.number, myColors, alpha)}
-                                             panel.abline(h = ref.y, lty = 5)
+                                            ## reference line(s)
+                                             if (!is.null(ref.y)) do.call(panel.abline, ref.y)
 
                                         }
                                         )
@@ -612,7 +619,8 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
                                             if (ci) {mkrect(data.weekday[subscripts, ], x = "wkday",
                                                             y = "Mean", group.number, myColors, alpha)}
-                                             panel.abline(h = ref.y, lty = 5)
+                                            ## refrence line(s)
+                                            if (!is.null(ref.y)) do.call(panel.abline, ref.y)
                                         }
                                         )
                     }
@@ -676,7 +684,9 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
                                             if (ci) {mkrect(data.month[subscripts, ], x = "mnth",
                                                             y = "Mean", group.number, myColors, alpha)}
-                                             panel.abline(h = ref.y, lty = 5)
+                                             ## refrence line(s)
+                                            if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+
                                         }
                                         )
                     }
@@ -766,7 +776,9 @@ timeVariation <- function(mydata, pollutant = "nox", local.tz = NULL,
 
                                             if (ci) {mkpoly(data.day.hour[subscripts, ], x = "hour",
                                                             y = "Mean", group.number, myColors, alpha)}
-                                             panel.abline(h = ref.y, lty = 5)
+                                            ## refrence line(s)
+                                            if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+
                                         }
                                         )
                     }

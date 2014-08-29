@@ -298,10 +298,10 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     ## plot mean concentration - CWT method
     if (statistic %in% c("cwt", "median")) {
-        
+
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
                              function (x)  length(x))
-        
+
         if (statistic == "cwt") stat.name <- "mean" else stat.name <- "median"
 
         ## need dates for later processing e.g. for type = "season"
@@ -331,10 +331,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ## plot trajectory frequecies
     if (statistic == "frequency") {
         ## count % of times a cell contains a trajectory
+        ## note - it is teh % across entire period, not by conditioning variable
         n <- length(unique(mydata$date))
-        ## number in each bin
-        counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
-                             function (x) length(unique(x)))
 
         ## need dates for later processing e.g. for type = "season"
         dates <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) head(x, 1))
@@ -348,7 +346,6 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
         mydata$count <-  mydata[, "date"] #counts$date
         mydata$date <- dates
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
-                                        #  mydata <- subset(mydata, count >= min.bin)
 
     }
 
