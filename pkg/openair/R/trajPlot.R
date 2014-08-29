@@ -298,11 +298,20 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     ## plot mean concentration - CWT method
     if (statistic %in% c("cwt", "median")) {
+        
         counts <-  aggregate(mydata[ , -ids], mydata[ , ids],
                              function (x)  length(x))
+        
         if (statistic == "cwt") stat.name <- "mean" else stat.name <- "median"
+
+        ## need dates for later processing e.g. for type = "season"
+        dates <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) head(x, 1))
+        dates <- dates$date
+
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids], get(stat.name), na.rm = TRUE)
         mydata$count <- counts$date
+
+        mydata$date <- dates
 
         mydata <- subset(mydata, count >= min.bin)
 
@@ -328,7 +337,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              function (x) length(unique(x)))
 
         ## need dates for later processing e.g. for type = "season"
-        dates <- aggregate(mydata[ , -ids], mydata[ , ids], mean, na.rm = TRUE)
+        dates <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) head(x, 1))
         dates <- dates$date
 
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids],
@@ -363,7 +372,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              function (x)  length(x))
 
         ## need dates for later processing e.g. for type = "season"
-        dates <- aggregate(dat2[ , -ids], dat2[ , ids], mean, na.rm = TRUE)
+        dates <- aggregate(dat2[ , -ids], dat2[ , ids], function (x) head(x, 1))
         dates <- dates$date
 
         dat2 <- aggregate(dat2[ , -ids], dat2[ , ids],
@@ -414,7 +423,7 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              function (x)  length(unique(x)))
 
         ## need dates for later processing e.g. for type = "season"
-        dates <- aggregate(dat2[ , -ids], dat2[ , ids], mean, na.rm = TRUE)
+        dates <- aggregate(dat2[ , -ids], dat2[ , ids], function (x) head(x, 1))
         dates <- dates$date
 
         dat2 <- aggregate(dat2[ , -ids], dat2[ , ids],
