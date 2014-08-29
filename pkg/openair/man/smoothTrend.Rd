@@ -7,8 +7,9 @@ smoothTrend(mydata, pollutant = "nox", deseason = FALSE, type = "default",
   statistic = "mean", avg.time = "month", percentile = NA,
   data.thresh = 0, simulate = FALSE, n = 200, autocor = FALSE,
   cols = "brewer1", shade = "grey95", xlab = "year",
-  y.relation = "same", key.columns = length(percentile), ci = TRUE,
-  alpha = 0.2, date.breaks = 7, auto.text = TRUE, k = NULL, ...)
+  y.relation = "same", ref.x = NULL, ref.y = NULL,
+  key.columns = length(percentile), ci = TRUE, alpha = 0.2,
+  date.breaks = 7, auto.text = TRUE, k = NULL, ...)
 }
 \arguments{
 \item{mydata}{A data frame containing the field \code{date} and at least
@@ -86,9 +87,22 @@ c("black", "green")} or pre-defined openair colours --- see
 \item{xlab}{x-axis label, by default \dQuote{year}.}
 
 \item{y.relation}{This determines how the y-axis scale is plotted. "same"
-ensures all panels use the same scale and "free" will use panel-specfic
-scales. The latter is a useful setting when plotting data with very
-different values.}
+  ensures all panels use the same scale and "free" will use panel-specfic
+  scales. The latter is a useful setting when plotting data with very
+  different values.
+##'}
+
+\item{ref.x}{See \code{ref.y} for details. In this case the
+correct date format should be used for a vertical line e.g.  \code{ref.x
+= list(v = as.POSIXct("2000-06-15"), lty = 5)}.}
+
+\item{ref.y}{A list with details of the horizontal lines to be
+added representing reference line(s). For example, \code{ref.y =
+list(h = 50, lty = 5)} will add a dashed horizontal line at
+50. Several lines can be plotted e.g. \code{ref.y = list(h = c(50,
+100), lty = c(1, 5), col = c("green", "blue"))}. See
+\code{panel.abline} in the \code{lattice} package for more details
+on adding/controlling lines.}
 
 \item{key.columns}{Number of columns used if a key is drawn when using the
 option \code{statistic = "percentile"}.}

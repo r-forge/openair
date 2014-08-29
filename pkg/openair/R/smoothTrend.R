@@ -86,6 +86,16 @@
 ##'   ensures all panels use the same scale and "free" will use panel-specfic
 ##'   scales. The latter is a useful setting when plotting data with very
 ##'   different values.
+##' ##' @param ref.x See \code{ref.y} for details. In this case the
+##' correct date format should be used for a vertical line e.g.  \code{ref.x
+##' = list(v = as.POSIXct("2000-06-15"), lty = 5)}.
+##' @param ref.y A list with details of the horizontal lines to be
+##' added representing reference line(s). For example, \code{ref.y =
+##' list(h = 50, lty = 5)} will add a dashed horizontal line at
+##' 50. Several lines can be plotted e.g. \code{ref.y = list(h = c(50,
+##' 100), lty = c(1, 5), col = c("green", "blue"))}. See
+##' \code{panel.abline} in the \code{lattice} package for more details
+##' on adding/controlling lines.
 ##' @param key.columns Number of columns used if a key is drawn when using the
 ##'   option \code{statistic = "percentile"}.
 ##' @param ci Should confidence intervals be plotted? The default is
@@ -133,7 +143,7 @@
 ##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summarise}. 
+##'   including \code{print}, \code{plot} and \code{summarise}.
 ##' @author David Carslaw
 ##' @seealso \code{\link{TheilSen}} for an alternative method of calculating
 ##'   trends.
@@ -164,7 +174,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                         type = "default", statistic = "mean", avg.time = "month",
                         percentile = NA, data.thresh = 0, simulate = FALSE,
                         n = 200, autocor = FALSE, cols = "brewer1", shade = "grey95",
-                        xlab = "year", y.relation = "same",
+                        xlab = "year", y.relation = "same", ref.x = NULL, ref.y = NULL,
                         key.columns = length(percentile),
                         ci = TRUE, alpha = 0.2, date.breaks = 7,
                         auto.text = TRUE, k = NULL, ...)  {
@@ -177,7 +187,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
         trellis.par.set(list(strip.background = list(col = "white")))
     }
-    
+
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
     on.exit(trellis.par.set("strip.background", current.strip))
@@ -221,12 +231,12 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
     }
 
     if (!avg.time %in% c("year", "season", "month")) stop("Averaging period must be 'month' or 'year'.")
-    
+
     ## if data clearly annual, then assume annual
     interval <- find.time.interval(mydata$date)
-    interval <- as.numeric(strsplit(interval, split = " ")[[1]][1])   
+    interval <- as.numeric(strsplit(interval, split = " ")[[1]][1])
     if (round(interval / 8760) == 3600) avg.time <- "year"
-    
+
     ## for overall data and graph plotting
     start.year <- startYear(mydata$date)
     end.year <-  endYear(mydata$date)
@@ -257,7 +267,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                                                            percentile, sep = ""))
 
     } else {
-        
+
         mydata <- ddply(mydata, c(type, "variable"), timeAverage, avg.time = avg.time,
                         statistic = statistic, percentile = percentile,
                         data.thresh = data.thresh)
@@ -303,18 +313,18 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
             results <- data.frame(date = mydata$date, conc = mydata[, "value"])
 
         }
-                              
+
         results
-       
+
     }
-    
+
     split.data <- ddply(mydata, c(type, "variable"),  process.cond)
 
     ## smooth fits so that they can be returned to the user
     fit <- ddply(split.data, c(type, "variable"), fitGam, x = "date", y = "conc",
                  k = k, ...)
     class(fit$date) <- c("POSIXt", "POSIXct")
-    
+
     ## special wd layout
     #(type field in results.grid called type not wd)
     if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
@@ -337,7 +347,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
     strip <- strip.dat[[1]]
     strip.left <- strip.dat[[2]]
     pol.name <- strip.dat[[3]]
-    
+
     ## colours according to number of percentiles
     npol <- max(length(percentile), length(pollutant)) ## number of pollutants
 
@@ -393,17 +403,22 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
                                                 ylim = current.panel.limits()$ylim,
                                       shade)
                           panel.grid(-1, 0)
-                          
+
                       }
+
                       panel.xyplot(x, y, type = "b", lwd = lwd, lty = lty, pch = pch,
                                    col.line = myColors[group.number],
                                    col.symbol = myColors[group.number], ...)
 
-                      panel.gam(x, y, col =  myColors[group.number], k = k, myColors[group.number], 
+                      panel.gam(x, y, col =  myColors[group.number], k = k, myColors[group.number],
                                 simulate = simulate, n.sim = n,
                                 autocor = autocor, lty = 1, lwd = 1, se = ci, ...)
-                                           
-                      
+
+                      ## add reference lines
+                      if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                      if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+
+
                   })
 
     #reset for extra.args
@@ -411,7 +426,7 @@ smoothTrend <- function(mydata, pollutant = "nox", deseason = FALSE,
 
     #plot
     plt <- do.call(xyplot, xyplot.args)
-   
+
     ## output ########################################################################
     if (length(type) == 1) plot(plt) else plot(useOuterStrips(plt, strip = strip, strip.left = strip.left))
     newdata <- split.data
