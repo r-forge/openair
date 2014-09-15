@@ -75,10 +75,10 @@
 ##' \dQuote{2009-11-29 12:00:00}, \dQuote{2009-11-29 12:15:00} \ldots{}
 ##' \code{start.date} is therefore used to force this type of
 ##' sequence.
-##' @param end.date A string giving a end date to use. This is
+##' @param end.date A string giving an end date to use. This is
 ##' sometimes useful to make sure a time series extends to a known end
 ##' point and is useful when \code{data.thresh} > 0 but the input time
-##' series does not extenf up to the final full interval. Input in teh
+##' series does not extend up to the final full interval. Input in the
 ##' format yyyy-mm-dd HH:MM.
 ##' @param interval The \code{timeAverage} function tries to determine
 ##' the interval of the original time series (e.g. hourly) by
