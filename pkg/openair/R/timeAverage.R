@@ -47,11 +47,12 @@
 ##' successive intervals so that \code{timeAverage} can work out how
 ##' much \sQuote{padding} to apply. To pad-out data in this way choose
 ##' \code{fill = TRUE}.
-##' @param data.thresh The data capture threshold to use (\%). A value of zero
-##'   means that all available data will be used in a particular period
-##'   regardless if of the number of values available. Conversely, a value of
-##'   100 will mean that all data will need to be present for the average to be
-##'   calculated, else it is recorded as \code{NA}.
+##' @param data.thresh The data capture threshold to use (\%). A value
+##' of zero means that all available data will be used in a particular
+##' period regardless if of the number of values
+##' available. Conversely, a value of 100 will mean that all data will
+##' need to be present for the average to be calculated, else it is
+##' recorded as \code{NA}.
 ##' @param statistic The statistic to apply when aggregating the data;
 ##' default is the mean. Can be one of \dQuote{mean}, \dQuote{max},
 ##' \dQuote{min}, \dQuote{median}, \dQuote{frequency}, \dQuote{sd},
@@ -74,6 +75,22 @@
 ##' \dQuote{2009-11-29 12:00:00}, \dQuote{2009-11-29 12:15:00} \ldots{}
 ##' \code{start.date} is therefore used to force this type of
 ##' sequence.
+##' @param end.date A string giving a end date to use. This is
+##' sometimes useful to make sure a time series extends to a known end
+##' point and is useful when \code{data.thresh} > 0 but the input time
+##' series does not extenf up to the final full interval. Input in teh
+##' format yyyy-mm-dd HH:MM.
+##' @param interval The \code{timeAverage} function tries to determine
+##' the interval of the original time series (e.g. hourly) by
+##' calculating the most common interval between time steps. For the
+##' vast majority of regular time series this works fine. However, for
+##' data with very poor data capture or irregular time series the
+##' automatic detection may not work. Users can supply a time interval
+##' to \emph{force} on the time series. See \code{avg.time} for the
+##' format.
+##'
+##' This option can sometimes be useful with \code{start.date} and
+##' \code{end.date}.
 ##' @param vector.ws Should vector averaging be carried out on wind
 ##' speed if available? The default is \code{FALSE} and scalar
 ##' averages are calculated. Vector averaging of the wind speed is
@@ -117,6 +134,7 @@
 ##'
 timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                         statistic = "mean", percentile = NA, start.date = NA,
+                        end.date = NA, interval = NA,
                         vector.ws = FALSE, fill = FALSE) {
 
     ## get rid of R check annoyances
@@ -155,6 +173,10 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         ## need to check whether avg.time is > or < actual time gap of data
         ## then data will be expanded or aggregated accordingly
 
+        ## if interval specified, then use it
+        if (!is.na(interval)) mydata <- date.pad2(mydata, interval)
+
+        ## If interval of original time series not specified, calculate it
         ## time diff in seconds of orginal data
         timeDiff <-  as.numeric(strsplit(find.time.interval(mydata$date),
                                          " ")[[1]][1])
@@ -239,6 +261,22 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         }
 
+
+         if (!is.na(end.date)) {
+
+            lastLine <- data.frame(date = as.POSIXct(end.date, tz = TZ))
+
+            mydata <- rbind.fill(mydata, lastLine)
+
+            ## for cutting data must ensure it is in GMT because combining
+            ## data frames when system is not GMT puts it in local time!...
+            ## and then cut makes a string/factor levels with tz lost...
+
+            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
+
+        }
+
+
         ## calculate wind components
         if ("wd" %in% names(mydata)) {
             if (is.numeric(mydata$wd) && "ws" %in% names(mydata)) {
@@ -276,9 +314,10 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
 
         } else {
+
             ## cut into sections dependent on period
             mydata$cuts <- cut(mydata$date, avg.time)
-        #    mydata$date <- as.POSIXct(mydata$cuts, tz = TZ)
+
         }
 
 
@@ -301,7 +340,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             }
 
             ## need to make sure all data are present..
-            mydata <- date.pad(mydata)
+            ## print out time interval assumed for input time series
+            ## useful for debugging
+            mydata <- date.pad(mydata, print.int = TRUE)
 
             ## cut into sections dependent on period
             mydata$cuts <- cut(mydata$date, avg.time)

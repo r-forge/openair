@@ -42,9 +42,10 @@
 ##' can also be used. (Note: \code{trendLevel} does not allow
 ##' duplication in \code{x}, \code{y} and \code{type} options within a
 ##' call.)
-##' @param y, type The names of the data series to use as the
+##' @param y The names of the data series to use as the
 ##' \code{trendLevel} y-axis and for additional conditioning,
 ##' respectively. As \code{x} above.
+##' @param type See \code{y}.
 ##' @param rotate.axis The rotation to be applied to \code{trendLevel}
 ##' \code{x} and \code{y} axes. The default, \code{c(90, 0)}, rotates
 ##' the x axis by 90 degrees but does not rotate the y axis. (Note: If
@@ -174,7 +175,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## greyscale handling
     if (length(cols) == 1 && cols == "greyscale")
         trellis.par.set(list(strip.background = list(col = "white")))
-    
+
 
     ## reset strip color on exit
     current.strip <- trellis.par.get("strip.background")
@@ -187,21 +188,21 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
 
     ## check.valid function
     check.valid <- function(a, x, y){
-        
+
         if (length(x) > 1) x <- x[1] #take first as default
-        
+
         if (is.null(x))
             stop(paste0("\ttrendLevel does not allow 'NULL' ", a, " option.",
                         "\n\t[suggest one of following: ", paste(y, collapse = ", "), "]"),
                  call. = FALSE)
-        
+
         out <- y[pmatch(x, y)] #match to options
 
         if (is.na(out))
             stop(paste0("\ttrendLevel could not evaluate ", a, " term '", x,
                         "'.\n\t[suggest one of following: ", paste(y, collapse=", "), "]"),
                  call. = FALSE)
-        
+
         ## code here for shorten cases x != out
         out
     }
@@ -248,12 +249,12 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## #################################
 
     temp <- unique(c(x, y, type)[duplicated(c(x, y, type))])
-    
+
     if (length(temp) > 0)
         stop(paste0("\ttrendLevel could not rationalise plot structure.",
                     "\n\t[duplicate term(s) in pollutant, x, y, type structure]",
                     "\n\t[term(s): ", paste(temp, collapse = ", "), "]"), call. = FALSE)
-    
+
 
     ## ###############################
     ## number vector handling
@@ -266,7 +267,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             ## use current default
             vector <- eval(formals(trendLevel)[[vector.name]])
         }
-        
+
         if (length(vector) < len) vector <- rep(vector,len)[1:len]
         ## insert default if not given
         ifelse(is.na(vector), eval(formals(trendLevel)[[vector.name]]), vector)
@@ -282,7 +283,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             ## ########################
             ## hardcoded statistic options
             ## ########################
-                                        
+
             statistic <- check.valid("statistic", statistic,
                                      eval(formals(trendLevel)$statistic))
             if (statistic == "mean") {
@@ -347,7 +348,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     temp <- if ("date" %in% names(mydata))
         c("date", pollutant) else
     pollutant
-    
+
     ## all of x, y, temp need to be handled as type here
     mydata <- checkPrep(mydata, temp, type = c(x, y, type), remove.calm = FALSE)
 
@@ -372,7 +373,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
 
     calc.stat <- function(...)
         tapply(newdata[, pollutant], newdata[c(x, y, type)], stat.fun, ...)
-    
+
 
     if (is.null(stat.args)) {
         newdata <- try(calc.stat(), silent = TRUE)
@@ -387,7 +388,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
         stop(paste0("\ttrendLevel could not complete supplied statistic operation '",
                     stat.name, "'.\n\t[R error below]", "\n\t", temp[1]),
              call. = FALSE)
-    
+
 
     ## ############################
     ## restructure new data for plot
@@ -410,7 +411,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
     ## layout for wd
     if (length(type) == 1 & type[1] == "wd" & !"layout" %in% names(extra.args)) {
         ## re-order to make sensible layout
-        
+
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
         newdata$wd <- ordered(newdata$wd, levels = wds)
         wd.ok <- sapply(wds, function (x) if (x %in% unique(newdata$wd)) FALSE else TRUE )
@@ -473,7 +474,7 @@ trendLevel <- function(mydata, pollutant = "nox", x = "month", y = "hour",
             breaks <- seq(min(newdata[, pollutant], na.rm = TRUE),
                           max(newdata[, pollutant], na.rm = TRUE),
                           length.out = nlev)
-            
+
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
             at <- labs

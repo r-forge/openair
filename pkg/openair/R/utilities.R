@@ -17,15 +17,15 @@ dateTypes <- c("year", "hour", "month", "season", "weekday", "weekend", "monthye
 ## sets up how openair graphics look by default and resets on exit
 
 setGraphics <- function(fontsize = 5) {
-    
+
   current.strip <- trellis.par.get("strip.background")
   trellis.par.set(fontsize = list(text = fontsize))
 
   ## reset graphic parameters
   font.orig <- trellis.par.get("fontsize")$text
-  on.exit(trellis.par.set(strip.background = current.strip, 
+  on.exit(trellis.par.set(strip.background = current.strip,
                           fontsize = list(text = font.orig)))
-  
+
 }
 
 ###############################################################################
@@ -92,7 +92,7 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
 }
 #############################################################################################
 ## Function to pad out missing time data, optionally dealing with conditioning variable "site"
-date.pad <- function(mydata) {
+date.pad <- function(mydata, print.int = FALSE) {
     site <- NULL
 
     date.pad.site <- function(mydata) {
@@ -119,6 +119,8 @@ date.pad <- function(mydata) {
 
         }
 
+        if (print.int) print(paste0("Input data time interval assumed is ", interval))
+
         ## make sure no gaps in site name are left
         if ("site" %in% names(mydata)) mydata$site <- site
         if ("code" %in% names(mydata)) mydata$code[1]
@@ -132,6 +134,8 @@ date.pad <- function(mydata) {
     } else {
         mydata <- date.pad.site(mydata)
     }
+
+
     mydata
 }
 #############################################################################################
@@ -584,13 +588,13 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", k = k, Args, ..., s
 
             pred <- predict(mod, data.frame(x = xseq), se = se)
 
-            
+
             results <- data.frame(date = xseq, pred = pred$fit,
                                   lower = pred$fit - std * pred$se,
                                   upper = pred$fit + std * pred$se)
-            
+
             if (se) {
-                
+
                 panel.polygon(x = c(xseq, rev(xseq)), y = c(pred$fit -
                                                       std * pred$se, rev(pred$fit + std * pred$se)),
                               col = col.se, alpha = alpha.se, border = border)
@@ -598,7 +602,7 @@ panel.gam <- function (x, y, form = y ~ x, method = "loess", k = k, Args, ..., s
             }
 
             panel.lines(xseq, pred, col = col, alpha = alpha, lty = lty, lwd = 2)
-            
+
         } else { ## simulations required
 
             sam.size <- length(x)
@@ -678,9 +682,9 @@ fitGam <- function (thedata, x = "date", y = "conc", form = y ~ x, k = k,
     names(thedata)[id] <- "x"
     id <- which(names(thedata) == y)
     names(thedata)[id] <- "y"
-    
+
     thedata$x <- as.numeric(thedata$x)
-    
+
     tryCatch({
 
         if (!simulate) {
@@ -699,15 +703,15 @@ fitGam <- function (thedata, x = "date", y = "conc", form = y ~ x, k = k,
 
             pred <- predict(mod, data.frame(x = xseq), se = se)
 
-            
+
             results <- data.frame(date = xseq, pred = pred$fit,
                                   lower = pred$fit - std * pred$se,
-                                  upper = pred$fit + std * pred$se)          
-            
+                                  upper = pred$fit + std * pred$se)
+
         } else { ## simulations required
 
             sam.size <- nrow(thedata)
-           
+
             xseq <- seq(min(thedata$x, na.rm = TRUE), max(thedata$x, na.rm = TRUE), length = n)
 
             boot.pred <- matrix(nrow = sam.size, ncol = n.sim)
@@ -748,7 +752,7 @@ fitGam <- function (thedata, x = "date", y = "conc", form = y ~ x, k = k,
 
             results <- as.data.frame(cbind(pred = rowMeans(boot.pred),
                                            lower = percentiles[1, ], upper = percentiles[2, ]))
-         
+
         }
         results
     }, error = function(x) {data.orig})

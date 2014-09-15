@@ -1,4 +1,4 @@
-Changes in openair 1.1-0 [2014-08-29]
+Changes in openair 1.1-0 [2014-09-15]
 =====================================
 *	Add ref.y option to timeVariation for y references line(s)
 *	Fix type = "wd" labelling to corPlot
@@ -13,6 +13,8 @@ Changes in openair 1.1-0 [2014-08-29]
 	with full control of their properties. Note - ref.x and
 	ref.y must now be lists; see help file for details.
 *	Don't open graphics window in aqStats
+*	Add more flexibility to timeAverage for irregular time
+	intervals
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================
