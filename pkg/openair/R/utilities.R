@@ -67,7 +67,7 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
         ## function to fill missing data gaps
         ## assume no missing data to begin with
         if (type == "site" ) site <- mydata$site[1]
-
+        
         ## pad out missing data for better looking plot
         start.date <- min(mydata$date, na.rm = TRUE)
         end.date <- max(mydata$date, na.rm = TRUE)
@@ -81,12 +81,9 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
     }
 
     if (type == "site") {
-        mydata <- split(mydata, mydata$site)
-        mydata <- lapply(mydata, date.pad.site, type, interval)
-        mydata <- do.call(rbind, mydata)
+        mydata <- ddply(mydata, .(site), date.pad.site, interval)
     } else {
-        mydata <- date.pad.site(mydata, type, interval
-                                )
+        mydata <- date.pad.site(mydata, type, interval)
     }
     mydata
 }
@@ -95,11 +92,11 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
 date.pad <- function(mydata, print.int = FALSE) {
     site <- NULL
 
-    date.pad.site <- function(mydata) {
+    date.pad.site <- function(mydata, print.int) {
         ## function to fill missing data gaps
         ## assume no missing data to begin with
         if ("site" %in% names(mydata)) site <- mydata$site[1]
-
+        
         ## pad out missing data for better looking plot
         start.date <- min(mydata$date, na.rm = TRUE)
         end.date <- max(mydata$date, na.rm = TRUE)
@@ -129,10 +126,11 @@ date.pad <- function(mydata, print.int = FALSE) {
     }
 
     if ("site" %in% names(mydata)) {
-        mydata <- ddply(mydata, .(site), date.pad.site)
+        
+        mydata <- ddply(mydata, .(site), date.pad.site, print.int)
 
     } else {
-        mydata <- date.pad.site(mydata)
+        mydata <- date.pad.site(mydata, print.int)
     }
 
 
