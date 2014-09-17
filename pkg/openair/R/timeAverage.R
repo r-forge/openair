@@ -17,17 +17,19 @@
 ##' calculate this interval based on the most common time gap (and
 ##' will print the assumed time gap to the screen). This works fine
 ##' most of the time but there are occasions where it may not
-##' e.g. when very few data exist in a data frame. In this case the
-##' user can explicitly specify the interval through \code{interval}
-##' in the same format as \code{avg.time} e.g. \code{interval =
-##' "month"}. It may also be useful to set \code{start.date} and
-##' \code{end.date} if the time series do not span the entire period
-##' of interest. For example, if a time series ended in October and
-##' annual means are required, setting \code{end.date} to the end of
-##' the year will ensure that the whole period is covered and that
-##' \code{data.thresh} is correctly calculated. The same also goes for
-##' a time series that starts later in the year where
-##' \code{start.date} should be set to the beginning of the year.
+##' e.g. when very few data exist in a data frame or the data are
+##' monthly (i.e. non-regular time interval between months). In this
+##' case the user can explicitly specify the interval through
+##' \code{interval} in the same format as \code{avg.time}
+##' e.g. \code{interval = "month"}. It may also be useful to set
+##' \code{start.date} and \code{end.date} if the time series do not
+##' span the entire period of interest. For example, if a time series
+##' ended in October and annual means are required, setting
+##' \code{end.date} to the end of the year will ensure that the whole
+##' period is covered and that \code{data.thresh} is correctly
+##' calculated. The same also goes for a time series that starts later
+##' in the year where \code{start.date} should be set to the beginning
+##' of the year.
 ##'
 ##' \code{timeAverage} should be useful in many circumstances where it
 ##' is necessary to work with different time average data. For
@@ -75,7 +77,9 @@
 ##' period regardless if of the number of values
 ##' available. Conversely, a value of 100 will mean that all data will
 ##' need to be present for the average to be calculated, else it is
-##' recorded as \code{NA}.
+##' recorded as \code{NA}. See also \code{interval}, \code{start.date}
+##' and \code{end.date} to see whether it is advisable to set these
+##' other options.
 ##' @param statistic The statistic to apply when aggregating the data;
 ##' default is the mean. Can be one of \dQuote{mean}, \dQuote{max},
 ##' \dQuote{min}, \dQuote{median}, \dQuote{frequency}, \dQuote{sd},
@@ -112,8 +116,11 @@
 ##' interval is needed for calculations where the \code{data.thresh}
 ##' >0. For the vast majority of regular time series this works
 ##' fine. However, for data with very poor data capture or irregular
-##' time series the automatic detection may not work. Users can supply
-##' a time interval to \emph{force} on the time series. See
+##' time series the automatic detection may not work. Also, for time
+##' series such as monthly time series where there is a variable
+##' difference in time between months users should specify the time
+##' interval explicitly e.g. \code{interval = "month"}. Users can also
+##' supply a time interval to \emph{force} on the time series. See
 ##' \code{avg.time} for the format.
 ##'
 ##' This option can sometimes be useful with \code{start.date} and
@@ -171,6 +178,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
     ## extract variables of interest
     vars <- names(mydata)
 
+    ## whether a time series has already been padded to fill time gaps
+    padded <- FALSE
+
     mydata <- checkPrep(mydata, vars, type = "default", remove.calm = FALSE,
                         strip.white = FALSE)
 
@@ -202,8 +212,42 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         ## need to check whether avg.time is > or < actual time gap of data
         ## then data will be expanded or aggregated accordingly
 
+         ## start from a particular time, if given
+        if (!is.na(start.date)) {
+
+            firstLine <- data.frame(date = as.POSIXct(start.date, tz = TZ))
+            if ("site" %in% names (mydata)) firstLine$site <- mydata$site[1]
+
+            mydata <- rbind.fill(firstLine, mydata)
+
+            ## for cutting data must ensure it is in GMT because combining
+            ## data frames when system is not GMT puts it in local time!...
+            ## and then cut makes a string/factor levels with tz lost...
+
+            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
+
+        }
+
+         if (!is.na(end.date)) {
+             
+            lastLine <- data.frame(date = as.POSIXct(end.date, tz = TZ))
+            if ("site" %in% names (mydata)) lastLine$site <- mydata$site[1]
+
+            mydata <- rbind.fill(mydata, lastLine)
+
+            ## for cutting data must ensure it is in GMT because combining
+            ## data frames when system is not GMT puts it in local time!...
+            ## and then cut makes a string/factor levels with tz lost...
+            
+            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
+
+        }
+
         ## if interval specified, then use it
-        if (!is.na(interval)) mydata <- date.pad2(mydata, interval)
+        if (!is.na(interval)) {
+            mydata <- date.pad2(mydata, interval)
+            padded <- TRUE
+        }
 
         ## If interval of original time series not specified, calculate it
         ## time diff in seconds of orginal data
@@ -275,37 +319,6 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         }
 
-         ## start from a particular time, if given
-        if (!is.na(start.date)) {
-
-            firstLine <- data.frame(date = as.POSIXct(start.date, tz = TZ))
-            if ("site" %in% names (mydata)) firstLine$site <- mydata$site[1]
-
-            mydata <- rbind.fill(firstLine, mydata)
-
-            ## for cutting data must ensure it is in GMT because combining
-            ## data frames when system is not GMT puts it in local time!...
-            ## and then cut makes a string/factor levels with tz lost...
-
-            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
-
-        }
-
-
-         if (!is.na(end.date)) {
-             
-            lastLine <- data.frame(date = as.POSIXct(end.date, tz = TZ))
-            if ("site" %in% names (mydata)) lastLine$site <- mydata$site[1]
-
-            mydata <- rbind.fill(mydata, lastLine)
-
-            ## for cutting data must ensure it is in GMT because combining
-            ## data frames when system is not GMT puts it in local time!...
-            ## and then cut makes a string/factor levels with tz lost...
-
-            mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
-
-        }
 
 
         ## calculate wind components
@@ -360,9 +373,9 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             ## be a problem for non-regular time series...
 
             newMethod <- function(x, data.thresh, na.rm) {
-
+                
                 ## calculate mean only if above data capture threshold
-                if (length(na.omit(x)) >= round(length(x) * data.thresh / 100)) {
+                if (length(na.omit(x)) >= length(x) * data.thresh / 100) {
                     res <- eval(parse(text = form))
                 } else {
                     res <- NA
@@ -373,7 +386,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             ## need to make sure all data are present..
             ## print out time interval assumed for input time series
             ## useful for debugging
-            mydata <- date.pad(mydata, print.int = TRUE)
+            if (!padded) mydata <- date.pad(mydata, print.int = TRUE)
 
             ## cut into sections dependent on period
             mydata$cuts <- cut(mydata$date, avg.time)

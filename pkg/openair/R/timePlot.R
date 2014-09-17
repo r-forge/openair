@@ -365,7 +365,7 @@ timePlot <- function(mydata, pollutant = "nox", group = FALSE, stack = FALSE,
 
             mydata <- ddply(mydata, type, timeAverage, avg.time = avg.time,
                             statistic = statistic, percentile = percentile,
-                            data.thresh = data.thresh)
+                            data.thresh = data.thresh, ...)
         }
     }
 

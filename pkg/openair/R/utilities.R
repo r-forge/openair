@@ -48,11 +48,11 @@ find.time.interval <- function(dates) {
 
     id <- which.max(table(diff(as.numeric(dates[order(dates[1 : len])]))))
     seconds <- as.numeric(names(id))
-
+    
     if ("POSIXt" %in% class(dates)) seconds <- paste(seconds, "sec")
 
     if (class(dates)[1] == "Date") {
-        seconds <- 3600 * 24
+        seconds <- seconds * 3600 * 24
         seconds <- paste(seconds, "sec")
     }
 
@@ -103,7 +103,13 @@ date.pad <- function(mydata, print.int = FALSE) {
 
         ## find time interval of data
         if (class(mydata$date)[1] == "Date") {
-            interval <- "day"
+            interval <- find.time.interval(mydata$date)
+            days <- as.numeric(strsplit(interval, split = " ")[[1]][1]) /
+                                  24 / 3600
+            interval <- paste(days, "day")
+
+            ## better interval, most common interval in a year
+            if (days == 31) interval <- "month"
         } else {
             interval <- find.time.interval(mydata$date)
         }
