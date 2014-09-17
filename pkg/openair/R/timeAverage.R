@@ -229,7 +229,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         }
 
          if (!is.na(end.date)) {
-             
+
             lastLine <- data.frame(date = as.POSIXct(end.date, tz = TZ))
             if ("site" %in% names (mydata)) lastLine$site <- mydata$site[1]
 
@@ -238,7 +238,7 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
             ## for cutting data must ensure it is in GMT because combining
             ## data frames when system is not GMT puts it in local time!...
             ## and then cut makes a string/factor levels with tz lost...
-            
+
             mydata$date <- as.POSIXct(format(mydata$date), tz = TZ)
 
         }
@@ -283,6 +283,26 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
             ## need to add a date to the end when expanding times
             interval <- find.time.interval(mydata$date)
+
+            ## equivalent number of days, used to refine interval for month/year
+            days <- as.numeric(strsplit(interval, split = " ")[[1]][1]) /
+                24 / 3600
+
+            ## find time interval of data
+            if (class(mydata$date)[1] == "Date") {
+
+                interval <- paste(days, "day")
+
+            } else {
+                ## this will be in seconds
+                interval <- find.time.interval(mydata$date)
+
+            }
+
+            ## better interval, most common interval in a year
+            if (days == 31) interval <- "month"
+            if (days %in% c(365, 366)) interval <- "year"
+
             allDates <- seq(min(mydata$date), max(mydata$date), by = interval)
             allDates <- c(allDates, max(allDates) + timeDiff)
 
@@ -367,13 +387,13 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
 
         if (data.thresh > 0) {
 
-            ## two methods of calculating stats, one that takes account of data capture (slow), the
-            ## other not (faster)
+            ## two methods of calculating stats, one that takes account of
+            ## data capture (slow), the other not (faster)
             ## Note need to know time interval of data to work out data capture, can
             ## be a problem for non-regular time series...
 
             newMethod <- function(x, data.thresh, na.rm) {
-                
+
                 ## calculate mean only if above data capture threshold
                 if (length(na.omit(x)) >= length(x) * data.thresh / 100) {
                     res <- eval(parse(text = form))
@@ -407,7 +427,8 @@ timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
         if (data.thresh == 0 & statistic == "mean") {
 
             dailymet <- aggregate(mydata[ , sapply(mydata, class) %in% c("numeric", "integer"),
-                                         drop = FALSE], list(date = mydata$cuts), mean, na.rm = TRUE)
+                                         drop = FALSE], list(date = mydata$cuts),
+                                  mean, na.rm = TRUE)
 
         }
         ## return same date class as went in...

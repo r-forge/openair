@@ -48,7 +48,7 @@ find.time.interval <- function(dates) {
 
     id <- which.max(table(diff(as.numeric(dates[order(dates[1 : len])]))))
     seconds <- as.numeric(names(id))
-    
+
     if ("POSIXt" %in% class(dates)) seconds <- paste(seconds, "sec")
 
     if (class(dates)[1] == "Date") {
@@ -67,7 +67,7 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
         ## function to fill missing data gaps
         ## assume no missing data to begin with
         if (type == "site" ) site <- mydata$site[1]
-        
+
         ## pad out missing data for better looking plot
         start.date <- min(mydata$date, na.rm = TRUE)
         end.date <- max(mydata$date, na.rm = TRUE)
@@ -87,32 +87,41 @@ date.pad2 <- function(mydata, type = "default", interval = "month") {
     }
     mydata
 }
-#############################################################################################
-## Function to pad out missing time data, optionally dealing with conditioning variable "site"
+## #################################################################
+## Function to pad out missing time data, optionally dealing with
+## conditioning variable "site"
 date.pad <- function(mydata, print.int = FALSE) {
     site <- NULL
 
     date.pad.site <- function(mydata, print.int) {
         ## function to fill missing data gaps
         ## assume no missing data to begin with
-        if ("site" %in% names(mydata)) site <- mydata$site[1]
-        
-        ## pad out missing data for better looking plot
+
+        ## pad out missing data
         start.date <- min(mydata$date, na.rm = TRUE)
         end.date <- max(mydata$date, na.rm = TRUE)
 
+        ## interval in seconds
+        interval <- find.time.interval(mydata$date)
+
+        ## equivalent number of days, used to refine interval for month/year
+        days <- as.numeric(strsplit(interval, split = " ")[[1]][1]) /
+            24 / 3600
+
         ## find time interval of data
         if (class(mydata$date)[1] == "Date") {
-            interval <- find.time.interval(mydata$date)
-            days <- as.numeric(strsplit(interval, split = " ")[[1]][1]) /
-                                  24 / 3600
+
             interval <- paste(days, "day")
 
-            ## better interval, most common interval in a year
-            if (days == 31) interval <- "month"
         } else {
+            ## this will be in seconds
             interval <- find.time.interval(mydata$date)
+
         }
+
+        ## better interval, most common interval in a year
+        if (days == 31) interval <- "month"
+        if (days %in% c(365, 366)) interval <- "year"
 
         ## only pad if there are missing data
         if (length(unique(diff(mydata$date))) != 1L) {
@@ -125,14 +134,13 @@ date.pad <- function(mydata, print.int = FALSE) {
         if (print.int) print(paste0("Input data time interval assumed is ", interval))
 
         ## make sure no gaps in site name are left
-        if ("site" %in% names(mydata)) mydata$site <- site
         if ("code" %in% names(mydata)) mydata$code[1]
 
         mydata
     }
 
     if ("site" %in% names(mydata)) {
-        
+
         mydata <- ddply(mydata, .(site), date.pad.site, print.int)
 
     } else {
@@ -144,14 +152,13 @@ date.pad <- function(mydata, print.int = FALSE) {
 }
 #############################################################################################
 
-## Function to pad out missing time data, optionally dealing with conditioning variable "site"
-## version where interval is given
+## Function to pad out missing time data, optionally dealing with conditioning
+## variable "site" version where interval is given
 date.pad2 <- function(mydata, interval = "month") {
 
     date.pad.site <- function(mydata) {
         ## function to fill missing data gaps
         ## assume no missing data to begin with
-        if ("site" %in% names(mydata)) site <- mydata$site[1]
 
         ## pad out missing data for better looking plot
         start.date <- min(mydata$date, na.rm = TRUE)
@@ -161,7 +168,6 @@ date.pad2 <- function(mydata, interval = "month") {
         mydata <- merge(mydata, all.dates, all = TRUE)
 
         ## put missing identifiers in gaps
-        if ("site" %in% names(mydata)) mydata$site <- site
         if ("code" %in% names(mydata)) mydata$code[1]
         mydata
     }
