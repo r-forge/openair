@@ -639,15 +639,26 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             if (Args$traj) {
 
                                 if (!is.na(z)) {
+
                                     ## colour by z
                                     ddply(mydata[subscripts, ], "date", function (x)
                                           llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
                                                  lty = lty))
                                 } else {
+
                                     ## colour by a grouping variable
                                     ddply(mydata[subscripts, ], .(date), function (x)
                                           llines(x$lon, x$lat, col.line = myColors[group.number],
                                                  lwd = lwd, lty = lty))
+
+                                    ## major 12 hour points
+                                    id <- seq(min(subscripts), max(subscripts), by = 12)
+
+                                    ddply(mydata[id, ], .(date), function (x)
+                                          lpoints(x$lon, x$lat,
+                                                  col = myColors[group.number],
+                                                 pch = 16, cex = 1))
+
                                 }
 
                             }
@@ -1064,6 +1075,7 @@ add.map <- function (Args, ...) {
         panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
                       alpha = Args$map.alpha)
     } else {
+
         mp <- map(database = res, plot = FALSE)
         llines(mp$x, mp$y, col = "black")
 

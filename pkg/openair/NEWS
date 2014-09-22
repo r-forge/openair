@@ -15,6 +15,7 @@ Changes in openair 1.1-0 [2014-09-15]
 *	Don't open graphics window in aqStats
 *	Add more flexibility to timeAverage for irregular time
 	intervals
+*	Add 12-hour interval points on back trajectory lines
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================
