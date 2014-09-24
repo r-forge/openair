@@ -1,4 +1,4 @@
-Changes in openair 1.1-0 [2014-09-15]
+Changes in openair 1.0-99 [2014-09-15]
 =====================================
 *	Add ref.y option to timeVariation for y references line(s)
 *	Fix type = "wd" labelling to corPlot
@@ -16,6 +16,10 @@ Changes in openair 1.1-0 [2014-09-15]
 *	Add more flexibility to timeAverage for irregular time
 	intervals
 *	Add 12-hour interval points on back trajectory lines
+*	Fix bug in percentileRose with stat = "cpf" and non-default
+	type (now uses single percentile based on all data, not
+	each panel)
+
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================
