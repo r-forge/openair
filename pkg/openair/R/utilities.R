@@ -462,6 +462,9 @@ selectByDate <- function (mydata, start = "1/1/2008", end = "31/12/2008", year =
      ## extract variables of interest
     vars <- names(mydata)
 
+    ## check data - mostly date format
+    mydata <- checkPrep(mydata, vars, "default", remove.calm = FALSE, strip.white = FALSE)
+
     weekday.names <- format(ISOdate(2000, 1, 3:9), "%A")
 
 

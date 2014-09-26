@@ -19,6 +19,8 @@ Changes in openair 1.0-99 [2014-09-15]
 *	Fix bug in percentileRose with stat = "cpf" and non-default
 	type (now uses single percentile based on all data, not
 	each panel)
+*	Check if date is in POSIXt format and throw error if TRUE
+*	Improve date checks in selectByDate
 
 
 Changes in openair 1.0-0 [2014-06-09]

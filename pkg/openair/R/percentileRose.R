@@ -267,11 +267,12 @@ percentileRose <- function (mydata, pollutant = "nox", wd = "wd", type = "defaul
     ## add zero wind angle = same as 360 for cyclic spline
     ids <- which(mydata[ , wd] == 360)
 
-    if (length(ids) > 0) {
-      zero.wd <- mydata[ids, ]
-      zero.wd[, wd] <- 0
-      mydata <- rbind.fill(mydata, zero.wd)
-    }
+
+     if (length(ids) > 0) {
+       zero.wd <- mydata[ids, ]
+       zero.wd[, wd] <- 0
+       mydata <- rbind.fill(mydata, zero.wd)
+     }
 
     mod.percentiles <- function(i, mydata, overall.lower, overall.upper) {
       ## need to work out how many knots to use in smooth
@@ -298,6 +299,7 @@ percentileRose <- function (mydata, pollutant = "nox", wd = "wd", type = "defaul
         pred$pollutant[-ids] <- min(c(0, min(percentiles[ , pollutant], na.rm = TRUE)))
 
       } else {
+
         ## do not smooth
           dat1 <- thedata
           dat2 <- thedata
@@ -318,7 +320,9 @@ percentileRose <- function (mydata, pollutant = "nox", wd = "wd", type = "defaul
       }
       pred
     }
+
     if (method == "default") {
+
       ## calculate percentiles
       percentiles <- ddply(mydata, wd, numcolwise(function (x)
         quantile(x, probs = percentile / 100, na.rm = TRUE)))
@@ -328,10 +332,14 @@ percentileRose <- function (mydata, pollutant = "nox", wd = "wd", type = "defaul
 
     if (tolower(method) == "cpf") {
 
-      percentiles1 <- ddply(mydata, wd, numcolwise(function (x) length(which(x < overall.lower)) / length(x)))
+      percentiles1 <- ddply(mydata, wd, numcolwise(function (x)
+                                                   length(which(x < overall.lower)) /
+                                                   length(x)))
       percentiles1$percentile <- min(percentile)
 
-      percentiles2 <- ddply(mydata, wd, numcolwise(function (x) length(which(x > overall.upper)) / length(x)))
+      percentiles2 <- ddply(mydata, wd, numcolwise(function (x)
+                                                   length(which(x > overall.upper)) /
+                                                   length(x)))
       percentiles2$percentile <- max(percentile)
 
       if (fill) {
