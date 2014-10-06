@@ -486,7 +486,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                 labs[1] <- paste("<", labs[1])
             }
 
-            thecol <- openColours(cols, 100)[cut(mydata[, z], 100, label = FALSE)]
+
+            thecol <- openColours(cols, 100)[cut(mydata[, z],
+                                                 breaks = seq(limits[1], limits[2],
+                                                 length.out = 100), label = FALSE)]
             mydata$col <- thecol
 
         }

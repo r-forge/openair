@@ -9,7 +9,7 @@ Changes in openair 1.0-99 [2014-09-15]
 * 	Fix type = 'season' in trajLevel (winter period not properly
 	calculated)
 *	Allow multiple reference lines to be added to timePlot,
-	scatterPlot,timeVariation and add to smoothTrend together
+	scatterPlot, timeVariation and add to smoothTrend together
 	with full control of their properties. Note - ref.x and
 	ref.y must now be lists; see help file for details.
 *	Don't open graphics window in aqStats
@@ -21,6 +21,14 @@ Changes in openair 1.0-99 [2014-09-15]
 	each panel)
 *	Check if date is in POSIXt format and throw error if TRUE
 *	Improve date checks in selectByDate
+*	Add dendrogram option to corPlot (thanks to James Durant for
+	the suggestion)
+*	Remove strip in corPlot when type = "default"
+*	Remove statistic description in pollutionRose when annotate =
+	FALSE.
+*	Fix colour scaling bug in scatterPlot/trajPlot when user
+	limits supplied
+
 
 
 Changes in openair 1.0-0 [2014-06-09]

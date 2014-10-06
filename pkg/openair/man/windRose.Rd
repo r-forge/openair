@@ -144,8 +144,9 @@ measurements in each bin.}
 speed. The \code{windRose} default NULL is equivalent to \code{pollutant
 = "ws"}.}
 
-\item{annotate}{If \code{TRUE} then the percentage calm and mean values are
-printed in each panel.}
+\item{annotate}{If \code{TRUE} then the percentage calm and mean
+values are printed in each panel together with a description of
+the statistic below the plot.}
 
 \item{border}{Border colour for shaded areas. Default is no border.}
 

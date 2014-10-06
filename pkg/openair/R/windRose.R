@@ -195,8 +195,9 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' @param pollutant Alternative data series to be sampled instead of wind
 ##'   speed. The \code{windRose} default NULL is equivalent to \code{pollutant
 ##'   = "ws"}.
-##' @param annotate If \code{TRUE} then the percentage calm and mean values are
-##'   printed in each panel.
+##' @param annotate If \code{TRUE} then the percentage calm and mean
+##' values are printed in each panel together with a description of
+##' the statistic below the plot.
 ##' @param border Border colour for shaded areas. Default is no border.
 ##' @param ... For \code{pollutionRose} other parameters that are
 ##' passed on to \code{windRose}. For \code{windRose} other parameters
@@ -218,7 +219,7 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
 ##' undertake further analysis.
 ##'
 ##' An openair output can be manipulated using a number of generic operations,
-##'   including \code{print}, \code{plot} and \code{summarise}. 
+##'   including \code{print}, \code{plot} and \code{summarise}.
 ##'
 ##' Summarised proportions can also be extracted directly using the
 ##'   \code{$data} operator, e.g.  \code{object$data} for \code{output <-
@@ -423,7 +424,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         if (missing(offset)) offset <- 20
         ## set the breaks to cover all the data
         if (is.na(breaks[1])) {
-            max.br <- max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE), max(mydata$ws, na.rm = TRUE)))))
+            max.br <- max(ceiling(abs(c(min(mydata$ws, na.rm = TRUE),
+                                        max(mydata$ws, na.rm = TRUE)))))
             breaks <- c(-1 * max.br, 0, max.br)
         }
 
@@ -626,12 +628,14 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
     if (myby / mymax > 0.9) myby <- mymax * 0.9
 
+    if (annotate) sub <- stat.lab else sub <- NULL
+
     xyplot.args <- list(x = myform,
                         xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
                         ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
                         data = results.grid,
                         type = "n",
-                        sub = stat.lab,
+                        sub = sub,
                         strip = strip,
                         strip.left = strip.left,
                         as.table = TRUE,
