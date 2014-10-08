@@ -5,7 +5,7 @@
 \usage{
 timeAverage(mydata, avg.time = "day", data.thresh = 0, statistic = "mean",
   percentile = NA, start.date = NA, end.date = NA, interval = NA,
-  vector.ws = FALSE, fill = FALSE)
+  vector.ws = FALSE, fill = FALSE, ...)
 }
 \arguments{
 \item{mydata}{A data frame containing a \code{date} field . Can be
@@ -110,6 +110,9 @@ interval is less than the original time series, data are
 \sQuote{padded out} with \code{NA}. To \sQuote{pad-out} the
 additional data with the first row in each original time interval,
 choose \code{fill = TRUE}.}
+
+\item{...}{Additional arguments for other functions calling
+\code{timeAverage}.}
 }
 \value{
 Returns a data frame with date in class \code{POSIXct} and will

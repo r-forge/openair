@@ -141,6 +141,8 @@
 ##' \sQuote{padded out} with \code{NA}. To \sQuote{pad-out} the
 ##' additional data with the first row in each original time interval,
 ##' choose \code{fill = TRUE}.
+##' @param ... Additional arguments for other functions calling
+##' \code{timeAverage}.
 ##' @export
 ##' @importFrom Rcpp evalCpp
 ##' @return Returns a data frame with date in class \code{POSIXct} and will
@@ -170,7 +172,7 @@
 timeAverage <- function(mydata, avg.time = "day", data.thresh = 0,
                         statistic = "mean", percentile = NA, start.date = NA,
                         end.date = NA, interval = NA,
-                        vector.ws = FALSE, fill = FALSE) {
+                        vector.ws = FALSE, fill = FALSE, ...) {
 
     ## get rid of R check annoyances
     year = season = month = Uu = Vv = site = NULL
