@@ -264,13 +264,14 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
     if (length(type) == 1 & type[1] == "wd" & is.null(extra.args$layout)) {
         ## re-order to make sensible layout
         ## starting point code as of ManKendall
+        
         wds <-  c("NW", "N", "NE", "W", "E", "SW", "S", "SE")
-        results.grid$type <- ordered(results.grid$type, levels = wds)
+        results.grid[, type] <- ordered(results.grid[, type], levels = wds)
         wd.ok <- sapply(wds, function (x) {
-            if (x %in% unique(results.grid$type)) FALSE else TRUE })
+            if (x %in% unique(results.grid[, type])) FALSE else TRUE })
 
         skip <- c(wd.ok[1:4], TRUE, wd.ok[5:8])
-        results.grid$type <- factor(results.grid$type)
+        results.grid[, type] <- factor(results.grid[, type])
         extra.args$layout <- c(3, 3)
         if (!"skip" %in% names(extra.args))
             extra.args$skip <- skip
@@ -297,8 +298,11 @@ corPlot <- function(mydata, pollutants = NULL, type = "default",
 
     }
 
+    temp <- paste(type, collapse = "+")
+    myform <- formula(paste("z ~ x * y | ", temp, sep = ""))
+    
     ## plot via ... handler
-    levelplot.args <- list(x = z ~ x * y | type , data = results.grid,
+    levelplot.args <- list(x = myform , data = results.grid,
               at = do.breaks(c(-1.01, 1.01), 100),
               strip = strip,
               as.table = TRUE,
