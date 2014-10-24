@@ -17,11 +17,12 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
     if (is.null(breaks))  breaks <- 6
 
     if (is.numeric(breaks) & length(breaks) == 1) {
-
-        breaks2 <- co.intervals(mydata[ , pollutant][is.finite(mydata[ ,pollutant])],
-                                number = 10, overlap = 0)
+        
+        ## breaks from the minimum to 90th percentile, which generally gives sensible
+        ## spacing for skewed data. Maximum is added later.
         breaks <- unique(pretty(c(min(mydata[ , pollutant], na.rm = TRUE),
-                           breaks2[nrow(breaks2), 1]), breaks))
+                                  quantile(mydata[ , pollutant], probs = 0.9, na.rm = TRUE),
+                                  breaks)))      
 
     }
 
