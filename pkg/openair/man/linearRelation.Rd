@@ -78,7 +78,7 @@ An openair output can be manipulated using a number of generic operations,
   including \code{print}, \code{plot} and \code{summary}.
 }
 \description{
-This function considers linearRelationships between two pollutants. The
+This function considers linear relationships between two pollutants. The
 relationships are calculated on different times bases using a linear model.
 The slope and 95% confidence interval in slope relationships by time unit
 are plotted in many ways. The function is particularly useful when
