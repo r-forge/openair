@@ -1,4 +1,4 @@
-Changes in openair 1.0-99 [2014-09-15]
+Changes in openair 1.0-99 [2014-10-28]
 =====================================
 *	Add ref.y option to timeVariation for y references line(s)
 *	Fix type = "wd" labelling to corPlot
@@ -28,7 +28,10 @@ Changes in openair 1.0-99 [2014-09-15]
 	FALSE.
 *	Fix colour scaling bug in scatterPlot/trajPlot when user
 	limits supplied
-
+*	Check period = "years" or "months" in summaryPlot; some users
+	supplied "year" resulting in incorrect statistics
+*	Give mean and percent calm in pollutionRose when statistic =
+	"prop.mean" (was erroneously percentage)
 
 
 Changes in openair 1.0-0 [2014-06-09]

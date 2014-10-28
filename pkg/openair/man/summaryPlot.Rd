@@ -36,8 +36,8 @@ default) or a density plot is used to show the distribution of the data.}
 \item{pollutant}{\code{pollutant} is used when there is a field \code{site}
 and there is more than one site in the data frame.}
 
-\item{period}{\code{period} is either \code{year} (the default) or
-\code{month}. Statistics are calculated depending on the \code{period}
+\item{period}{\code{period} is either \code{years} (the default) or
+\code{months}. Statistics are calculated depending on the \code{period}
 chosen.}
 
 \item{breaks}{Number of histogram bins. Sometime useful but not easy to set

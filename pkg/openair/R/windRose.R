@@ -17,12 +17,12 @@ pollutionRose <- function(mydata, pollutant = "nox", key.footer = pollutant,
     if (is.null(breaks))  breaks <- 6
 
     if (is.numeric(breaks) & length(breaks) == 1) {
-        
+
         ## breaks from the minimum to 90th percentile, which generally gives sensible
         ## spacing for skewed data. Maximum is added later.
         breaks <- unique(pretty(c(min(mydata[ , pollutant], na.rm = TRUE),
                                   quantile(mydata[ , pollutant], probs = 0.9, na.rm = TRUE),
-                                  breaks)))      
+                                  breaks)))
 
     }
 
@@ -687,27 +687,22 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
                             ## annotations e.g. calms, means etc
                             if (annotate) ## don't add calms for prop.mean for now...
-                                if (statistic != "prop.mean") {
-                                    if (!diff) {
-                                        ltext(max.freq + off.set, -max.freq - off.set,
-                                              label = paste(stat.lab2, " = ",
+
+                                if (!diff) {
+                                    ltext(max.freq + off.set, -max.freq - off.set,
+                                          label = paste(stat.lab2, " = ",
                                               dat$panel.fun[1], "\ncalm = ",
                                               dat$calm[1], stat.unit, sep = ""),
-                                              adj = c(1, 0), cex = 0.7, col = calm.col)
-                                    }
-                                    if (diff) { ## when two data sets are present
-                                        ltext(max.freq + off.set, -max.freq - off.set,
-                                              label = paste("mean ws = ",
-                                              round(dat$panel.fun[1], 1),
-                                              "\nmean wd = ", round(dat$mean.wd[1], 1),
-                                              sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
-                                    }
-                                } else {
-                                    ltext(max.freq + off.set, -max.freq - off.set,
-                                          label = paste(stat.lab2, " = ", dat$panel.fun[1],
-                                          stat.unit, sep = ""), adj = c(1, 0), cex = 0.7,
-                                          col = calm.col)
+                                          adj = c(1, 0), cex = 0.7, col = calm.col)
                                 }
+                            if (diff) { ## when two data sets are present
+                                ltext(max.freq + off.set, -max.freq - off.set,
+                                      label = paste("mean ws = ",
+                                          round(dat$panel.fun[1], 1),
+                                          "\nmean wd = ", round(dat$mean.wd[1], 1),
+                                          sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
+                            }
+
                         }, legend = legend)
 
     ## reset for extra
