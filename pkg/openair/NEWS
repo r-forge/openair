@@ -32,6 +32,8 @@ Changes in openair 1.0-99 [2014-10-28]
 	supplied "year" resulting in incorrect statistics
 *	Give mean and percent calm in pollutionRose when statistic =
 	"prop.mean" (was erroneously percentage)
+*	getMet function for downloading Hysplit met files in manual
+	did not download as binary files; now corrected
 
 
 Changes in openair 1.0-0 [2014-06-09]
