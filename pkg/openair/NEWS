@@ -34,7 +34,8 @@ Changes in openair 1.0-99 [2014-10-28]
 	"prop.mean" (was erroneously percentage)
 *	getMet function for downloading Hysplit met files in manual
 	did not download as binary files; now corrected
-
+*	Add name.pol argument to smoothTrend for more control over
+	names used for plotting
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================

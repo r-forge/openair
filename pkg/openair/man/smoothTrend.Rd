@@ -8,8 +8,8 @@ smoothTrend(mydata, pollutant = "nox", deseason = FALSE, type = "default",
   data.thresh = 0, simulate = FALSE, n = 200, autocor = FALSE,
   cols = "brewer1", shade = "grey95", xlab = "year",
   y.relation = "same", ref.x = NULL, ref.y = NULL,
-  key.columns = length(percentile), ci = TRUE, alpha = 0.2,
-  date.breaks = 7, auto.text = TRUE, k = NULL, ...)
+  key.columns = length(percentile), name.pol = pollutant, ci = TRUE,
+  alpha = 0.2, date.breaks = 7, auto.text = TRUE, k = NULL, ...)
 }
 \arguments{
 \item{mydata}{A data frame containing the field \code{date} and at least
@@ -90,11 +90,11 @@ c("black", "green")} or pre-defined openair colours --- see
   ensures all panels use the same scale and "free" will use panel-specfic
   scales. The latter is a useful setting when plotting data with very
   different values.
-##'}
-
-\item{ref.x}{See \code{ref.y} for details. In this case the
+ref.x See \code{ref.y} for details. In this case the
 correct date format should be used for a vertical line e.g.  \code{ref.x
 = list(v = as.POSIXct("2000-06-15"), lty = 5)}.}
+
+\item{ref.x}{See \code{ref.y}.}
 
 \item{ref.y}{A list with details of the horizontal lines to be
 added representing reference line(s). For example, \code{ref.y =
@@ -106,6 +106,10 @@ on adding/controlling lines.}
 
 \item{key.columns}{Number of columns used if a key is drawn when using the
 option \code{statistic = "percentile"}.}
+
+\item{name.pol}{Names to be given to the pollutant(s). This is
+useful if you want to give a fuller description of the variables,
+maybe also including subscripts etc.}
 
 \item{ci}{Should confidence intervals be plotted? The default is
 \code{FALSE}.}
