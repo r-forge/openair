@@ -31,12 +31,13 @@ types as detailed in \code{cutData} e.g. \dQuote{season},
 \dQuote{year}, \dQuote{weekday} and so on. For example, \code{type
 = "season"} will produce four plots --- one for each season.
 
-It is also possible to choose \code{type} as another variable in the data
-  frame. If that variable is numeric, then the data will be split into four
-  quantiles (if possible) and labelled accordingly. If type is an existing
-  character or factor variable, then those categories/levels will be used
-  directly. This offers great flexibility for understanding the variation
-  of different variables and how they depend on one another.
+It is also possible to choose \code{type} as another variable in
+the data frame. If that variable is numeric, then the data will be
+split into four quantiles (if possible) and labelled
+accordingly. If type is an existing character or factor variable,
+then those categories/levels will be used directly. This offers
+great flexibility for understanding the variation of different
+variables and how they depend on one another.
 
 Type can be up length two e.g. \code{type = c("season", "weekday")} will
   produce a 2x2 plot split by season and day of the week. Note, when two
@@ -86,13 +87,13 @@ c("black", "green")} or pre-defined openair colours --- see
 
 \item{xlab}{x-axis label, by default \dQuote{year}.}
 
-\item{y.relation}{This determines how the y-axis scale is plotted. "same"
-  ensures all panels use the same scale and "free" will use panel-specfic
-  scales. The latter is a useful setting when plotting data with very
-  different values.
-ref.x See \code{ref.y} for details. In this case the
-correct date format should be used for a vertical line e.g.  \code{ref.x
-= list(v = as.POSIXct("2000-06-15"), lty = 5)}.}
+\item{y.relation}{This determines how the y-axis scale is
+plotted. "same" ensures all panels use the same scale and "free"
+will use panel-specfic scales. The latter is a useful setting when
+plotting data with very different values.  ref.x See \code{ref.y}
+for details. In this case the correct date format should be used
+for a vertical line e.g.  \code{ref.x = list(v =
+as.POSIXct("2000-06-15"), lty = 5)}.}
 
 \item{ref.x}{See \code{ref.y}.}
 
@@ -168,22 +169,24 @@ An openair output can be manipulated using a number of generic operations,
 Use non-parametric methods to calculate time series trends
 }
 \details{
-The \code{smoothTrend} function provides a flexible way of estimating the
-trend in the concentration of a pollutant or other variable. Monthly mean
-values are calculated from an hourly (or higher resolution) or daily time
-series. There is the option to deseasonalise the data if there is evidence
-of a seasonal cycle.
+The \code{smoothTrend} function provides a flexible way of
+estimating the trend in the concentration of a pollutant or other
+variable. Monthly mean values are calculated from an hourly (or
+higher resolution) or daily time series. There is the option to
+deseasonalise the data if there is evidence of a seasonal cycle.
 
-\code{smoothTrend} uses a Generalized Additive Model (GAM) from the
-\code{\link{gam}} package to find the most appropriate level of smoothing.
-The function is particularly suited to situations where trends are not
-monotonic (see discussion with \code{\link{TheilSen}} for more details
-on this). The \code{smoothTrend} function is particularly useful as an
-exploratory technique e.g. to check how linear or non-linear trends are.
+\code{smoothTrend} uses a Generalized Additive Model (GAM) from
+the \code{\link{gam}} package to find the most appropriate level
+of smoothing.  The function is particularly suited to situations
+where trends are not monotonic (see discussion with
+\code{\link{TheilSen}} for more details on this). The
+\code{smoothTrend} function is particularly useful as an
+exploratory technique e.g. to check how linear or non-linear
+trends are.
 
-95% confidence intervals are shown by shading. Bootstrap estimates of the
-confidence intervals are also available through the \code{simulate} option.
-Residual resampling is used.
+95% confidence intervals are shown by shading. Bootstrap estimates
+of the confidence intervals are also available through the
+\code{simulate} option.  Residual resampling is used.
 
 Trends can be considered in a very wide range of ways, controlled by
 setting \code{type} - see examples below.

@@ -438,6 +438,8 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
     if (!is.null(pollutant)) vars <- c(vars, pollutant)
 
+    mydata <- cutData(mydata, type, ...)
+
     mydata <- checkPrep(mydata, vars, type, remove.calm = FALSE, remove.neg = rm.neg)
 
     mydata <- na.omit(mydata)
@@ -475,7 +477,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         ## return if there is nothing to plot
         if (all(is.na(mydata$x))) return()
 
-        levels(mydata$x) <- c(paste("x", 1:length(labs), sep = ""))
+        levels(mydata$x) <- c(paste("Interval", 1:length(labs), sep = ""))
 
         all <- stat.fun(mydata[ , wd])
         calm <- mydata[mydata[ , wd] == -999, ][, pollutant]
@@ -568,8 +570,6 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         }
     }
 
-    mydata <- cutData(mydata, type, ...)
-
     results.grid <- ddply(mydata, type, prepare.grid)
 
     ## format
@@ -583,7 +583,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
         id <- which(tmp == 0)
         if (length(id > 0)) tmp[id] <- 360
         tmp <- table(tmp) ## number of sectors spanned
-        vars <- grep("x", names(results.grid)) ## the frequencies
+        vars <- grep("Interval[1-9]", names(results.grid)) ## the frequencies
         results.grid[, vars] <- results.grid[, vars] * mean(tmp) /tmp
     }
 
@@ -622,7 +622,7 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
 
     temp <- paste(type, collapse = "+")
-    myform <- formula(paste("x1 ~ wd | ", temp, sep = ""))
+    myform <- formula(paste("Interval1 ~ wd | ", temp, sep = ""))
 
     mymax <- 2 * max.freq
     myby <- if (is.null(grid.line)) pretty(c(0, mymax), 10)[2] else grid.line
@@ -631,85 +631,85 @@ windRose <- function (mydata, ws = "ws", wd = "wd", ws2 = NA, wd2 = NA,
 
     if (annotate) sub <- stat.lab else sub <- NULL
 
-    xyplot.args <- list(x = myform,
-                        xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
-                        ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
-                        data = results.grid,
-                        type = "n",
-                        sub = sub,
-                        strip = strip,
-                        strip.left = strip.left,
-                        as.table = TRUE,
-                        aspect = 1,
-                        par.strip.text = list(cex = 0.8),
-                        scales = list(draw = FALSE),
+    xy.args <- list(x = myform,
+                    xlim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
+                    ylim = 1.03 * c(-max.freq - off.set, max.freq + off.set),
+                    data = results.grid,
+                    type = "n",
+                    sub = sub,
+                    strip = strip,
+                    strip.left = strip.left,
+                    as.table = TRUE,
+                    aspect = 1,
+                    par.strip.text = list(cex = 0.8),
+                    scales = list(draw = FALSE),
 
-                        panel = function(x, y, subscripts, ...) {
-                            panel.xyplot(x, y, ...)
-                            angles <- seq(0, 2 * pi, length = 360)
-                            sapply(seq(off.set, mymax, by = myby),
-                                   function(x) llines(x * sin(angles), x * cos(angles),
-                                                      col = "grey85", lwd = 1))
+                    panel = function(x, y, subscripts, ...) {
+                        panel.xyplot(x, y, ...)
+                        angles <- seq(0, 2 * pi, length = 360)
+                        sapply(seq(off.set, mymax, by = myby),
+                               function(x) llines(x * sin(angles), x * cos(angles),
+                                                  col = "grey85", lwd = 1))
 
-                            dat <- results.grid[subscripts, ] ## subset of data
-                            upper <- max.freq + off.set
+                        dat <- results.grid[subscripts, ] ## subset of data
+                        upper <- max.freq + off.set
 
-                            ## add axis lines
-                            larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
-                            larrows(0, -upper, 0, upper, code = 3, length = 0.1)
+                        ## add axis lines
+                        larrows(-upper, 0, upper, 0, code = 3, length = 0.1)
+                        larrows(0, -upper, 0, upper, code = 3, length = 0.1)
 
-                            ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
-                            ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
-                            ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
-                            ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
+                        ltext(upper * -1 * 0.95, 0.07 * upper, "W", cex = 0.7)
+                        ltext(0.07 * upper, upper * -1 * 0.95, "S", cex = 0.7)
+                        ltext(0.07 * upper, upper * 0.95, "N", cex = 0.7)
+                        ltext(upper * 0.95, 0.07 *upper, "E", cex = 0.7)
 
-                            if (nrow(dat) > 0) {
+                        if (nrow(dat) > 0) {
 
-                                dat$x0 <- 0 ## make a lower bound to refer to
+                            dat$Interval0 <- 0 ## make a lower bound to refer to
 
-                                for (i in 1:nrow(dat)) { ## go through wind angles 30, 60, ...
+                            for (i in 1:nrow(dat)) { ## go through wind angles 30, 60, ...
 
-                                    for (j in seq_along(labs)) { ## go through paddles x1, x2, ...
+                                for (j in seq_along(labs)) { ## go through paddles x1, x2, ...
 
-                                        tmp <- paste("poly(dat$wd[i], dat$x", j - 1,
-                                                      "[i], dat$x", j, "[i], width * box.widths[",
-                                                      j, "], col[", j, "])", sep = "")
+                                    tmp <- paste("poly(dat$wd[i], dat$Interval", j - 1,
+                                                 "[i], dat$Interval", j, "[i], width * box.widths[",
+                                                 j, "], col[", j, "])", sep = "")
 
 
-                                        eval(parse(text = tmp))
-                                    }
+                                    eval(parse(text = tmp))
                                 }
                             }
+                        }
 
-                            ltext(seq((myby + off.set), mymax, myby) * sin(pi / 4),
-                                  seq((myby + off.set), mymax, myby) * cos(pi / 4),
-                                  paste(seq(myby, mymax, by = myby), stat.unit,  sep = ""), cex = 0.7)
+                        ltext(seq((myby + off.set), mymax, myby) * sin(pi / 4),
+                              seq((myby + off.set), mymax, myby) * cos(pi / 4),
+                              paste(seq(myby, mymax, by = myby), stat.unit,  sep = ""), cex = 0.7)
 
-                            ## annotations e.g. calms, means etc
-                            if (annotate) ## don't add calms for prop.mean for now...
+                        ## annotations e.g. calms, means etc
+                        if (annotate) ## don't add calms for prop.mean for now...
 
-                                if (!diff) {
-                                    ltext(max.freq + off.set, -max.freq - off.set,
-                                          label = paste(stat.lab2, " = ",
-                                              dat$panel.fun[1], "\ncalm = ",
-                                              dat$calm[1], stat.unit, sep = ""),
-                                          adj = c(1, 0), cex = 0.7, col = calm.col)
-                                }
-                            if (diff) { ## when two data sets are present
+                            if (!diff) {
                                 ltext(max.freq + off.set, -max.freq - off.set,
-                                      label = paste("mean ws = ",
-                                          round(dat$panel.fun[1], 1),
-                                          "\nmean wd = ", round(dat$mean.wd[1], 1),
-                                          sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
+                                      label = paste(stat.lab2, " = ",
+                                          dat$panel.fun[1], "\ncalm = ",
+                                          dat$calm[1], stat.unit, sep = ""),
+                                      adj = c(1, 0), cex = 0.7, col = calm.col)
                             }
+                        if (diff) { ## when two data sets are present
+                            ltext(max.freq + off.set, -max.freq - off.set,
+                                  label = paste("mean ws = ",
+                                      round(dat$panel.fun[1], 1),
+                                      "\nmean wd = ", round(dat$mean.wd[1], 1),
+                                      sep = ""), adj = c(1, 0), cex = 0.7, col = calm.col)
+                        }
 
-                        }, legend = legend)
+                    }, legend = legend)
 
     ## reset for extra
-    xyplot.args <- listUpdate(xyplot.args, extra)
+    xy.args <- listUpdate(xy.args, extra)
 
     ## plot
-    plt <- do.call(xyplot, xyplot.args)
+    plt <- do.call(xyplot, xy.args)
 
 
     ## output ################################################################################

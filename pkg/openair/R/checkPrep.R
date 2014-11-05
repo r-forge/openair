@@ -3,8 +3,8 @@
                                         # Author: DCC
 ###############################################################################
 
-checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE, strip.white = TRUE,
-                      wd = "wd") {
+checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE,
+                      strip.white = TRUE, wd = "wd") {
 
     ## deal with conditioning variable if present, if user-defined, must exist in data
     ## pre-defined types
@@ -34,7 +34,6 @@ checkPrep <- function(mydata, Names, type, remove.calm = TRUE, remove.neg = TRUE
 
     ## just select data needed
     mydata <- mydata[, Names]
-
 
 
     ## check to see if there are any missing dates, stop if there are
