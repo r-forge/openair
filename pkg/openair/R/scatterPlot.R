@@ -347,6 +347,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$map.fill <- if ("map.fill" %in% names(Args)) Args$map.fill else TRUE
     Args$map.res <- if ("map.res" %in% names(Args)) Args$map.res else "default"
     Args$traj <- if ("traj" %in% names(Args)) Args$traj else FALSE
+    Args$projection <- if ("projection" %in% names(Args)) Args$projection else FALSE
+    Args$parameters <- if ("parameters" %in% names(Args)) Args$parameters else FALSE
+    Args$orientation <- if ("orientation" %in% names(Args)) Args$orientation else FALSE
 
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
@@ -409,7 +412,22 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         stop ("Can't have 'group' also in 'type'.")
 
     ## will need date so that trajectory groups can be coloured
-    if (Args$traj)  vars <- c(vars, "date")
+    if (Args$traj)  {
+        vars <- c(vars, "date")
+
+        ## these are the map limits used for grid lines - in degrees
+        trajLims <- c(range(mydata$lon, na.rm = TRUE), range(mydata$lat, na.rm = TRUE))
+
+        ## apply map projection
+        tmp <- mapproject(x = mydata$lon,
+                          y = mydata$lat,
+                          projection = Args$projection,
+                          parameters = Args$parameters,
+                          orientation = Args$orientation)
+        mydata$lon <- tmp$x
+        mydata$lat <- tmp$y
+
+    }
 
     ## data checks
 
@@ -538,6 +556,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     scales <- list(x = list(log = nlog.x, rot = x.rot, relation = x.relation),
                    y = list(log = nlog.y, relation = y.relation, rot = 0))
 
+    ## don't need scales for trajectories
+    if (Args$traj)  scales <- list(x = list(draw = FALSE), y = list(draw = FALSE))
+
+
     ## if logs are chosen, ensure data >0 for line fitting etc
     if (log.x)  mydata <- mydata[mydata[ , x] > 0, ]
     if (log.y)  mydata <- mydata[mydata[ , y] > 0, ]
@@ -614,12 +636,14 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     ## for printing map at end, if necessary
     groupMax <- length(unique(factor(mydata$MyGroupVar)))
 
+    plotType <- if (!Args$traj) c("p", "g") else "n"
+
     if (method == "scatter") {
 
         if (missing(k)) k <- NULL ## auto-smoothing by default
 
         xyplot.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
-                            type = c("p", "g"),
+                            type = plotType,
                             as.table = TRUE,
                             scales = scales,
                             key = key,
@@ -641,18 +665,22 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                             ## in batches
                             if (Args$traj) {
 
+                                map.grid(lim = trajLims, projection = Args$projection,
+                                         parameters = Args$parameters,
+                                         orientation = Args$orientation)
+
                                 if (!is.na(z)) {
 
                                     ## colour by z
                                     ddply(mydata[subscripts, ], "date", function (x)
-                                          llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
-                                                 lty = lty))
+                                        llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
+                                               lty = lty))
                                 } else {
 
                                     ## colour by a grouping variable
                                     ddply(mydata[subscripts, ], .(date), function (x)
-                                          llines(x$lon, x$lat, col.line = myColors[group.number],
-                                                 lwd = lwd, lty = lty))
+                                        llines(x$lon, x$lat, col.line = myColors[group.number],
+                                               lwd = lwd, lty = lty))
 
                                     ## major 12 hour points
                                     id <- seq(min(subscripts), max(subscripts), by = 12)
@@ -1074,13 +1102,18 @@ add.map <- function (Args, ...) {
     }
 
     if (Args$map.fill) {
-         mp <- map(database = res, plot = FALSE, fill = TRUE)
+
+        mp <- map(database = res, plot = FALSE, fill = TRUE, projection = Args$projection,
+                  parameters = Args$parameters, orientation = Args$orientation)
         panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
                       alpha = Args$map.alpha)
+        mp <- map.wrap(mp)
     } else {
 
-        mp <- map(database = res, plot = FALSE)
+        mp <- map(database = res, plot = FALSE, projection = Args$projection,
+                  parameters = Args$parameters, orientation = Args$orientation)
         llines(mp$x, mp$y, col = "black")
+        mp <- map.wrap(mp)
 
     }
 }

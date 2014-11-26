@@ -36,6 +36,10 @@ Changes in openair 1.0-99 [2014-10-28]
 	did not download as binary files; now corrected
 *	Add name.pol argument to smoothTrend for more control over
 	names used for plotting
+*	Show first few dates when import fails to apply correct date format
+	(helps to provide a clue as to actual date format)
+*	Updates to trajectory plots to allow for different map
+	projections using the mapproj package (new dependency)
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================
