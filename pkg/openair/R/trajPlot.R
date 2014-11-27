@@ -201,7 +201,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
 
 ## function from mapproj to add grid lines to a map
 map.grid <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
-                      cex = 1, col = "skyblue", lty = 2, font = 2,
+                      cex = 1, col = "skyblue", lty = 2, font = 1,
                       projection = "rectangular", parameters = 52,
                       orientation = c(90, 0, 0), ...)
 

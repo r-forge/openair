@@ -217,10 +217,10 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     statistic <- tolower(statistic)
 
     if(!"ylab" %in% names(extra.args))
-        extra.args$ylab <- "latitude"
+        extra.args$ylab <- ""
 
     if(!"xlab" %in% names(extra.args))
-        extra.args$xlab <- "longitude"
+        extra.args$xlab <- ""
 
      if(!"main" %in% names(extra.args))
         extra.args$main <- ""
@@ -236,21 +236,21 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
 
     extra.args$trajStat <- statistic
 
-    if(!"method" %in% names(extra.args)) {
-        method <- "level"
+    if (!"method" %in% names(extra.args)) {
+        method <- "traj"
     } else {
         method <- extra.args$method
         statistic = "XX" ## i.e. it wont touch the data
     }
 
-
+    if (method == "density") stop ("Use trajPlot with method = 'density' instead")
 
     if (is.list(mydata)) mydata <- rbind.fill(mydata)
 
     mydata <- cutData(mydata, type, ...)
 
     ## bin data
-    if (method == "level") {
+    if (method == "traj") {
         mydata$ygrid <- round_any(mydata[ , lat], lat.inc)
         mydata$xgrid <- round_any(mydata[ , lon], lon.inc)
     } else {
@@ -416,7 +416,9 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              type = type, method = method, smooth = smooth,
                              map = map, x.inc = lon.inc, y.inc = lat.inc,
                              map.fill = map.fill, map.res = map.res,
-                             map.cols = map.cols, map.alpha = map.alpha, traj = TRUE)
+                             map.cols = map.cols, map.alpha = map.alpha, traj = TRUE,
+                             projection = "rectangular",
+                             parameters = 0, orientation = c(90, 0, 0))
 
     ## reset for extra.args
     scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)
@@ -425,3 +427,4 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     do.call(scatterPlot, scatterPlot.args)
 
 }
+
