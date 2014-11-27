@@ -126,8 +126,8 @@
 trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                      type = "default", map = TRUE, group = NA, map.fill = TRUE,
                      map.res = "default", map.cols = "grey40",
-                     map.alpha = 0.4, projection = "rectangular",
-                     parameters = 51.5, orientation = c(90, 0, 0), ...)
+                     map.alpha = 0.4, projection = "lambert",
+                     parameters = c(51, 51), orientation = c(90, 0, 0), ...)
 {
     len <- NULL ## silence R check
 

@@ -644,94 +644,94 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
         if (missing(k)) k <- NULL ## auto-smoothing by default
 
-        xyplot.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
-                            type = plotType,
-                            as.table = TRUE,
-                            scales = scales,
-                            key = key,
-                            par.strip.text = list(cex = 0.8),
-                            strip = strip,
-                            strip.left = strip.left,
-                            yscale.components = yscale.components.log10ticks,
-                            xscale.components = xscale.components.log10ticks,
-                            legend = legend,
-                            panel =  panel.superpose,...,
-                            panel.groups = function(x, y, col.symbol, col,
-                                type, col.line,
-                                lty, lwd, group.number,
-                                subscripts, ...)
-                                {
+        xy.args <- list(x = myform,  data = mydata, groups = mydata$MyGroupVar,
+                        type = plotType,
+                        as.table = TRUE,
+                        scales = scales,
+                        key = key,
+                        par.strip.text = list(cex = 0.8),
+                        strip = strip,
+                        strip.left = strip.left,
+                        yscale.components = yscale.components.log10ticks,
+                        xscale.components = xscale.components.log10ticks,
+                        legend = legend,
+                        panel =  panel.superpose,...,
+                        panel.groups = function(x, y, col.symbol, col,
+                            type, col.line,
+                            lty, lwd, group.number,
+                            subscripts, ...)
+                            {
 
-                                    ## specific treatemt of trajectory lines
-                                    ## in order to avoid a line back to the origin, need to process
-                                    ## in batches
-                                    if (Args$traj) {
+                                ## specific treatemt of trajectory lines
+                                ## in order to avoid a line back to the origin, need to process
+                                ## in batches
+                                if (Args$traj) {
 
-                                        if (!is.na(z)) {
+                                    if (!is.na(z)) {
 
-                                            ## colour by z
-                                            ddply(mydata[subscripts, ], "date", function (x)
-                                                llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
-                                                       lty = lty))
-                                        } else {
+                                        ## colour by z
+                                        ddply(mydata[subscripts, ], "date", function (x)
+                                            llines(x$lon, x$lat, col.line = x$col, lwd = lwd,
+                                                   lty = lty))
+                                    } else {
 
-                                            ## colour by a grouping variable
-                                            ddply(mydata[subscripts, ], .(date), function (x)
-                                                llines(x$lon, x$lat, col.line = myColors[group.number],
-                                                       lwd = lwd, lty = lty))
+                                        ## colour by a grouping variable
+                                        ddply(mydata[subscripts, ], .(date), function (x)
+                                            llines(x$lon, x$lat, col.line = myColors[group.number],
+                                                   lwd = lwd, lty = lty))
 
-                                            ## major 12 hour points
-                                            id <- seq(min(subscripts), max(subscripts), by = 12)
+                                        ## major 12 hour points
+                                        id <- seq(min(subscripts), max(subscripts), by = 12)
 
-                                            ddply(mydata[id, ], .(date), function (x)
-                                                lpoints(x$lon, x$lat,
-                                                        col = myColors[group.number],
-                                                        pch = 16, cex = 1))
-
-                                        }
+                                        ddply(mydata[id, ], .(date), function (x)
+                                            lpoints(x$lon, x$lat,
+                                                    col = myColors[group.number],
+                                                    pch = 16, cex = 1))
 
                                     }
 
-                                    ## add base map
-                                    if (map && group.number == groupMax)
-                                        add.map(Args, ...)
+                                }
 
-                                    if (!is.na(z) & !Args$traj)
-                                        panel.xyplot(x, y, col.symbol = thecol[subscripts],
-                                                     as.table = TRUE, ...)
+                                ## add base map
+                                if (map && group.number == groupMax)
+                                    add.map(Args, ...)
 
-                                    if (is.na(z) & !Args$traj)
-                                        panel.xyplot(x, y, type = plot.type,
-                                                     col.symbol = myColors[group.number],
-                                                     col.line = myColors[group.number],
-                                                     lty = lty, lwd = lwd,
-                                                     as.table = TRUE,...)
+                                if (!is.na(z) & !Args$traj)
+                                    panel.xyplot(x, y, col.symbol = thecol[subscripts],
+                                                 as.table = TRUE, ...)
 
-                                    if (linear & npol == 1)
-                                        panel.linear(x, y, col = "black", myColors[group.number],
-                                                     lwd = 1, lty = 5, x.nam = x.nam,
-                                                     y.nam = y.nam, se = ci,  ...)
+                                if (is.na(z) & !Args$traj)
+                                    panel.xyplot(x, y, type = plot.type,
+                                                 col.symbol = myColors[group.number],
+                                                 col.line = myColors[group.number],
+                                                 lty = lty, lwd = lwd,
+                                                 as.table = TRUE,...)
 
-
-                                    if (smooth)
-                                        panel.gam(x, y, col = "grey20", col.se = "black",
-                                                  lty = 1, lwd = 1, se = ci, k = k, ...)
-
-                                    if (spline)
-                                        panel.smooth.spline(x, y, col = "grey20", #myColors[group.number],
-                                                            lwd = lwd, ...)
+                                if (linear & npol == 1)
+                                    panel.linear(x, y, col = "black", myColors[group.number],
+                                                 lwd = 1, lty = 5, x.nam = x.nam,
+                                                 y.nam = y.nam, se = ci,  ...)
 
 
+                                if (smooth)
+                                    panel.gam(x, y, col = "grey20", col.se = "black",
+                                              lty = 1, lwd = 1, se = ci, k = k, ...)
 
-                                    if (mod.line && group.number == 1)
-                                        panel.modline(log.x, log.y)
-
-                                    ## add reference lines
-                                    if (!is.null(ref.x)) do.call(panel.abline, ref.x)
-                                    if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+                                if (spline)
+                                    panel.smooth.spline(x, y, col = "grey20", #myColors[group.number],
+                                                        lwd = lwd, ...)
 
 
-                                })
+
+                                if (mod.line && group.number == 1)
+                                    panel.modline(log.x, log.y)
+
+                                ## add reference lines
+                                if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                                if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+
+
+                            })
 
         ## by default title if z set
         ## else none
@@ -745,10 +745,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        xyplot.args<- listUpdate(xyplot.args, Args)
+        xy.args<- listUpdate(xy.args, Args)
 
         ## plot
-        plt <- do.call(xyplot, xyplot.args)
+        plt <- do.call(xyplot, xy.args)
 
     }
 
@@ -756,32 +756,32 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     if (method == "hexbin") {
         require(hexbin)
 
-        hexbinplot.args <- list(x = myform, data = mydata,
-                                strip = strip,
-                                scales = scales,
-                                strip.left = strip.left,
-                                as.table = TRUE,
-                                yscale.components = yscale.components.log10ticks,
-                                xscale.components = xscale.components.log10ticks,
-                                par.strip.text = list(cex = 0.8),
-                                colorkey = TRUE,
-                                colramp = function(n) {openColours(method.col, n)},
-                                ...,
-                                panel = function(x,...) {
-                                    panel.grid(-1, -1)
-                                    panel.hexbinplot(x,...)
+        hex.args <- list(x = myform, data = mydata,
+                         strip = strip,
+                         scales = scales,
+                         strip.left = strip.left,
+                         as.table = TRUE,
+                         yscale.components = yscale.components.log10ticks,
+                         xscale.components = xscale.components.log10ticks,
+                         par.strip.text = list(cex = 0.8),
+                         colorkey = TRUE,
+                         colramp = function(n) {openColours(method.col, n)},
+                         ...,
+                         panel = function(x,...) {
+                             panel.grid(-1, -1)
+                             panel.hexbinplot(x,...)
 
-                                    if (mod.line)
-                                        panel.modline(log.x, log.y)
+                             if (mod.line)
+                                 panel.modline(log.x, log.y)
 
-                                    ## base map
-                                    if (map)
-                                        add.map(Args, ...)
+                             ## base map
+                             if (map)
+                                 add.map(Args, ...)
 
-                                    ## add reference lines
-                                    if (!is.null(ref.x)) do.call(panel.abline, ref.x)
-                                    if (!is.null(ref.y)) do.call(panel.abline, ref.y)
-                                })
+                             ## add reference lines
+                             if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                             if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+                         })
 
         ## by default no title ever
         Args$main <- if("main" %in% names(Args))
@@ -791,10 +791,10 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             Args$pch <- 1
 
         ## reset for Args
-        hexbinplot.args <- listUpdate(hexbinplot.args, Args)
+        hex.args <- listUpdate(hex.args, Args)
 
         ## plot
-        plt <- do.call(hexbinplot, hexbinplot.args)
+        plt <- do.call(hexbinplot, hex.args)
 
     }
 
@@ -1120,60 +1120,59 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             legend <- makeOpenKeyLegend(key, legend, "windRose")
         }
 
-        levelplot.args <- list(x = myform, data = mydata,
-                               type = plotType,
-                               strip = strip,
-                               as.table = TRUE,
-                               region = TRUE,
-                               scales = scales,
-                               col.regions = col,
-                               at = col.scale,
-                               yscale.components = yscale.components.log10ticks,
-                               xscale.components = xscale.components.log10ticks,
-                               par.strip.text = list(cex = 0.8),
-                               colorkey = FALSE,
-                               legend = legend,
-                               panel = function(x, y, z,...) {
+        lv.args <- list(x = myform, data = mydata,
+                        type = plotType,
+                        strip = strip,
+                        as.table = TRUE,
+                        region = TRUE,
+                        scales = scales,
+                        col.regions = col,
+                        at = col.scale,
+                        yscale.components = yscale.components.log10ticks,
+                        xscale.components = xscale.components.log10ticks,
+                        par.strip.text = list(cex = 0.8),
+                        colorkey = FALSE,
+                        legend = legend,
+                        panel = function(x, y, z,...) {
 
-                                   ## plot individual polygons
-                                   if (!smooth) {
-                                       for (i in 1:nrow(mydata)) {
-                                           lpolygon(x = c(mydata$x1[i], mydata$x2[i],
-                                                        mydata$x3[i], mydata$x4[i]),
-                                                    y = c(mydata$y1[i], mydata$y2[i],
-                                                        mydata$y3[i], mydata$y4[i]),
-                                                    col = mydata$col[i], border = "white")
-                                       }
+                            ## plot individual polygons
+                            if (!smooth) {
+                                for (i in 1:nrow(mydata)) {
+                                    lpolygon(x = c(mydata$x1[i], mydata$x2[i],
+                                                 mydata$x3[i], mydata$x4[i]),
+                                             y = c(mydata$y1[i], mydata$y2[i],
+                                                 mydata$y3[i], mydata$y4[i]),
+                                             col = mydata$col[i], border = "white")
+                                }
 
-                                   } else {
+                            } else {
 
-                                       panel.levelplot(x, y, z, subscripts,
-                                                       labels = FALSE, ...)
-                                   }
+                                panel.levelplot(x, y, z, labels = FALSE, ...)
+                            }
 
-                                   ## add base map
-                                   if (map)
-                                       add.map(Args, ...)
+                            ## add base map
+                            if (map)
+                                add.map(Args, ...)
 
-                                   ## add reference lines
-                                   if (!is.null(ref.x)) do.call(panel.abline, ref.x)
-                                   if (!is.null(ref.y)) do.call(panel.abline, ref.y)
+                            ## add reference lines
+                            if (!is.null(ref.x)) do.call(panel.abline, ref.x)
+                            if (!is.null(ref.y)) do.call(panel.abline, ref.y)
 
-                               })
+                        })
 
         ## z must exist to get here
-        Args$main <- if("main" %in% names(Args))
+        Args$main <- if ("main" %in% names(Args))
                          quickText(Args$main, auto.text) else
         quickText(paste(x, "vs.", y, "by levels of", z), auto.text)
 
-        if(!"pch" %in% names(Args))
+        if (!"pch" %in% names(Args))
             Args$pch <- 1
 
         ## reset for Args
-        levelplot.args<- listUpdate(levelplot.args, Args)
+        lv.args <- listUpdate(lv.args, Args)
 
         ## plot
-        plt <- do.call(levelplot, levelplot.args)
+        plt <- do.call(levelplot, lv.args)
 
     }
 
@@ -1291,7 +1290,9 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
 ## function to add base map ##############################################################
 add.map <- function (Args, ...) {
+
     require(mapdata)
+
     if (Args$map.res == "default") {
         res <- "world"
     } else {
@@ -1302,9 +1303,11 @@ add.map <- function (Args, ...) {
 
         mp <- map(database = res, plot = FALSE, fill = TRUE, projection = Args$projection,
                   parameters = Args$parameters, orientation = Args$orientation)
+
         panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
                       alpha = Args$map.alpha)
         mp <- map.wrap(mp)
+
     } else {
 
         mp <- map(database = res, plot = FALSE, projection = Args$projection,

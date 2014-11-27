@@ -142,6 +142,24 @@
 ##' takes values from 0 (full transparency) to 1 (full
 ##' opacity). Setting it below 1 can help view trajectories,
 ##' trajectory surfaces etc. \emph{and} a filled base map.
+##' @param projection The map projection to be used. Different map
+##' projections are possible through the \code{mapproj}
+##' package. See\code{?mapproj} for extensive details and information
+##' on setting other parameters and orientation (see below).
+##' @param parameters From teh \code{mapproj} package. Optional
+##' numeric vector of parameters for use with the projection
+##' argument. This argument is optional only in the sense that certain
+##' projections do not require additional parameters. If a projection
+##' does require additional parameters, these must be given in the
+##' parameters argument.
+##' @param orientation From teh \code{mapproj} package. An optional
+##' vector c(latitude,longitude,rotation) which describes where the
+##' "North Pole" should be when computing the projection. Normally
+##' this is c(90,0), which is appropriate for cylindrical and conic
+##' projections. For a planar projection, you should set it to the
+##' desired point of tangency. The third value is a clockwise rotation
+##' (in degrees), which defaults to the midrange of the longitude
+##' coordinates in the map.
 ##' @param ... other arguments are passed to \code{cutData} and
 ##' \code{scatterPlot}. This provides access to arguments used in both
 ##' these functions and functions that they in turn pass arguments on
@@ -206,7 +224,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       statistic = "frequency", percentile = 90,
                       map = TRUE, lon.inc = 1.0, lat.inc = 1.0, min.bin = 1,
                       map.fill = TRUE, map.res = "default", map.cols = "grey40",
-                      map.alpha = 0.3, ...)  {
+                      map.alpha = 0.3, projection = "lambert",
+                      parameters = c(51, 51), orientation = c(90, 0, 0), ...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
@@ -417,8 +436,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              map = map, x.inc = lon.inc, y.inc = lat.inc,
                              map.fill = map.fill, map.res = map.res,
                              map.cols = map.cols, map.alpha = map.alpha, traj = TRUE,
-                             projection = "rectangular",
-                             parameters = 0, orientation = c(90, 0, 0))
+                             projection = projection,
+                             parameters = parameters, orientation = orientation)
 
     ## reset for extra.args
     scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)
