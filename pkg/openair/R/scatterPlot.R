@@ -1292,6 +1292,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 add.map <- function (Args, ...) {
 
     require(mapdata)
+    require(mapproj)
 
     if (Args$map.res == "default") {
         res <- "world"
