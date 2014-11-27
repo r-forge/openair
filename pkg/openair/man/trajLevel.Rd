@@ -92,7 +92,7 @@ missing. For \code{trajLevel} gridded outputs.}
 \item{map.fill}{Should the base map be a filled polygon? Default
 is to fill countries.}
 
-\item{map.res}{The resolution of the base map. By default teh
+\item{map.res}{The resolution of the base map. By default the
 function uses the \sQuote{world} map from the \code{maps}
 package. If \code{map.res = "hires"} then the (much) more detailed
 base map \sQuote{worldHires} from the \code{mapdata} package is
@@ -113,14 +113,14 @@ projections are possible through the \code{mapproj}
 package. See\code{?mapproj} for extensive details and information
 on setting other parameters and orientation (see below).}
 
-\item{parameters}{From teh \code{mapproj} package. Optional
+\item{parameters}{From the \code{mapproj} package. Optional
 numeric vector of parameters for use with the projection
 argument. This argument is optional only in the sense that certain
 projections do not require additional parameters. If a projection
 does require additional parameters, these must be given in the
 parameters argument.}
 
-\item{orientation}{From teh \code{mapproj} package. An optional
+\item{orientation}{From the \code{mapproj} package. An optional
 vector c(latitude,longitude,rotation) which describes where the
 "North Pole" should be when computing the projection. Normally
 this is c(90,0), which is appropriate for cylindrical and conic
