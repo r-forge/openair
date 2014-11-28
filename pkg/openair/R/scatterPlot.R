@@ -778,7 +778,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                          colramp = function(n) {openColours(method.col, n)},
                          ...,
                          panel = function(x,...) {
-                             panel.grid(-1, -1)
+                             if (!Args$traj) panel.grid(-1, -1)
                              panel.hexbinplot(x,...)
 
                              if (mod.line)
@@ -1143,16 +1143,16 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                         par.strip.text = list(cex = 0.8),
                         colorkey = FALSE,
                         legend = legend,
-                        panel = function(x, y, z,...) {
+                        panel = function(x, y, z, subscripts, ...) {
 
                             ## plot individual polygons
                             if (!smooth) {
-                                for (i in 1:nrow(mydata)) {
-                                    lpolygon(x = c(mydata$x1[i], mydata$x2[i],
-                                                 mydata$x3[i], mydata$x4[i]),
-                                             y = c(mydata$y1[i], mydata$y2[i],
-                                                 mydata$y3[i], mydata$y4[i]),
-                                             col = mydata$col[i], border = "white")
+
+                                sub <- mydata[subscripts, ] ## deal with one (type) at a time
+                                for (i in 1:nrow(sub)) {
+                                    lpolygon(x = c(sub$x1[i], sub$x2[i], sub$x3[i], sub$x4[i]),
+                                             y = c(sub$y1[i], sub$y2[i], sub$y3[i], sub$y4[i]),
+                                             col = sub$col[i], border = "white")
                                 }
 
                             } else {

@@ -317,20 +317,22 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
     ## plot trajectory frequecies
     if (statistic == "frequency") {
         ## count % of times a cell contains a trajectory
-        ## note - it is the % across entire period, not by conditioning variable
-        n <- length(unique(mydata$date))
+        ## counts by conditioning variable not total
 
         ## need dates for later processing e.g. for type = "season"
         dates <- aggregate(mydata[ , -ids], mydata[ , ids], function (x) head(x, 1))
         dates <- dates$date
 
         mydata <- aggregate(mydata[ , -ids], mydata[ , ids],
-                            function (x) 100 * length(unique(x)) / n)
+                            function (x) length(unique(x)))
 
 
-        mydata[, pollutant] <- mydata[, "date"]
-        mydata$count <-  mydata[, "date"] #counts$date
+        mydata$count <-  mydata[, pollutant] #mydata[, "date"] #counts$date
         mydata$date <- dates
+
+        mydata[, pollutant] <- ave(mydata$count, mydata[, type], FUN = function (x) 100 * x / max(x))
+
+
         attr(mydata$date, "tzone") <- "GMT"  ## avoid warning messages about TZ
 
     }
