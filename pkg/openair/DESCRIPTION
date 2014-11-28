@@ -24,8 +24,6 @@ Suggests:
     hexbin,
     RgoogleMaps,
     png,
-    mapdata,
-    mapproj,
     KernSmooth
 LinkingTo: Rcpp
 Maintainer: David Carslaw <david.carslaw@kcl.ac.uk>
