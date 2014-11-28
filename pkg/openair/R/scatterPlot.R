@@ -414,20 +414,29 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
     ## will need date so that trajectory groups can be coloured
 
-    if (Args$traj && method %in% c("scatter", "density"))  {
+    if (Args$traj && method %in% c("scatter", "density", "hexbin"))  {
+
+        if (method == "hexbin") {
+            var1 <- "xgrid"
+            var2 <- "ygrid"
+        } else {
+            var1 <- "lon"
+            var2 <- "lat"
+        }
+
         vars <- c(vars, "date")
 
         ## these are the map limits used for grid lines - in degrees
-        Args$trajLims <- c(range(mydata$lon, na.rm = TRUE), range(mydata$lat, na.rm = TRUE))
+        Args$trajLims <- c(range(mydata[, var1], na.rm = TRUE), range(mydata[, var2], na.rm = TRUE))
 
         ## apply map projection
-        tmp <- mapproject(x = mydata$lon,
-                          y = mydata$lat,
+        tmp <- mapproject(x = mydata[, var1],
+                          y = mydata[, var2],
                           projection = Args$projection,
                           parameters = Args$parameters,
                           orientation = Args$orientation)
-        mydata$lon <- tmp$x
-        mydata$lat <- tmp$y
+        mydata[, var1] <- tmp$x
+        mydata[, var2] <- tmp$y
 
     }
 
@@ -1291,9 +1300,6 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
 ## function to add base map ##############################################################
 add.map <- function (Args, ...) {
-
-    require(mapdata)
-    require(mapproj)
 
     if (Args$map.res == "default") {
         res <- "world"

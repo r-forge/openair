@@ -104,8 +104,8 @@
 trajCluster <- function(traj, method = "Euclid", n.cluster = 5, plot = TRUE, type = "default",
                         cols = "Set1", split.after = FALSE, map.fill = TRUE,
                         map.cols = "grey40", map.alpha = 0.4,
-                        projection = "rectangular",
-                        parameters = 51.5, orientation = c(90, 0, 0), ...) {
+                        projection = "lambert",
+                        parameters = c(51, 51), orientation = c(90, 0, 0), ...) {
 
     if (tolower(method) == "euclid")  method <- "distEuclid" else method <- "distAngle"
 
