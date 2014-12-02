@@ -150,8 +150,8 @@
 ##' numeric vector of parameters for use with the projection
 ##' argument. This argument is optional only in the sense that certain
 ##' projections do not require additional parameters. If a projection
-##' does require additional parameters, these must be given in the
-##' parameters argument.
+##' does not require additional parameters then set to null
+##' i.e. \code{parameters = NULL}.
 ##' @param orientation From the \code{mapproj} package. An optional
 ##' vector c(latitude,longitude,rotation) which describes where the
 ##' "North Pole" should be when computing the projection. Normally
@@ -160,6 +160,8 @@
 ##' desired point of tangency. The third value is a clockwise rotation
 ##' (in degrees), which defaults to the midrange of the longitude
 ##' coordinates in the map.
+##' @param grid.col The colour of the map grid to be used. To remove
+##' the grid set \code{grid.col = "transparent"}.
 ##' @param ... other arguments are passed to \code{cutData} and
 ##' \code{scatterPlot}. This provides access to arguments used in both
 ##' these functions and functions that they in turn pass arguments on
@@ -225,7 +227,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                       map = TRUE, lon.inc = 1.0, lat.inc = 1.0, min.bin = 1,
                       map.fill = TRUE, map.res = "default", map.cols = "grey40",
                       map.alpha = 0.3, projection = "lambert",
-                      parameters = c(51, 51), orientation = c(90, 0, 0), ...)  {
+                      parameters = c(51, 51), orientation = c(90, 0, 0),
+                      grid.col = "deepskyblue", ...)  {
 
     ## mydata can be a list of several trajectory files; in which case combine them
     ## before averaging
@@ -439,7 +442,8 @@ trajLevel <- function(mydata, lon = "lon", lat = "lat",
                              map.fill = map.fill, map.res = map.res,
                              map.cols = map.cols, map.alpha = map.alpha, traj = TRUE,
                              projection = projection,
-                             parameters = parameters, orientation = orientation)
+                             parameters = parameters, orientation = orientation,
+                             grid.col = grid.col)
 
     ## reset for extra.args
     scatterPlot.args <- listUpdate(scatterPlot.args, extra.args)

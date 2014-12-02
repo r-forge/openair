@@ -351,6 +351,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
     Args$projection <- if ("projection" %in% names(Args)) Args$projection else FALSE
     Args$parameters <- if ("parameters" %in% names(Args)) Args$parameters else FALSE
     Args$orientation <- if ("orientation" %in% names(Args)) Args$orientation else FALSE
+    Args$grid.col <- if ("grid.col" %in% names(Args)) Args$grid.col else "deepskyblue"
 
     ## transform hexbin by default
     Args$trans <- if ("trans" %in% names(Args)) Args$trans else function(x) log(x)
@@ -427,7 +428,8 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         vars <- c(vars, "date")
 
         ## these are the map limits used for grid lines - in degrees
-        Args$trajLims <- c(range(mydata[, var1], na.rm = TRUE), range(mydata[, var2], na.rm = TRUE))
+        Args$trajLims <- c(range(mydata[, var1], na.rm = TRUE), range(mydata[, var2],
+                                                     na.rm = TRUE) )
 
         ## apply map projection
         tmp <- mapproject(x = mydata[, var1],
@@ -700,6 +702,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                                     }
 
+
                                 }
 
                                 ## add base map
@@ -784,7 +787,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                              if (mod.line)
                                  panel.modline(log.x, log.y)
 
-                             ## base map
+                           ## base map
                              if (map)
                                  add.map(Args, ...)
 
@@ -979,12 +982,13 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
         rhs <- paste0("xgrid * ygrid |", type)
         myform <- formula(paste(z, "~", rhs))
 
-        ## add vertices of each grid
+        ## add vertices of each grid so that polygons can be drawn
         mydata <- transform(mydata, x1 = xgrid - x.inc / 2, x2 = xgrid - x.inc / 2,
                             x3 = xgrid + x.inc / 2, x4 = xgrid + x.inc / 2,
                             y1 = ygrid - y.inc / 2, y2 = ygrid + y.inc / 2,
                             y3 = ygrid + y.inc / 2, y4 = ygrid - y.inc / 2)
 
+        ## find coordinates in appropriate map projection
         coord1 <- mapproject(x = mydata$x1, y = mydata$y1, projection = Args$projection,
                              parameters = Args$parameters, orientation = Args$orientation)
         coord2 <- mapproject(x = mydata$x2, y = mydata$y2, projection = Args$projection,
@@ -1152,17 +1156,18 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                 for (i in 1:nrow(sub)) {
                                     lpolygon(x = c(sub$x1[i], sub$x2[i], sub$x3[i], sub$x4[i]),
                                              y = c(sub$y1[i], sub$y2[i], sub$y3[i], sub$y4[i]),
-                                             col = sub$col[i], border = "white")
+                                             col = sub$col[i], ...)
                                 }
 
                             } else {
 
-                                panel.levelplot(x, y, z, labels = FALSE, ...)
+                                panel.levelplot(x, y, z, subscripts, labels = FALSE, ...)
                             }
 
                             ## add base map
                             if (map)
                                 add.map(Args, ...)
+
 
                             ## add reference lines
                             if (!is.null(ref.x)) do.call(panel.abline, ref.x)
@@ -1264,6 +1269,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
                                    if (mod.line) panel.modline(log.x, log.y)
 
+
                                    ## base map
                                    if (map)
                                        add.map(Args, ...)
@@ -1310,25 +1316,29 @@ add.map <- function (Args, ...) {
     if (Args$map.fill) {
 
         mp <- map(database = res, plot = FALSE, fill = TRUE, projection = Args$projection,
-                  parameters = Args$parameters, orientation = Args$orientation)
+                  parameters = Args$parameters, orientation = Args$orientation,
+                  xlim = Args$trajLims[1:2], ylim = Args$trajLims[3:4])
+        mp <- map.wrap(mp)
 
         panel.polygon(mp$x, mp$y, col = Args$map.cols, border = "white",
                       alpha = Args$map.alpha)
-        mp <- map.wrap(mp)
+
 
     } else {
 
         mp <- map(database = res, plot = FALSE, projection = Args$projection,
                   parameters = Args$parameters, orientation = Args$orientation)
-        llines(mp$x, mp$y, col = "black")
         mp <- map.wrap(mp)
+        llines(mp$x, mp$y, col = "black")
 
     }
 
     map.grid(lim = Args$trajLims, projection = Args$projection,
              parameters = Args$parameters,
-             orientation = Args$orientation)
+             orientation = Args$orientation, col = Args$grid.col)
 }
+
+
 
 ## add simple FAC2 lines #################################################################
 ## takes account of log-scaling for x/y, x and y

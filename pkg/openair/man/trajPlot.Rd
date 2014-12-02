@@ -7,7 +7,7 @@ trajPlot(mydata, lon = "lon", lat = "lat", pollutant = "height",
   type = "default", map = TRUE, group = NA, map.fill = TRUE,
   map.res = "default", map.cols = "grey40", map.alpha = 0.4,
   projection = "lambert", parameters = c(51, 51), orientation = c(90, 0,
-  0), ...)
+  0), grid.col = "deepskyblue", ...)
 }
 \arguments{
 \item{mydata}{Data frame, the result of importing a trajectory
@@ -74,8 +74,8 @@ on setting other parameters and orientation (see below).}
 numeric vector of parameters for use with the projection
 argument. This argument is optional only in the sense that certain
 projections do not require additional parameters. If a projection
-does require additional parameters, these must be given in the
-parameters argument.}
+does not require additional parameters then set to null
+i.e. \code{parameters = NULL}.}
 
 \item{orientation}{From the \code{mapproj} package. An optional
 vector c(latitude,longitude,rotation) which describes where the
@@ -85,6 +85,9 @@ projections. For a planar projection, you should set it to the
 desired point of tangency. The third value is a clockwise rotation
 (in degrees), which defaults to the midrange of the longitude
 coordinates in the map.}
+
+\item{grid.col}{The colour of the map grid to be used. To remove
+the grid set \code{grid.col = "transparent"}.}
 
 \item{...}{other arguments are passed to \code{cutData} and
 \code{scatterPlot}. This provides access to arguments used in both

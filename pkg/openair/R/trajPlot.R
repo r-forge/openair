@@ -75,8 +75,8 @@
 ##' numeric vector of parameters for use with the projection
 ##' argument. This argument is optional only in the sense that certain
 ##' projections do not require additional parameters. If a projection
-##' does require additional parameters, these must be given in the
-##' parameters argument.
+##' does not require additional parameters then set to null
+##' i.e. \code{parameters = NULL}.
 ##' @param orientation From the \code{mapproj} package. An optional
 ##' vector c(latitude,longitude,rotation) which describes where the
 ##' "North Pole" should be when computing the projection. Normally
@@ -85,6 +85,8 @@
 ##' desired point of tangency. The third value is a clockwise rotation
 ##' (in degrees), which defaults to the midrange of the longitude
 ##' coordinates in the map.
+##' @param grid.col The colour of the map grid to be used. To remove
+##' the grid set \code{grid.col = "transparent"}.
 ##' @param ... other arguments are passed to \code{cutData} and
 ##' \code{scatterPlot}. This provides access to arguments used in both
 ##' these functions and functions that they in turn pass arguments on
@@ -127,7 +129,8 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                      type = "default", map = TRUE, group = NA, map.fill = TRUE,
                      map.res = "default", map.cols = "grey40",
                      map.alpha = 0.4, projection = "lambert",
-                     parameters = c(51, 51), orientation = c(90, 0, 0), ...)
+                     parameters = c(51, 51), orientation = c(90, 0, 0),
+                     grid.col = "deepskyblue", ...)
 {
     len <- NULL ## silence R check
 
@@ -174,7 +177,8 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                                  map.fill = map.fill, map.res = map.res,
                                  map.cols = map.cols, map.alpha = map.alpha,
                                  traj = TRUE, projection = projection,
-                                 parameters = parameters, orientation = orientation)
+                                 parameters = parameters, orientation = orientation,
+                                 grid.col = grid.col)
 
     } else {
          if(!"main" %in% names(extra.args))
@@ -186,7 +190,8 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
                                  map.fill = map.fill, map.res = map.res,
                                  map.cols = map.cols,
                                  map.alpha = map.alpha, traj = TRUE, projection = projection,
-                                 parameters = parameters, orientation = orientation)
+                                 parameters = parameters, orientation = orientation,
+                                 grid.col = grid.col)
     }
 
     #reset for extra.args
@@ -201,7 +206,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
 
 ## function from mapproj to add grid lines to a map
 map.grid <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
-                      cex = 1, col = "skyblue", lty = 2, font = 1,
+                      cex = 1, col = "deepskyblue", lty = 2, font = 1,
                       projection = "rectangular", parameters = 52,
                       orientation = c(90, 0, 0), ...)
 

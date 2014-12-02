@@ -40,6 +40,7 @@ Changes in openair 1.0-99 [2014-10-28]
 	(helps to provide a clue as to actual date format)
 *	Updates to trajectory plots to allow for different map
 	projections using the mapproj package (new dependency)
+*	Fix trajectory frequency calculation - underestimated frequencies.
 
 Changes in openair 1.0-0 [2014-06-09]
 =====================================
