@@ -67,7 +67,7 @@ trajectory surfaces etc. \emph{and} a filled base map.}
 
 \item{projection}{The map projection to be used. Different map
 projections are possible through the \code{mapproj}
-package. See\code{?mapproj} for extensive details and information
+package. See \code{?mapproj} for extensive details and information
 on setting other parameters and orientation (see below).}
 
 \item{parameters}{From the \code{mapproj} package. Optional
@@ -78,9 +78,9 @@ does not require additional parameters then set to null
 i.e. \code{parameters = NULL}.}
 
 \item{orientation}{From the \code{mapproj} package. An optional
-vector c(latitude,longitude,rotation) which describes where the
+vector c(latitude, longitude, rotation) which describes where the
 "North Pole" should be when computing the projection. Normally
-this is c(90,0), which is appropriate for cylindrical and conic
+this is c(90, 0), which is appropriate for cylindrical and conic
 projections. For a planar projection, you should set it to the
 desired point of tangency. The third value is a clockwise rotation
 (in degrees), which defaults to the midrange of the longitude

@@ -875,6 +875,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             breaks <- pretty(mydata[[z]], n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
 
         } else {
 
@@ -882,6 +883,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
             breaks <- pretty(limits, n = nlev)
             labs <- pretty(breaks, 7)
             labs <- labs[labs >= min(breaks) & labs <= max(breaks)]
+            at <- labs
 
             ## case where user max is < data max
             if (max(limits) < max(mydata[[z]], na.rm = TRUE)) {
@@ -909,15 +911,13 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
         col.scale <- breaks
 
-        ## frequency plot
-        n <- 7
-        col <- openColours(cols, n)
-        legend <- list(col = col, space = key.position, auto.text = auto.text,
-                       labels = labels, footer = Args$key.footer,
+        legend <- list(col = col, at = col.scale,
+                       labels = list(labels = labs, at = at), space = key.position,
+                       auto.text = auto.text, footer = Args$key.footer,
                        header = Args$key.header, height = 0.8, width = 1.5, fit = "scale",
-                       plot.style = "other")
+                       plot.style = c("ticks", "border"))
 
-        col.scale <- breaks
+
         legend <- makeOpenKeyLegend(key, legend, "windRose")
 
 
@@ -936,8 +936,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                legend = legend,
                                panel = function(x, y, z, subscripts,...) {
                                    panel.grid(h = -1, v = -1)
-                                   panel.levelplot(x, y, z, subscripts,
-                                                   labels = FALSE, ...)
+                                   panel.levelplot(x, y, z, subscripts, ...)
 
                                    if (mod.line)
                                        panel.modline(log.x, log.y)
@@ -1007,7 +1006,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
         smooth.grid <- function(mydata, z) {
 
-            myform <- formula(paste(z, "~ s(xgrid, ygrid, k = ", k , ")", sep = ""))
+            myform <- formula(paste0(z, "^0.5 ~ s(xgrid, ygrid, k = ", k , ")", sep = ""))
             res <- 101
             Mgam <- gam(myform, data = mydata)
 
@@ -1017,7 +1016,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
                                         max(mydata$ygrid), length = res))
 
             pred <- predict.gam(Mgam, newdata = new.data)
-            pred <- as.vector(pred)
+            pred <- as.vector(pred) ^ 2
 
             new.data[ , z] <- pred
 
@@ -1133,6 +1132,7 @@ scatterPlot <- function(mydata, x = "nox", y = "no2", z = NA, method = "scatter"
 
             legend <- makeOpenKeyLegend(key, legend, "windRose")
         }
+
 
         lv.args <- list(x = myform, data = mydata,
                         type = plotType,
