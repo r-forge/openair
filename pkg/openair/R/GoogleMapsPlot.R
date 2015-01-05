@@ -202,6 +202,7 @@
 ##'   handling, \code{MapBackground} in \code{RgoogleMaps} for map layer
 ##'   production, and \code{xyplot} in \code{lattice} for data layer
 ##'   production.
+##' @import RgoogleMaps
 ##' @export
 ##' @return As well as generating the plot itself, \code{GoogleMapsPlot} also
 ##'   returns an object of class ``openair''. The object includes three main
@@ -264,7 +265,7 @@ GoogleMapsPlot <- function(mydata,
 
 #uses
 #RgoogleMaps MapBackground, etc.
-    stopifnot(require("RgoogleMaps"))
+ 
 
 ##################
 #need to confirm this has not changed
@@ -809,8 +810,8 @@ openairMapManager <- function(map){
     if("nativeRaster" %in% class(map$myTile) & require(png)){
 
         #do to png native output
-        writePNG(map$myTile, "XtempX.png")
-        map$myTile <- readPNG("XtempX.png", native = FALSE)
+        png::writePNG(map$myTile, "XtempX.png")
+        map$myTile <- png::readPNG("XtempX.png", native = FALSE)
         attr(map$myTile, "type") <- "rgb"
 
     }

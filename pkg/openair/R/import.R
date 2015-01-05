@@ -150,7 +150,7 @@ import <- function (file = file.choose(), file.type = "csv", sep = ",", header.a
     ## set date format - if no time column use date format directly
     if (is.null(time)) {
         ## use this to show what date looks like
-        exam.date <- do.call("paste", list(head(mydata$date), collapse = ", "))
+        exam.date <- do.call("paste", list(head(thedata$date), collapse = ", "))
 
         thedata$date <- as.POSIXct(strptime(thedata$date, format = date.format, tz = tzone),
                                    tz = tzone)

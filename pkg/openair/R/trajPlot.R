@@ -209,7 +209,7 @@ trajPlot <- function(mydata, lon = "lon", lat = "lat", pollutant = "height",
 }
 
 ## function from mapproj to add grid lines to a map
-map.grid <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
+map.grid2 <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
                       cex = 1, col = "deepskyblue", lty = 2, font = 1,
                       projection = "rectangular", parameters = 52,
                       orientation = c(90, 0, 0), ...)
@@ -237,7 +237,7 @@ map.grid <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
         s
     }
     if (missing(lim))
-        lim = .map.range()
+        lim = maps::.map.range()
     if (is.list(lim)) {
         lim <- lim$range
     }
@@ -256,7 +256,7 @@ map.grid <- function (lim, nx = 9, ny = 9, labels = TRUE, pretty = TRUE,
                                     NA), y = y), projection = projection,
                     parameters = parameters,
                  orientation = orientation)
-    p <- map.wrap(p)
+    p <- maps::map.wrap(p)
     llines(p, col = col, lty = lty, ...)
     llines(mapproject(expand.grid(y = c(seq(lim[3], lim[4], len = 100),
                                       NA), x = x), projection = projection,

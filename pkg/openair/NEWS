@@ -1,4 +1,4 @@
-Changes in openair 1.0-99 [2014-10-28]
+Changes in openair 1.1 [2015-01-05]
 =====================================
 *	Add ref.y option to timeVariation for y references line(s)
 *	Fix type = "wd" labelling to corPlot
