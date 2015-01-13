@@ -807,7 +807,7 @@ openairMapManager <- function(map){
     #native raster handler
     #######################
 
-    if("nativeRaster" %in% class(map$myTile) & require(png)){
+    if("nativeRaster" %in% class(map$myTile)){
 
         #do to png native output
         png::writePNG(map$myTile, "XtempX.png")
