@@ -2,6 +2,8 @@ Changes in openair 1.1-99 [2015-01-05]
 =====================================
 *	Fix regression for openair methods e.g. affected plot method
 	for timeVariation subsets
+*	Check data are numeric before appling running mean (would
+	crash R if not)
 
 Changes in openair 1.1 [2015-01-05]
 =====================================
